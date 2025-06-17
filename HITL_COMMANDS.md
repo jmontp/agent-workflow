@@ -71,6 +71,20 @@ These commands are used during the Sprint Review and for providing continuous fe
 /request_changes "The login button needs to be re-styled to match the new design spec."
 ```
 
+### `/suggest_fix <description>`
+**Description:** Provides a specific suggestion to the Code Agent to help it resolve a failing test when it is blocked.
+**Example:**
+```
+/suggest_fix "Check for a null pointer exception in the `user.profile` object."
+```
+
+### `/skip_task`
+**Description:** Instructs the orchestrator to abandon a currently blocked task and move to the next one. This is typically used after repeated failed attempts by the agent.
+**Example:**
+```
+/skip_task
+```
+
 ### `/feedback <description>`
 **Description:** Provides general feedback to the orchestrator, typically after a sprint, to improve the performance of specialist agents in the future.
 **Example:**
@@ -91,9 +105,30 @@ These commands allow for manual management of the product and sprint backlogs.
 /view_backlog product
 ```
 
-### `/add_story <description>`
-**Description:** Manually adds a new user story to the product backlog.
+### `/view_item <item_id>`
+**Description:** Displays the full details for a specific epic, feature, or story.
 **Example:**
 ```
-/add_story "As a user, I want to be able to export my dashboard data to a CSV file."
+/view_item FEAT-3
+```
+
+### `/add_story <description> --to_feature <feature_id>`
+**Description:** Manually adds a new user story to a specific feature in the product backlog.
+**Example:**
+```
+/add_story "As a user, I want to be able to export my dashboard data to a CSV file." --to_feature DASH-4
+```
+
+### `/remove_item <item_id>`
+**Description:** Removes a story or feature from the product backlog.
+**Example:**
+```
+/remove_item STORY-1.3
+```
+
+### `/prioritize_story <story_id> [top|high|medium|low]`
+**Description:** Sets the priority of a story in the product backlog, which influences the Orchestrator's suggestions during sprint planning.
+**Example:**
+```
+/prioritize_story STORY-1.1 top
 ``` 
