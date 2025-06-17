@@ -30,11 +30,13 @@ test_cases = [
   - `tests/unit/test_code_agent.py`
   - `tests/unit/test_qa_agent.py`
   - `tests/unit/test_data_agent.py`
+  - `tests/unit/test_agent_tool_config.py` ✅
 - **Coverage**: 
   - Agent initialization and configuration
   - Task execution with dry-run mode
   - Error handling and retry logic
-  - Anthropic API integration (mocked)
+  - **Agent Security**: Tool access control and command restrictions
+  - Claude Code integration (mocked)
 
 #### 3. Discord Bot Tests
 - **Files**:
@@ -162,6 +164,7 @@ mkdir -p tests/tmp
 - State machine command validation
 - HITL approval workflows
 - Agent task execution
+- **Agent security and tool restrictions** ✅
 - Discord command parsing
 - Project state persistence
 

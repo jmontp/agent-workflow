@@ -13,7 +13,8 @@ from . import BaseAgent, Task, AgentResult
 import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from claude_client import claude_client
+from claude_client import claude_client, create_agent_client
+from agent_tool_config import AgentType
 import logging
 
 logger = logging.getLogger(__name__)
@@ -45,7 +46,7 @@ class CodeAgent(BaseAgent):
                 "performance_optimization"
             ]
         )
-        self.claude_client = claude_code_client or claude_client
+        self.claude_client = claude_code_client or create_agent_client(AgentType.CODE)
         self.github_client = github_client
         
     async def run(self, task: Task, dry_run: bool = False) -> AgentResult:

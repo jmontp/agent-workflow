@@ -3,14 +3,21 @@ Claude Code Integration Client
 
 Provides integration with Claude Code for AI agent capabilities.
 Uses subprocess to execute claude commands for AI-powered tasks.
+Includes security boundaries through tool access restrictions per agent type.
 """
 
 import subprocess
 import asyncio
 import logging
 import json
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List
 from pathlib import Path
+
+# Handle both relative and absolute imports
+try:
+    from .agent_tool_config import AgentType, get_claude_tool_args
+except ImportError:
+    from agent_tool_config import AgentType, get_claude_tool_args
 
 logger = logging.getLogger(__name__)
 
@@ -20,21 +27,25 @@ class ClaudeCodeClient:
     Client for integrating with Claude Code command-line interface.
     
     This client executes claude commands to provide AI capabilities
-    for the agent workflow system.
+    for the agent workflow system with security boundaries per agent type.
     """
     
-    def __init__(self, timeout: int = 300):
+    def __init__(self, timeout: int = 300, agent_type: Optional[AgentType] = None):
         """
         Initialize Claude Code client.
         
         Args:
             timeout: Command timeout in seconds (default: 5 minutes)
+            agent_type: Type of agent using this client (for tool restrictions)
         """
         self.timeout = timeout
+        self.agent_type = agent_type
         self.available = self._check_claude_availability()
         
         if self.available:
             logger.info("Claude Code integration available")
+            if agent_type:
+                logger.info(f"Tool restrictions enabled for {agent_type.value}")
         else:
             logger.warning("Claude Code not available - using placeholder implementations")
     
@@ -171,7 +182,7 @@ class ClaudeCodeClient:
     
     async def _execute_claude_command(self, prompt: str) -> str:
         """
-        Execute claude command with given prompt.
+        Execute claude command with given prompt and tool restrictions.
         
         Args:
             prompt: Prompt to send to Claude
@@ -180,9 +191,17 @@ class ClaudeCodeClient:
             Claude's response
         """
         try:
+            # Build command with tool restrictions if agent type is set
+            cmd_args = ['claude']
+            
+            if self.agent_type:
+                tool_args = get_claude_tool_args(self.agent_type)
+                cmd_args.extend(tool_args)
+                logger.debug(f"Using tool restrictions for {self.agent_type.value}: {tool_args}")
+            
             # Execute claude command with prompt as stdin
             process = await asyncio.create_subprocess_exec(
-                'claude',
+                *cmd_args,
                 stdin=asyncio.subprocess.PIPE,
                 stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.PIPE
@@ -451,5 +470,10 @@ This is a placeholder analysis report. Claude Code integration is not available.
 '''
 
 
-# Global client instance
+# Global client instance (no restrictions - for backwards compatibility)
 claude_client = ClaudeCodeClient()
+
+# Factory function to create agent-specific clients
+def create_agent_client(agent_type: AgentType, timeout: int = 300) -> ClaudeCodeClient:
+    """Create a Claude client with agent-specific tool restrictions"""
+    return ClaudeCodeClient(timeout=timeout, agent_type=agent_type)

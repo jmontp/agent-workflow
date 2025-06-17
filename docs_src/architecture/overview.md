@@ -170,20 +170,24 @@ Event-driven communication between components:
 
 ## Security Architecture
 
-### 1. **Authentication & Authorization**
+The system implements comprehensive security through multiple layers of protection. See [Security Architecture](security.md) for detailed information.
+
+### 1. **Agent Security Model**
+- **Command Access Control**: Each agent type has restricted tool access
+- **Principle of Least Privilege**: Agents can only access necessary tools
+- **Automatic Enforcement**: Security boundaries applied via Claude Code CLI flags
+
+### 2. **Authentication & Authorization**
 - Discord bot token authentication
 - Role-based access control in Discord
 - Project-level permission isolation
+- Agent-specific security profiles
 
-### 2. **Data Protection**
+### 3. **Data Protection**
 - No sensitive data stored in state files
 - Environment variables for secrets
-- Audit logging of all commands
-
-### 3. **Input Validation**
-- All user inputs validated before processing
-- SQL injection protection (if database used)
-- Command injection prevention
+- Audit logging of all commands and agent tool usage
+- State file access controls
 
 ## Extensibility Points
 

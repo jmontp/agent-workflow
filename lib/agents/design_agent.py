@@ -12,8 +12,15 @@ from . import BaseAgent, Task, AgentResult
 import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from claude_client import claude_client
 import logging
+
+# Handle both relative and absolute imports
+try:
+    from claude_client import claude_client, create_agent_client
+    from agent_tool_config import AgentType
+except ImportError:
+    from ..claude_client import claude_client, create_agent_client
+    from ..agent_tool_config import AgentType
 
 logger = logging.getLogger(__name__)
 
@@ -42,7 +49,7 @@ class DesignAgent(BaseAgent):
                 "technical_specification"
             ]
         )
-        self.claude_client = claude_code_client or claude_client
+        self.claude_client = claude_code_client or create_agent_client(AgentType.DESIGN)
         
     async def run(self, task: Task, dry_run: bool = False) -> AgentResult:
         """Execute design-related tasks"""
