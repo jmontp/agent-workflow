@@ -237,6 +237,17 @@
       How It Works
     </span>
 </a>
+<nav aria-label="How It Works" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#detailed-system-architecture">
+<span class="md-ellipsis">
+      Detailed System Architecture
+    </span>
+</a>
+</li>
+</ul>
+</nav>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="#key-features">
@@ -687,6 +698,17 @@
       How It Works
     </span>
 </a>
+<nav aria-label="How It Works" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#detailed-system-architecture">
+<span class="md-ellipsis">
+      Detailed System Architecture
+    </span>
+</a>
+</li>
+</ul>
+</nav>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="#key-features">
@@ -795,6 +817,27 @@
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">¶</a></h2>
 <p>This system implements a complete workflow for AI-assisted software development with proper human oversight and control. It combines the best practices of Test-Driven Development (TDD) and Scrum methodology, adapted for modern AI-assisted development scenarios.</p>
 <h2 id="how-it-works">How It Works<a class="headerlink" href="#how-it-works" title="Permanent link">¶</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    You["👨‍💻&lt;br/&gt;YOU"] 
+    Chat["💬&lt;br/&gt;Discord&lt;br/&gt;Chat"]
+    AI["🤖&lt;br/&gt;AI Team&lt;br/&gt;Helper"]
+    Code["📝&lt;br/&gt;Your&lt;br/&gt;Project"]
+
+    You --&gt;|"Tell it what to build"| Chat
+    Chat --&gt;|"Coordinates"| AI
+    AI --&gt;|"Builds &amp; tests"| Code
+    Code --&gt;|"Shows you progress"| You
+
+    style You fill:#e3f2fd,stroke:#1976d2,stroke-width:3px
+    style Chat fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    style AI fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
+    style Code fill:#fff3e0,stroke:#f57c00,stroke-width:2px</code></pre>
+<p><strong>The Big Picture:</strong> You tell the system what you want to build through simple Discord messages. A team of AI agents collaborates to design, code, test, and improve your project while keeping you in control of every major decision.</p>
+<hr/>
+<h3 id="detailed-system-architecture">Detailed System Architecture<a class="headerlink" href="#detailed-system-architecture" title="Permanent link">¶</a></h3>
+<div style="background: #f5f5f5; padding: 15px; border-radius: 8px; margin: 20px 0;">
+<em>💡 <strong>Interactive Diagram:</strong> You can zoom and pan in the diagram below to explore the detailed system architecture.</em>
+</div>
 <pre class="mermaid"><code>graph TB
     subgraph "👤 Solo Engineer/Product Owner"
         User[User]
