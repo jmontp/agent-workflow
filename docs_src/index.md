@@ -9,6 +9,34 @@ This system implements a complete workflow for AI-assisted software development 
 ## How It Works
 
 ```mermaid
+flowchart LR
+    You["👨‍💻<br/>YOU"] 
+    Chat["💬<br/>Discord<br/>Chat"]
+    AI["🤖<br/>AI Team<br/>Helper"]
+    Code["📝<br/>Your<br/>Project"]
+    
+    You -->|"Tell it what to build"| Chat
+    Chat -->|"Coordinates"| AI
+    AI -->|"Builds & tests"| Code
+    Code -->|"Shows you progress"| You
+    
+    style You fill:#e3f2fd,stroke:#1976d2,stroke-width:3px
+    style Chat fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    style AI fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
+    style Code fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+```
+
+**The Big Picture:** You tell the system what you want to build through simple Discord messages. A team of AI agents collaborates to design, code, test, and improve your project while keeping you in control of every major decision.
+
+---
+
+### Detailed System Architecture
+
+<div style="background: #f5f5f5; padding: 15px; border-radius: 8px; margin: 20px 0;">
+<em>💡 <strong>Interactive Diagram:</strong> You can zoom and pan in the diagram below to explore the detailed system architecture.</em>
+</div>
+
+```mermaid
 graph TB
     subgraph "👤 Solo Engineer/Product Owner"
         User[User]
