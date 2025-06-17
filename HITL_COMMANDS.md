@@ -16,6 +16,7 @@ _Optimized for a solo product-owner/engineer who wants minimal ceremony and maxi
 | **/suggest_fix** | `/suggest_fix "<description>"` | Give the Code Agent a hint when stuck. |
 | **/skip_task** | `/skip_task` | Abandon the currently blocked task and move on. |
 | **/feedback** | `/feedback "<description>"` | General improvement notes after a sprint. |
+| **/state** | `/state` – interactive view (allowed commands, diagram, matrix) | Inspect current orchestrator state & legal commands. |
 
 ---
 
@@ -65,4 +66,19 @@ At any time:
 2. Security-critical code requires explicit human approval.
 3. Agents time-box tasks to **30 min**; longer tasks trigger a status ping.
 
-_This lightweight command set keeps you focused on big-picture direction while agents handle the details._ 
+_This lightweight command set keeps you focused on big-picture direction while agents handle the details._
+
+## State Awareness & Invalid Commands
+The orchestrator enforces a finite-state machine (see `command_state_machine.md`).
+
+* Use `/state` at any time to:
+  1. View the **current state** (e.g., `SPRINT_ACTIVE`).
+  2. Click **Allowed Commands** – shows only the verbs valid right now.
+  3. Click **Diagram** – in-chat SVG of the full state chart.
+  4. Click **Matrix** – raw command→state table.
+
+If you issue a command that is **not legal** for the current state, the bot replies with an error message:
+
+> ⚠️ Command `/sprint plan` is not allowed now (state: **SPRINT_ACTIVE**). Try `/sprint status`.
+
+No action is taken until a valid command is sent. 
