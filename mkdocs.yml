@@ -37,6 +37,10 @@ theme:
     - content.code.copy
     - content.code.annotate
 
+extra_javascript:
+  - https://cdn.jsdelivr.net/npm/svg-pan-zoom@3.6.1/dist/svg-pan-zoom.min.js
+  - js/mermaid-zoom.js
+
 
 plugins:
   - search
@@ -51,9 +55,6 @@ plugins:
             height: auto;
           }
         zoom: true
-      javascript:
-        - https://cdn.jsdelivr.net/npm/svg-pan-zoom@3.6.1/dist/svg-pan-zoom.min.js
-        - js/mermaid-zoom.js
 
 markdown_extensions:
   - pymdownx.highlight:
