@@ -9,6 +9,10 @@ import asyncio
 import time
 from typing import Dict, Any
 from . import BaseAgent, Task, AgentResult
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from claude_client import claude_client
 import logging
 
 logger = logging.getLogger(__name__)
@@ -26,7 +30,7 @@ class DesignAgent(BaseAgent):
     - Identify design patterns and anti-patterns
     """
     
-    def __init__(self, anthropic_client=None):
+    def __init__(self, claude_code_client=None):
         super().__init__(
             name="DesignAgent",
             capabilities=[
@@ -38,7 +42,7 @@ class DesignAgent(BaseAgent):
                 "technical_specification"
             ]
         )
-        self.anthropic_client = anthropic_client
+        self.claude_client = claude_code_client or claude_client
         
     async def run(self, task: Task, dry_run: bool = False) -> AgentResult:
         """Execute design-related tasks"""
@@ -80,25 +84,20 @@ class DesignAgent(BaseAgent):
             output = f"[DRY RUN] Would create architecture for: {requirements}"
             artifacts = {"architecture.md": "# System Architecture\n\n[Generated design]"}
         else:
-            # TODO: Integrate with Anthropic API for actual architecture generation
-            prompt = f"""
-            Create a system architecture for the following requirements:
-            {requirements}
-            
-            Include:
-            - High-level component diagram
-            - Data flow architecture  
-            - Technology stack recommendations
-            - Scalability considerations
-            - Security architecture
-            """
-            
-            # Placeholder implementation
-            output = self._generate_architecture_design(requirements)
-            artifacts = {
-                "architecture.md": output,
-                "component-diagram.mermaid": self._generate_component_diagram()
-            }
+            # Use Claude Code for architecture generation
+            try:
+                output = await self.claude_client.create_architecture(requirements)
+                artifacts = {
+                    "architecture.md": output,
+                    "component-diagram.mermaid": self._generate_component_diagram()
+                }
+            except Exception as e:
+                logger.warning(f"Claude Code unavailable, using fallback: {e}")
+                output = self._generate_architecture_design(requirements)
+                artifacts = {
+                    "architecture.md": output,
+                    "component-diagram.mermaid": self._generate_component_diagram()
+                }
         
         return AgentResult(
             success=True,
@@ -113,8 +112,12 @@ class DesignAgent(BaseAgent):
         if dry_run:
             output = f"[DRY RUN] Would review design: {design_content[:100]}..."
         else:
-            # TODO: Integrate with Anthropic API for design review
-            output = self._analyze_design_quality(design_content)
+            # Use Claude Code for design review
+            try:
+                output = await self.claude_client.analyze_code(design_content, "design_review")
+            except Exception as e:
+                logger.warning(f"Claude Code unavailable, using fallback: {e}")
+                output = self._analyze_design_quality(design_content)
         
         return AgentResult(
             success=True,

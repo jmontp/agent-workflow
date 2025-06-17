@@ -10,6 +10,10 @@ import time
 import subprocess
 from typing import Dict, Any, List
 from . import BaseAgent, Task, AgentResult
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from claude_client import claude_client
 import logging
 
 logger = logging.getLogger(__name__)
@@ -28,7 +32,7 @@ class QAAgent(BaseAgent):
     - Automated testing pipeline setup
     """
     
-    def __init__(self, anthropic_client=None):
+    def __init__(self, claude_code_client=None):
         super().__init__(
             name="QAAgent",
             capabilities=[
@@ -41,7 +45,7 @@ class QAAgent(BaseAgent):
                 "performance_testing"
             ]
         )
-        self.anthropic_client = anthropic_client
+        self.claude_client = claude_code_client or claude_client
         
     async def run(self, task: Task, dry_run: bool = False) -> AgentResult:
         """Execute QA-related tasks"""
@@ -89,11 +93,16 @@ class QAAgent(BaseAgent):
             for test_type in test_types:
                 artifacts[f"test_{test_type}.py"] = f"# Generated {test_type} tests"
         else:
-            # TODO: Integrate with Anthropic API for intelligent test generation
+            # Use Claude Code for intelligent test generation
             artifacts = {}
             for test_type in test_types:
-                test_code = self._generate_test_suite(code_to_test, test_type)
-                artifacts[f"test_{test_type}.py"] = test_code
+                try:
+                    test_code = await self.claude_client.generate_tests(code_to_test, test_type)
+                    artifacts[f"test_{test_type}.py"] = test_code
+                except Exception as e:
+                    logger.warning(f"Claude Code unavailable for {test_type} tests, using fallback: {e}")
+                    test_code = self._generate_test_suite(code_to_test, test_type)
+                    artifacts[f"test_{test_type}.py"] = test_code
             
             output = f"Created {len(test_types)} test suites: {', '.join(test_types)}"
         

@@ -11,6 +11,10 @@ import json
 import csv
 from typing import Dict, Any, List
 from . import BaseAgent, Task, AgentResult
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from claude_client import claude_client
 import logging
 
 logger = logging.getLogger(__name__)
@@ -29,7 +33,7 @@ class DataAgent(BaseAgent):
     - Performance metrics analysis
     """
     
-    def __init__(self, anthropic_client=None):
+    def __init__(self, claude_code_client=None):
         super().__init__(
             name="DataAgent",
             capabilities=[
@@ -42,7 +46,7 @@ class DataAgent(BaseAgent):
                 "data_visualization"
             ]
         )
-        self.anthropic_client = anthropic_client
+        self.claude_client = claude_code_client or claude_client
         
     async def run(self, task: Task, dry_run: bool = False) -> AgentResult:
         """Execute data-related tasks"""
@@ -90,9 +94,21 @@ class DataAgent(BaseAgent):
             output = f"[DRY RUN] Would analyze {dataset_path} with {analysis_type} analysis"
             analysis_results = self._mock_analysis_results()
         else:
-            # TODO: Integrate with Anthropic API for intelligent data analysis
-            analysis_results = await self._perform_data_analysis(dataset_path, analysis_type)
-            output = f"Data analysis complete: {len(analysis_results.get('insights', []))} insights generated"
+            # Use Claude Code for intelligent data analysis
+            try:
+                data_description = f"Dataset: {dataset_path}, Type: {analysis_type}"
+                analysis_goals = task.context.get("goals", "Generate insights and patterns from the data")
+                ai_analysis = await self.claude_client.analyze_data(data_description, analysis_goals)
+                
+                # Combine AI analysis with traditional analysis
+                analysis_results = await self._perform_data_analysis(dataset_path, analysis_type)
+                analysis_results["ai_insights"] = ai_analysis
+                
+                output = f"Data analysis complete: {len(analysis_results.get('insights', []))} insights generated"
+            except Exception as e:
+                logger.warning(f"Claude Code unavailable for data analysis, using fallback: {e}")
+                analysis_results = await self._perform_data_analysis(dataset_path, analysis_type)
+                output = f"Data analysis complete: {len(analysis_results.get('insights', []))} insights generated"
         
         return AgentResult(
             success=True,

@@ -52,16 +52,20 @@ pytest -m "not slow"           # Skip slow tests
 
 Install Python dependencies:
 ```bash
-pip install discord.py pygithub pyyaml anthropic pytest pytest-asyncio
+pip install discord.py pygithub pyyaml pytest pytest-asyncio mkdocs-material
 ```
 
-Core dependencies: `discord.py`, `pygithub`, `pyyaml`, `anthropic`, `pytest`
+Core dependencies: `discord.py`, `pygithub`, `pyyaml`, `pytest`, `mkdocs-material`
 
 ## Configuration
 
 ### Required Environment Variables
 - `DISCORD_BOT_TOKEN`: Required for Discord bot functionality
-- `ANTHROPIC_API_KEY`: Required for AI agent capabilities (optional for testing)
+
+### AI Integration
+- **Claude Code**: The system integrates with Claude Code CLI for AI capabilities
+- **Automatic Detection**: System automatically detects if Claude Code is available
+- **Graceful Fallback**: Uses placeholder implementations when Claude Code is not available
 
 ### Configuration Files
 - YAML project configuration files define orchestration modes and project paths

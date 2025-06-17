@@ -10,6 +10,10 @@ import time
 import os
 from typing import Dict, Any
 from . import BaseAgent, Task, AgentResult
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from claude_client import claude_client
 import logging
 
 logger = logging.getLogger(__name__)
@@ -28,7 +32,7 @@ class CodeAgent(BaseAgent):
     - Git operations and version control
     """
     
-    def __init__(self, anthropic_client=None, github_client=None):
+    def __init__(self, claude_code_client=None, github_client=None):
         super().__init__(
             name="CodeAgent", 
             capabilities=[
@@ -41,7 +45,7 @@ class CodeAgent(BaseAgent):
                 "performance_optimization"
             ]
         )
-        self.anthropic_client = anthropic_client
+        self.claude_client = claude_code_client or claude_client
         self.github_client = github_client
         
     async def run(self, task: Task, dry_run: bool = False) -> AgentResult:
@@ -88,15 +92,30 @@ class CodeAgent(BaseAgent):
             output = f"[DRY RUN] Would implement feature: {spec[:100]}..."
             artifacts = {target_file or "feature.py": "# Generated feature implementation"}
         else:
-            # TODO: Integrate with Anthropic API for code generation
-            code = self._generate_feature_code(spec, target_file)
-            
-            # Write code to file if target specified
-            if target_file and not dry_run:
-                await self._write_code_file(target_file, code)
-            
-            output = f"Feature implemented: {spec}"
-            artifacts = {target_file or "feature.py": code}
+            # Use Claude Code for feature implementation
+            try:
+                context = {
+                    "language": task.context.get("language", "python"),
+                    "framework": task.context.get("framework"),
+                    "style_guide": task.context.get("style_guide")
+                }
+                code = await self.claude_client.generate_code(spec, context)
+                
+                # Write code to file if target specified
+                if target_file:
+                    await self._write_code_file(target_file, code)
+                
+                output = f"Feature implemented: {spec}"
+                artifacts = {target_file or "feature.py": code}
+            except Exception as e:
+                logger.warning(f"Claude Code unavailable, using fallback: {e}")
+                code = self._generate_feature_code(spec, target_file)
+                
+                if target_file:
+                    await self._write_code_file(target_file, code)
+                
+                output = f"Feature implemented: {spec}"
+                artifacts = {target_file or "feature.py": code}
         
         return AgentResult(
             success=True,

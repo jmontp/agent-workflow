@@ -1,6 +1,6 @@
 # AI Agent TDD-Scrum Workflow Makefile
 
-.PHONY: install test lint run clean help
+.PHONY: install test lint run clean help docs
 
 # Default target
 help:
@@ -10,6 +10,8 @@ help:
 	@echo "  lint        - Run code linting"
 	@echo "  run         - Run Discord bot with orchestrator"
 	@echo "  orchestrator - Run orchestrator only"
+	@echo "  docs        - Serve documentation locally"
+	@echo "  docs-build  - Build documentation"
 	@echo "  clean       - Clean up generated files"
 	@echo "  help        - Show this help message"
 
@@ -63,8 +65,15 @@ dev-setup: install
 	pip install black flake8
 	@echo "Development environment ready!"
 
+# Documentation
+docs:
+	mkdocs serve
+
+docs-build:
+	mkdocs build
+
 # Run with environment variables
 run-dev:
 	@echo "Make sure to set DISCORD_BOT_TOKEN environment variable"
-	@echo "Optional: set ANTHROPIC_API_KEY for AI capabilities"
+	@echo "Claude Code integration available for enhanced AI capabilities"
 	python lib/discord_bot.py

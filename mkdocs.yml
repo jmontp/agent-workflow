@@ -1,0 +1,84 @@
+site_name: AI Agent TDD-Scrum Workflow
+site_description: Human-In-The-Loop orchestration framework for AI-assisted software development
+site_author: AI Agent Workflow Team
+site_url: https://github.com/jmontp/agent-workflow
+
+repo_name: jmontp/agent-workflow
+repo_url: https://github.com/jmontp/agent-workflow
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: blue
+      accent: blue
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: blue
+      accent: blue
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.expand
+    - navigation.path
+    - navigation.top
+    - search.highlight
+    - search.suggest
+    - content.code.copy
+    - content.code.annotate
+
+plugins:
+  - search
+  - mermaid2
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - admonition
+  - pymdownx.details
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+
+nav:
+  - Home: index.md
+  - Getting Started:
+    - Quick Start: getting-started/quick-start.md
+    - Installation: getting-started/installation.md
+    - Configuration: getting-started/configuration.md
+  - User Guide:
+    - HITL Commands: user-guide/hitl-commands.md
+    - State Machine: user-guide/state-machine.md
+    - Workflow Sequences: user-guide/workflow-sequences.md
+    - User Profile: user-guide/user-profile.md
+  - Architecture:
+    - Overview: architecture/overview.md
+    - Context Diagram: architecture/context.md
+    - Container Diagram: architecture/container.md
+    - Component Diagram: architecture/component.md
+    - Code Structure: architecture/code.md
+  - Development:
+    - Testing Strategy: development/testing.md
+    - Contributing: development/contributing.md
+    - API Reference: development/api-reference.md
+  - Deployment:
+    - Discord Setup: deployment/discord-setup.md
+    - Production Deployment: deployment/production.md
