@@ -1,7 +1,7 @@
 ```mermaid
 %%{init: {'theme': 'dark', 'themeVariables': { 'primaryColor': '#42a5f5', 'mainBkg': '#1e1e1e', 'textColor': '#ffffff'}}}%%
 sequenceDiagram
-    title "AI Agent TDD-Scrum" Workflow
+    title "AI Agent TDD-Scrum Workflow (v2)"
 
     participant U as "User (Product Owner)"
     participant BOT as "Orchestrator (Scrum Master)"
@@ -14,16 +14,18 @@ sequenceDiagram
     participant GH as "GitHub Repo"
     participant CI as "CI/CD Pipeline"
 
-    %% == 1. Product Backlog Refinement (Epic -> Stories) ==
-    U->>BOT: /refine_epic "Build a complete auth system"
-    BOT->>BOT: Decompose epic into user stories
-    BOT-->>U: "Product Backlog updated with stories for 'Auth System'. Ready for sprint planning."
+    %% == 1. Backlog Refinement (Epic -> Feature -> Story) ==
+    U->>BOT: /define_epic "Build a complete auth system"
+    BOT->>BOT: Decompose epic into features (e.g., Registration, Login, SSO)
+    BOT-->>U: "Features for 'Auth System' are drafted. Please approve."
+    U->>BOT: /approve_features [REG, SSO]
+    BOT->>BOT: Decompose approved features into user stories
+    BOT-->>U: "Product Backlog updated with stories. Ready for sprint planning."
 
     %% == 2. Sprint Planning ==
-    U->>BOT: /plan_sprint stories: [AUTH-1, AUTH-3]
-    BOT->>BOT: Create sprint backlog for selected stories
-    BOT-->>U: "Sprint for 'User Registration' is planned and ready to start."
-    U->>BOT: ✅ Approve Sprint
+    U->>BOT: /plan_sprint stories: [REG-1, REG-2, SSO-1]
+    BOT-->>U: "Sprint for 'User Registration & Google SSO' is planned."
+    U->>BOT: ✅ Start Sprint
 
     %% == 3. Sprint Execution (TDD Task Loop) ==
     loop For each task in Sprint Backlog
@@ -53,12 +55,20 @@ sequenceDiagram
     end
 
     %% == 4. Sprint Review ==
+    Note over U, BOT: End of Sprint Cycle
     BOT->>GH: Create Pull Request for 'feat/auth-sprint-1'
-    BOT-->>U: "Sprint 'User Registration' is done! 🎉<br/>PR #125 is ready for your review."
-    U->>GH: Review, approve & merge Pull Request
+    BOT-->>U: "Sprint Review: 'User Registration & Google SSO' is ready. 🎉<br/>**PR #125 is ready for your review and approval.**"
+    U->>GH: Review Pull Request, leave comments if needed
+    alt PR Approved
+        U->>GH: Approve & Merge Pull Request
+        GH-->>BOT: Webhook: PR Merged
+        BOT-->>U: "Sprint Goal achieved and merged!"
+    else PR Needs Changes
+        U->>BOT: /request_changes "Please add more robust error handling for duplicate emails."
+        note over BOT: New tasks are added to the backlog for the next sprint.
+    end
 
     %% == 5. Sprint Retrospective ==
     U->>BOT: /feedback "The User Doc Agent should use LaTeX for math formulas."
-    BOT->>BOT: Update system prompts for User_Doc_Agent
-    BOT-->>U: "Feedback noted. User docs will now include LaTeX."
+    BOT-->>U: "Feedback noted. Agent prompts will be updated."
 ```
