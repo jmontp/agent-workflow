@@ -1,39 +1,107 @@
 // Interactive zoom/pan for Mermaid diagrams
-document.addEventListener('DOMContentLoaded', function() {
-    // Wait for mermaid to render
-    setTimeout(function() {
-        initializeMermaidZoom();
-    }, 1000);
+(function() {
+    'use strict';
     
-    // Also initialize on dynamic content changes
-    const observer = new MutationObserver(function(mutations) {
-        mutations.forEach(function(mutation) {
-            if (mutation.addedNodes.length) {
-                setTimeout(initializeMermaidZoom, 500);
-            }
+    console.log('Mermaid zoom script loaded');
+    
+    // Try to initialize immediately when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeWithRetry);
+    } else {
+        initializeWithRetry();
+    }
+    
+    // Function to initialize with retry logic
+    function initializeWithRetry() {
+        console.log('Attempting to initialize Mermaid zoom...');
+        
+        // Try multiple times with increasing delays
+        const delays = [500, 1000, 2000, 3000, 5000];
+        
+        delays.forEach(function(delay) {
+            setTimeout(function() {
+                console.log('Checking for Mermaid diagrams (delay: ' + delay + 'ms)');
+                initializeMermaidZoom();
+            }, delay);
         });
-    });
+        
+        // Also set up a mutation observer for dynamic content
+        setupMutationObserver();
+    }
     
-    observer.observe(document.body, {
-        childList: true,
-        subtree: true
-    });
-});
+    function setupMutationObserver() {
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.addedNodes.length) {
+                    // Check if any added nodes contain Mermaid content
+                    for (let i = 0; i < mutation.addedNodes.length; i++) {
+                        const node = mutation.addedNodes[i];
+                        if (node.nodeType === Node.ELEMENT_NODE) {
+                            if (node.classList && node.classList.contains('mermaid') ||
+                                node.querySelector && node.querySelector('.mermaid')) {
+                                console.log('New Mermaid content detected, initializing zoom...');
+                                setTimeout(initializeMermaidZoom, 200);
+                                break;
+                            }
+                        }
+                    }
+                }
+            });
+        });
+        
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+        
+        console.log('Mutation observer set up for Mermaid diagrams');
+    }
+})();
 
 function initializeMermaidZoom() {
+    console.log('initializeMermaidZoom called');
+    
     // Find all mermaid diagrams
     const mermaidDivs = document.querySelectorAll('.mermaid');
+    console.log('Found', mermaidDivs.length, 'Mermaid divs');
+    
+    if (mermaidDivs.length === 0) {
+        // Check if we have pre elements that haven't been converted yet
+        const preElements = document.querySelectorAll('pre.mermaid');
+        console.log('Found', preElements.length, 'pre.mermaid elements that may need conversion');
+        return; // Exit early if no rendered diagrams found
+    }
     
     mermaidDivs.forEach(function(div, index) {
+        console.log('Processing Mermaid div', index);
         const svg = div.querySelector('svg');
         
-        if (svg && !svg.hasAttribute('data-zoom-initialized')) {
-            // Mark as initialized to avoid duplicate initialization
-            svg.setAttribute('data-zoom-initialized', 'true');
-            
-            // Only add zoom to larger diagrams (skip simple ones)
-            const bbox = svg.getBBox ? svg.getBBox() : null;
-            if (bbox && (bbox.width > 400 || bbox.height > 300)) {
+        if (!svg) {
+            console.log('No SVG found in Mermaid div', index);
+            return;
+        }
+        
+        if (svg.hasAttribute('data-zoom-initialized')) {
+            console.log('SVG already initialized for zoom, skipping');
+            return;
+        }
+        
+        // Mark as initialized to avoid duplicate initialization
+        svg.setAttribute('data-zoom-initialized', 'true');
+        console.log('Initializing zoom for SVG', index);
+        
+        // Only add zoom to larger diagrams (skip simple ones)
+        let bbox;
+        try {
+            bbox = svg.getBBox();
+            console.log('SVG bbox:', bbox);
+        } catch (e) {
+            console.log('Could not get bbox, using fallback size check');
+            bbox = { width: 500, height: 400 }; // Default to enable zoom
+        }
+        
+        if (bbox && (bbox.width > 400 || bbox.height > 300)) {
+            console.log('SVG is large enough for zoom, proceeding...');
                 
                 // Add a container div for better control
                 const container = document.createElement('div');
@@ -102,6 +170,12 @@ function initializeMermaidZoom() {
                 
                 // Initialize svg-pan-zoom
                 try {
+                    console.log('Checking if svgPanZoom is available...');
+                    if (typeof svgPanZoom === 'undefined') {
+                        throw new Error('svgPanZoom library not loaded');
+                    }
+                    
+                    console.log('Initializing svgPanZoom for', svg.id);
                     const panZoomInstance = svgPanZoom(svg, {
                         zoomEnabled: true,
                         controlIconsEnabled: false,
@@ -117,10 +191,12 @@ function initializeMermaidZoom() {
                     
                     // Store reference for control buttons
                     window['panZoom_' + svg.id] = panZoomInstance;
+                    console.log('SVG Pan Zoom initialized successfully for', svg.id);
                     
                 } catch (error) {
-                    console.log('SVG Pan Zoom not available for diagram:', svg.id);
+                    console.error('SVG Pan Zoom failed for diagram:', svg.id, error);
                     // Fallback: basic CSS zoom on hover
+                    console.log('Using fallback zoom implementation');
                     svg.style.transition = 'transform 0.3s ease';
                     svg.addEventListener('wheel', function(e) {
                         e.preventDefault();
@@ -131,9 +207,15 @@ function initializeMermaidZoom() {
                         svg.style.transform = `scale(${newScale})`;
                     });
                 }
+            } else {
+                console.log('SVG too small for zoom, skipping');
             }
+        } else {
+            console.log('No valid bbox found, skipping zoom for this SVG');
         }
     });
+    
+    console.log('initializeMermaidZoom completed');
 }
 
 // Control functions for zoom buttons
