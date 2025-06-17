@@ -38,75 +38,85 @@ flowchart LR
 
 ```mermaid
 graph TB
-    subgraph "👤 Solo Engineer/Product Owner"
+    subgraph "👤 Solo Engineer"
         User[User]
     end
     
-    subgraph "🎮 Discord Interface"
-        Discord["/epic /sprint /approve<br/>Human Commands"]
+    subgraph DISCORD ["🎮 Discord Interface"]
+        Discord["/epic /sprint /approve<br/>Slash Commands"]
+        State[Interactive State<br/>Visualization]
     end
     
-    subgraph "🤖 AI Agent TDD-Scrum Workflow System"
-        subgraph "🎛️ Orchestrator"
-            SM[State Machine<br/>IDLE → BACKLOG → SPRINT]
-            HITL[Human-in-the-Loop<br/>Approval Gates]
+    subgraph WORKFLOW ["🤖 TDD-Scrum Workflow System"]
+        subgraph "🎛️ Control Layer"
+            SM[Workflow State Machine<br/>IDLE - BACKLOG - SPRINT]
+            HITL[Approval Gates<br/>Strategic Decisions]
+            PM[Persistent Storage<br/>Epics - Stories - Tasks]
         end
         
-        subgraph "🔄 Agent Collaboration"
-            Design[🎨 DesignAgent<br/>Architecture & Specs]
-            Code[💻 CodeAgent<br/>Implementation & Fixes]
-            QA[🧪 QAAgent<br/>Testing & Quality]
-            Data[📊 DataAgent<br/>Analysis & Metrics]
+        subgraph "🎭 Ephemeral Agents"
+            Orch[🎭 Orchestrator Agent<br/>Scrum Master<br/>spun up on demand]
         end
         
-        subgraph "📋 Project Management"
-            Epics[Epic Creation]
-            Stories[Story Breakdown]
-            Sprints[Sprint Execution]
+        subgraph "🔄 TDD Execution Layer"
+            TDD[TDD State Machine<br/>DESIGN - TEST - CODE - REFACTOR]
+            Design[🎨 Design Agent<br/>Architecture and Specs]
+            QA[🧪 Test Agent<br/>Write Tests First]
+            Code[💻 Code Agent<br/>Make Tests Pass]
+            Data[📊 Analytics Agent<br/>Metrics and Coverage]
         end
     end
     
-    subgraph "🔗 External Services"
-        GitHub[📁 GitHub<br/>Code Repository]
-        AI[🧠 AI Services<br/>Claude/GPT]
+    subgraph PROJECT ["💾 Your Project 1 to n"]
+        Tests[🧪 Test Suite<br/>RED - GREEN - REFACTOR]
+        Repo[📁 Git Repository<br/>Code & Documentation]
     end
     
-    User -.->|"Issues commands"| Discord
-    Discord <-->|"Slash commands"| SM
-    SM -->|"Orchestrates"| Design
-    SM -->|"Coordinates"| Code
-    SM -->|"Manages"| QA
-    SM -->|"Directs"| Data
+    User -->|"Commands"| Discord
+    Discord <-->|"Validates"| SM
+    Discord -->|"Updates"| State
+    State -->|"Progress"| User
     
-    Design -.->|"Creates specs for"| Code
-    Code -.->|"Sends code to"| QA
-    QA -.->|"Reports metrics to"| Data
-    Data -.->|"Provides insights to"| Design
+    SM -->|"Spins up"| Orch
+    Orch -->|"Decisions"| SM
+    SM <-->|"Enforces"| HITL
+    SM <-->|"Reads/Writes"| PM
     
-    HITL -.->|"Requires approval"| User
+    Orch -->|"Plans Sprint"| PM
+    PM -->|"Assigns Story"| TDD
+    TDD -->|"1 Design"| Design
+    Design -->|"Specs"| TDD
+    TDD -->|"2 Test"| QA
+    QA -->|"Tests"| Tests
+    TDD -->|"3 Code"| Code
+    Code <-->|"TDD Cycle"| Tests
+    TDD -->|"4 Analyze"| Data
+    Data -->|"Metrics"| TDD
     
-    Design & Code & QA & Data -->|"Execute tasks"| Epics
-    Epics --> Stories
-    Stories --> Sprints
+    TDD -->|"Story Complete"| SM
+    HITL <-->|"Approvals"| Discord
     
-    Code <-->|"Commits & PRs"| GitHub
-    Design & Code & QA & Data <-->|"AI capabilities"| AI
+    Code -->|"Commits"| Repo
+    Tests -->|"Validates"| Repo
     
-    style User fill:#e1f5fe
-    style Discord fill:#f3e5f5
-    style SM fill:#fff3e0
-    style Design fill:#f1f8e9
-    style Code fill:#e8f5e8
-    style QA fill:#fff8e1
-    style Data fill:#fce4ec
+    style User fill:#e1f5fe,stroke:#0277bd,stroke-width:3px
+    style DISCORD fill:#f8f4ff,stroke:#7b1fa2,stroke-width:3px
+    style WORKFLOW fill:#f0f8f0,stroke:#388e3c,stroke-width:3px
+    style PROJECT fill:#fff8e1,stroke:#f57c00,stroke-width:3px
+    style Discord fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    style State fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    style SM fill:#ff6b6b,stroke:#c92a2a,stroke-width:3px
+    style PM fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    style HITL fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    style Orch fill:#ffd43b,stroke:#fab005,stroke-width:3px
+    style TDD fill:#4dabf7,stroke:#1971c2,stroke-width:3px
+    style Design fill:#f1f8e9,stroke:#388e3c,stroke-width:2px
+    style QA fill:#ffebee,stroke:#d32f2f,stroke-width:3px
+    style Code fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
+    style Data fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    style Tests fill:#ffebee,stroke:#d32f2f,stroke-width:3px
+    style Repo fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
 ```
-
-**Key Benefits:**
-- **Human Control**: You stay in command through simple Discord commands
-- **AI Automation**: Specialized agents handle implementation details
-- **Quality Assurance**: Built-in testing and review processes
-- **Structured Workflow**: TDD-Scrum methodology ensures systematic progress
-- **Transparency**: Every decision point requires your explicit approval
 
 ## Key Features
 
