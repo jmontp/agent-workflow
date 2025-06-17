@@ -6,7 +6,7 @@ and validates user interactions according to the workflow specification.
 """
 
 from enum import Enum
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple, Any
 from dataclasses import dataclass
 import logging
 
@@ -103,6 +103,8 @@ class StateMachine:
     
     def __init__(self, initial_state: State = State.IDLE):
         self.current_state = initial_state
+        self.active_tdd_cycles: Dict[str, str] = {}  # story_id -> cycle_id mapping
+        self.tdd_transition_listeners: List[callable] = []
         logger.info(f"StateMachine initialized in state: {initial_state.value}")
     
     def validate_command(self, command: str) -> CommandResult:
@@ -209,13 +211,78 @@ class StateMachine:
     
     def can_auto_progress(self) -> bool:
         """Check if state machine can automatically progress"""
-        return self.current_state in [State.SPRINT_ACTIVE] 
+        return self.current_state in [State.SPRINT_ACTIVE]
+    
+    def register_tdd_cycle(self, story_id: str, cycle_id: str) -> None:
+        """Register an active TDD cycle for a story"""
+        self.active_tdd_cycles[story_id] = cycle_id
+        logger.info(f"Registered TDD cycle {cycle_id} for story {story_id}")
+    
+    def unregister_tdd_cycle(self, story_id: str) -> None:
+        """Unregister a TDD cycle when complete"""
+        if story_id in self.active_tdd_cycles:
+            cycle_id = self.active_tdd_cycles.pop(story_id)
+            logger.info(f"Unregistered TDD cycle {cycle_id} for story {story_id}")
+    
+    def get_active_tdd_cycles(self) -> Dict[str, str]:
+        """Get all active TDD cycles"""
+        return self.active_tdd_cycles.copy()
+    
+    def has_active_tdd_cycles(self) -> bool:
+        """Check if there are any active TDD cycles"""
+        return len(self.active_tdd_cycles) > 0
+    
+    def add_tdd_transition_listener(self, listener: callable) -> None:
+        """Add a listener for TDD state transitions"""
+        self.tdd_transition_listeners.append(listener)
+    
+    def notify_tdd_transition(self, event_data: Dict) -> None:
+        """Notify listeners of TDD state transitions"""
+        for listener in self.tdd_transition_listeners:
+            try:
+                listener(event_data)
+            except Exception as e:
+                logger.error(f"Error in TDD transition listener: {e}")
+    
+    def validate_sprint_transition_with_tdd(self, target_state: State) -> CommandResult:
+        """Validate sprint transitions considering active TDD cycles"""
+        if target_state == State.SPRINT_REVIEW and self.has_active_tdd_cycles():
+            active_cycles = list(self.active_tdd_cycles.values())
+            return CommandResult(
+                success=False,
+                error_message=f"Cannot transition to SPRINT_REVIEW with active TDD cycles: {active_cycles}",
+                hint="Complete or abort active TDD cycles before sprint review"
+            )
+        
+        if target_state == State.IDLE and self.has_active_tdd_cycles():
+            return CommandResult(
+                success=False,
+                error_message="Cannot transition to IDLE with active TDD cycles",
+                hint="Complete or abort all TDD cycles before ending sprint"
+            )
+        
+        return CommandResult(success=True)
+    
+    def get_tdd_workflow_status(self) -> Dict[str, Any]:
+        """Get comprehensive TDD workflow status for the main state machine"""
+        return {
+            "main_workflow_state": self.current_state.value,
+            "active_tdd_cycles": len(self.active_tdd_cycles),
+            "tdd_cycles_by_story": self.active_tdd_cycles,
+            "can_transition_to_review": not self.has_active_tdd_cycles(),
+            "sprint_tdd_coordination": {
+                "blocking_sprint_review": self.current_state == State.SPRINT_ACTIVE and self.has_active_tdd_cycles(),
+                "sprint_allows_tdd": self.current_state in [State.SPRINT_ACTIVE, State.SPRINT_PAUSED]
+            }
+        }
     
     def get_mermaid_diagram(self) -> str:
         """Generate Mermaid state diagram for visualization"""
-        return '''
+        active_tdd_info = f" ({len(self.active_tdd_cycles)} TDD cycles)" if self.has_active_tdd_cycles() else ""
+        
+        return f'''
 ```mermaid
-%%{init: {'theme': 'dark'}}%%
+%%{{init: {{'theme': 'dark'}}}}%%
 stateDiagram-v2
     [*] --> IDLE
     IDLE --> BACKLOG_READY : /epic
@@ -226,8 +293,11 @@ stateDiagram-v2
     SPRINT_PAUSED --> SPRINT_ACTIVE : /sprint resume
     SPRINT_ACTIVE --> BLOCKED : CI fails 3×
     BLOCKED --> SPRINT_ACTIVE : /suggest_fix | /skip_task
-    SPRINT_ACTIVE --> SPRINT_REVIEW : all tasks done
+    SPRINT_ACTIVE --> SPRINT_REVIEW : all tasks done (TDD complete)
     SPRINT_REVIEW --> BACKLOG_READY : /request_changes
     SPRINT_REVIEW --> IDLE : /feedback
+    
+    note right of SPRINT_ACTIVE : TDD cycles active{active_tdd_info}
+    note right of SPRINT_REVIEW : Requires TDD completion
 ```
         '''.strip()

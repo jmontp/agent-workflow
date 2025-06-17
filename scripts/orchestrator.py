@@ -25,6 +25,8 @@ from state_machine import StateMachine, State, CommandResult
 from agents import create_agent, get_available_agents, Task, TaskStatus, AgentResult
 from project_storage import ProjectStorage
 from data_models import ProjectData, Epic, Story, Sprint, EpicStatus, StoryStatus, SprintStatus
+from tdd_state_machine import TDDStateMachine, TDDCommandResult
+from tdd_models import TDDCycle, TDDTask, TDDState, TestResult, TestStatus
 
 logger = logging.getLogger(__name__)
 
@@ -43,6 +45,7 @@ class Project:
     path: Path
     orchestration_mode: OrchestrationMode
     state_machine: StateMachine
+    tdd_state_machine: TDDStateMachine
     active_tasks: List[Task]
     pending_approvals: List[str]
     storage: ProjectStorage
@@ -117,6 +120,7 @@ class Orchestrator:
                         path=project_path,
                         orchestration_mode=orchestration_mode,
                         state_machine=StateMachine(),
+                        tdd_state_machine=TDDStateMachine(),
                         active_tasks=[],
                         pending_approvals=[],
                         storage=storage
@@ -141,6 +145,7 @@ class Orchestrator:
             path=Path("."),
             orchestration_mode=OrchestrationMode.BLOCKING,
             state_machine=StateMachine(),
+            tdd_state_machine=TDDStateMachine(),
             active_tasks=[],
             pending_approvals=[],
             storage=storage
@@ -225,16 +230,23 @@ class Orchestrator:
                     "available_projects": list(self.projects.keys())
                 }
             
-            # Validate command against state machine
-            validation_result = project.state_machine.validate_command(command)
-            if not validation_result.success:
-                return {
-                    "success": False,
-                    "error": validation_result.error_message,
-                    "hint": validation_result.hint,
-                    "current_state": project.state_machine.current_state.value,
-                    "allowed_commands": project.state_machine.get_allowed_commands()
-                }
+            # Skip main state machine validation for TDD commands and introspection commands
+            skip_main_validation = command.startswith("/tdd") or command.startswith("/state")
+            
+            if not skip_main_validation:
+                # Validate command against state machine
+                validation_result = project.state_machine.validate_command(command)
+                if not validation_result.success:
+                    return {
+                        "success": False,
+                        "error": validation_result.error_message,
+                        "hint": validation_result.hint,
+                        "current_state": project.state_machine.current_state.value,
+                        "allowed_commands": project.state_machine.get_allowed_commands()
+                    }
+            else:
+                # Create successful validation result for skipped commands
+                validation_result = CommandResult(success=True)
             
             # Execute command
             result = await self._execute_command(command, project, **kwargs)
@@ -274,6 +286,8 @@ class Orchestrator:
                 return await self._handle_feedback(project, **kwargs)
             elif command.startswith("/state"):
                 return self._handle_state_command(project)
+            elif command.startswith("/tdd"):
+                return await self._handle_tdd_command(command, project, **kwargs)
             else:
                 return {
                     "success": False,
@@ -660,6 +674,512 @@ class Orchestrator:
             "mermaid_diagram": project.state_machine.get_mermaid_diagram()
         }
     
+    async def _handle_tdd_command(self, command: str, project: Project, **kwargs) -> Dict[str, Any]:
+        """Handle TDD commands"""
+        try:
+            # Parse TDD subcommand
+            parts = command.split()
+            if len(parts) < 2:
+                return {
+                    "success": False,
+                    "error": "TDD command requires action (e.g., /tdd start, /tdd status)"
+                }
+            
+            action = parts[1]
+            
+            if action == "start":
+                return await self._handle_tdd_start(project, **kwargs)
+            elif action == "status":
+                return self._handle_tdd_status(project, **kwargs)
+            elif action == "next":
+                return await self._handle_tdd_next(project)
+            elif action == "abort":
+                return await self._handle_tdd_abort(project, **kwargs)
+            elif action == "logs":
+                return self._handle_tdd_logs(project, **kwargs)
+            elif action == "overview":
+                return self._handle_tdd_overview(project)
+            elif action in ["design", "test", "code", "refactor", "commit", "run_tests"]:
+                return await self._handle_tdd_transition(action, project, **kwargs)
+            else:
+                return {
+                    "success": False,
+                    "error": f"Unknown TDD action: {action}",
+                    "available_actions": ["start", "status", "next", "abort", "logs", "overview", "design", "test", "code", "refactor", "commit", "run_tests"]
+                }
+                
+        except Exception as e:
+            logger.error(f"Error handling TDD command '{command}': {e}")
+            return {
+                "success": False,
+                "error": str(e)
+            }
+    
+    async def _handle_tdd_start(self, project: Project, story_id: str = "", task_description: str = "", **kwargs) -> Dict[str, Any]:
+        """Handle /tdd start command"""
+        if not story_id:
+            return {
+                "success": False,
+                "error": "Story ID is required to start TDD cycle",
+                "hint": "Use: /tdd start <story_id>"
+            }
+        
+        try:
+            # Load project data
+            project_data = project.storage.load_project_data()
+            story = project_data.get_story_by_id(story_id)
+            
+            if not story:
+                return {
+                    "success": False,
+                    "error": f"Story not found: {story_id}",
+                    "available_stories": [s.id for s in project_data.stories]
+                }
+            
+            # Check if story already has an active TDD cycle
+            if story.tdd_cycle_id:
+                existing_cycle = project.storage.load_tdd_cycle(story.tdd_cycle_id)
+                if existing_cycle and not existing_cycle.is_complete():
+                    return {
+                        "success": False,
+                        "error": f"Story {story_id} already has an active TDD cycle: {existing_cycle.id}",
+                        "hint": "Use /tdd status to see current cycle or /tdd abort to cancel it"
+                    }
+            
+            # Create new TDD cycle
+            cycle = TDDCycle(story_id=story_id)
+            
+            # Create initial task
+            if task_description:
+                task = TDDTask(description=task_description)
+                cycle.add_task(task)
+                cycle.start_task(task.id)
+            
+            # Set up TDD state machine
+            project.tdd_state_machine.set_active_cycle(cycle)
+            
+            # Update story
+            story.tdd_cycle_id = cycle.id
+            story.test_status = "design"
+            
+            # Save data
+            project.storage.save_tdd_cycle(cycle)
+            project.storage.save_project_data(project_data)
+            
+            return {
+                "success": True,
+                "message": f"TDD cycle started for story {story_id}",
+                "cycle_id": cycle.id,
+                "story_id": story_id,
+                "current_state": cycle.current_state.value,
+                "next_step": "Use /tdd design to create detailed specifications"
+            }
+            
+        except Exception as e:
+            logger.error(f"Error starting TDD cycle: {e}")
+            return {
+                "success": False,
+                "error": f"Failed to start TDD cycle: {e}"
+            }
+    
+    def _handle_tdd_status(self, project: Project, story_id: str = "", **kwargs) -> Dict[str, Any]:
+        """Handle /tdd status command"""
+        try:
+            if story_id:
+                # Get status for specific story
+                project_data = project.storage.load_project_data()
+                story = project_data.get_story_by_id(story_id)
+                if not story:
+                    return {
+                        "success": False,
+                        "error": f"Story not found: {story_id}"
+                    }
+                
+                if story.tdd_cycle_id:
+                    cycle = project.storage.load_tdd_cycle(story.tdd_cycle_id)
+                    if cycle:
+                        project.tdd_state_machine.set_active_cycle(cycle)
+                        state_info = project.tdd_state_machine.get_state_info()
+                        
+                        return {
+                            "success": True,
+                            "cycle_info": cycle.get_progress_summary(),
+                            "allowed_commands": state_info["allowed_commands"],
+                            "next_suggested": state_info["next_suggested"],
+                            "current_state": cycle.current_state.value
+                        }
+                
+                return {
+                    "success": True,
+                    "message": f"No TDD cycle for story {story_id}",
+                    "allowed_commands": [f"/tdd start {story_id}"]
+                }
+            
+            # Get status for active cycle
+            active_cycle = project.storage.get_active_tdd_cycle()
+            
+            if not active_cycle:
+                return {
+                    "success": True,
+                    "message": "No active TDD cycle",
+                    "allowed_commands": ["/tdd start <story_id>"]
+                }
+            
+            # Get TDD state machine info
+            project.tdd_state_machine.set_active_cycle(active_cycle)
+            state_info = project.tdd_state_machine.get_state_info()
+            
+            return {
+                "success": True,
+                "cycle_info": active_cycle.get_progress_summary(),
+                "allowed_commands": state_info["allowed_commands"],
+                "next_suggested": state_info["next_suggested"],
+                "current_state": active_cycle.current_state.value
+            }
+            
+        except Exception as e:
+            logger.error(f"Error getting TDD status: {e}")
+            return {
+                "success": False,
+                "error": f"Failed to get TDD status: {e}"
+            }
+    
+    async def _handle_tdd_next(self, project: Project, **kwargs) -> Dict[str, Any]:
+        """Handle /tdd next command - auto-advance to next logical state"""
+        try:
+            active_cycle = project.storage.get_active_tdd_cycle()
+            if not active_cycle:
+                return {
+                    "success": False,
+                    "error": "No active TDD cycle",
+                    "hint": "Start a TDD cycle with /tdd start <story_id>"
+                }
+            
+            project.tdd_state_machine.set_active_cycle(active_cycle)
+            
+            # Validate and transition
+            result = project.tdd_state_machine.transition("/tdd next")
+            
+            if result.success:
+                # Save updated cycle
+                project.storage.save_tdd_cycle(active_cycle)
+                
+                # Update story status
+                project_data = project.storage.load_project_data()
+                story = project_data.get_story_by_id(active_cycle.story_id)
+                if story:
+                    story.test_status = active_cycle.current_state.value
+                    project.storage.save_project_data(project_data)
+                
+                return {
+                    "success": True,
+                    "message": f"Advanced to {active_cycle.current_state.value}",
+                    "current_state": active_cycle.current_state.value,
+                    "next_suggested": project.tdd_state_machine.get_next_suggested_command()
+                }
+            else:
+                return {
+                    "success": False,
+                    "error": result.error_message,
+                    "hint": result.hint,
+                    "current_state": active_cycle.current_state.value,
+                    "allowed_commands": project.tdd_state_machine.get_allowed_commands()
+                }
+                
+        except Exception as e:
+            logger.error(f"Error in TDD next: {e}")
+            return {
+                "success": False,
+                "error": f"Failed to advance TDD state: {e}"
+            }
+    
+    async def _handle_tdd_abort(self, project: Project, story_id: str = "", **kwargs) -> Dict[str, Any]:
+        """Handle /tdd abort command"""
+        try:
+            if story_id:
+                # Abort specific story's TDD cycle
+                project_data = project.storage.load_project_data()
+                story = project_data.get_story_by_id(story_id)
+                if not story:
+                    return {
+                        "success": False,
+                        "error": f"Story not found: {story_id}"
+                    }
+                
+                if not story.tdd_cycle_id:
+                    return {
+                        "success": False,
+                        "error": f"No TDD cycle found for story {story_id}"
+                    }
+                
+                cycle = project.storage.load_tdd_cycle(story.tdd_cycle_id)
+                if not cycle or cycle.is_complete():
+                    return {
+                        "success": False,
+                        "error": f"No active TDD cycle for story {story_id}"
+                    }
+                
+                # Mark cycle as complete (aborted)
+                cycle.completed_at = datetime.now().isoformat()
+                cycle.current_state = TDDState.COMMIT
+                
+                # Update story
+                story.test_status = "aborted"
+                project.storage.save_project_data(project_data)
+                project.storage.save_tdd_cycle(cycle)
+                
+                return {
+                    "success": True,
+                    "message": f"TDD cycle {cycle.id} for story {story_id} aborted",
+                    "next_step": "Start a new TDD cycle with /tdd start <story_id>"
+                }
+            
+            # Abort active cycle
+            active_cycle = project.storage.get_active_tdd_cycle()
+            if not active_cycle:
+                return {
+                    "success": False,
+                    "error": "No active TDD cycle to abort"
+                }
+            
+            # Mark cycle as complete (aborted)
+            active_cycle.completed_at = datetime.now().isoformat()
+            active_cycle.current_state = TDDState.COMMIT
+            
+            # Update story
+            project_data = project.storage.load_project_data()
+            story = project_data.get_story_by_id(active_cycle.story_id)
+            if story:
+                story.test_status = "aborted"
+                project.storage.save_project_data(project_data)
+            
+            # Save cycle and reset state machine
+            project.storage.save_tdd_cycle(active_cycle)
+            project.tdd_state_machine.reset()
+            
+            return {
+                "success": True,
+                "message": f"TDD cycle {active_cycle.id} aborted",
+                "next_step": "Start a new TDD cycle with /tdd start <story_id>"
+            }
+            
+        except Exception as e:
+            logger.error(f"Error aborting TDD cycle: {e}")
+            return {
+                "success": False,
+                "error": f"Failed to abort TDD cycle: {e}"
+            }
+    
+    async def _handle_tdd_transition(self, action: str, project: Project, **kwargs) -> Dict[str, Any]:
+        """Handle TDD state transition commands"""
+        try:
+            active_cycle = project.storage.get_active_tdd_cycle()
+            if not active_cycle:
+                return {
+                    "success": False,
+                    "error": "No active TDD cycle",
+                    "hint": "Start a TDD cycle with /tdd start <story_id>"
+                }
+            
+            project.tdd_state_machine.set_active_cycle(active_cycle)
+            command = f"/tdd {action}"
+            
+            # Validate and transition
+            result = project.tdd_state_machine.transition(command)
+            
+            if result.success:
+                # Handle specific actions
+                if action == "run_tests":
+                    # Increment test run counter
+                    active_cycle.total_test_runs += 1
+                elif action == "refactor":
+                    # Increment refactor counter
+                    active_cycle.total_refactors += 1
+                elif action == "commit":
+                    # Complete current task or cycle
+                    if active_cycle.get_current_task():
+                        active_cycle.complete_current_task()
+                
+                # Save updated cycle
+                project.storage.save_tdd_cycle(active_cycle)
+                
+                # Update story status
+                project_data = project.storage.load_project_data()
+                story = project_data.get_story_by_id(active_cycle.story_id)
+                if story:
+                    story.test_status = active_cycle.current_state.value
+                    project.storage.save_project_data(project_data)
+                
+                return {
+                    "success": True,
+                    "message": f"TDD {action} completed",
+                    "current_state": active_cycle.current_state.value,
+                    "next_suggested": project.tdd_state_machine.get_next_suggested_command()
+                }
+            else:
+                return {
+                    "success": False,
+                    "error": result.error_message,
+                    "hint": result.hint,
+                    "current_state": active_cycle.current_state.value,
+                    "allowed_commands": project.tdd_state_machine.get_allowed_commands()
+                }
+                
+        except Exception as e:
+            logger.error(f"Error in TDD {action}: {e}")
+            return {
+                "success": False,
+                "error": f"Failed to execute TDD {action}: {e}"
+            }
+    
+    def _handle_tdd_logs(self, project: Project, story_id: str = "", **kwargs) -> Dict[str, Any]:
+        """Handle /tdd logs command - show TDD cycle logs and metrics"""
+        try:
+            if story_id:
+                # Get logs for specific story
+                project_data = project.storage.load_project_data()
+                story = project_data.get_story_by_id(story_id)
+                if not story:
+                    return {
+                        "success": False,
+                        "error": f"Story not found: {story_id}"
+                    }
+                
+                if not story.tdd_cycle_id:
+                    return {
+                        "success": True,
+                        "message": f"No TDD cycle logs for story {story_id}",
+                        "logs_info": {}
+                    }
+                
+                cycle = project.storage.load_tdd_cycle(story.tdd_cycle_id)
+                if not cycle:
+                    return {
+                        "success": True,
+                        "message": f"TDD cycle not found for story {story_id}",
+                        "logs_info": {}
+                    }
+                
+                # Generate logs info for specific cycle
+                logs_info = {
+                    "cycle_id": cycle.id,
+                    "story_id": cycle.story_id,
+                    "total_events": len(cycle.tasks) + cycle.total_test_runs + cycle.total_commits,
+                    "last_activity": cycle.completed_at or "In progress",
+                    "recent_events": [
+                        f"Started cycle at {cycle.started_at}",
+                        f"Total test runs: {cycle.total_test_runs}",
+                        f"Total refactors: {cycle.total_refactors}",
+                        f"Total commits: {cycle.total_commits}",
+                        f"Current state: {cycle.current_state.value}"
+                    ]
+                }
+                
+                return {
+                    "success": True,
+                    "logs_info": logs_info
+                }
+            
+            # Get logs for active cycle
+            active_cycle = project.storage.get_active_tdd_cycle()
+            if not active_cycle:
+                return {
+                    "success": True,
+                    "message": "No active TDD cycle logs",
+                    "logs_info": {}
+                }
+            
+            # Generate logs info for active cycle
+            logs_info = {
+                "cycle_id": active_cycle.id,
+                "story_id": active_cycle.story_id,
+                "total_events": len(active_cycle.tasks) + active_cycle.total_test_runs + active_cycle.total_commits,
+                "last_activity": "In progress",
+                "recent_events": [
+                    f"Started cycle at {active_cycle.started_at}",
+                    f"Total test runs: {active_cycle.total_test_runs}",
+                    f"Total refactors: {active_cycle.total_refactors}",
+                    f"Total commits: {active_cycle.total_commits}",
+                    f"Current state: {active_cycle.current_state.value}"
+                ]
+            }
+            
+            return {
+                "success": True,
+                "logs_info": logs_info
+            }
+            
+        except Exception as e:
+            logger.error(f"Error getting TDD logs: {e}")
+            return {
+                "success": False,
+                "error": f"Failed to get TDD logs: {e}"
+            }
+    
+    def _handle_tdd_overview(self, project: Project) -> Dict[str, Any]:
+        """Handle /tdd overview command - dashboard view of all TDD cycles"""
+        try:
+            project_data = project.storage.load_project_data()
+            
+            # Get all TDD cycle files
+            cycle_files = project.storage.list_tdd_cycle_files()
+            
+            active_cycles = 0
+            completed_cycles = 0
+            total_test_runs = 0
+            total_refactors = 0
+            total_commits = 0
+            total_coverage = 0.0
+            coverage_count = 0
+            active_stories = []
+            
+            for cycle_id in cycle_files:
+                cycle = project.storage.load_tdd_cycle(cycle_id)
+                if cycle:
+                    if cycle.is_complete():
+                        completed_cycles += 1
+                    else:
+                        active_cycles += 1
+                        # Find story for this cycle
+                        story = project_data.get_story_by_id(cycle.story_id)
+                        if story:
+                            active_stories.append(f"{story.id}: {story.title[:30]}...")
+                    
+                    total_test_runs += cycle.total_test_runs
+                    total_refactors += cycle.total_refactors
+                    total_commits += cycle.total_commits
+                    
+                    if cycle.overall_test_coverage > 0:
+                        total_coverage += cycle.overall_test_coverage
+                        coverage_count += 1
+            
+            # Calculate metrics
+            average_coverage = total_coverage / coverage_count if coverage_count > 0 else 0.0
+            success_rate = (completed_cycles / (active_cycles + completed_cycles) * 100) if (active_cycles + completed_cycles) > 0 else 0.0
+            
+            overview_info = {
+                "active_cycles": active_cycles,
+                "completed_cycles": completed_cycles,
+                "total_test_runs": total_test_runs,
+                "total_refactors": total_refactors,
+                "total_commits": total_commits,
+                "average_coverage": average_coverage,
+                "success_rate": success_rate,
+                "active_stories": active_stories[:5]  # Limit to 5 most recent
+            }
+            
+            return {
+                "success": True,
+                "overview_info": overview_info
+            }
+            
+        except Exception as e:
+            logger.error(f"Error getting TDD overview: {e}")
+            return {
+                "success": False,
+                "error": f"Failed to get TDD overview: {e}"
+            }
+    
     async def _dispatch_task(self, task: Task, project: Project) -> AgentResult:
         """Dispatch task to appropriate agent"""
         agent = self.agents.get(task.agent_type)
@@ -697,6 +1217,179 @@ class Orchestrator:
             # Execute directly
             result = await agent._execute_with_retry(task, dry_run=False)
             return result
+    
+    async def _coordinate_tdd_agent_handoff(self, project: Project, from_state: str, to_state: str, cycle_id: str) -> Dict[str, Any]:
+        """Coordinate agent handoffs during TDD state transitions"""
+        try:
+            # Define which agents handle which TDD states
+            state_agents = {
+                "design": "DesignAgent",
+                "test_red": "QAAgent", 
+                "code_green": "CodeAgent",
+                "refactor": "CodeAgent",
+                "commit": "CodeAgent"
+            }
+            
+            from_agent = state_agents.get(from_state)
+            to_agent = state_agents.get(to_state)
+            
+            if from_agent == to_agent:
+                return {"success": True, "message": "No agent handoff needed"}
+            
+            # Load cycle context
+            cycle = project.storage.load_tdd_cycle(cycle_id)
+            if not cycle:
+                return {"success": False, "error": "TDD cycle not found"}
+            
+            current_task = cycle.get_current_task()
+            if not current_task:
+                return {"success": False, "error": "No current task in TDD cycle"}
+            
+            # Create handoff context
+            handoff_context = {
+                "cycle_id": cycle_id,
+                "story_id": cycle.story_id,
+                "task_id": current_task.id,
+                "from_state": from_state,
+                "to_state": to_state,
+                "task_description": current_task.description,
+                "test_files": current_task.test_files,
+                "source_files": current_task.source_files
+            }
+            
+            # Queue task for new agent
+            if to_agent and to_agent in self.agents:
+                task = Task(
+                    id=f"tdd-{to_state}-{datetime.now().timestamp()}",
+                    agent_type=to_agent,
+                    command=f"Continue TDD cycle in {to_state} state",
+                    context=handoff_context
+                )
+                
+                project.active_tasks.append(task)
+                self._save_project_state(project)
+                
+                return {
+                    "success": True,
+                    "message": f"TDD handoff: {from_agent} → {to_agent}",
+                    "task_id": task.id
+                }
+            
+            return {"success": True, "message": "TDD transition completed"}
+            
+        except Exception as e:
+            logger.error(f"Error in TDD agent handoff: {e}")
+            return {"success": False, "error": str(e)}
+    
+    async def _monitor_tdd_resource_usage(self, project: Project) -> Dict[str, Any]:
+        """Monitor and manage TDD cycle resource usage"""
+        try:
+            # Get all active TDD cycles
+            cycle_files = project.storage.list_tdd_cycle_files()
+            active_cycles = []
+            
+            for cycle_id in cycle_files:
+                cycle = project.storage.load_tdd_cycle(cycle_id)
+                if cycle and not cycle.is_complete():
+                    active_cycles.append(cycle)
+            
+            # Check resource limits
+            max_concurrent_cycles = 3  # Configurable limit
+            if len(active_cycles) > max_concurrent_cycles:
+                return {
+                    "success": False,
+                    "error": f"Too many active TDD cycles ({len(active_cycles)}). Maximum allowed: {max_concurrent_cycles}",
+                    "hint": "Complete or abort some cycles before starting new ones"
+                }
+            
+            # Monitor agent workload
+            active_tdd_tasks = [t for t in project.active_tasks if "tdd" in t.command.lower()]
+            
+            resource_info = {
+                "active_cycles": len(active_cycles),
+                "max_cycles": max_concurrent_cycles,
+                "active_tdd_tasks": len(active_tdd_tasks),
+                "cycles_info": [
+                    {
+                        "id": cycle.id,
+                        "story_id": cycle.story_id,
+                        "state": cycle.current_state.value,
+                        "started_at": cycle.started_at
+                    }
+                    for cycle in active_cycles
+                ]
+            }
+            
+            return {
+                "success": True,
+                "resource_info": resource_info
+            }
+            
+        except Exception as e:
+            logger.error(f"Error monitoring TDD resources: {e}")
+            return {"success": False, "error": str(e)}
+    
+    async def _handle_tdd_failure_recovery(self, project: Project, cycle_id: str, error_info: Dict[str, Any]) -> Dict[str, Any]:
+        """Handle TDD cycle failures and implement recovery workflows"""
+        try:
+            cycle = project.storage.load_tdd_cycle(cycle_id)
+            if not cycle:
+                return {"success": False, "error": "TDD cycle not found"}
+            
+            # Determine recovery strategy based on error type
+            error_type = error_info.get("type", "unknown")
+            retry_count = error_info.get("retry_count", 0)
+            max_retries = 3
+            
+            if retry_count >= max_retries:
+                # Escalate to human after max retries
+                approval_request = ApprovalRequest(
+                    id=f"tdd-failure-{cycle_id}",
+                    project_name=project.name,
+                    task=Task(
+                        id=f"tdd-recovery-{cycle_id}",
+                        agent_type="Orchestrator",
+                        command=f"TDD cycle {cycle_id} requires human intervention",
+                        context={"cycle_id": cycle_id, "error_info": error_info}
+                    ),
+                    reason=f"TDD cycle failed after {retry_count} retries: {error_type}",
+                    created_at=datetime.now(),
+                    retry_count=retry_count
+                )
+                
+                self.approval_queue.append(approval_request)
+                project.pending_approvals.append(approval_request.id)
+                
+                return {
+                    "success": True,
+                    "message": f"TDD failure escalated to human review: {approval_request.id}",
+                    "recovery_action": "human_intervention"
+                }
+            
+            # Implement automatic recovery strategies
+            recovery_actions = {
+                "test_failure": "Revert to last known good state and retry",
+                "build_failure": "Check dependencies and retry",
+                "timeout": "Increase timeout and retry",
+                "agent_error": "Reset agent state and retry"
+            }
+            
+            recovery_action = recovery_actions.get(error_type, "Generic retry")
+            
+            # Update error info for retry
+            error_info["retry_count"] = retry_count + 1
+            error_info["recovery_action"] = recovery_action
+            
+            return {
+                "success": True,
+                "message": f"TDD recovery initiated: {recovery_action}",
+                "recovery_action": recovery_action,
+                "retry_count": retry_count + 1
+            }
+            
+        except Exception as e:
+            logger.error(f"Error in TDD failure recovery: {e}")
+            return {"success": False, "error": str(e)}
     
     async def _process_project_tasks(self, project: Project) -> None:
         """Background task processing for a project"""

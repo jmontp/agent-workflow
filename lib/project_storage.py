@@ -8,6 +8,7 @@ within project repositories.
 import json
 import os
 from pathlib import Path
+from datetime import datetime, timedelta
 from typing import Optional, Dict, Any
 from data_models import ProjectData, Epic, Story, Sprint
 
@@ -21,6 +22,7 @@ class ProjectStorage:
         self.orch_state_dir = self.project_path / ".orch-state"
         self.backlog_file = self.orch_state_dir / "backlog.json"
         self.sprints_dir = self.orch_state_dir / "sprints"
+        self.tdd_cycles_dir = self.orch_state_dir / "tdd_cycles"
         self.architecture_file = self.orch_state_dir / "architecture.md"
         self.best_practices_file = self.orch_state_dir / "best-practices.md"
         self.status_file = self.orch_state_dir / "status.json"
@@ -29,11 +31,16 @@ class ProjectStorage:
         """Create the .orch-state directory structure if it doesn't exist."""
         self.orch_state_dir.mkdir(exist_ok=True)
         self.sprints_dir.mkdir(exist_ok=True)
+        self.tdd_cycles_dir.mkdir(exist_ok=True)
         
-        # Create .gitkeep file in sprints directory
+        # Create .gitkeep files in directories
         gitkeep = self.sprints_dir / ".gitkeep"
         if not gitkeep.exists():
             gitkeep.touch()
+        
+        tdd_gitkeep = self.tdd_cycles_dir / ".gitkeep"
+        if not tdd_gitkeep.exists():
+            tdd_gitkeep.touch()
     
     def initialize_project(self) -> bool:
         """Initialize a new project with default structure and files."""
@@ -148,6 +155,70 @@ This document describes the architecture and design decisions for this project.
         
         return [f.stem for f in self.sprints_dir.glob("*.json")]
     
+    def load_tdd_cycle(self, cycle_id: str):
+        """Load a specific TDD cycle from its JSON file."""
+        # Import here to avoid circular imports
+        try:
+            from .tdd_models import TDDCycle
+        except ImportError:
+            from tdd_models import TDDCycle
+        
+        cycle_file = self.tdd_cycles_dir / f"{cycle_id}.json"
+        if not cycle_file.exists():
+            return None
+        
+        try:
+            with open(cycle_file, 'r') as f:
+                data = json.load(f)
+            return TDDCycle.from_dict(data)
+        except (json.JSONDecodeError, KeyError) as e:
+            print(f"Error loading TDD cycle {cycle_id}: {e}")
+            return None
+    
+    def save_tdd_cycle(self, cycle):
+        """Save a TDD cycle to its individual JSON file."""
+        self.ensure_directories()
+        
+        cycle_file = self.tdd_cycles_dir / f"{cycle.id}.json"
+        try:
+            with open(cycle_file, 'w') as f:
+                json.dump(cycle.to_dict(), f, indent=2)
+        except Exception as e:
+            print(f"Error saving TDD cycle {cycle.id}: {e}")
+    
+    def list_tdd_cycle_files(self) -> list[str]:
+        """Get a list of all TDD cycle JSON files."""
+        if not self.tdd_cycles_dir.exists():
+            return []
+        
+        return [f.stem for f in self.tdd_cycles_dir.glob("*.json")]
+    
+    def get_active_tdd_cycle(self):
+        """Get the currently active TDD cycle (always fresh from disk)."""
+        # Import here to avoid circular imports
+        try:
+            from .tdd_models import TDDCycle
+        except ImportError:
+            from tdd_models import TDDCycle
+        
+        cycle_files = self.list_tdd_cycle_files()
+        # Sort by modification time to get most recently modified first
+        cycle_files_with_time = []
+        for cycle_id in cycle_files:
+            cycle_file = self.tdd_cycles_dir / f"{cycle_id}.json"
+            if cycle_file.exists():
+                mtime = cycle_file.stat().st_mtime
+                cycle_files_with_time.append((cycle_id, mtime))
+        
+        # Sort by modification time (newest first)
+        cycle_files_with_time.sort(key=lambda x: x[1], reverse=True)
+        
+        for cycle_id, _ in cycle_files_with_time:
+            cycle = self.load_tdd_cycle(cycle_id)
+            if cycle and not cycle.is_complete():
+                return cycle
+        return None
+    
     def project_exists(self) -> bool:
         """Check if this appears to be a valid project with git."""
         git_dir = self.project_path / ".git"
@@ -203,3 +274,196 @@ This document describes the architecture and design decisions for this project.
         """Update the best-practices.md file."""
         self.ensure_directories()
         self.best_practices_file.write_text(content)
+    
+    def save_tdd_metrics(self, metrics: Dict[str, Any]):
+        """Save TDD performance metrics to disk"""
+        self.ensure_directories()
+        metrics_file = self.orch_state_dir / "tdd_metrics.json"
+        
+        try:
+            with open(metrics_file, 'w') as f:
+                json.dump(metrics, f, indent=2)
+        except Exception as e:
+            print(f"Error saving TDD metrics: {e}")
+    
+    def load_tdd_metrics(self) -> Dict[str, Any]:
+        """Load TDD performance metrics from disk"""
+        metrics_file = self.orch_state_dir / "tdd_metrics.json"
+        if not metrics_file.exists():
+            return {}
+        
+        try:
+            with open(metrics_file, 'r') as f:
+                return json.load(f)
+        except (json.JSONDecodeError, FileNotFoundError):
+            return {}
+    
+    def save_tdd_cycle_state(self, cycle_id: str, state_data: Dict[str, Any]):
+        """Save TDD cycle state synchronization data"""
+        self.ensure_directories()
+        state_file = self.tdd_cycles_dir / f"{cycle_id}_state.json"
+        
+        try:
+            with open(state_file, 'w') as f:
+                json.dump(state_data, f, indent=2)
+        except Exception as e:
+            print(f"Error saving TDD cycle state: {e}")
+    
+    def load_tdd_cycle_state(self, cycle_id: str) -> Dict[str, Any]:
+        """Load TDD cycle state synchronization data"""
+        state_file = self.tdd_cycles_dir / f"{cycle_id}_state.json"
+        if not state_file.exists():
+            return {}
+        
+        try:
+            with open(state_file, 'r') as f:
+                return json.load(f)
+        except (json.JSONDecodeError, FileNotFoundError):
+            return {}
+    
+    def get_interrupted_tdd_cycles(self) -> list[str]:
+        """Get list of TDD cycles that were interrupted and need recovery"""
+        interrupted = []
+        cycle_files = self.list_tdd_cycle_files()
+        
+        for cycle_id in cycle_files:
+            cycle = self.load_tdd_cycle(cycle_id)
+            if cycle and not cycle.is_complete():
+                # Check if cycle has been inactive for too long
+                state_data = self.load_tdd_cycle_state(cycle_id)
+                if state_data.get("needs_recovery", False):
+                    interrupted.append(cycle_id)
+        
+        return interrupted
+    
+    def track_test_file(self, story_id: str, test_file_path: str, status: str = "created"):
+        """Track test files created by TDD cycles"""
+        self.ensure_directories()
+        tracking_file = self.orch_state_dir / "test_file_tracking.json"
+        
+        # Load existing tracking data
+        tracking_data = {}
+        if tracking_file.exists():
+            try:
+                with open(tracking_file, 'r') as f:
+                    tracking_data = json.load(f)
+            except (json.JSONDecodeError, FileNotFoundError):
+                tracking_data = {}
+        
+        # Add or update test file entry
+        if story_id not in tracking_data:
+            tracking_data[story_id] = []
+        
+        # Update existing entry or add new one
+        updated = False
+        for entry in tracking_data[story_id]:
+            if entry["file_path"] == test_file_path:
+                entry["status"] = status
+                entry["updated_at"] = datetime.now().isoformat()
+                updated = True
+                break
+        
+        if not updated:
+            tracking_data[story_id].append({
+                "file_path": test_file_path,
+                "status": status,
+                "created_at": datetime.now().isoformat(),
+                "updated_at": datetime.now().isoformat()
+            })
+        
+        # Save updated tracking data
+        try:
+            with open(tracking_file, 'w') as f:
+                json.dump(tracking_data, f, indent=2)
+        except Exception as e:
+            print(f"Error saving test file tracking: {e}")
+    
+    def get_tracked_test_files(self, story_id: str = None) -> Dict[str, Any]:
+        """Get tracked test files for a story or all stories"""
+        tracking_file = self.orch_state_dir / "test_file_tracking.json"
+        if not tracking_file.exists():
+            return {} if story_id else {}
+        
+        try:
+            with open(tracking_file, 'r') as f:
+                tracking_data = json.load(f)
+                
+            if story_id:
+                return tracking_data.get(story_id, [])
+            else:
+                return tracking_data
+                
+        except (json.JSONDecodeError, FileNotFoundError):
+            return {} if story_id else {}
+    
+    def backup_tdd_cycle(self, cycle_id: str) -> bool:
+        """Create backup of TDD cycle for recovery purposes"""
+        try:
+            cycle = self.load_tdd_cycle(cycle_id)
+            if not cycle:
+                return False
+            
+            backup_dir = self.orch_state_dir / "backups" / "tdd_cycles"
+            backup_dir.mkdir(parents=True, exist_ok=True)
+            
+            backup_file = backup_dir / f"{cycle_id}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+            
+            with open(backup_file, 'w') as f:
+                json.dump(cycle.to_dict(), f, indent=2)
+            
+            return True
+            
+        except Exception as e:
+            print(f"Error backing up TDD cycle {cycle_id}: {e}")
+            return False
+    
+    def restore_tdd_cycle_from_backup(self, cycle_id: str, backup_timestamp: str = None):
+        """Restore TDD cycle from backup"""
+        try:
+            backup_dir = self.orch_state_dir / "backups" / "tdd_cycles"
+            if not backup_dir.exists():
+                return None
+            
+            # Find backup file
+            if backup_timestamp:
+                backup_file = backup_dir / f"{cycle_id}_{backup_timestamp}.json"
+            else:
+                # Find most recent backup
+                backup_files = list(backup_dir.glob(f"{cycle_id}_*.json"))
+                if not backup_files:
+                    return None
+                backup_file = sorted(backup_files)[-1]  # Most recent
+            
+            if not backup_file.exists():
+                return None
+            
+            # Import here to avoid circular imports
+            try:
+                from .tdd_models import TDDCycle
+            except ImportError:
+                from tdd_models import TDDCycle
+            
+            with open(backup_file, 'r') as f:
+                data = json.load(f)
+            
+            return TDDCycle.from_dict(data)
+            
+        except Exception as e:
+            print(f"Error restoring TDD cycle {cycle_id}: {e}")
+            return None
+    
+    def cleanup_old_tdd_backups(self, days_to_keep: int = 30):
+        """Clean up old TDD cycle backups"""
+        try:
+            backup_dir = self.orch_state_dir / "backups" / "tdd_cycles"
+            if not backup_dir.exists():
+                return
+            
+            cutoff_time = datetime.now() - timedelta(days=days_to_keep)
+            
+            for backup_file in backup_dir.glob("*.json"):
+                if backup_file.stat().st_mtime < cutoff_time.timestamp():
+                    backup_file.unlink()
+            
+        except Exception as e:
+            print(f"Error cleaning up TDD backups: {e}")

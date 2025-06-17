@@ -4,7 +4,7 @@ A sophisticated **Human-In-The-Loop (HITL)** orchestration framework that coordi
 
 ## Overview
 
-This system implements a complete workflow for AI-assisted software development with proper human oversight and control. It combines the best practices of Test-Driven Development (TDD) and Scrum methodology, adapted for modern AI-assisted development scenarios.
+This system implements a sophisticated dual state machine architecture for AI-assisted software development with integrated Test-Driven Development and human oversight. It coordinates multiple TDD cycles in parallel while maintaining proper Scrum methodology, optimized for solo engineers working with AI assistance.
 
 ## How It Works
 
@@ -117,13 +117,14 @@ graph TB
 
 ## Key Features
 
-- **Multi-Agent Coordination**: Specialized AI agents for design, coding, testing, and data analysis
-- **Discord Integration**: Complete HITL interface with slash commands and interactive UI
-- **State Machine**: Enforced workflow states preventing invalid operations
-- **Multi-Project Support**: Simultaneous orchestration across multiple projects
-- **Human Oversight**: Approval gates for strategic decisions with escalation workflows
-- **Interactive Visualization**: Real-time state inspection and command discovery
-- **Comprehensive Testing**: Unit, integration, and E2E test coverage
+- **Dual State Machine Architecture**: Primary workflow coordination with secondary TDD state machines
+- **Parallel TDD Processing**: Multiple stories developed simultaneously with proper RED-GREEN-REFACTOR cycles
+- **Ephemeral Agent System**: On-demand agent creation and coordination for optimal resource utilization
+- **Discord Integration**: Complete HITL interface with TDD-aware slash commands and interactive UI
+- **Multi-Project Support**: Simultaneous orchestration across multiple projects with independent TDD cycles
+- **Human Oversight**: Strategic approval gates with automated TDD execution and error escalation
+- **Real-time TDD Monitoring**: Live visibility into all TDD cycles with interactive progress tracking
+- **Comprehensive Testing**: Unit, integration, and E2E test coverage with TDD methodology enforcement
 
 ## Quick Start
 
@@ -144,9 +145,9 @@ make run
 
 [**→ Detailed Installation Guide**](getting-started/installation.md)
 
-## Core Workflow
+## Dual State Machine Workflow
 
-The system follows a finite state machine with clear transitions:
+The system operates two coordinated state machines for complete TDD-Scrum integration:
 
 ```mermaid
 stateDiagram-v2
@@ -162,49 +163,87 @@ stateDiagram-v2
     BLOCKED --> SPRINT_ACTIVE : /suggest_fix
 ```
 
-[**→ Complete State Machine Reference**](user-guide/state-machine.md)
+### TDD State Machine (Per Story)
 
-## AI Agents
+```mermaid
+stateDiagram-v2
+    [*] --> DESIGN
+    DESIGN --> TEST_RED : specs complete
+    TEST_RED --> CODE_GREEN : tests failing
+    CODE_GREEN --> REFACTOR : tests passing
+    REFACTOR --> COMMIT : quality gates met
+    COMMIT --> [*] : story complete
+    
+    REFACTOR --> CODE_GREEN : tests broken
+    CODE_GREEN --> TEST_RED : need more tests
+    TEST_RED --> DESIGN : requirements unclear
+```
 
-Four specialized agents handle different aspects of development:
+**Key TDD Commands:**
+- `/tdd overview` - Monitor all active TDD cycles
+- `/tdd status AUTH-1` - Check specific story progress
+- `/tdd review_cycle AUTH-1` - Request human review
+- `/tdd metrics` - View TDD performance data
 
-### DesignAgent
-- System architecture creation
-- Component design and interfaces  
-- Technical specifications
-- Design review and validation
+[**→ Complete State Machine Reference**](user-guide/state-machine.md) | [**→ TDD Workflow Guide**](user-guide/tdd-workflow.md)
 
-### CodeAgent
-- Feature implementation
-- Bug fixing and debugging
-- Code refactoring
-- Performance optimization
+## Ephemeral AI Agent System
 
-### QAAgent
-- Test suite creation
-- Quality validation
-- Coverage analysis
-- Performance testing
+Specialized agents are created on-demand for optimal resource utilization:
 
-### DataAgent
-- Data analysis and insights
-- Pipeline creation
-- Metrics reporting
-- Visualization generation
+### Orchestrator Agent (Temporary)
+- Sprint coordination and multi-task management
+- Spun up during SPRINT_ACTIVE state
+- Manages parallel TDD cycle execution
+- Handles cross-story dependencies and coordination
+
+### Design Agents (Per Story)
+- Technical specifications for individual stories
+- Created during TDD DESIGN phase
+- Architecture decisions and interface definitions
+- Destroyed after design phase completion
+
+### QA Agents (Per TDD Cycle)
+- Test suite creation following TDD methodology
+- Active during TEST_RED phase
+- Comprehensive test coverage for story requirements
+- Ensures proper failing tests before implementation
+
+### Code Agents (Per TDD Cycle)
+- Implementation during CODE_GREEN and REFACTOR phases
+- Makes tests pass with minimal implementation
+- Applies refactoring while maintaining green tests
+- Handles version control and final commits
+
+### Analytics Agent (Persistent)
+- Cross-story metrics and performance analysis
+- TDD cycle time tracking and optimization
+- Sprint progress reporting and forecasting
+- Continuous process improvement insights
 
 [**→ Agent Capabilities Reference**](concepts/overview.md)
 
 ## Essential Commands
 
-Master these key slash commands in Discord:
+Master these key slash commands for dual state machine control:
 
+### Workflow Commands
 | Command | Purpose | Example |
 |---------|---------|---------|
 | `/epic` | Define high-level initiatives | `/epic "Build authentication system"` |
 | `/sprint plan` | Plan sprint with stories | `/sprint plan AUTH-1 AUTH-2` |
-| `/sprint start` | Begin sprint execution | `/sprint start` |
+| `/sprint start` | Begin sprint execution (creates TDD cycles) | `/sprint start` |
 | `/approve` | Approve pending tasks | `/approve AUTH-1 AUTH-2` |
 | `/state` | Interactive state inspection | `/state` |
+
+### TDD Commands
+| Command | Purpose | Example |
+|---------|---------|---------|
+| `/tdd overview` | Monitor all TDD cycles | `/tdd overview` |
+| `/tdd status` | Check specific story progress | `/tdd status AUTH-1` |
+| `/tdd review_cycle` | Request human review | `/tdd review_cycle AUTH-1` |
+| `/tdd metrics` | View TDD performance data | `/tdd metrics` |
+| `/tdd pause/resume` | Control TDD cycle execution | `/tdd pause AUTH-1` |
 
 [**→ Complete Command Reference**](user-guide/hitl-commands.md)
 
@@ -245,10 +284,14 @@ We welcome contributions! The system is designed for extensibility:
 
 | Section | Description |
 |---------|-------------|
-| [**Getting Started**](getting-started/quick-start.md) | Installation, setup, and first steps |
+| [**Getting Started**](getting-started/quick-start.md) | Installation, setup, and TDD workflow examples |
 | [**User Guide**](user-guide/hitl-commands.md) | Commands, workflows, and daily usage |
-| [**Concepts**](concepts/overview.md) | System design and core principles |
-| [**Advanced**](advanced/architecture-detailed.md) | Detailed technical documentation |
+| [**TDD Workflow**](user-guide/tdd-workflow.md) | Complete TDD cycle management and monitoring |
+| [**State Machines**](user-guide/state-machine.md) | Dual state machine architecture and transitions |
+| [**Architecture**](architecture/overview.md) | Dual state machine system design and coordination |
+| [**Context Management**](architecture/context-management-system.md) | Intelligent agent communication and context optimization |
+| [**Concepts**](concepts/overview.md) | Core principles and ephemeral agent patterns |
+| [**Advanced**](advanced/architecture-detailed.md) | Detailed technical implementation |
 | [**Deployment**](deployment/github-pages.md) | Production setup and configuration |
 
 ---

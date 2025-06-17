@@ -20,9 +20,14 @@ from lib.agent_tool_config import (
     get_claude_tool_args,
     validate_agent_access,
     get_security_summary,
+    get_tdd_capabilities,
+    validate_tdd_phase_access,
+    get_tdd_tool_restrictions,
+    validate_tdd_tool_access,
     RESTRICTED_COMMANDS,
     ELEVATED_COMMANDS,
-    CODE_MANAGEMENT_COMMANDS
+    CODE_MANAGEMENT_COMMANDS,
+    TDD_COMMANDS
 )
 
 
@@ -87,9 +92,10 @@ class TestAgentToolConfig(unittest.TestCase):
         self.assertIn("Bash(pytest)", allowed)
         self.assertIn("Bash(coverage)", allowed)
         
-        # Should not modify code
+        # Should not modify code but can create test files for TDD
         self.assertIn("Edit", disallowed)
-        self.assertIn("Write", disallowed)
+        # Note: QA agent CAN write test files for TDD TEST_RED phase
+        self.assertIn("Write", allowed)  # TDD enhancement: QA can create test files
         
         # Should not have git access
         self.assertIn("Bash(git commit)", disallowed)
@@ -235,6 +241,250 @@ class TestAgentIntegration(unittest.TestCase):
         self.assertEqual(code_agent.claude_client.agent_type.value, "CodeAgent")
         self.assertEqual(qa_agent.claude_client.agent_type.value, "QAAgent")
         self.assertEqual(data_agent.claude_client.agent_type.value, "DataAgent")
+
+
+class TestTDDCapabilities(unittest.TestCase):
+    """Test TDD-specific agent capabilities and restrictions"""
+    
+    def test_get_tdd_capabilities_all_agents(self):
+        """Test TDD capabilities for all agent types"""
+        for agent_type in AgentType:
+            capabilities = get_tdd_capabilities(agent_type)
+            
+            # All agents should have a capabilities dict
+            self.assertIsInstance(capabilities, dict)
+            self.assertIn("can_coordinate_tdd_cycles", capabilities)
+            self.assertIn("can_manage_all_phases", capabilities)
+            self.assertIn("tdd_phases", capabilities)
+            self.assertIsInstance(capabilities["tdd_phases"], list)
+    
+    def test_orchestrator_tdd_capabilities(self):
+        """Test that orchestrator has full TDD capabilities"""
+        capabilities = get_tdd_capabilities(AgentType.ORCHESTRATOR)
+        
+        self.assertTrue(capabilities["can_coordinate_tdd_cycles"])
+        self.assertTrue(capabilities["can_manage_all_phases"])
+        self.assertEqual(len(capabilities["tdd_phases"]), 5)  # All phases
+        self.assertIn("DESIGN", capabilities["tdd_phases"])
+        self.assertIn("TEST_RED", capabilities["tdd_phases"])
+        self.assertIn("CODE_GREEN", capabilities["tdd_phases"])
+        self.assertIn("REFACTOR", capabilities["tdd_phases"])
+        self.assertIn("COMMIT", capabilities["tdd_phases"])
+    
+    def test_design_agent_tdd_capabilities(self):
+        """Test DesignAgent TDD capabilities"""
+        capabilities = get_tdd_capabilities(AgentType.DESIGN)
+        
+        self.assertFalse(capabilities["can_coordinate_tdd_cycles"])
+        self.assertFalse(capabilities["can_manage_all_phases"])
+        self.assertEqual(capabilities["tdd_phases"], ["DESIGN"])
+        self.assertIn("tdd_specification_creation", capabilities["capabilities"])
+        self.assertIn("acceptance_criteria_definition", capabilities["capabilities"])
+        self.assertIn("read_only_code_access", capabilities["restrictions"])
+    
+    def test_qa_agent_tdd_capabilities(self):
+        """Test QAAgent TDD capabilities"""
+        capabilities = get_tdd_capabilities(AgentType.QA)
+        
+        self.assertFalse(capabilities["can_coordinate_tdd_cycles"])
+        self.assertFalse(capabilities["can_manage_all_phases"])
+        self.assertEqual(capabilities["tdd_phases"], ["TEST_RED"])
+        self.assertIn("failing_test_creation", capabilities["capabilities"])
+        self.assertIn("test_red_state_validation", capabilities["capabilities"])
+        self.assertIn("cannot_modify_implementation_code", capabilities["restrictions"])
+    
+    def test_code_agent_tdd_capabilities(self):
+        """Test CodeAgent TDD capabilities"""
+        capabilities = get_tdd_capabilities(AgentType.CODE)
+        
+        self.assertFalse(capabilities["can_coordinate_tdd_cycles"])
+        self.assertFalse(capabilities["can_manage_all_phases"])
+        self.assertEqual(set(capabilities["tdd_phases"]), {"CODE_GREEN", "REFACTOR", "COMMIT"})
+        self.assertIn("minimal_implementation_creation", capabilities["capabilities"])
+        self.assertIn("test_driven_development", capabilities["capabilities"])
+        self.assertIn("tdd_commit_management", capabilities["capabilities"])
+    
+    def test_data_agent_tdd_capabilities(self):
+        """Test DataAgent TDD capabilities"""
+        capabilities = get_tdd_capabilities(AgentType.DATA)
+        
+        self.assertFalse(capabilities["can_coordinate_tdd_cycles"])
+        self.assertFalse(capabilities["can_manage_all_phases"])
+        self.assertEqual(capabilities["tdd_phases"], [])  # No direct TDD phases
+        self.assertIn("tdd_metrics_analysis", capabilities["capabilities"])
+        self.assertIn("test_coverage_reporting", capabilities["capabilities"])
+        self.assertIn("read_only_access", capabilities["restrictions"])
+    
+    def test_validate_tdd_phase_access(self):
+        """Test TDD phase access validation"""
+        # DesignAgent should only access DESIGN phase
+        self.assertTrue(validate_tdd_phase_access(AgentType.DESIGN, "DESIGN"))
+        self.assertFalse(validate_tdd_phase_access(AgentType.DESIGN, "TEST_RED"))
+        self.assertFalse(validate_tdd_phase_access(AgentType.DESIGN, "CODE_GREEN"))
+        
+        # QAAgent should only access TEST_RED phase
+        self.assertFalse(validate_tdd_phase_access(AgentType.QA, "DESIGN"))
+        self.assertTrue(validate_tdd_phase_access(AgentType.QA, "TEST_RED"))
+        self.assertFalse(validate_tdd_phase_access(AgentType.QA, "CODE_GREEN"))
+        
+        # CodeAgent should access CODE_GREEN, REFACTOR, COMMIT phases
+        self.assertFalse(validate_tdd_phase_access(AgentType.CODE, "DESIGN"))
+        self.assertFalse(validate_tdd_phase_access(AgentType.CODE, "TEST_RED"))
+        self.assertTrue(validate_tdd_phase_access(AgentType.CODE, "CODE_GREEN"))
+        self.assertTrue(validate_tdd_phase_access(AgentType.CODE, "REFACTOR"))
+        self.assertTrue(validate_tdd_phase_access(AgentType.CODE, "COMMIT"))
+        
+        # Orchestrator should access all phases
+        for phase in ["DESIGN", "TEST_RED", "CODE_GREEN", "REFACTOR", "COMMIT"]:
+            self.assertTrue(validate_tdd_phase_access(AgentType.ORCHESTRATOR, phase))
+    
+    def test_get_tdd_tool_restrictions(self):
+        """Test TDD tool restrictions for all agent types"""
+        for agent_type in AgentType:
+            restrictions = get_tdd_tool_restrictions(agent_type)
+            
+            self.assertIsInstance(restrictions, dict)
+            self.assertIn("pytest_restrictions", restrictions)
+            self.assertIn("git_restrictions", restrictions)
+            self.assertIn("file_access_restrictions", restrictions)
+            self.assertIn("special_tdd_tools", restrictions)
+    
+    def test_design_agent_tdd_restrictions(self):
+        """Test DesignAgent TDD restrictions"""
+        restrictions = get_tdd_tool_restrictions(AgentType.DESIGN)
+        
+        self.assertIn("cannot_execute_tests", restrictions["pytest_restrictions"])
+        self.assertIn("read_only_git_access", restrictions["git_restrictions"])
+        self.assertIn("cannot_modify_existing_code", restrictions["file_access_restrictions"])
+        self.assertIn("specification_generation", restrictions["special_tdd_tools"])
+    
+    def test_qa_agent_tdd_restrictions(self):
+        """Test QAAgent TDD restrictions"""
+        restrictions = get_tdd_tool_restrictions(AgentType.QA)
+        
+        self.assertIn("can_execute_tests", restrictions["pytest_restrictions"])
+        self.assertIn("can_create_test_files", restrictions["pytest_restrictions"])
+        self.assertIn("cannot_commit", restrictions["git_restrictions"])
+        self.assertIn("cannot_push", restrictions["git_restrictions"])
+        self.assertIn("can_create_test_files", restrictions["file_access_restrictions"])
+        self.assertIn("test_file_generation", restrictions["special_tdd_tools"])
+    
+    def test_code_agent_tdd_restrictions(self):
+        """Test CodeAgent TDD restrictions"""
+        restrictions = get_tdd_tool_restrictions(AgentType.CODE)
+        
+        self.assertIn("can_execute_tests", restrictions["pytest_restrictions"])
+        self.assertIn("can_validate_green_state", restrictions["pytest_restrictions"])
+        self.assertIn("can_add", restrictions["git_restrictions"])
+        self.assertIn("can_commit", restrictions["git_restrictions"])
+        self.assertIn("cannot_push", restrictions["git_restrictions"])
+        self.assertIn("can_modify_implementation", restrictions["file_access_restrictions"])
+        self.assertIn("minimal_implementation", restrictions["special_tdd_tools"])
+    
+    def test_validate_tdd_tool_access_pytest(self):
+        """Test TDD tool access validation for pytest commands"""
+        # DesignAgent should not execute tests
+        result = validate_tdd_tool_access(AgentType.DESIGN, "Bash(pytest)", {"current_phase": "DESIGN"})
+        self.assertFalse(result["allowed"])
+        self.assertIn("cannot execute tests", result["tdd_specific_restrictions"][0])
+        
+        # QAAgent should execute tests
+        result = validate_tdd_tool_access(AgentType.QA, "Bash(pytest)", {"current_phase": "TEST_RED"})
+        self.assertTrue(result["allowed"])
+        self.assertIn("test execution permissions", result["reasoning"][1])
+        
+        # CodeAgent should execute tests
+        result = validate_tdd_tool_access(AgentType.CODE, "Bash(pytest)", {"current_phase": "CODE_GREEN"})
+        self.assertTrue(result["allowed"])
+        self.assertIn("test execution permissions", result["reasoning"][1])
+    
+    def test_validate_tdd_tool_access_git(self):
+        """Test TDD tool access validation for git commands"""
+        # DesignAgent should not commit
+        result = validate_tdd_tool_access(AgentType.DESIGN, "Bash(git commit)", {"current_phase": "DESIGN"})
+        self.assertFalse(result["allowed"])
+        self.assertIn("read-only git access", result["tdd_specific_restrictions"][0])
+        
+        # QAAgent should not commit
+        result = validate_tdd_tool_access(AgentType.QA, "Bash(git commit)", {"current_phase": "TEST_RED"})
+        self.assertFalse(result["allowed"])
+        self.assertIn("cannot commit", result["tdd_specific_restrictions"][0])
+        
+        # CodeAgent should commit but not push
+        result = validate_tdd_tool_access(AgentType.CODE, "Bash(git commit)", {"current_phase": "COMMIT"})
+        self.assertTrue(result["allowed"])
+        
+        result = validate_tdd_tool_access(AgentType.CODE, "Bash(git push)", {"current_phase": "COMMIT"})
+        self.assertFalse(result["allowed"])
+        self.assertIn("cannot push", result["tdd_specific_restrictions"][0])
+    
+    def test_validate_tdd_tool_access_phase_recommendations(self):
+        """Test TDD phase recommendations in tool access validation"""
+        # DesignAgent in wrong phase
+        result = validate_tdd_tool_access(AgentType.DESIGN, "Read", {"current_phase": "TEST_RED"})
+        self.assertIn("should not be active in TEST_RED phase", result["recommendations"][0])
+        
+        # QAAgent in correct phase
+        result = validate_tdd_tool_access(AgentType.QA, "Write", {"current_phase": "TEST_RED"})
+        self.assertIn("properly configured for TEST_RED phase", result["recommendations"][0])
+        
+        # CodeAgent in correct phase
+        result = validate_tdd_tool_access(AgentType.CODE, "Edit", {"current_phase": "CODE_GREEN"})
+        self.assertIn("properly configured for CODE_GREEN phase", result["recommendations"][0])
+    
+    def test_tdd_commands_defined(self):
+        """Test that TDD commands are properly defined"""
+        self.assertIsInstance(TDD_COMMANDS, list)
+        self.assertGreater(len(TDD_COMMANDS), 0)
+        
+        # Check for expected TDD commands
+        tdd_command_strings = " ".join(TDD_COMMANDS)
+        self.assertIn("pytest", tdd_command_strings)
+        self.assertIn("coverage", tdd_command_strings)
+        self.assertIn("git status", tdd_command_strings)
+    
+    def test_qa_agent_can_write_test_files(self):
+        """Test that QAAgent can write test files in TDD workflow"""
+        allowed_tools = get_allowed_tools(AgentType.QA)
+        
+        # QAAgent should be able to write test files
+        self.assertIn("Write", allowed_tools)
+        
+        # Verify this is allowed for test creation but not general code
+        restrictions = get_tdd_tool_restrictions(AgentType.QA)
+        self.assertIn("can_create_test_files", restrictions["file_access_restrictions"])
+        self.assertIn("cannot_modify_implementation", restrictions["file_access_restrictions"])
+    
+    def test_code_agent_enhanced_tdd_tools(self):
+        """Test that CodeAgent has enhanced TDD tools"""
+        allowed_tools = get_allowed_tools(AgentType.CODE)
+        
+        # Should have enhanced pytest commands
+        self.assertIn("Bash(pytest --tb=short)", allowed_tools)
+        self.assertIn("Bash(pytest -v)", allowed_tools)
+        self.assertIn("Bash(pytest --cov)", allowed_tools)
+        self.assertIn("Bash(coverage run)", allowed_tools)
+        self.assertIn("Bash(coverage report)", allowed_tools)
+        
+        # Should have enhanced git commands for TDD
+        self.assertIn("Bash(git status --porcelain)", allowed_tools)
+        self.assertIn("Bash(git diff --name-only)", allowed_tools)
+        self.assertIn("Bash(git diff --stat)", allowed_tools)
+        
+        # Should have code quality tools for refactoring
+        self.assertIn("Bash(isort)", allowed_tools)
+        self.assertIn("Bash(autopep8)", allowed_tools)
+    
+    def test_security_summary_includes_tdd(self):
+        """Test that security summary includes TDD capabilities"""
+        for agent_type in AgentType:
+            summary = get_security_summary(agent_type)
+            
+            self.assertIn("tdd_capabilities", summary)
+            tdd_caps = summary["tdd_capabilities"]
+            self.assertIsInstance(tdd_caps, dict)
+            self.assertIn("can_coordinate_tdd_cycles", tdd_caps)
+            self.assertIn("tdd_phases", tdd_caps)
 
 
 if __name__ == "__main__":

@@ -196,7 +196,7 @@ def test_helpers():
 
 
 # Mark all tests as asyncio tests by default
-pytest_plugins = ['pytest_asyncio']
+# pytest_plugins = ['pytest_asyncio']  # Disabled - pytest-asyncio not available
 
 
 def pytest_configure(config):

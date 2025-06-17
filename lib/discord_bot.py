@@ -608,6 +608,157 @@ class WorkflowBot(commands.Bot):
                 "success": False,
                 "error": f"Failed to register project: {e}"
             }
+    
+    @app_commands.command(name="tdd", description="Test-Driven Development cycle management")
+    @app_commands.describe(
+        action="TDD action to perform",
+        story_id="Story ID to start TDD cycle for (required for start)",
+        task_description="Description for new TDD task"
+    )
+    @app_commands.choices(action=[
+        app_commands.Choice(name="start", value="start"),
+        app_commands.Choice(name="status", value="status"),
+        app_commands.Choice(name="next", value="next"),
+        app_commands.Choice(name="abort", value="abort"),
+        app_commands.Choice(name="logs", value="logs"),
+        app_commands.Choice(name="overview", value="overview"),
+        app_commands.Choice(name="design", value="design"),
+        app_commands.Choice(name="test", value="test"),
+        app_commands.Choice(name="code", value="code"),
+        app_commands.Choice(name="refactor", value="refactor"),
+        app_commands.Choice(name="commit", value="commit"),
+        app_commands.Choice(name="run_tests", value="run_tests"),
+    ])
+    async def tdd_command(self, interaction: discord.Interaction, action: str, story_id: str = "", task_description: str = ""):
+        """Handle /tdd commands"""
+        await interaction.response.defer()
+        
+        project_name = await self._get_project_from_channel(interaction.channel_id)
+        command = f"/tdd {action}"
+        
+        kwargs = {}
+        if story_id:
+            kwargs["story_id"] = story_id
+        if task_description:
+            kwargs["task_description"] = task_description
+        
+        result = await self.orchestrator.handle_command(command, project_name, **kwargs)
+        
+        if result["success"]:
+            if action == "status":
+                embed = discord.Embed(
+                    title="🔬 TDD Status",
+                    color=discord.Color.blue()
+                )
+                
+                cycle_info = result.get("cycle_info", {})
+                if cycle_info:
+                    embed.add_field(name="Cycle ID", value=cycle_info.get("cycle_id", "None"), inline=True)
+                    embed.add_field(name="Story ID", value=cycle_info.get("story_id", "None"), inline=True)
+                    embed.add_field(name="Current State", value=cycle_info.get("current_state", "None"), inline=True)
+                    embed.add_field(name="Progress", value=cycle_info.get("progress", "0/0"), inline=True)
+                    embed.add_field(name="Test Runs", value=cycle_info.get("total_test_runs", 0), inline=True)
+                    embed.add_field(name="Refactors", value=cycle_info.get("total_refactors", 0), inline=True)
+                    
+                    if cycle_info.get("current_task_id"):
+                        embed.add_field(name="Current Task", value=cycle_info["current_task_id"], inline=False)
+                else:
+                    embed.add_field(name="Status", value="No active TDD cycle", inline=False)
+                
+                if result.get("allowed_commands"):
+                    commands_text = ", ".join(f"`{cmd}`" for cmd in result["allowed_commands"])
+                    embed.add_field(name="Available Commands", value=commands_text, inline=False)
+                
+                if result.get("next_suggested"):
+                    embed.add_field(name="Suggested Next", value=f"`{result['next_suggested']}`", inline=False)
+                    
+            elif action == "logs":
+                embed = discord.Embed(
+                    title="📊 TDD Cycle Logs",
+                    color=discord.Color.blue()
+                )
+                
+                logs_info = result.get("logs_info", {})
+                if logs_info:
+                    embed.add_field(name="Cycle ID", value=logs_info.get("cycle_id", "None"), inline=True)
+                    embed.add_field(name="Total Events", value=logs_info.get("total_events", 0), inline=True)
+                    embed.add_field(name="Last Activity", value=logs_info.get("last_activity", "None"), inline=True)
+                    
+                    recent_events = logs_info.get("recent_events", [])
+                    if recent_events:
+                        events_text = "\n".join(f"• {event}" for event in recent_events[:5])
+                        embed.add_field(name="Recent Events", value=events_text, inline=False)
+                else:
+                    embed.add_field(name="Status", value="No TDD cycle logs found", inline=False)
+                    
+            elif action == "overview":
+                embed = discord.Embed(
+                    title="📈 TDD Overview Dashboard",
+                    color=discord.Color.purple()
+                )
+                
+                overview_info = result.get("overview_info", {})
+                if overview_info:
+                    embed.add_field(name="Active Cycles", value=overview_info.get("active_cycles", 0), inline=True)
+                    embed.add_field(name="Completed Cycles", value=overview_info.get("completed_cycles", 0), inline=True)
+                    embed.add_field(name="Total Test Runs", value=overview_info.get("total_test_runs", 0), inline=True)
+                    embed.add_field(name="Average Coverage", value=f"{overview_info.get('average_coverage', 0):.1f}%", inline=True)
+                    embed.add_field(name="Total Refactors", value=overview_info.get("total_refactors", 0), inline=True)
+                    embed.add_field(name="Success Rate", value=f"{overview_info.get('success_rate', 0):.1f}%", inline=True)
+                    
+                    active_stories = overview_info.get("active_stories", [])
+                    if active_stories:
+                        stories_text = "\n".join(f"• {story}" for story in active_stories[:5])
+                        embed.add_field(name="Active Stories", value=stories_text, inline=False)
+                else:
+                    embed.add_field(name="Status", value="No TDD activity found", inline=False)
+                    
+            elif action == "start":
+                embed = discord.Embed(
+                    title="🚀 TDD Cycle Started",
+                    description=result.get("message", ""),
+                    color=discord.Color.green()
+                )
+                if result.get("cycle_id"):
+                    embed.add_field(name="Cycle ID", value=result["cycle_id"], inline=True)
+                if result.get("story_id"):
+                    embed.add_field(name="Story ID", value=result["story_id"], inline=True)
+                if result.get("current_state"):
+                    embed.add_field(name="Current State", value=result["current_state"], inline=True)
+                    
+            else:
+                embed = discord.Embed(
+                    title=f"🔬 TDD {action.title()}",
+                    description=result.get("message", ""),
+                    color=discord.Color.green()
+                )
+                if result.get("current_state"):
+                    embed.add_field(name="Current State", value=result["current_state"], inline=True)
+                if result.get("next_suggested"):
+                    embed.add_field(name="Suggested Next", value=f"`{result['next_suggested']}`", inline=True)
+            
+            if result.get("next_step"):
+                embed.add_field(name="Next Step", value=result["next_step"], inline=False)
+            
+            await interaction.followup.send(embed=embed)
+        else:
+            error_message = result.get("error", "Unknown error")
+            hint = result.get("hint", "")
+            
+            embed = discord.Embed(
+                title="❌ TDD Command Failed",
+                description=error_message,
+                color=discord.Color.red()
+            )
+            if hint:
+                embed.add_field(name="Suggestion", value=hint, inline=False)
+            if result.get("current_state"):
+                embed.add_field(name="Current TDD State", value=result["current_state"], inline=False)
+            if result.get("allowed_commands"):
+                commands_text = ", ".join(f"`{cmd}`" for cmd in result["allowed_commands"])
+                embed.add_field(name="Available Commands", value=commands_text, inline=False)
+            
+            await interaction.followup.send(embed=embed)
 
 
 async def run_discord_bot():

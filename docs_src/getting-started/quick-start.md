@@ -62,6 +62,13 @@ This runs the orchestrator without Discord integration (useful for testing).
    /sprint start
    ```
 
+3. **Monitor TDD workflow**:
+   ```
+   /tdd overview
+   /tdd status TODO-1
+   /sprint status
+   ```
+
 ## 5. Verify Installation
 
 Run the test suite to ensure everything works:
@@ -70,8 +77,38 @@ Run the test suite to ensure everything works:
 make test
 ```
 
+## Example TDD Workflow
+
+Once your system is running, try this complete TDD workflow:
+
+```bash
+# 1. Create epic and stories
+/epic "Build user authentication system"
+/approve AUTH-1 AUTH-2
+
+# 2. Plan and start sprint
+/sprint plan AUTH-1 AUTH-2
+/sprint start
+
+# 3. Monitor TDD progress
+/tdd overview
+# Shows: AUTH-1 in DESIGN phase, AUTH-2 in DESIGN phase
+
+# 4. Check specific story progress
+/tdd status AUTH-1
+# Shows: "AUTH-1 in TEST_RED phase - 12 failing tests written"
+
+# 5. Review TDD cycle if needed
+/tdd review_cycle AUTH-1
+
+# 6. Monitor sprint completion
+/sprint status
+# Shows overall sprint progress with TDD cycle status
+```
+
 ## Next Steps
 
+- [**Read the TDD Workflow Guide**](../user-guide/tdd-workflow.md) for complete TDD implementation
 - [**Read the User Guide**](../user-guide/hitl-commands.md) for complete command reference
 - [**Configure Projects**](configuration.md) for multi-project setups
 - [**Explore Workflows**](../user-guide/workflow-sequences.md) for common usage patterns

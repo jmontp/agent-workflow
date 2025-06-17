@@ -45,6 +45,16 @@ CODE_MANAGEMENT_COMMANDS = [
     "git reset",  # Reset changes
 ]
 
+# TDD-specific commands that require special handling
+TDD_COMMANDS = [
+    "pytest --tb=short",  # TDD test execution with concise output
+    "pytest -v",  # Verbose test execution for TDD validation
+    "coverage run",  # Code coverage measurement for TDD
+    "coverage report",  # Coverage reporting for TDD quality
+    "git status --porcelain",  # Check working directory status for TDD commits
+    "git diff --name-only",  # Check file changes for TDD validation
+]
+
 # Agent-specific tool configurations
 AGENT_TOOL_CONFIG: Dict[AgentType, Dict[str, List[str]]] = {
     
@@ -83,6 +93,9 @@ AGENT_TOOL_CONFIG: Dict[AgentType, Dict[str, List[str]]] = {
             "Bash(tail)",  # Preview files
             "Bash(cat)",  # Read files
             "Bash(tree)",  # Directory structure
+            # TDD-specific tools for design phase
+            "Bash(wc)",  # Count lines for specification sizing
+            "Bash(grep -r)",  # Search for patterns across project
         ],
         "disallowed_tools": [
             "Edit",  # Should not modify existing code
@@ -125,6 +138,18 @@ AGENT_TOOL_CONFIG: Dict[AgentType, Dict[str, List[str]]] = {
             "Bash(mkdir)",  # Create directories
             "Bash(cp)",  # Copy files (limited)
             "Bash(mv)",  # Move files (limited)
+            # TDD-specific tools for CODE_GREEN and REFACTOR phases
+            "Bash(pytest --tb=short)",  # Concise test output for TDD validation
+            "Bash(pytest -v)",  # Verbose test execution for debugging
+            "Bash(pytest --cov)",  # Coverage analysis during implementation
+            "Bash(coverage run)",  # Code coverage measurement
+            "Bash(coverage report)",  # Coverage reporting
+            "Bash(coverage html)",  # HTML coverage reports
+            "Bash(git status --porcelain)",  # Clean status checking for TDD commits
+            "Bash(git diff --name-only)",  # File change validation
+            "Bash(git diff --stat)",  # Summary of changes for commit preparation
+            "Bash(isort)",  # Import sorting for code quality
+            "Bash(autopep8)",  # Code formatting for refactoring
         ],
         "disallowed_tools": [
             "TodoWrite",  # Should not manage todos directly
@@ -134,6 +159,7 @@ AGENT_TOOL_CONFIG: Dict[AgentType, Dict[str, List[str]]] = {
     AgentType.QA: {
         "allowed_tools": [
             "Read",  # Read code and test files
+            "Write",  # Create test files for TDD TEST_RED phase
             "Glob",  # Find test files
             "Grep",  # Search for test patterns
             "LS",  # List directories
@@ -154,14 +180,26 @@ AGENT_TOOL_CONFIG: Dict[AgentType, Dict[str, List[str]]] = {
             "Bash(cat)",  # Read files
             "Bash(wc)",  # Count lines/words
             "Bash(diff)",  # Compare files
+            # TDD-specific tools for TEST_RED phase
+            "Bash(pytest --tb=short)",  # Concise test failure output for TDD
+            "Bash(pytest -v --tb=long)",  # Detailed test output for debugging
+            "Bash(pytest --collect-only)",  # Test discovery for validation
+            "Bash(pytest --dry-run)",  # Test syntax validation
+            "Bash(pytest -k)",  # Selective test execution
+            "Bash(python -m unittest)",  # Alternative test framework
+            "Bash(python -c)",  # Quick Python execution for test validation
+            "Bash(python -m py_compile)",  # Syntax checking for test files
         ],
         "disallowed_tools": [
-            "Write",  # Should not create new code files
-            "Edit",  # Should not modify existing code
+            "Edit",  # Should not modify existing code (only create test files)
             "MultiEdit",  # Should not modify existing code
             "NotebookEdit",  # Should not modify notebooks
             "TodoWrite",  # Should not manage todos
-        ] + [f"Bash({cmd})" for cmd in RESTRICTED_COMMANDS + ELEVATED_COMMANDS + CODE_MANAGEMENT_COMMANDS]
+            # TDD-specific restrictions for QA Agent
+            "Bash(git add)",  # Should not stage files directly
+            "Bash(git commit)",  # Should not commit changes
+            "Bash(git push)",  # Should not push changes
+        ] + [f"Bash({cmd})" for cmd in RESTRICTED_COMMANDS + ELEVATED_COMMANDS]
     },
     
     AgentType.DATA: {
@@ -293,5 +331,206 @@ def get_security_summary(agent_type: AgentType) -> Dict[str, any]:
         "disallowed_tools_count": len(get_disallowed_tools(agent_type)),
         "allowed_tools": get_allowed_tools(agent_type),
         "disallowed_tools": get_disallowed_tools(agent_type)[:10],  # First 10 for brevity
-        "restricted_commands_blocked": len(RESTRICTED_COMMANDS + ELEVATED_COMMANDS + CODE_MANAGEMENT_COMMANDS)
+        "restricted_commands_blocked": len(RESTRICTED_COMMANDS + ELEVATED_COMMANDS + CODE_MANAGEMENT_COMMANDS),
+        "tdd_capabilities": get_tdd_capabilities(agent_type)
     }
+
+
+def get_tdd_capabilities(agent_type: AgentType) -> Dict[str, any]:
+    """Get TDD-specific capabilities for an agent type"""
+    tdd_capabilities = {
+        AgentType.ORCHESTRATOR: {
+            "can_coordinate_tdd_cycles": True,
+            "can_manage_all_phases": True,
+            "tdd_phases": ["DESIGN", "TEST_RED", "CODE_GREEN", "REFACTOR", "COMMIT"],
+            "special_permissions": ["full_git_access", "cross_agent_coordination"]
+        },
+        AgentType.DESIGN: {
+            "can_coordinate_tdd_cycles": False,
+            "can_manage_all_phases": False,
+            "tdd_phases": ["DESIGN"],
+            "capabilities": [
+                "tdd_specification_creation",
+                "acceptance_criteria_definition",
+                "test_scenario_design",
+                "api_contract_creation",
+                "testable_architecture_design"
+            ],
+            "restrictions": ["read_only_code_access", "no_test_execution", "no_code_modification"]
+        },
+        AgentType.CODE: {
+            "can_coordinate_tdd_cycles": False,
+            "can_manage_all_phases": False,
+            "tdd_phases": ["CODE_GREEN", "REFACTOR", "COMMIT"],
+            "capabilities": [
+                "minimal_implementation_creation",
+                "test_driven_development",
+                "code_refactoring_with_test_preservation",
+                "tdd_commit_management",
+                "green_state_validation"
+            ],
+            "test_tools": ["pytest", "coverage", "quality_analysis"],
+            "git_permissions": ["add", "commit", "status", "diff"]
+        },
+        AgentType.QA: {
+            "can_coordinate_tdd_cycles": False,
+            "can_manage_all_phases": False,
+            "tdd_phases": ["TEST_RED"],
+            "capabilities": [
+                "failing_test_creation",
+                "comprehensive_test_suite_generation",
+                "test_red_state_validation",
+                "test_coverage_analysis",
+                "test_organization_and_structure"
+            ],
+            "test_frameworks": ["pytest", "unittest", "coverage"],
+            "restrictions": ["cannot_modify_implementation_code", "cannot_commit_changes"]
+        },
+        AgentType.DATA: {
+            "can_coordinate_tdd_cycles": False,
+            "can_manage_all_phases": False,
+            "tdd_phases": [],
+            "capabilities": [
+                "tdd_metrics_analysis",
+                "test_coverage_reporting",
+                "quality_metrics_visualization",
+                "tdd_cycle_performance_analysis"
+            ],
+            "restrictions": ["read_only_access", "no_code_modification", "no_test_execution"]
+        }
+    }
+    
+    return tdd_capabilities.get(agent_type, {
+        "can_coordinate_tdd_cycles": False,
+        "can_manage_all_phases": False,
+        "tdd_phases": [],
+        "capabilities": [],
+        "restrictions": ["no_tdd_access"]
+    })
+
+
+def validate_tdd_phase_access(agent_type: AgentType, tdd_phase: str) -> bool:
+    """
+    Validate if an agent type has access to a specific TDD phase.
+    
+    Args:
+        agent_type: Type of agent
+        tdd_phase: TDD phase to check (DESIGN, TEST_RED, CODE_GREEN, REFACTOR, COMMIT)
+        
+    Returns:
+        True if agent has access to the phase, False otherwise
+    """
+    capabilities = get_tdd_capabilities(agent_type)
+    return tdd_phase in capabilities.get("tdd_phases", [])
+
+
+def get_tdd_tool_restrictions(agent_type: AgentType) -> Dict[str, List[str]]:
+    """
+    Get TDD-specific tool restrictions for an agent type.
+    
+    Args:
+        agent_type: Type of agent
+        
+    Returns:
+        Dictionary with TDD tool restrictions
+    """
+    base_restrictions = {
+        "pytest_restrictions": [],
+        "git_restrictions": [],
+        "file_access_restrictions": [],
+        "special_tdd_tools": []
+    }
+    
+    if agent_type == AgentType.DESIGN:
+        return {
+            "pytest_restrictions": ["cannot_execute_tests"],
+            "git_restrictions": ["read_only_git_access"],
+            "file_access_restrictions": ["cannot_modify_existing_code", "can_create_documentation"],
+            "special_tdd_tools": ["specification_generation", "acceptance_criteria_creation"]
+        }
+    elif agent_type == AgentType.QA:
+        return {
+            "pytest_restrictions": ["can_execute_tests", "can_create_test_files"],
+            "git_restrictions": ["cannot_commit", "cannot_push"],
+            "file_access_restrictions": ["can_create_test_files", "cannot_modify_implementation"],
+            "special_tdd_tools": ["test_file_generation", "red_state_validation"]
+        }
+    elif agent_type == AgentType.CODE:
+        return {
+            "pytest_restrictions": ["can_execute_tests", "can_validate_green_state"],
+            "git_restrictions": ["can_add", "can_commit", "cannot_push"],
+            "file_access_restrictions": ["can_modify_implementation", "cannot_modify_tests"],
+            "special_tdd_tools": ["minimal_implementation", "refactoring_tools", "commit_management"]
+        }
+    elif agent_type == AgentType.ORCHESTRATOR:
+        return {
+            "pytest_restrictions": ["full_test_access"],
+            "git_restrictions": ["full_git_access"],
+            "file_access_restrictions": ["full_file_access"],
+            "special_tdd_tools": ["cycle_coordination", "phase_management", "cross_agent_communication"]
+        }
+    
+    return base_restrictions
+
+
+def validate_tdd_tool_access(agent_type: AgentType, tool_name: str, tdd_context: Dict[str, any] = None) -> Dict[str, any]:
+    """
+    Validate tool access in TDD context with detailed reasoning.
+    
+    Args:
+        agent_type: Type of agent
+        tool_name: Name of the tool to validate
+        tdd_context: Optional TDD context (phase, cycle info, etc.)
+        
+    Returns:
+        Dictionary with validation result and reasoning
+    """
+    base_access = validate_agent_access(agent_type, tool_name)
+    tdd_restrictions = get_tdd_tool_restrictions(agent_type)
+    current_phase = tdd_context.get("current_phase") if tdd_context else None
+    
+    result = {
+        "allowed": base_access,
+        "agent_type": agent_type.value,
+        "tool_name": tool_name,
+        "current_phase": current_phase,
+        "reasoning": [],
+        "tdd_specific_restrictions": [],
+        "recommendations": []
+    }
+    
+    # Add base access reasoning
+    if base_access:
+        result["reasoning"].append(f"Tool {tool_name} is in allowed tools for {agent_type.value}")
+    else:
+        result["reasoning"].append(f"Tool {tool_name} is not in allowed tools for {agent_type.value}")
+    
+    # Add TDD-specific validations
+    if "pytest" in tool_name.lower():
+        if "cannot_execute_tests" in tdd_restrictions["pytest_restrictions"]:
+            result["allowed"] = False
+            result["tdd_specific_restrictions"].append("Agent cannot execute tests in TDD workflow")
+        elif "can_execute_tests" in tdd_restrictions["pytest_restrictions"]:
+            result["reasoning"].append("Agent has TDD test execution permissions")
+    
+    if "git" in tool_name.lower():
+        git_restrictions = tdd_restrictions["git_restrictions"]
+        if "read_only_git_access" in git_restrictions and any(cmd in tool_name for cmd in ["add", "commit", "push"]):
+            result["allowed"] = False
+            result["tdd_specific_restrictions"].append("Agent has read-only git access in TDD workflow")
+        elif "cannot_commit" in git_restrictions and "commit" in tool_name:
+            result["allowed"] = False
+            result["tdd_specific_restrictions"].append("Agent cannot commit in TDD workflow")
+        elif "cannot_push" in git_restrictions and "push" in tool_name:
+            result["allowed"] = False
+            result["tdd_specific_restrictions"].append("Agent cannot push in TDD workflow")
+    
+    # Add phase-specific recommendations
+    if current_phase:
+        phase_valid = validate_tdd_phase_access(agent_type, current_phase)
+        if not phase_valid:
+            result["recommendations"].append(f"Agent should not be active in {current_phase} phase")
+        else:
+            result["recommendations"].append(f"Agent is properly configured for {current_phase} phase")
+    
+    return result

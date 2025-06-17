@@ -10,13 +10,14 @@ import time
 import json
 import csv
 from typing import Dict, Any, List
-from . import BaseAgent, Task, AgentResult
+from . import BaseAgent, Task, AgentResult, TDDState, TDDCycle, TDDTask, TestResult
 import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from claude_client import claude_client, create_agent_client
 from agent_tool_config import AgentType
 import logging
+from datetime import datetime, timedelta
 
 logger = logging.getLogger(__name__)
 
@@ -44,7 +45,13 @@ class DataAgent(BaseAgent):
                 "report_generation",
                 "data_transformation",
                 "metrics_analysis",
-                "data_visualization"
+                "data_visualization",
+                # TDD-specific capabilities
+                "tdd_metrics_tracking",
+                "test_coverage_analysis",
+                "code_quality_monitoring",
+                "tdd_progress_reporting",
+                "cycle_performance_analysis"
             ]
         )
         self.claude_client = claude_code_client or create_agent_client(AgentType.DATA)
@@ -57,7 +64,17 @@ class DataAgent(BaseAgent):
             command = task.command.lower()
             context = task.context or {}
             
-            if "analyze" in command:
+            # TDD-specific commands
+            if "track_tdd_metrics" in command:
+                result = await self._track_tdd_metrics(task, dry_run)
+            elif "analyze_test_coverage" in command:
+                result = await self._analyze_test_coverage(task, dry_run)
+            elif "monitor_code_quality" in command:
+                result = await self._monitor_code_quality(task, dry_run)
+            elif "generate_tdd_report" in command:
+                result = await self._generate_tdd_report(task, dry_run)
+            # Original data commands
+            elif "analyze" in command:
                 result = await self._analyze_data(task, dry_run)
             elif "pipeline" in command:
                 result = await self._create_pipeline(task, dry_run)

@@ -1,10 +1,10 @@
 # HITL Commands
 
-Command reference for the AI Agent TDD-Scrum workflow system. These commands provide Human-In-The-Loop control over the multi-agent orchestration process.
+Command reference for the AI Agent TDD-Scrum workflow system. These commands provide Human-In-The-Loop control over the dual state machine orchestration process with integrated TDD workflows.
 
 ## Command Quick-Reference
 
-## Core Commands
+## Core Workflow Commands
 
 ### Project Management
 
@@ -68,6 +68,47 @@ Provide improvement notes after a sprint.
 **`/state`**
 Inspect current orchestrator state with interactive controls.
 
+### TDD Workflow Commands
+
+**`/tdd start <STORY_ID>`**
+Manually start TDD cycle for a specific story.
+
+**`/tdd status [STORY_ID]`**
+Get current TDD phase and progress for one or all active stories.
+
+**`/tdd overview`**
+Show status of all active TDD cycles with visual progress.
+
+**`/tdd pause <STORY_ID>`**
+Temporarily halt TDD cycle for a story.
+
+**`/tdd resume <STORY_ID>`**
+Resume paused TDD cycle.
+
+**`/tdd design_complete <STORY_ID>`**
+Mark design phase complete and advance to TEST_RED.
+
+**`/tdd tests_ready <STORY_ID>`**
+Confirm tests are written and failing properly.
+
+**`/tdd code_green <STORY_ID>`**
+Confirm all tests are now passing.
+
+**`/tdd refactor_done <STORY_ID>`**
+Complete refactoring and proceed to commit.
+
+**`/tdd review_cycle <STORY_ID>`**
+Request human review of current TDD cycle.
+
+**`/tdd skip_phase <STORY_ID>`**
+Skip current TDD phase (requires approval).
+
+**`/tdd metrics`**
+Display TDD metrics: cycle time, test coverage, refactor frequency.
+
+**`/tdd halt_all`**
+Emergency stop all TDD cycles (requires confirmation).
+
 ---
 
 ## Examples
@@ -107,6 +148,56 @@ At any time:
 /request_changes "Add duplicate-email guard in registration API"
 /suggest_fix "Database URL is wrong in config.py"
 /skip_task   # after three failed CI attempts
+```
+
+### 5. TDD Workflow Management
+```bash
+# Monitor TDD progress during active sprint
+/tdd overview
+
+# Check specific story TDD status
+/tdd status AUTH-1
+
+# Manually advance TDD phases when needed
+/tdd design_complete AUTH-1
+/tdd tests_ready AUTH-1
+/tdd code_green AUTH-1
+/tdd refactor_done AUTH-1
+
+# Review TDD cycle before proceeding
+/tdd review_cycle AUTH-1
+
+# Handle stuck TDD cycles
+/tdd pause AUTH-1
+/suggest_fix "Need to handle async authentication flow"
+/tdd resume AUTH-1
+
+# Skip problematic phase with justification
+/tdd skip_phase AUTH-1   # Requires approval
+```
+
+### 6. Parallel TDD Monitoring
+```bash
+# Start sprint with multiple stories
+/sprint start
+# Automatically creates TDD cycles for all stories
+
+# Monitor all TDD cycles
+/tdd overview
+```
+> Output shows parallel progress:
+> ```
+> AUTH-1: CODE_GREEN (14/15 tests passing)
+> AUTH-2: REFACTOR (applying clean patterns)  
+> AUTH-3: TEST_RED (8 failing tests written)
+> ```
+
+```bash
+# Get TDD performance metrics
+/tdd metrics
+
+# Emergency halt all TDD cycles
+/tdd halt_all
 ```
 
 ---
