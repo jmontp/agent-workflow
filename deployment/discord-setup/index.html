@@ -12,11 +12,13 @@
         <meta name="author" content="AI Agent Workflow Team">
       
       
-        <link rel="canonical" href="https://jmontp.github.io/agent-workflow/deployment/github-pages/">
+        <link rel="canonical" href="https://jmontp.github.io/agent-workflow/deployment/discord-setup/">
       
       
-        <link rel="prev" href="../production/">
+        <link rel="prev" href="../../development/api-reference/">
       
+      
+        <link rel="next" href="../production/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -24,7 +26,7 @@
     
     
       
-        <title>GitHub Pages - AI Agent TDD-Scrum Workflow</title>
+        <title>Discord Setup - AI Agent TDD-Scrum Workflow</title>
       
     
     
@@ -76,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#github-pages-deployment" class="md-skip">
+        <a href="#discord-setup" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              GitHub Pages
+              Discord Setup
             
           </span>
         </div>
@@ -342,7 +344,7 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../discord-setup/" class="md-tabs__link">
+        <a href="./" class="md-tabs__link">
           
   
   
@@ -1291,10 +1293,32 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../discord-setup/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Discord Setup
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1305,6 +1329,428 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-1-create-discord-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 1: Create Discord Application
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 1: Create Discord Application">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-access-developer-portal" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.1 Access Developer Portal
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-configure-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.2 Configure Application
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-2-create-bot" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 2: Create Bot
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 2: Create Bot">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-bot-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.1 Bot Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-bot-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.2 Bot Settings
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-get-bot-token" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.3 Get Bot Token
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-bot-permissions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 3: Bot Permissions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 3: Bot Permissions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-required-permissions" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.1 Required Permissions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-calculate-permission-integer" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.2 Calculate Permission Integer
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-invite-bot-to-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 4: Invite Bot to Server
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 4: Invite Bot to Server">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-generate-invite-url" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.1 Generate Invite URL
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-alternative-invite-url" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.2 Alternative Invite URL
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-complete-invitation" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.3 Complete Invitation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-5-environment-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 5: Environment Configuration
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 5: Environment Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-set-environment-variable" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.1 Set Environment Variable
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-using-env-file-development" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.2 Using .env File (Development)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-6-test-bot-connection" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 6: Test Bot Connection
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 6: Test Bot Connection">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-start-the-bot" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.1 Start the Bot
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-verify-connection" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.2 Verify Connection
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-test-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.3 Test Commands
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-7-production-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 7: Production Configuration
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 7: Production Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-server-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.1 Server Setup
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-channel-organization" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.2 Channel Organization
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73-user-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.3 User Management
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Troubleshooting
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      Common Issues
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#debug-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      Debug Commands
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#log-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Log Analysis
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      Security Best Practices
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Security Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#token-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      Token Management
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#server-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      Server Security
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#access-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      Access Control
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Advanced Configuration
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#custom-command-prefix" class="md-nav__link">
+    <span class="md-ellipsis">
+      Custom Command Prefix
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#webhook-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Webhook Integration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#custom-embeds" class="md-nav__link">
+    <span class="md-ellipsis">
+      Custom Embeds
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1337,32 +1783,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    GitHub Pages
-    
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../github-pages/" class="md-nav__link">
         
   
   
@@ -1373,287 +1797,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#prerequisites" class="md-nav__link">
-    <span class="md-ellipsis">
-      Prerequisites
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#quick-setup" class="md-nav__link">
-    <span class="md-ellipsis">
-      Quick Setup
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Quick Setup">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#1-configure-mkdocs-for-github-pages" class="md-nav__link">
-    <span class="md-ellipsis">
-      1. Configure MkDocs for GitHub Pages
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#2-deploy-using-mkdocs-command" class="md-nav__link">
-    <span class="md-ellipsis">
-      2. Deploy Using MkDocs Command
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3-enable-github-pages" class="md-nav__link">
-    <span class="md-ellipsis">
-      3. Enable GitHub Pages
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#automated-deployment" class="md-nav__link">
-    <span class="md-ellipsis">
-      Automated Deployment
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Automated Deployment">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#github-actions-workflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      GitHub Actions Workflow
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#manual-deployment-commands" class="md-nav__link">
-    <span class="md-ellipsis">
-      Manual Deployment Commands
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#custom-domain-optional" class="md-nav__link">
-    <span class="md-ellipsis">
-      Custom Domain (Optional)
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Custom Domain (Optional)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#1-configure-dns" class="md-nav__link">
-    <span class="md-ellipsis">
-      1. Configure DNS
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#2-update-mkdocs-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      2. Update MkDocs Configuration
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3-configure-github-pages" class="md-nav__link">
-    <span class="md-ellipsis">
-      3. Configure GitHub Pages
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#troubleshooting" class="md-nav__link">
-    <span class="md-ellipsis">
-      Troubleshooting
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Troubleshooting">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#common-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      Common Issues
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#branch-protection" class="md-nav__link">
-    <span class="md-ellipsis">
-      Branch Protection
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#best-practices" class="md-nav__link">
-    <span class="md-ellipsis">
-      Best Practices
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Best Practices">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#content-organization" class="md-nav__link">
-    <span class="md-ellipsis">
-      Content Organization
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#performance-optimization" class="md-nav__link">
-    <span class="md-ellipsis">
-      Performance Optimization
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#seo-and-accessibility" class="md-nav__link">
-    <span class="md-ellipsis">
-      SEO and Accessibility
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#maintenance" class="md-nav__link">
-    <span class="md-ellipsis">
-      Maintenance
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#advanced-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      Advanced Configuration
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Advanced Configuration">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#custom-themes" class="md-nav__link">
-    <span class="md-ellipsis">
-      Custom Themes
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#analytics-integration" class="md-nav__link">
-    <span class="md-ellipsis">
-      Analytics Integration
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#social-media-cards" class="md-nav__link">
-    <span class="md-ellipsis">
-      Social Media Cards
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#monitoring-and-analytics" class="md-nav__link">
-    <span class="md-ellipsis">
-      Monitoring and Analytics
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1693,46 +1836,37 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#prerequisites" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
-      Prerequisites
+      Overview
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#quick-setup" class="md-nav__link">
+  <a href="#step-1-create-discord-application" class="md-nav__link">
     <span class="md-ellipsis">
-      Quick Setup
+      Step 1: Create Discord Application
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Quick Setup">
+    <nav class="md-nav" aria-label="Step 1: Create Discord Application">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1-configure-mkdocs-for-github-pages" class="md-nav__link">
+  <a href="#11-access-developer-portal" class="md-nav__link">
     <span class="md-ellipsis">
-      1. Configure MkDocs for GitHub Pages
+      1.1 Access Developer Portal
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-deploy-using-mkdocs-command" class="md-nav__link">
+  <a href="#12-configure-application" class="md-nav__link">
     <span class="md-ellipsis">
-      2. Deploy Using MkDocs Command
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3-enable-github-pages" class="md-nav__link">
-    <span class="md-ellipsis">
-      3. Enable GitHub Pages
+      1.2 Configure Application
     </span>
   </a>
   
@@ -1744,28 +1878,37 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#automated-deployment" class="md-nav__link">
+  <a href="#step-2-create-bot" class="md-nav__link">
     <span class="md-ellipsis">
-      Automated Deployment
+      Step 2: Create Bot
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Automated Deployment">
+    <nav class="md-nav" aria-label="Step 2: Create Bot">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#github-actions-workflow" class="md-nav__link">
+  <a href="#21-bot-configuration" class="md-nav__link">
     <span class="md-ellipsis">
-      GitHub Actions Workflow
+      2.1 Bot Configuration
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#manual-deployment-commands" class="md-nav__link">
+  <a href="#22-bot-settings" class="md-nav__link">
     <span class="md-ellipsis">
-      Manual Deployment Commands
+      2.2 Bot Settings
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-get-bot-token" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.3 Get Bot Token
     </span>
   </a>
   
@@ -1777,37 +1920,187 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#custom-domain-optional" class="md-nav__link">
+  <a href="#step-3-bot-permissions" class="md-nav__link">
     <span class="md-ellipsis">
-      Custom Domain (Optional)
+      Step 3: Bot Permissions
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Custom Domain (Optional)">
+    <nav class="md-nav" aria-label="Step 3: Bot Permissions">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1-configure-dns" class="md-nav__link">
+  <a href="#31-required-permissions" class="md-nav__link">
     <span class="md-ellipsis">
-      1. Configure DNS
+      3.1 Required Permissions
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-update-mkdocs-configuration" class="md-nav__link">
+  <a href="#32-calculate-permission-integer" class="md-nav__link">
     <span class="md-ellipsis">
-      2. Update MkDocs Configuration
+      3.2 Calculate Permission Integer
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-invite-bot-to-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 4: Invite Bot to Server
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 4: Invite Bot to Server">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-generate-invite-url" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.1 Generate Invite URL
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#3-configure-github-pages" class="md-nav__link">
+  <a href="#42-alternative-invite-url" class="md-nav__link">
     <span class="md-ellipsis">
-      3. Configure GitHub Pages
+      4.2 Alternative Invite URL
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-complete-invitation" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.3 Complete Invitation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-5-environment-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 5: Environment Configuration
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 5: Environment Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-set-environment-variable" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.1 Set Environment Variable
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-using-env-file-development" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.2 Using .env File (Development)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-6-test-bot-connection" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 6: Test Bot Connection
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 6: Test Bot Connection">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-start-the-bot" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.1 Start the Bot
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-verify-connection" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.2 Verify Connection
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-test-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.3 Test Commands
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-7-production-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 7: Production Configuration
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 7: Production Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-server-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.1 Server Setup
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-channel-organization" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.2 Channel Organization
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73-user-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.3 User Management
     </span>
   </a>
   
@@ -1838,9 +2131,18 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#branch-protection" class="md-nav__link">
+  <a href="#debug-commands" class="md-nav__link">
     <span class="md-ellipsis">
-      Branch Protection
+      Debug Commands
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#log-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Log Analysis
     </span>
   </a>
   
@@ -1852,46 +2154,37 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#best-practices" class="md-nav__link">
+  <a href="#security-best-practices" class="md-nav__link">
     <span class="md-ellipsis">
-      Best Practices
+      Security Best Practices
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Best Practices">
+    <nav class="md-nav" aria-label="Security Best Practices">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#content-organization" class="md-nav__link">
+  <a href="#token-management" class="md-nav__link">
     <span class="md-ellipsis">
-      Content Organization
+      Token Management
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#performance-optimization" class="md-nav__link">
+  <a href="#server-security" class="md-nav__link">
     <span class="md-ellipsis">
-      Performance Optimization
+      Server Security
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#seo-and-accessibility" class="md-nav__link">
+  <a href="#access-control" class="md-nav__link">
     <span class="md-ellipsis">
-      SEO and Accessibility
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#maintenance" class="md-nav__link">
-    <span class="md-ellipsis">
-      Maintenance
+      Access Control
     </span>
   </a>
   
@@ -1913,27 +2206,27 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#custom-themes" class="md-nav__link">
+  <a href="#custom-command-prefix" class="md-nav__link">
     <span class="md-ellipsis">
-      Custom Themes
+      Custom Command Prefix
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#analytics-integration" class="md-nav__link">
+  <a href="#webhook-integration" class="md-nav__link">
     <span class="md-ellipsis">
-      Analytics Integration
+      Webhook Integration
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#social-media-cards" class="md-nav__link">
+  <a href="#custom-embeds" class="md-nav__link">
     <span class="md-ellipsis">
-      Social Media Cards
+      Custom Embeds
     </span>
   </a>
   
@@ -1941,15 +2234,6 @@
         
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#monitoring-and-analytics" class="md-nav__link">
-    <span class="md-ellipsis">
-      Monitoring and Analytics
-    </span>
-  </a>
   
 </li>
       
@@ -1972,193 +2256,241 @@
   
 
 
-<h1 id="github-pages-deployment">GitHub Pages Deployment<a class="headerlink" href="#github-pages-deployment" title="Permanent link">&para;</a></h1>
-<p>Deploy the documentation to GitHub Pages for easy access and sharing.</p>
-<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
-<ul>
-<li>GitHub repository with the documentation</li>
-<li>Admin access to the repository</li>
-<li>MkDocs installed locally for testing</li>
-</ul>
-<h2 id="quick-setup">Quick Setup<a class="headerlink" href="#quick-setup" title="Permanent link">&para;</a></h2>
-<h3 id="1-configure-mkdocs-for-github-pages">1. Configure MkDocs for GitHub Pages<a class="headerlink" href="#1-configure-mkdocs-for-github-pages" title="Permanent link">&para;</a></h3>
-<p>The <code>mkdocs.yml</code> file is already configured with the correct site URL:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">site_url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://jmontp.github.io/agent-workflow/</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nt">repo_url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/jmontp/agent-workflow</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nt">repo_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jmontp/agent-workflow</span>
-</code></pre></div>
-<h3 id="2-deploy-using-mkdocs-command">2. Deploy Using MkDocs Command<a class="headerlink" href="#2-deploy-using-mkdocs-command" title="Permanent link">&para;</a></h3>
-<p>From the repository root:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Build and deploy to GitHub Pages</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>mkdocs<span class="w"> </span>gh-deploy<span class="w"> </span>--clean
-</code></pre></div>
-<p>This command will:
-- Build the documentation site
-- Create/update the <code>gh-pages</code> branch
-- Push the generated site to GitHub</p>
-<h3 id="3-enable-github-pages">3. Enable GitHub Pages<a class="headerlink" href="#3-enable-github-pages" title="Permanent link">&para;</a></h3>
+<h1 id="discord-setup">Discord Setup<a class="headerlink" href="#discord-setup" title="Permanent link">&para;</a></h1>
+<p>Complete guide to setting up Discord for the AI Agent TDD-Scrum workflow system.</p>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>The Discord bot provides the primary Human-In-The-Loop interface for controlling the orchestrator and AI agents. This guide walks through the complete setup process.</p>
+<h2 id="step-1-create-discord-application">Step 1: Create Discord Application<a class="headerlink" href="#step-1-create-discord-application" title="Permanent link">&para;</a></h2>
+<h3 id="11-access-developer-portal">1.1 Access Developer Portal<a class="headerlink" href="#11-access-developer-portal" title="Permanent link">&para;</a></h3>
 <ol>
-<li>Go to your repository on GitHub</li>
-<li>Navigate to <strong>Settings</strong> → <strong>Pages</strong></li>
-<li>Under <strong>Source</strong>, select <strong>Deploy from a branch</strong></li>
-<li>Choose <strong>gh-pages</strong> branch and <strong>/ (root)</strong> folder</li>
-<li>Click <strong>Save</strong></li>
+<li>Go to the <a href="https://discord.com/developers/applications">Discord Developer Portal</a></li>
+<li>Click <strong>"New Application"</strong></li>
+<li>Enter a name: <code>AI Agent Workflow</code> (or your preferred name)</li>
+<li>Click <strong>"Create"</strong></li>
 </ol>
-<p>The documentation will be available at: <code>https://jmontp.github.io/agent-workflow/</code></p>
-<h2 id="automated-deployment">Automated Deployment<a class="headerlink" href="#automated-deployment" title="Permanent link">&para;</a></h2>
-<h3 id="github-actions-workflow">GitHub Actions Workflow<a class="headerlink" href="#github-actions-workflow" title="Permanent link">&para;</a></h3>
-<p>Create <code>.github/workflows/docs.yml</code> for automatic deployment:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deploy Documentation</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nt">on</span><span class="p">:</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="nt">push</span><span class="p">:</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span><span class="nt">branches</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">main</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">master</span><span class="p p-Indicator">]</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span><span class="nt">paths</span><span class="p">:</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;docs_src/**&#39;</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;mkdocs.yml&#39;</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span><span class="nt">workflow_dispatch</span><span class="p">:</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="nt">permissions</span><span class="p">:</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span><span class="nt">contents</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">read</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">  </span><span class="nt">pages</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">write</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span><span class="nt">id-token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">write</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="nt">jobs</span><span class="p">:</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">  </span><span class="nt">deploy</span><span class="p">:</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Checkout</span>
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">        </span><span class="nt">with</span><span class="p">:</span>
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="w">          </span><span class="nt">fetch-depth</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>
-<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Setup Python</span>
-<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-python@v4</span>
-<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="w">        </span><span class="nt">with</span><span class="p">:</span>
-<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="w">          </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;3.x&#39;</span>
-<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>
-<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install dependencies</span>
-<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a><span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a><span class="w">          </span><span class="no">pip install mkdocs-material</span>
-<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a><span class="w">          </span><span class="no">pip install pymdown-extensions</span>
-<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a>
-<a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Build and deploy</span>
-<a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a><span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mkdocs gh-deploy --force</span>
-</code></pre></div>
-<h3 id="manual-deployment-commands">Manual Deployment Commands<a class="headerlink" href="#manual-deployment-commands" title="Permanent link">&para;</a></h3>
-<p>For local development and testing:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Preview locally</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>mkdocs<span class="w"> </span>serve
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Build static site</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>mkdocs<span class="w"> </span>build
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Deploy to GitHub Pages</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>mkdocs<span class="w"> </span>gh-deploy<span class="w"> </span>--clean
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Deploy with custom commit message</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>mkdocs<span class="w"> </span>gh-deploy<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Update documentation&quot;</span>
-</code></pre></div>
-<h2 id="custom-domain-optional">Custom Domain (Optional)<a class="headerlink" href="#custom-domain-optional" title="Permanent link">&para;</a></h2>
-<h3 id="1-configure-dns">1. Configure DNS<a class="headerlink" href="#1-configure-dns" title="Permanent link">&para;</a></h3>
-<p>If you have a custom domain, add a <code>CNAME</code> file:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Add to docs_src/CNAME</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;docs.yourdomain.com&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>docs_src/CNAME
-</code></pre></div>
-<h3 id="2-update-mkdocs-configuration">2. Update MkDocs Configuration<a class="headerlink" href="#2-update-mkdocs-configuration" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nt">site_url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://docs.yourdomain.com/</span>
-</code></pre></div>
-<h3 id="3-configure-github-pages">3. Configure GitHub Pages<a class="headerlink" href="#3-configure-github-pages" title="Permanent link">&para;</a></h3>
+<h3 id="12-configure-application">1.2 Configure Application<a class="headerlink" href="#12-configure-application" title="Permanent link">&para;</a></h3>
 <ol>
-<li>Go to <strong>Settings</strong> → <strong>Pages</strong></li>
-<li>Enter your custom domain</li>
-<li>Enable <strong>Enforce HTTPS</strong></li>
+<li><strong>General Information</strong> tab:</li>
+<li>Add a description: "AI Agent TDD-Scrum workflow orchestrator"</li>
+<li>Upload an icon (optional)</li>
+<li>
+<p>Add tags: "productivity", "development" (optional)</p>
+</li>
+<li>
+<p><strong>OAuth2</strong> tab:</p>
+</li>
+<li>Copy the <strong>Client ID</strong> (you'll need this later)</li>
 </ol>
+<h2 id="step-2-create-bot">Step 2: Create Bot<a class="headerlink" href="#step-2-create-bot" title="Permanent link">&para;</a></h2>
+<h3 id="21-bot-configuration">2.1 Bot Configuration<a class="headerlink" href="#21-bot-configuration" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Navigate to the <strong>"Bot"</strong> tab</li>
+<li>Click <strong>"Add Bot"</strong></li>
+<li>Confirm by clicking <strong>"Yes, do it!"</strong></li>
+</ol>
+<h3 id="22-bot-settings">2.2 Bot Settings<a class="headerlink" href="#22-bot-settings" title="Permanent link">&para;</a></h3>
+<p>Configure the following settings:</p>
+<p><strong>Public Bot:</strong> ❌ Disabled (keep private)
+<strong>Requires OAuth2 Code Grant:</strong> ❌ Disabled
+<strong>Presence Intent:</strong> ✅ Enabled
+<strong>Server Members Intent:</strong> ✅ Enabled<br />
+<strong>Message Content Intent:</strong> ✅ Enabled</p>
+<h3 id="23-get-bot-token">2.3 Get Bot Token<a class="headerlink" href="#23-get-bot-token" title="Permanent link">&para;</a></h3>
+<ol>
+<li>In the <strong>Token</strong> section, click <strong>"Reset Token"</strong></li>
+<li>Copy the token immediately (you won't see it again)</li>
+<li>Store securely - this is your <code>DISCORD_BOT_TOKEN</code></li>
+</ol>
+<p><strong>Security Note:</strong> Never share your bot token publicly or commit it to version control.</p>
+<h2 id="step-3-bot-permissions">Step 3: Bot Permissions<a class="headerlink" href="#step-3-bot-permissions" title="Permanent link">&para;</a></h2>
+<h3 id="31-required-permissions">3.1 Required Permissions<a class="headerlink" href="#31-required-permissions" title="Permanent link">&para;</a></h3>
+<p>The bot needs these permissions:
+- <strong>Send Messages</strong> - Basic communication
+- <strong>Use Slash Commands</strong> - Primary command interface
+- <strong>Embed Links</strong> - Rich message formatting
+- <strong>Read Message History</strong> - Context awareness
+- <strong>Manage Threads</strong> - Organize discussions
+- <strong>Create Public Threads</strong> - Project discussions</p>
+<h3 id="32-calculate-permission-integer">3.2 Calculate Permission Integer<a class="headerlink" href="#32-calculate-permission-integer" title="Permanent link">&para;</a></h3>
+<p>Permission integer: <code>2147484736</code></p>
+<p>Or use the Discord Permissions Calculator:
+1. Go to <a href="https://discordapi.com/permissions.html">Discord Permissions Calculator</a>
+2. Select the permissions listed above
+3. Copy the generated integer</p>
+<h2 id="step-4-invite-bot-to-server">Step 4: Invite Bot to Server<a class="headerlink" href="#step-4-invite-bot-to-server" title="Permanent link">&para;</a></h2>
+<h3 id="41-generate-invite-url">4.1 Generate Invite URL<a class="headerlink" href="#41-generate-invite-url" title="Permanent link">&para;</a></h3>
+<p>Using OAuth2 URL Generator in the Developer Portal:</p>
+<ol>
+<li><strong>OAuth2</strong> → <strong>URL Generator</strong></li>
+<li><strong>Scopes:</strong> Select <code>bot</code> and <code>applications.commands</code></li>
+<li><strong>Bot Permissions:</strong> Select required permissions (or paste permission integer)</li>
+<li>Copy the generated URL</li>
+</ol>
+<h3 id="42-alternative-invite-url">4.2 Alternative Invite URL<a class="headerlink" href="#42-alternative-invite-url" title="Permanent link">&para;</a></h3>
+<p>Replace <code>YOUR_CLIENT_ID</code> with your actual Client ID:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>https://discord.com/api/oauth2/authorize?client_id=YOUR_CLIENT_ID&amp;permissions=2147484736&amp;scope=bot%20applications.commands
+</code></pre></div>
+<h3 id="43-complete-invitation">4.3 Complete Invitation<a class="headerlink" href="#43-complete-invitation" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Open the invite URL in your browser</li>
+<li>Select the Discord server for testing</li>
+<li>Click <strong>"Continue"</strong></li>
+<li>Verify permissions and click <strong>"Authorize"</strong></li>
+<li>Complete any CAPTCHA if prompted</li>
+</ol>
+<h2 id="step-5-environment-configuration">Step 5: Environment Configuration<a class="headerlink" href="#step-5-environment-configuration" title="Permanent link">&para;</a></h2>
+<h3 id="51-set-environment-variable">5.1 Set Environment Variable<a class="headerlink" href="#51-set-environment-variable" title="Permanent link">&para;</a></h3>
+<p><strong>Linux/Mac:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">DISCORD_BOT_TOKEN</span><span class="o">=</span><span class="s2">&quot;your_bot_token_here&quot;</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;export DISCORD_BOT_TOKEN=&quot;your_bot_token_here&quot;&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.bashrc
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nb">source</span><span class="w"> </span>~/.bashrc
+</code></pre></div></p>
+<p><strong>Windows (PowerShell):</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nv">$env:DISCORD_BOT_TOKEN</span><span class="p">=</span><span class="s2">&quot;your_bot_token_here&quot;</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="no">[System.Environment]</span><span class="p">::</span><span class="n">SetEnvironmentVariable</span><span class="p">(</span><span class="s2">&quot;DISCORD_BOT_TOKEN&quot;</span><span class="p">,</span> <span class="s2">&quot;your_bot_token_here&quot;</span><span class="p">,</span> <span class="s2">&quot;User&quot;</span><span class="p">)</span>
+</code></pre></div></p>
+<p><strong>Windows (Command Prompt):</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>set DISCORD_BOT_TOKEN=your_bot_token_here
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>setx DISCORD_BOT_TOKEN &quot;your_bot_token_here&quot;
+</code></pre></div></p>
+<h3 id="52-using-env-file-development">5.2 Using .env File (Development)<a class="headerlink" href="#52-using-env-file-development" title="Permanent link">&para;</a></h3>
+<p>Create a <code>.env</code> file in your project root:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># .env</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">DISCORD_BOT_TOKEN</span><span class="o">=</span>your_bot_token_here
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nv">ANTHROPIC_API_KEY</span><span class="o">=</span>your_anthropic_key<span class="w">  </span><span class="c1"># Optional</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nv">GITHUB_TOKEN</span><span class="o">=</span>your_github_token<span class="w">        </span><span class="c1"># Optional</span>
+</code></pre></div>
+<p>Add to <code>.gitignore</code>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;.env&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>.gitignore
+</code></pre></div></p>
+<h2 id="step-6-test-bot-connection">Step 6: Test Bot Connection<a class="headerlink" href="#step-6-test-bot-connection" title="Permanent link">&para;</a></h2>
+<h3 id="61-start-the-bot">6.1 Start the Bot<a class="headerlink" href="#61-start-the-bot" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># From project root</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>python<span class="w"> </span>lib/discord_bot.py
+</code></pre></div>
+<h3 id="62-verify-connection">6.2 Verify Connection<a class="headerlink" href="#62-verify-connection" title="Permanent link">&para;</a></h3>
+<p>Look for these success messages:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>INFO - Discord bot started successfully
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>INFO - Slash commands registered
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>INFO - Bot is ready and listening for commands
+</code></pre></div></p>
+<h3 id="63-test-commands">6.3 Test Commands<a class="headerlink" href="#63-test-commands" title="Permanent link">&para;</a></h3>
+<p>In your Discord server, try these commands:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>/state
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>/epic &quot;Test epic creation&quot;
+</code></pre></div>
+<p>If the bot responds, your setup is successful!</p>
+<h2 id="step-7-production-configuration">Step 7: Production Configuration<a class="headerlink" href="#step-7-production-configuration" title="Permanent link">&para;</a></h2>
+<h3 id="71-server-setup">7.1 Server Setup<a class="headerlink" href="#71-server-setup" title="Permanent link">&para;</a></h3>
+<p>For production deployment:</p>
+<ol>
+<li><strong>Create a dedicated Discord server</strong> for the workflow</li>
+<li><strong>Set up project-specific channels</strong> (auto-created by bot)</li>
+<li><strong>Configure user roles</strong> and permissions</li>
+<li><strong>Set up logging channels</strong> for monitoring</li>
+</ol>
+<h3 id="72-channel-organization">7.2 Channel Organization<a class="headerlink" href="#72-channel-organization" title="Permanent link">&para;</a></h3>
+<p>The bot automatically creates channels with this pattern:
+- <code>hostname-projectname-general</code> - Main project discussion
+- <code>hostname-projectname-alerts</code> - System notifications
+- <code>hostname-projectname-logs</code> - Detailed operation logs</p>
+<h3 id="73-user-management">7.3 User Management<a class="headerlink" href="#73-user-management" title="Permanent link">&para;</a></h3>
+<p>Grant appropriate permissions:
+- <strong>Workflow Manager:</strong> Full access to all commands
+- <strong>Developer:</strong> Access to project-specific commands
+- <strong>Observer:</strong> Read-only access to status commands</p>
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
 <h3 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h3>
-<p><strong>Pages not updating:</strong>
-- Check the Actions tab for deployment status
-- Ensure the <code>gh-pages</code> branch exists
-- Wait up to 10 minutes for changes to propagate</p>
-<p><strong>404 errors:</strong>
-- Verify the site URL in <code>mkdocs.yml</code>
-- Check that GitHub Pages is enabled
-- Ensure the correct branch is selected</p>
-<p><strong>Build failures:</strong>
-- Check that all plugins are installed
-- Verify markdown syntax in documentation files
-- Review GitHub Actions logs for errors</p>
-<h3 id="branch-protection">Branch Protection<a class="headerlink" href="#branch-protection" title="Permanent link">&para;</a></h3>
-<p>If your repository has branch protection rules:</p>
-<ol>
-<li>Allow the GitHub Actions bot to push to <code>gh-pages</code></li>
-<li>Or create the branch manually and exempt it from protection</li>
-<li>Use a personal access token with appropriate permissions</li>
-</ol>
-<h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
-<h3 id="content-organization">Content Organization<a class="headerlink" href="#content-organization" title="Permanent link">&para;</a></h3>
+<p><strong>Bot doesn't appear online:</strong>
+- Verify bot token is correct
+- Check network connectivity
+- Ensure intents are enabled in Developer Portal</p>
+<p><strong>Slash commands not appearing:</strong>
+- Wait up to 1 hour for global command registration
+- Try in a different server to test guild vs global commands
+- Check bot permissions in server settings</p>
+<p><strong>Bot responds with "Unknown interaction":</strong>
+- Restart the bot application
+- Verify slash command registration in logs
+- Check Discord API status</p>
+<p><strong>Permission errors:</strong>
+- Verify bot has required permissions in server
+- Check channel-specific permission overrides
+- Ensure bot role is positioned correctly in hierarchy</p>
+<h3 id="debug-commands">Debug Commands<a class="headerlink" href="#debug-commands" title="Permanent link">&para;</a></h3>
+<p>Test bot functionality:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Test Discord connection only</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="s2">import discord</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="s2">import os</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="s2">client = discord.Client()</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="s2">@client.event</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="s2">async def on_ready():</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="s2">    print(f&#39;Connected as {client.user}&#39;)</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="s2">    await client.close()</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="s2">client.run(os.environ[&#39;DISCORD_BOT_TOKEN&#39;])</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="s2">&quot;</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="c1"># Test slash command registration</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>python<span class="w"> </span>scripts/test-discord-commands.py
+</code></pre></div>
+<h3 id="log-analysis">Log Analysis<a class="headerlink" href="#log-analysis" title="Permanent link">&para;</a></h3>
+<p>Monitor these log files:
+- <code>logs/discord-bot.log</code> - Bot operation logs
+- <code>logs/orchestrator.log</code> - System coordination logs
+- <code>logs/agents/*.log</code> - Individual agent logs</p>
+<h2 id="security-best-practices">Security Best Practices<a class="headerlink" href="#security-best-practices" title="Permanent link">&para;</a></h2>
+<h3 id="token-management">Token Management<a class="headerlink" href="#token-management" title="Permanent link">&para;</a></h3>
 <ul>
-<li>Keep documentation source in <code>docs_src/</code></li>
-<li>Use clear, descriptive filenames</li>
-<li>Maintain consistent navigation structure</li>
-<li>Include relative links between pages</li>
+<li><strong>Never commit tokens</strong> to version control</li>
+<li><strong>Use environment variables</strong> for production</li>
+<li><strong>Rotate tokens regularly</strong> (quarterly recommended)</li>
+<li><strong>Limit bot scope</strong> to necessary servers only</li>
 </ul>
-<h3 id="performance-optimization">Performance Optimization<a class="headerlink" href="#performance-optimization" title="Permanent link">&para;</a></h3>
+<h3 id="server-security">Server Security<a class="headerlink" href="#server-security" title="Permanent link">&para;</a></h3>
 <ul>
-<li>Optimize images and media files</li>
-<li>Use MkDocs caching for faster builds</li>
-<li>Consider using a CDN for better global performance</li>
+<li><strong>Enable 2FA</strong> for server administrators</li>
+<li><strong>Audit permissions</strong> regularly</li>
+<li><strong>Monitor bot activity</strong> through logs</li>
+<li><strong>Use private servers</strong> for sensitive projects</li>
 </ul>
-<h3 id="seo-and-accessibility">SEO and Accessibility<a class="headerlink" href="#seo-and-accessibility" title="Permanent link">&para;</a></h3>
+<h3 id="access-control">Access Control<a class="headerlink" href="#access-control" title="Permanent link">&para;</a></h3>
 <ul>
-<li>Include meta descriptions in frontmatter</li>
-<li>Use proper heading hierarchy</li>
-<li>Add alt text for images</li>
-<li>Test with screen readers</li>
-</ul>
-<h3 id="maintenance">Maintenance<a class="headerlink" href="#maintenance" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Set up automated link checking</li>
-<li>Regular review and updates</li>
-<li>Monitor GitHub Pages usage limits</li>
-<li>Keep dependencies updated</li>
+<li><strong>Restrict command access</strong> using Discord roles</li>
+<li><strong>Monitor user activity</strong> in workflow channels</li>
+<li><strong>Log all workflow decisions</strong> for audit trails</li>
+<li><strong>Regular security reviews</strong> of bot permissions</li>
 </ul>
 <h2 id="advanced-configuration">Advanced Configuration<a class="headerlink" href="#advanced-configuration" title="Permanent link">&para;</a></h2>
-<h3 id="custom-themes">Custom Themes<a class="headerlink" href="#custom-themes" title="Permanent link">&para;</a></h3>
-<p>Customize the Material theme:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nt">theme</span><span class="p">:</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">material</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="nt">custom_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">overrides</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="nt">palette</span><span class="p">:</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">scheme</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">      </span><span class="nt">primary</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">custom-color</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span><span class="nt">logo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">assets/logo.png</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span><span class="nt">favicon</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">assets/favicon.ico</span>
+<h3 id="custom-command-prefix">Custom Command Prefix<a class="headerlink" href="#custom-command-prefix" title="Permanent link">&para;</a></h3>
+<p>To use traditional prefix commands alongside slash commands:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># In lib/discord_bot.py</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nd">@bot</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;status&#39;</span><span class="p">)</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="k">async</span> <span class="k">def</span> <span class="nf">status_command</span><span class="p">(</span><span class="n">ctx</span><span class="p">):</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>    <span class="k">await</span> <span class="n">ctx</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s2">&quot;Bot is running!&quot;</span><span class="p">)</span>
 </code></pre></div>
-<h3 id="analytics-integration">Analytics Integration<a class="headerlink" href="#analytics-integration" title="Permanent link">&para;</a></h3>
-<p>Add Google Analytics:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nt">extra</span><span class="p">:</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="nt">analytics</span><span class="p">:</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span><span class="nt">provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">google</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span><span class="nt">property</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GA_MEASUREMENT_ID</span>
+<h3 id="webhook-integration">Webhook Integration<a class="headerlink" href="#webhook-integration" title="Permanent link">&para;</a></h3>
+<p>For external system integration:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Webhook setup for external notifications</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="n">webhook_url</span> <span class="o">=</span> <span class="s2">&quot;https://discord.com/api/webhooks/...&quot;</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="k">async</span> <span class="k">def</span> <span class="nf">send_webhook_notification</span><span class="p">(</span><span class="n">message</span><span class="p">):</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>    <span class="k">async</span> <span class="k">with</span> <span class="n">aiohttp</span><span class="o">.</span><span class="n">ClientSession</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>        <span class="k">await</span> <span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">webhook_url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">message</span><span class="p">})</span>
 </code></pre></div>
-<h3 id="social-media-cards">Social Media Cards<a class="headerlink" href="#social-media-cards" title="Permanent link">&para;</a></h3>
-<p>Configure Open Graph metadata:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nt">extra</span><span class="p">:</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="nt">social</span><span class="p">:</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">icon</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fontawesome/brands/github</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">      </span><span class="nt">link</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/jmontp/agent-workflow</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">icon</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fontawesome/brands/twitter</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">      </span><span class="nt">link</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://twitter.com/username</span>
+<h3 id="custom-embeds">Custom Embeds<a class="headerlink" href="#custom-embeds" title="Permanent link">&para;</a></h3>
+<p>For rich message formatting:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="kn">import</span> <span class="nn">discord</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="n">embed</span> <span class="o">=</span> <span class="n">discord</span><span class="o">.</span><span class="n">Embed</span><span class="p">(</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Sprint Status&quot;</span><span class="p">,</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Current sprint progress&quot;</span><span class="p">,</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>    <span class="n">color</span><span class="o">=</span><span class="mh">0x00ff00</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="p">)</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="n">embed</span><span class="o">.</span><span class="n">add_field</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Stories Complete&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;3/5&quot;</span><span class="p">,</span> <span class="n">inline</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="n">embed</span><span class="o">.</span><span class="n">add_field</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Time Remaining&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;2 days&quot;</span><span class="p">,</span> <span class="n">inline</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="k">await</span> <span class="n">ctx</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">embed</span><span class="o">=</span><span class="n">embed</span><span class="p">)</span>
 </code></pre></div>
-<h2 id="monitoring-and-analytics">Monitoring and Analytics<a class="headerlink" href="#monitoring-and-analytics" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Use GitHub repository insights</li>
-<li>Monitor page views in GitHub Pages settings</li>
-<li>Set up Google Analytics for detailed metrics</li>
-<li>Track user engagement and popular content</li>
-</ul>
-<p>The documentation site will automatically update whenever changes are pushed to the main branch, ensuring the published docs stay current with development.</p>
+<p>Your Discord bot is now ready to orchestrate AI agents through an intuitive chat interface!</p>
 
 
 
