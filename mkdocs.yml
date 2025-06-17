@@ -1,7 +1,7 @@
 site_name: AI Agent TDD-Scrum Workflow
 site_description: Human-In-The-Loop orchestration framework for AI-assisted software development
 site_author: AI Agent Workflow Team
-site_url: https://github.com/jmontp/agent-workflow
+site_url: https://jmontp.github.io/agent-workflow/
 
 repo_name: jmontp/agent-workflow
 repo_url: https://github.com/jmontp/agent-workflow
@@ -73,20 +73,22 @@ nav:
     - Project Setup: user-guide/project-setup.md
     - Workflow Sequences: user-guide/workflow-sequences.md
     - User Profile: user-guide/user-profile.md
-  - Architecture:
-    - Overview: architecture/overview.md
-    - Orchestration Repository: architecture/orchestration-repo.md
-    - Project Repository: architecture/project-repo.md
-    - Data Flow: architecture/data-flow.md
-    - Security: architecture/security.md
-    - Context Diagram: architecture/context.md
-    - Container Diagram: architecture/container.md
-    - Component Diagram: architecture/component.md
-    - Code Structure: architecture/code.md
+    - Troubleshooting: user-guide/troubleshooting.md
+    - FAQ: user-guide/faq.md
+  - Concepts:
+    - System Overview: concepts/overview.md
+    - Security Model: concepts/security.md
+  - Advanced:
+    - Detailed Architecture: advanced/architecture-detailed.md
+    - Security Implementation: advanced/security-implementation.md
+    - Testing Strategy: advanced/testing.md
+    - Data Flow: advanced/data-flow.md
+    - System Components: advanced/component.md
+    - Code Structure: advanced/code.md
   - Development:
-    - Testing Strategy: development/testing.md
     - Contributing: development/contributing.md
     - API Reference: development/api-reference.md
   - Deployment:
     - Discord Setup: deployment/discord-setup.md
     - Production Deployment: deployment/production.md
+    - GitHub Pages: deployment/github-pages.md

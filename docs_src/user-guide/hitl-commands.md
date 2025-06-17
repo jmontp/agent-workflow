@@ -1,22 +1,72 @@
-# HITL Commands – Research-Mode AI Agent Scrum
+# HITL Commands
 
-_Optimized for a solo product-owner/engineer who wants minimal ceremony and maximum momentum._
-
----
+Command reference for the AI Agent TDD-Scrum workflow system. These commands provide Human-In-The-Loop control over the multi-agent orchestration process.
 
 ## Command Quick-Reference
 
-| Verb Group | Syntax | Purpose |
-| ---------- | ------ | ------- |
-| **/epic** | `/epic "<description>"` | Define a new high-level initiative. |
-| **/approve** | `/approve [ID ...]` | Approve proposed stories or epics so they can enter a sprint. |
-| **/sprint** | `/sprint plan [ID ...]` – plan next sprint<br>`/sprint start` – kick off planned sprint<br>`/sprint status` – progress snapshot<br>`/sprint pause` – halt agent work<br>`/sprint resume` – continue paused sprint | Single verb for all sprint administration. |
-| **/backlog** | `/backlog view product \| sprint` – list items<br>`/backlog view <ITEM_ID>` – show full item details<br>`/backlog add_story "<desc>" --feature <FEATURE_ID>` – create story<br>`/backlog remove <ITEM_ID>` – delete item<br>`/backlog prioritize <STORY_ID> <top|high|med|low>` | Manage product & sprint backlog without leaving GitHub Projects. |
-| **/request_changes** | `/request_changes "<description>"` | Used on a PR to demand modifications. |
-| **/suggest_fix** | `/suggest_fix "<description>"` | Give the Code Agent a hint when stuck. |
-| **/skip_task** | `/skip_task` | Abandon the currently blocked task and move on. |
-| **/feedback** | `/feedback "<description>"` | General improvement notes after a sprint. |
-| **/state** | `/state` – interactive view (allowed commands, diagram, matrix) | Inspect current orchestrator state & legal commands. |
+## Core Commands
+
+### Project Management
+
+**`/epic "<description>"`**
+Define a new high-level initiative.
+
+**`/approve [ID ...]`**
+Approve proposed stories or epics so they can enter a sprint.
+
+### Sprint Management
+
+**`/sprint plan [ID ...]`**
+Plan next sprint with specified story IDs.
+
+**`/sprint start`**
+Kick off the planned sprint.
+
+**`/sprint status`**
+Get a progress snapshot of the current sprint.
+
+**`/sprint pause`**
+Halt agent work temporarily.
+
+**`/sprint resume`**
+Continue paused sprint work.
+
+### Backlog Operations
+
+**`/backlog view product`**
+List all product backlog items.
+
+**`/backlog view sprint`**
+List current sprint backlog items.
+
+**`/backlog view <ITEM_ID>`**
+Show full details for a specific item.
+
+**`/backlog add_story "<description>" --feature <FEATURE_ID>`**
+Create a new story under a feature.
+
+**`/backlog remove <ITEM_ID>`**
+Delete an item from the backlog.
+
+**`/backlog prioritize <STORY_ID> <top|high|med|low>`**
+Set priority level for a story.
+
+### Development Control
+
+**`/request_changes "<description>"`**
+Request modifications on a pull request.
+
+**`/suggest_fix "<description>"`**
+Provide hints to the Code Agent when stuck.
+
+**`/skip_task`**
+Abandon the currently blocked task and move on.
+
+**`/feedback "<description>"`**
+Provide improvement notes after a sprint.
+
+**`/state`**
+Inspect current orchestrator state with interactive controls.
 
 ---
 
@@ -79,6 +129,6 @@ The orchestrator enforces a finite-state machine (see `command_state_machine.md`
 
 If you issue a command that is **not legal** for the current state, the bot replies with an error message:
 
-> ⚠️ Command `/sprint plan` is not allowed now (state: **SPRINT_ACTIVE**). Try `/sprint status`.
+**Warning:** Command `/sprint plan` is not allowed now (state: **SPRINT_ACTIVE**). Try `/sprint status`.
 
 No action is taken until a valid command is sent. 

@@ -5,7 +5,10 @@
       "Bash(ls:*)",
       "Bash(python:*)",
       "Bash(cat:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(mkdir:*)",
+      "Bash(mv:*)",
+      "Bash(mkdocs:*)"
     ],
     "deny": []
   }

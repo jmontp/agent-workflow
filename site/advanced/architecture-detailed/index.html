@@ -7,12 +7,12 @@
 <meta content="width=device-width,initial-scale=1" name="viewport"/>
 <meta content="Human-In-The-Loop orchestration framework for AI-assisted software development" name="description"/>
 <meta content="AI Agent Workflow Team" name="author"/>
-<link href="https://github.com/jmontp/agent-workflow/architecture/overview/" rel="canonical"/>
-<link href="../../user-guide/user-profile/" rel="prev"/>
-<link href="../security/" rel="next"/>
+<link href="https://jmontp.github.io/agent-workflow/advanced/architecture-detailed/" rel="canonical"/>
+<link href="../../concepts/security/" rel="prev"/>
+<link href="../security-implementation/" rel="next"/>
 <link href="../../assets/images/favicon.png" rel="icon"/>
 <meta content="mkdocs-1.6.1, mkdocs-material-9.6.14" name="generator"/>
-<title>Overview - AI Agent TDD-Scrum Workflow</title>
+<title>Detailed Architecture - AI Agent TDD-Scrum Workflow</title>
 <link href="../../assets/stylesheets/main.342714a4.min.css" rel="stylesheet"/>
 <link href="../../assets/stylesheets/palette.06af60db.min.css" rel="stylesheet"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
@@ -49,7 +49,7 @@
 <div class="md-header__topic" data-md-component="header-topic">
 <span class="md-ellipsis">
             
-              Overview
+              Detailed Architecture
             
           </span>
 </div>
@@ -140,17 +140,26 @@
 
         </a>
 </li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../concepts/overview/">
+          
+  
+  
+  Concepts
+
+        </a>
+</li>
 <li class="md-tabs__item md-tabs__item--active">
 <a class="md-tabs__link" href="./">
           
   
   
-  Architecture
+  Advanced
 
         </a>
 </li>
 <li class="md-tabs__item">
-<a class="md-tabs__link" href="../../development/testing/">
+<a class="md-tabs__link" href="../../development/contributing.md">
           
   
   
@@ -277,6 +286,14 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="../../user-guide/project-setup/">
+<span class="md-ellipsis">
+    Project Setup
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="../../user-guide/workflow-sequences/">
 <span class="md-ellipsis">
     Workflow Sequences
@@ -292,36 +309,86 @@
   </span>
 </a>
 </li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../user-guide/troubleshooting/">
+<span class="md-ellipsis">
+    Troubleshooting
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../user-guide/faq/">
+<span class="md-ellipsis">
+    FAQ
+    
+  </span>
+</a>
+</li>
 </ul>
 </nav>
 </li>
-<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
-<input checked="" class="md-nav__toggle md-toggle" id="__nav_4" type="checkbox"/>
-<label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
 <span class="md-ellipsis">
-    Architecture
+    Concepts
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="true" aria-labelledby="__nav_4_label" class="md-nav" data-md-level="1">
+<nav aria-expanded="false" aria-labelledby="__nav_4_label" class="md-nav" data-md-level="1">
 <label class="md-nav__title" for="__nav_4">
 <span class="md-nav__icon md-icon"></span>
-            Architecture
+            Concepts
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../concepts/overview/">
+<span class="md-ellipsis">
+    System Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../concepts/security/">
+<span class="md-ellipsis">
+    Security Model
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+<span class="md-ellipsis">
+    Advanced
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_5">
+<span class="md-nav__icon md-icon"></span>
+            Advanced
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item md-nav__item--active">
 <input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
 <label class="md-nav__link md-nav__link--active" for="__toc">
 <span class="md-ellipsis">
-    Overview
+    Detailed Architecture
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
 <a class="md-nav__link md-nav__link--active" href="./">
 <span class="md-ellipsis">
-    Overview
+    Detailed Architecture
     
   </span>
 </a>
@@ -331,6 +398,31 @@
       Table of contents
     </label>
 <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#two-repository-model">
+<span class="md-ellipsis">
+      Two-Repository Model
+    </span>
+</a>
+<nav aria-label="Two-Repository Model" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#orchestration-repository-this-repo">
+<span class="md-ellipsis">
+      Orchestration Repository (this repo)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#project-repositories-1-to-n">
+<span class="md-ellipsis">
+      Project Repositories (1 to n)
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="#system-architecture">
 <span class="md-ellipsis">
@@ -587,25 +679,25 @@
 </nav>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../security/">
+<a class="md-nav__link" href="../security-implementation/">
 <span class="md-ellipsis">
-    Security
+    Security Implementation
     
   </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../context/">
+<a class="md-nav__link" href="../testing/">
 <span class="md-ellipsis">
-    Context Diagram
+    Testing Strategy
     
   </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../container/">
+<a class="md-nav__link" href="../data-flow/">
 <span class="md-ellipsis">
-    Container Diagram
+    Data Flow
     
   </span>
 </a>
@@ -613,7 +705,7 @@
 <li class="md-nav__item">
 <a class="md-nav__link" href="../component/">
 <span class="md-ellipsis">
-    Component Diagram
+    System Components
     
   </span>
 </a>
@@ -630,28 +722,20 @@
 </nav>
 </li>
 <li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_5" type="checkbox"/>
-<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_6" type="checkbox"/>
+<label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
 <span class="md-ellipsis">
     Development
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="false" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="__nav_5">
+<nav aria-expanded="false" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_6">
 <span class="md-nav__icon md-icon"></span>
             Development
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../development/testing/">
-<span class="md-ellipsis">
-    Testing Strategy
-    
-  </span>
-</a>
-</li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="../../development/contributing.md">
 <span class="md-ellipsis">
@@ -672,16 +756,16 @@
 </nav>
 </li>
 <li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_6" type="checkbox"/>
-<label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_7" type="checkbox"/>
+<label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
 <span class="md-ellipsis">
     Deployment
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="false" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="__nav_6">
+<nav aria-expanded="false" aria-labelledby="__nav_7_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_7">
 <span class="md-nav__icon md-icon"></span>
             Deployment
           </label>
@@ -698,6 +782,14 @@
 <a class="md-nav__link" href="../../deployment/production.md">
 <span class="md-ellipsis">
     Production Deployment
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../deployment/github-pages/">
+<span class="md-ellipsis">
+    GitHub Pages
     
   </span>
 </a>
@@ -719,6 +811,31 @@
       Table of contents
     </label>
 <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#two-repository-model">
+<span class="md-ellipsis">
+      Two-Repository Model
+    </span>
+</a>
+<nav aria-label="Two-Repository Model" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#orchestration-repository-this-repo">
+<span class="md-ellipsis">
+      Orchestration Repository (this repo)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#project-repositories-1-to-n">
+<span class="md-ellipsis">
+      Project Repositories (1 to n)
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="#system-architecture">
 <span class="md-ellipsis">
@@ -980,6 +1097,27 @@
 <article class="md-content__inner md-typeset">
 <h1 id="architecture-overview">Architecture Overview<a class="headerlink" href="#architecture-overview" title="Permanent link">¶</a></h1>
 <p>The AI Agent TDD-Scrum Workflow system follows a clean, layered architecture designed for scalability, maintainability, and extensibility.</p>
+<h2 id="two-repository-model">Two-Repository Model<a class="headerlink" href="#two-repository-model" title="Permanent link">¶</a></h2>
+<p>The system operates on a clear separation between orchestration and project concerns:</p>
+<h3 id="orchestration-repository-this-repo">Orchestration Repository (this repo)<a class="headerlink" href="#orchestration-repository-this-repo" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Purpose</strong>: Central framework for AI agent coordination</li>
+<li><strong>Contents</strong>: Agent definitions, workflow engine, Discord bot, security policies</li>
+<li><strong>Scope</strong>: Global across all managed projects</li>
+<li><strong>Lifecycle</strong>: Long-lived, evolves with framework capabilities</li>
+</ul>
+<h3 id="project-repositories-1-to-n">Project Repositories (1 to n)<a class="headerlink" href="#project-repositories-1-to-n" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Purpose</strong>: Individual codebases being developed with AI assistance</li>
+<li><strong>Contents</strong>: Project code + embedded workflow data in <code>.orch-state/</code></li>
+<li><strong>Scope</strong>: Project-specific data and state</li>
+<li><strong>Lifecycle</strong>: Tied to project development lifecycle</li>
+</ul>
+<p>This separation ensures:
+- <strong>Data Ownership</strong>: Project data stays with the project code
+- <strong>Version Control</strong>: Project management data versioned with code changes
+- <strong>Portability</strong>: Projects can move between orchestration instances
+- <strong>Security</strong>: Clear boundaries between global and project-specific access</p>
 <h2 id="system-architecture">System Architecture<a class="headerlink" href="#system-architecture" title="Permanent link">¶</a></h2>
 <pre class="mermaid"><code>graph TB
     subgraph "User Interface Layer"
@@ -1130,7 +1268,7 @@
 <li>Memory-efficient state storage</li>
 </ul>
 <h2 id="security-architecture">Security Architecture<a class="headerlink" href="#security-architecture" title="Permanent link">¶</a></h2>
-<p>The system implements comprehensive security through multiple layers of protection. See <a href="../security/">Security Architecture</a> for detailed information.</p>
+<p>The system implements comprehensive security through multiple layers of protection. See <a href="security.md">Security Architecture</a> for detailed information.</p>
 <h3 id="1-agent-security-model">1. <strong>Agent Security Model</strong><a class="headerlink" href="#1-agent-security-model" title="Permanent link">¶</a></h3>
 <ul>
 <li><strong>Command Access Control</strong>: Each agent type has restricted tool access</li>

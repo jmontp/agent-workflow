@@ -7,12 +7,10 @@
 <meta content="width=device-width,initial-scale=1" name="viewport"/>
 <meta content="Human-In-The-Loop orchestration framework for AI-assisted software development" name="description"/>
 <meta content="AI Agent Workflow Team" name="author"/>
-<link href="https://github.com/jmontp/agent-workflow/architecture/component/" rel="canonical"/>
-<link href="../container/" rel="prev"/>
-<link href="../code/" rel="next"/>
+<link href="https://jmontp.github.io/agent-workflow/advanced/orchestration-repo/" rel="canonical"/>
 <link href="../../assets/images/favicon.png" rel="icon"/>
 <meta content="mkdocs-1.6.1, mkdocs-material-9.6.14" name="generator"/>
-<title>Component Diagram - AI Agent TDD-Scrum Workflow</title>
+<title>Orchestration Repository Architecture - AI Agent TDD-Scrum Workflow</title>
 <link href="../../assets/stylesheets/main.342714a4.min.css" rel="stylesheet"/>
 <link href="../../assets/stylesheets/palette.06af60db.min.css" rel="stylesheet"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
@@ -25,7 +23,7 @@
 <input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
 <label class="md-overlay" for="__drawer"></label>
 <div data-md-component="skip">
-<a class="md-skip" href="#c4-component-diagram-ai-agent-tdd-scrum-workflow">
+<a class="md-skip" href="#orchestration-repository-architecture">
           Skip to content
         </a>
 </div>
@@ -49,7 +47,7 @@
 <div class="md-header__topic" data-md-component="header-topic">
 <span class="md-ellipsis">
             
-              Component Diagram
+              Orchestration Repository Architecture
             
           </span>
 </div>
@@ -140,17 +138,26 @@
 
         </a>
 </li>
-<li class="md-tabs__item md-tabs__item--active">
-<a class="md-tabs__link" href="../overview/">
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../concepts/overview/">
           
   
   
-  Architecture
+  Concepts
 
         </a>
 </li>
 <li class="md-tabs__item">
-<a class="md-tabs__link" href="../../development/testing/">
+<a class="md-tabs__link" href="../architecture-detailed/">
+          
+  
+  
+  Advanced
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../development/contributing.md">
           
   
   
@@ -277,6 +284,14 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="../../user-guide/project-setup/">
+<span class="md-ellipsis">
+    Project Setup
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="../../user-guide/workflow-sequences/">
 <span class="md-ellipsis">
     Workflow Sequences
@@ -292,111 +307,113 @@
   </span>
 </a>
 </li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../user-guide/troubleshooting/">
+<span class="md-ellipsis">
+    Troubleshooting
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../user-guide/faq/">
+<span class="md-ellipsis">
+    FAQ
+    
+  </span>
+</a>
+</li>
 </ul>
 </nav>
 </li>
-<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
-<input checked="" class="md-nav__toggle md-toggle" id="__nav_4" type="checkbox"/>
-<label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
 <span class="md-ellipsis">
-    Architecture
+    Concepts
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="true" aria-labelledby="__nav_4_label" class="md-nav" data-md-level="1">
+<nav aria-expanded="false" aria-labelledby="__nav_4_label" class="md-nav" data-md-level="1">
 <label class="md-nav__title" for="__nav_4">
 <span class="md-nav__icon md-icon"></span>
-            Architecture
+            Concepts
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="../overview/">
+<a class="md-nav__link" href="../../concepts/overview/">
 <span class="md-ellipsis">
-    Overview
+    System Overview
     
   </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../security/">
+<a class="md-nav__link" href="../../concepts/security/">
 <span class="md-ellipsis">
-    Security
+    Security Model
     
   </span>
 </a>
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../context/">
-<span class="md-ellipsis">
-    Context Diagram
-    
-  </span>
-</a>
+</ul>
+</nav>
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../container/">
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
 <span class="md-ellipsis">
-    Container Diagram
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item md-nav__item--active">
-<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
-<label class="md-nav__link md-nav__link--active" for="__toc">
-<span class="md-ellipsis">
-    Component Diagram
+    Advanced
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<a class="md-nav__link md-nav__link--active" href="./">
+<nav aria-expanded="false" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_5">
+<span class="md-nav__icon md-icon"></span>
+            Advanced
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../architecture-detailed/">
 <span class="md-ellipsis">
-    Component Diagram
+    Detailed Architecture
     
   </span>
 </a>
-<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
-<label class="md-nav__title" for="__toc">
-<span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+</li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#component-architecture">
+<a class="md-nav__link" href="../security-implementation/">
 <span class="md-ellipsis">
-      Component Architecture
-    </span>
-</a>
-<nav aria-label="Component Architecture" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#discord-bot-components">
-<span class="md-ellipsis">
-      Discord Bot Components
-    </span>
+    Security Implementation
+    
+  </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#orchestrator-components">
+<a class="md-nav__link" href="../testing/">
 <span class="md-ellipsis">
-      Orchestrator Components
-    </span>
+    Testing Strategy
+    
+  </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#agent-library-components">
+<a class="md-nav__link" href="../data-flow/">
 <span class="md-ellipsis">
-      Agent Library Components
-    </span>
+    Data Flow
+    
+  </span>
 </a>
 </li>
-</ul>
-</nav>
-</li>
-</ul>
-</nav>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../component/">
+<span class="md-ellipsis">
+    System Components
+    
+  </span>
+</a>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="../code/">
@@ -410,28 +427,20 @@
 </nav>
 </li>
 <li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_5" type="checkbox"/>
-<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_6" type="checkbox"/>
+<label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
 <span class="md-ellipsis">
     Development
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="false" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="__nav_5">
+<nav aria-expanded="false" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_6">
 <span class="md-nav__icon md-icon"></span>
             Development
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../development/testing/">
-<span class="md-ellipsis">
-    Testing Strategy
-    
-  </span>
-</a>
-</li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="../../development/contributing.md">
 <span class="md-ellipsis">
@@ -452,16 +461,16 @@
 </nav>
 </li>
 <li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_6" type="checkbox"/>
-<label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_7" type="checkbox"/>
+<label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
 <span class="md-ellipsis">
     Deployment
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="false" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="__nav_6">
+<nav aria-expanded="false" aria-labelledby="__nav_7_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_7">
 <span class="md-nav__icon md-icon"></span>
             Deployment
           </label>
@@ -478,6 +487,14 @@
 <a class="md-nav__link" href="../../deployment/production.md">
 <span class="md-ellipsis">
     Production Deployment
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../deployment/github-pages/">
+<span class="md-ellipsis">
+    GitHub Pages
     
   </span>
 </a>
@@ -500,31 +517,134 @@
     </label>
 <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="#component-architecture">
+<a class="md-nav__link" href="#responsibilities">
 <span class="md-ellipsis">
-      Component Architecture
+      Responsibilities
     </span>
 </a>
-<nav aria-label="Component Architecture" class="md-nav">
+<nav aria-label="Responsibilities" class="md-nav">
 <ul class="md-nav__list">
 <li class="md-nav__item">
-<a class="md-nav__link" href="#discord-bot-components">
+<a class="md-nav__link" href="#core-framework">
 <span class="md-ellipsis">
-      Discord Bot Components
+      Core Framework
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#orchestrator-components">
+<a class="md-nav__link" href="#multi-project-management">
 <span class="md-ellipsis">
-      Orchestrator Components
+      Multi-Project Management
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#agent-library-components">
+<a class="md-nav__link" href="#global-configuration">
 <span class="md-ellipsis">
-      Agent Library Components
+      Global Configuration
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#architecture-components">
+<span class="md-ellipsis">
+      Architecture Components
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#data-flow">
+<span class="md-ellipsis">
+      Data Flow
+    </span>
+</a>
+<nav aria-label="Data Flow" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#project-registration">
+<span class="md-ellipsis">
+      Project Registration
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#command-execution">
+<span class="md-ellipsis">
+      Command Execution
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#state-management">
+<span class="md-ellipsis">
+      State Management
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#security-architecture">
+<span class="md-ellipsis">
+      Security Architecture
+    </span>
+</a>
+<nav aria-label="Security Architecture" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#agent-isolation">
+<span class="md-ellipsis">
+      Agent Isolation
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#repository-boundaries">
+<span class="md-ellipsis">
+      Repository Boundaries
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#discord-security">
+<span class="md-ellipsis">
+      Discord Security
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#deployment-model">
+<span class="md-ellipsis">
+      Deployment Model
+    </span>
+</a>
+<nav aria-label="Deployment Model" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#single-instance">
+<span class="md-ellipsis">
+      Single Instance
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#configuration">
+<span class="md-ellipsis">
+      Configuration
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#monitoring">
+<span class="md-ellipsis">
+      Monitoring
     </span>
 </a>
 </li>
@@ -538,78 +658,122 @@
 </div>
 <div class="md-content" data-md-component="content">
 <article class="md-content__inner md-typeset">
-<h1 id="c4-component-diagram-ai-agent-tdd-scrum-workflow">C4 Component Diagram - AI Agent TDD-Scrum Workflow<a class="headerlink" href="#c4-component-diagram-ai-agent-tdd-scrum-workflow" title="Permanent link">¶</a></h1>
-<h2 id="component-architecture">Component Architecture<a class="headerlink" href="#component-architecture" title="Permanent link">¶</a></h2>
-<h3 id="discord-bot-components">Discord Bot Components<a class="headerlink" href="#discord-bot-components" title="Permanent link">¶</a></h3>
-<pre class="mermaid"><code>C4Component
-    title Discord Bot Components
+<h1 id="orchestration-repository-architecture">Orchestration Repository Architecture<a class="headerlink" href="#orchestration-repository-architecture" title="Permanent link">¶</a></h1>
+<p>The orchestration repository (this repository) contains the AI agent framework and multi-project coordination logic. It serves as the centralized system that manages multiple project repositories.</p>
+<h2 id="responsibilities">Responsibilities<a class="headerlink" href="#responsibilities" title="Permanent link">¶</a></h2>
+<h3 id="core-framework">Core Framework<a class="headerlink" href="#core-framework" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Agent Definitions</strong>: All AI agent types (CodeAgent, DesignAgent, QAAgent, DataAgent)</li>
+<li><strong>State Machine</strong>: Workflow state management and validation</li>
+<li><strong>Discord Bot</strong>: Human-In-The-Loop interface for all projects</li>
+<li><strong>Security System</strong>: Agent tool access control and restrictions</li>
+<li><strong>Orchestrator</strong>: Central coordination engine</li>
+</ul>
+<h3 id="multi-project-management">Multi-Project Management<a class="headerlink" href="#multi-project-management" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Project Registry</strong>: Configuration and discovery of project repositories</li>
+<li><strong>Channel Management</strong>: Automatic Discord channel creation per project</li>
+<li><strong>State Coordination</strong>: Cross-project workflow management</li>
+<li><strong>Resource Allocation</strong>: Agent assignment and task distribution</li>
+</ul>
+<h3 id="global-configuration">Global Configuration<a class="headerlink" href="#global-configuration" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Agent Security Profiles</strong>: Tool access restrictions per agent type</li>
+<li><strong>Workflow Templates</strong>: Reusable workflow definitions</li>
+<li><strong>Discord Bot Configuration</strong>: Global bot settings and commands</li>
+<li><strong>Logging and Monitoring</strong>: Centralized logging across all projects</li>
+</ul>
+<h2 id="architecture-components">Architecture Components<a class="headerlink" href="#architecture-components" title="Permanent link">¶</a></h2>
+<pre class="mermaid"><code>graph TB
+    subgraph "Orchestration Repository"
+        O[Orchestrator]
+        DB[Discord Bot]
+        SM[State Machine]
+        A[Agents]
+        S[Security System]
 
-    Container_Boundary(discord_bot, "Discord Bot") {
-        Component(command_parser, "Command Parser", "Parse and validate slash commands")
-        Component(state_visualizer, "State Visualizer", "Generate interactive state diagrams")
-        Component(notification_manager, "Notification Manager", "Send alerts and status updates")
-        Component(button_handler, "Button Handler", "Handle interactive UI elements")
-    }
+        O --&gt; DB
+        O --&gt; SM
+        O --&gt; A
+        A --&gt; S
+    end
 
-    Container(orchestrator, "Orchestrator", "Core coordination logic")
-    System_Ext(discord_api, "Discord API")
+    subgraph "Project Repository 1"
+        P1[Project Code]
+        D1[.orch-state/]
+    end
 
-    Rel(discord_api, command_parser, "Slash command events")
-    Rel(command_parser, orchestrator, "Validated commands")
-    Rel(orchestrator, state_visualizer, "State data")
-    Rel(state_visualizer, discord_api, "Interactive messages")
-    Rel(orchestrator, notification_manager, "Status updates")
-    Rel(notification_manager, discord_api, "Notifications")
-    Rel(button_handler, orchestrator, "User interactions")</code></pre>
-<h3 id="orchestrator-components">Orchestrator Components<a class="headerlink" href="#orchestrator-components" title="Permanent link">¶</a></h3>
-<pre class="mermaid"><code>C4Component
-    title Orchestrator Components
+    subgraph "Project Repository 2"
+        P2[Project Code]
+        D2[.orch-state/]
+    end
 
-    Container_Boundary(orchestrator, "Orchestrator") {
-        Component(state_machine, "State Machine", "Enforce command transitions")
-        Component(project_manager, "Project Manager", "Multi-project coordination")
-        Component(task_dispatcher, "Task Dispatcher", "Agent task coordination")
-        Component(approval_gate, "Approval Gate", "HITL workflow management")
-        Component(retry_logic, "Retry Logic", "3-attempt failure handling")
-    }
-
-    Container(agent_lib, "Agent Library")
-    Container(state_store, "State Store")
-    Container(discord_bot, "Discord Bot")
-
-    Rel(discord_bot, state_machine, "Command validation")
-    Rel(state_machine, project_manager, "Valid state transitions")
-    Rel(project_manager, task_dispatcher, "Task assignment")
-    Rel(task_dispatcher, agent_lib, "Agent execution")
-    Rel(approval_gate, discord_bot, "Approval requests")
-    Rel(retry_logic, approval_gate, "Escalation after 3 failures")
-    Rel(project_manager, state_store, "Persist state")</code></pre>
-<h3 id="agent-library-components">Agent Library Components<a class="headerlink" href="#agent-library-components" title="Permanent link">¶</a></h3>
-<pre class="mermaid"><code>C4Component
-    title Agent Library Components
-
-    Container_Boundary(agent_lib, "Agent Library") {
-        Component(base_agent, "Base Agent", "Common agent interface")
-        Component(design_agent, "Design Agent", "Architecture decisions")
-        Component(code_agent, "Code Agent", "Implementation tasks")
-        Component(qa_agent, "QA Agent", "Testing and validation")
-        Component(data_agent, "Data Agent", "Data processing")
-        Component(anthropic_client, "Anthropic Client", "AI model integration")
-        Component(github_client, "GitHub Client", "Repository operations")
-    }
-
-    System_Ext(anthropic_api, "Anthropic API")
-    System_Ext(github_api, "GitHub API")
-
-    Rel(base_agent, design_agent, "Inheritance")
-    Rel(base_agent, code_agent, "Inheritance")
-    Rel(base_agent, qa_agent, "Inheritance")
-    Rel(base_agent, data_agent, "Inheritance")
-    Rel(design_agent, anthropic_client, "AI requests")
-    Rel(code_agent, anthropic_client, "AI requests")
-    Rel(code_agent, github_client, "Code commits")
-    Rel(anthropic_client, anthropic_api, "API calls")
-    Rel(github_client, github_api, "Repository operations")</code></pre>
+    O --&gt; D1
+    O --&gt; D2
+    DB --&gt; D1
+    DB --&gt; D2</code></pre>
+<h2 id="data-flow">Data Flow<a class="headerlink" href="#data-flow" title="Permanent link">¶</a></h2>
+<h3 id="project-registration">Project Registration<a class="headerlink" href="#project-registration" title="Permanent link">¶</a></h3>
+<ol>
+<li>User runs <code>/project register &lt;path&gt;</code> in Discord</li>
+<li>Discord Bot validates project path and git repository</li>
+<li>Orchestrator creates project instance with storage</li>
+<li>Discord channel created with naming convention <code>{hostname}-{projectname}</code></li>
+<li>Project structure initialized in target repository</li>
+</ol>
+<h3 id="command-execution">Command Execution<a class="headerlink" href="#command-execution" title="Permanent link">¶</a></h3>
+<ol>
+<li>User issues command in project-specific Discord channel</li>
+<li>Discord Bot routes command to Orchestrator with project context</li>
+<li>Orchestrator validates command against project state machine</li>
+<li>Appropriate agent executes command with security restrictions</li>
+<li>Results stored in project repository's <code>.orch-state/</code> directory</li>
+</ol>
+<h3 id="state-management">State Management<a class="headerlink" href="#state-management" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Global State</strong>: Orchestrator maintains registry of all projects</li>
+<li><strong>Project State</strong>: Each project has independent state machine</li>
+<li><strong>Persistence</strong>: Project state persisted in project repository</li>
+<li><strong>Synchronization</strong>: Discord Bot keeps channel mappings current</li>
+</ul>
+<h2 id="security-architecture">Security Architecture<a class="headerlink" href="#security-architecture" title="Permanent link">¶</a></h2>
+<h3 id="agent-isolation">Agent Isolation<a class="headerlink" href="#agent-isolation" title="Permanent link">¶</a></h3>
+<ul>
+<li>Each project has isolated agent instances</li>
+<li>Agents cannot access data from other projects</li>
+<li>Tool access restricted based on agent type and project context</li>
+</ul>
+<h3 id="repository-boundaries">Repository Boundaries<a class="headerlink" href="#repository-boundaries" title="Permanent link">¶</a></h3>
+<ul>
+<li>Orchestration repo has read-only access to project repos</li>
+<li>Write access limited to <code>.orch-state/</code> directory only</li>
+<li>No cross-project data access without explicit permission</li>
+</ul>
+<h3 id="discord-security">Discord Security<a class="headerlink" href="#discord-security" title="Permanent link">¶</a></h3>
+<ul>
+<li>Project-specific channels provide access control</li>
+<li>Commands validated against project membership</li>
+<li>Audit trail maintained in project repositories</li>
+</ul>
+<h2 id="deployment-model">Deployment Model<a class="headerlink" href="#deployment-model" title="Permanent link">¶</a></h2>
+<h3 id="single-instance">Single Instance<a class="headerlink" href="#single-instance" title="Permanent link">¶</a></h3>
+<ul>
+<li>One orchestration instance manages multiple projects</li>
+<li>Scales horizontally by project distribution</li>
+<li>Discord Bot provides unified interface</li>
+</ul>
+<h3 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">¶</a></h3>
+<ul>
+<li>Projects registered via Discord commands</li>
+<li>No manual configuration files required</li>
+<li>Self-discovering and self-healing</li>
+</ul>
+<h3 id="monitoring">Monitoring<a class="headerlink" href="#monitoring" title="Permanent link">¶</a></h3>
+<ul>
+<li>Centralized logging from all projects</li>
+<li>Health checks per project</li>
+<li>Performance metrics aggregated across projects</li>
+</ul>
 </article>
 </div>
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>

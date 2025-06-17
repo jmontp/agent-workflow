@@ -32,8 +32,7 @@ Set up your Discord bot token:
 export DISCORD_BOT_TOKEN="your_discord_bot_token_here"
 ```
 
-!!! tip "Optional: AI Capabilities"
-    The system works without AI integration for testing. For full AI capabilities, you can integrate with Claude Code or other AI services.
+**Note:** The system works without AI integration for testing. For full AI capabilities, you can integrate with Claude Code or other AI services.
 
 ## 3. Run the System
 
@@ -102,5 +101,4 @@ make test
 
 ---
 
-!!! success "You're Ready!"
-    Your AI Agent TDD-Scrum Workflow system is now running. Start with `/epic "Your first project"` in Discord!
+**Success!** Your AI Agent TDD-Scrum Workflow system is now running. Start with `/epic "Your first project"` in Discord.
