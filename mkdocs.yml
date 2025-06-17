@@ -6,6 +6,9 @@ site_url: https://github.com/jmontp/agent-workflow
 repo_name: jmontp/agent-workflow
 repo_url: https://github.com/jmontp/agent-workflow
 
+# Source directory for documentation
+docs_dir: docs_src
+
 theme:
   name: material
   palette:
@@ -71,6 +74,7 @@ nav:
     - User Profile: user-guide/user-profile.md
   - Architecture:
     - Overview: architecture/overview.md
+    - Security: architecture/security.md
     - Context Diagram: architecture/context.md
     - Container Diagram: architecture/container.md
     - Component Diagram: architecture/component.md
