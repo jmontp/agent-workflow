@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mermaid Zoom Test</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.4.0/dist/mermaid.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/svg-pan-zoom@3.6.1/dist/svg-pan-zoom.min.js"></script>
+</head>
+<body>
+    <h1>Mermaid Zoom Test</h1>
+    
+    <div class="mermaid">
+graph TB
+    subgraph "User Interface Layer"
+        Discord[Discord Bot Interface]
+        CLI[Command Line Interface]
+    end
+
+    subgraph "Application Layer"
+        Orch[Orchestrator]
+        SM[State Machine]
+        Commands[Command Handlers]
+    end
+
+    subgraph "Domain Layer"
+        Agents[AI Agent Library]
+        Tasks[Task Management]
+        Projects[Project Management]
+    end
+
+    subgraph "Infrastructure Layer"
+        State[State Persistence]
+        Config[Configuration]
+        Logging[Logging & Monitoring]
+    end
+
+    Discord --> Orch
+    CLI --> Orch
+    Orch --> SM
+    Orch --> Commands
+    Commands --> Agents
+    Commands --> Tasks
+    Commands --> Projects
+    Agents --> State
+    Projects --> State
+    Orch --> Config
+    Orch --> Logging
+    </div>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: false,
+            securityLevel: 'loose',
+            theme: 'default'
+        });
+        
+        // Initialize mermaid first
+        mermaid.run().then(() => {
+            console.log('Mermaid initialized');
+            
+            // Then add zoom functionality
+            setTimeout(() => {
+                const mermaidDiv = document.querySelector('.mermaid');
+                const svg = mermaidDiv.querySelector('svg');
+                
+                if (svg && typeof svgPanZoom !== 'undefined') {
+                    console.log('Adding zoom to SVG');
+                    
+                    // Set SVG size
+                    svg.style.width = '100%';
+                    svg.style.height = '500px';
+                    
+                    const panZoomInstance = svgPanZoom(svg, {
+                        zoomEnabled: true,
+                        controlIconsEnabled: false,
+                        fit: true,
+                        center: true,
+                        minZoom: 0.3,
+                        maxZoom: 5,
+                        zoomScaleSensitivity: 0.3,
+                        panEnabled: true,
+                        dblClickZoomEnabled: true,
+                        mouseWheelZoomEnabled: true
+                    });
+                    
+                    console.log('Zoom initialized successfully');
+                    
+                    // Add controls
+                    const controls = document.createElement('div');
+                    controls.style.cssText = `
+                        position: absolute;
+                        top: 10px;
+                        right: 10px;
+                        z-index: 1000;
+                        background: rgba(255,255,255,0.9);
+                        padding: 5px;
+                        border-radius: 4px;
+                    `;
+                    controls.innerHTML = `
+                        <button onclick="panZoomInstance.zoomIn()">🔍+</button>
+                        <button onclick="panZoomInstance.zoomOut()">🔍-</button>
+                        <button onclick="panZoomInstance.reset()">↺</button>
+                    `;
+                    
+                    mermaidDiv.style.position = 'relative';
+                    mermaidDiv.appendChild(controls);
+                    
+                    // Make instance globally accessible for buttons
+                    window.panZoomInstance = panZoomInstance;
+                } else {
+                    console.log('SVG pan-zoom not available');
+                }
+            }, 500);
+        });
+    </script>
+</body>
+</html>

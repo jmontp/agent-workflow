@@ -41,7 +41,6 @@ extra_javascript:
   - https://cdn.jsdelivr.net/npm/svg-pan-zoom@3.6.1/dist/svg-pan-zoom.min.js
   - js/mermaid-zoom.js
 
-
 plugins:
   - search
   - mermaid2:
@@ -95,11 +94,11 @@ nav:
     - System Overview: concepts/overview.md
     - Security Model: concepts/security.md
   - Advanced:
-    - Detailed Architecture: advanced/architecture-detailed.md
-    - Data Flow: advanced/data-flow.md
-    - System Components: advanced/component.md
-    - Container Architecture: advanced/container.md
     - Context Diagram: advanced/context.md
+    - Detailed Architecture: advanced/architecture-detailed.md
+    - Container Architecture: advanced/container.md
+    - System Components: advanced/component.md
+    - Data Flow: advanced/data-flow.md
     - Orchestration Repository: advanced/orchestration-repo.md
     - Project Repository: advanced/project-repo.md
     - Security Implementation: advanced/security-implementation.md
