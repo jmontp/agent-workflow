@@ -32,9 +32,6 @@ flowchart LR
 
 ### Detailed System Architecture
 
-<div style="background: #e3f2fd; padding: 15px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #2196F3;">
-<em>🔍 <strong>Interactive Diagram:</strong> The diagram below supports zoom, pan, and drag. Use mouse wheel to zoom, drag to pan, or use the control buttons. Perfect for exploring the detailed system architecture!</em>
-</div>
 
 ```mermaid
 graph TB
