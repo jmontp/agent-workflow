@@ -6,7 +6,7 @@ A sophisticated **Human-In-The-Loop (HITL)** orchestration framework that coordi
 
 This system implements a complete workflow for AI-assisted software development with proper human oversight and control. It combines the best practices of Test-Driven Development (TDD) and Scrum methodology, adapted for modern AI-assisted development scenarios.
 
-![Architecture Overview](architecture/context.md)
+![Architecture Overview](advanced/context.md)
 
 ## Key Features
 

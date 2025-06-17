@@ -192,7 +192,7 @@ Event-driven communication between components:
 
 ## Security Architecture
 
-The system implements comprehensive security through multiple layers of protection. See [Security Architecture](security.md) for detailed information.
+The system implements comprehensive security through multiple layers of protection. See [Security Implementation](security-implementation.md) for detailed information.
 
 ### 1. **Agent Security Model**
 - **Command Access Control**: Each agent type has restricted tool access
