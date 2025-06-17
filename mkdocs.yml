@@ -80,14 +80,14 @@ nav:
     - Security Model: concepts/security.md
   - Advanced:
     - Detailed Architecture: advanced/architecture-detailed.md
-    - Security Implementation: advanced/security-implementation.md
-    - Testing Strategy: advanced/testing.md
     - Data Flow: advanced/data-flow.md
     - System Components: advanced/component.md
     - Container Architecture: advanced/container.md
     - Context Diagram: advanced/context.md
     - Orchestration Repository: advanced/orchestration-repo.md
     - Project Repository: advanced/project-repo.md
+    - Security Implementation: advanced/security-implementation.md
+    - Testing Strategy: advanced/testing.md
     - Code Structure: advanced/code.md
   - Development:
     - Contributing: development/contributing.md

@@ -6,7 +6,79 @@ A sophisticated **Human-In-The-Loop (HITL)** orchestration framework that coordi
 
 This system implements a complete workflow for AI-assisted software development with proper human oversight and control. It combines the best practices of Test-Driven Development (TDD) and Scrum methodology, adapted for modern AI-assisted development scenarios.
 
-[View Architecture Overview →](advanced/context.md)
+## How It Works
+
+```mermaid
+graph TB
+    subgraph "👤 Solo Engineer/Product Owner"
+        User[User]
+    end
+    
+    subgraph "🎮 Discord Interface"
+        Discord["/epic /sprint /approve<br/>Human Commands"]
+    end
+    
+    subgraph "🤖 AI Agent TDD-Scrum Workflow System"
+        subgraph "🎛️ Orchestrator"
+            SM[State Machine<br/>IDLE → BACKLOG → SPRINT]
+            HITL[Human-in-the-Loop<br/>Approval Gates]
+        end
+        
+        subgraph "🔄 Agent Collaboration"
+            Design[🎨 DesignAgent<br/>Architecture & Specs]
+            Code[💻 CodeAgent<br/>Implementation & Fixes]
+            QA[🧪 QAAgent<br/>Testing & Quality]
+            Data[📊 DataAgent<br/>Analysis & Metrics]
+        end
+        
+        subgraph "📋 Project Management"
+            Epics[Epic Creation]
+            Stories[Story Breakdown]
+            Sprints[Sprint Execution]
+        end
+    end
+    
+    subgraph "🔗 External Services"
+        GitHub[📁 GitHub<br/>Code Repository]
+        AI[🧠 AI Services<br/>Claude/GPT]
+    end
+    
+    User -.->|"Issues commands"| Discord
+    Discord <-->|"Slash commands"| SM
+    SM -->|"Orchestrates"| Design
+    SM -->|"Coordinates"| Code
+    SM -->|"Manages"| QA
+    SM -->|"Directs"| Data
+    
+    Design -.->|"Creates specs for"| Code
+    Code -.->|"Sends code to"| QA
+    QA -.->|"Reports metrics to"| Data
+    Data -.->|"Provides insights to"| Design
+    
+    HITL -.->|"Requires approval"| User
+    
+    Design & Code & QA & Data -->|"Execute tasks"| Epics
+    Epics --> Stories
+    Stories --> Sprints
+    
+    Code <-->|"Commits & PRs"| GitHub
+    Design & Code & QA & Data <-->|"AI capabilities"| AI
+    
+    style User fill:#e1f5fe
+    style Discord fill:#f3e5f5
+    style SM fill:#fff3e0
+    style Design fill:#f1f8e9
+    style Code fill:#e8f5e8
+    style QA fill:#fff8e1
+    style Data fill:#fce4ec
+```
+
+**Key Benefits:**
+- **Human Control**: You stay in command through simple Discord commands
+- **AI Automation**: Specialized agents handle implementation details
+- **Quality Assurance**: Built-in testing and review processes
+- **Structured Workflow**: TDD-Scrum methodology ensures systematic progress
+- **Transparency**: Every decision point requires your explicit approval
 
 ## Key Features
 
