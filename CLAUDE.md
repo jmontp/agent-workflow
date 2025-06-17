@@ -12,11 +12,27 @@ This is an **AI Agent TDD-Scrum workflow** system that implements a Human-In-The
 
 ## Architecture
 
+### Two-Repository Model
+
+The system operates on a clear separation between orchestration and project concerns:
+
+**Orchestration Repository** (this repo):
+- Central framework for AI agent coordination
+- Agent definitions, workflow engine, Discord bot, security policies
+- Global configuration and multi-project management
+
+**Project Repositories** (1 to n):
+- Individual codebases being developed with AI assistance
+- Project-specific data stored in `.orch-state/` directory within each project
+- Backlog, sprints, architecture decisions version-controlled with code
+
 ### Directory Structure
 ```
 docs_src/       # MkDocs documentation source files
 scripts/        # Executable scripts (orchestrator entry point)
-lib/            # Library code (agents, state machine, Discord bot, security)
+lib/            # Library code (agents, state machine, Discord bot, security, storage)
+├── data_models.py       # Epic, Story, Sprint data models
+├── project_storage.py   # File-based persistence for project data
 tests/          # Comprehensive test suite
 ```
 
@@ -24,8 +40,10 @@ tests/          # Comprehensive test suite
 - **Orchestrator** (`scripts/orchestrator.py`): Central coordination engine that manages workflows across multiple projects, implements HITL approval gates, and maintains state
 - **State Machine** (`lib/state_machine.py`): Finite state machine enforcing proper command sequencing (IDLE → BACKLOG_READY → SPRINT_PLANNED → SPRINT_ACTIVE → SPRINT_REVIEW)
 - **Agent Library** (`lib/agents/`): Specialized AI agents (Design, Code, Data, QA) with base class inheritance and security controls
-- **Discord Bot** (`lib/discord_bot.py`): Primary HITL command interface with slash commands and interactive state visualization
+- **Discord Bot** (`lib/discord_bot.py`): Primary HITL command interface with project registration and interactive state visualization
 - **Security System** (`lib/agent_tool_config.py`): Command access control and tool restrictions per agent type
+- **Data Models** (`lib/data_models.py`): Epic, Story, Sprint entities with serialization
+- **Project Storage** (`lib/project_storage.py`): File-based persistence for project management data
 
 ### Key Patterns
 - **Multi-Project Orchestration**: Single orchestrator manages multiple projects defined in YAML configuration
@@ -85,12 +103,23 @@ Core dependencies: `discord.py`, `pygithub`, `pyyaml`, `pytest`, `mkdocs-materia
 ## HITL Command System
 
 The system implements a finite state machine with these key commands:
-- `/epic "<description>"` - Define high-level initiatives
-- `/sprint plan|start|status|pause|resume` - Sprint lifecycle management  
-- `/backlog view|add_story|prioritize` - Backlog management
+
+### Project Management
+- `/project register <path> [name]` - Register new project repository
+- `/epic "<description>"` - Define high-level initiatives with persistent storage
+- `/backlog view|add_story|prioritize` - Backlog management with file persistence
+- `/sprint plan|start|status|pause|resume` - Sprint lifecycle management
+
+### Workflow Control  
 - `/approve [ID]` - Approve queued tasks
 - `/request_changes "<description>"` - Request modifications on PRs
 - `/state` - Interactive state inspection with diagram visualization
+
+### Data Persistence
+- All project management data stored in project repositories under `.orch-state/`
+- Epics, stories, and sprints persisted as JSON files
+- Architecture decisions and best practices maintained as markdown
+- Complete audit trail through git version control
 
 Commands are validated against current state - invalid commands return helpful error messages with suggested alternatives.
 

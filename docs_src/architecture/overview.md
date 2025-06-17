@@ -2,6 +2,28 @@
 
 The AI Agent TDD-Scrum Workflow system follows a clean, layered architecture designed for scalability, maintainability, and extensibility.
 
+## Two-Repository Model
+
+The system operates on a clear separation between orchestration and project concerns:
+
+### Orchestration Repository (this repo)
+- **Purpose**: Central framework for AI agent coordination
+- **Contents**: Agent definitions, workflow engine, Discord bot, security policies
+- **Scope**: Global across all managed projects
+- **Lifecycle**: Long-lived, evolves with framework capabilities
+
+### Project Repositories (1 to n)
+- **Purpose**: Individual codebases being developed with AI assistance
+- **Contents**: Project code + embedded workflow data in `.orch-state/`
+- **Scope**: Project-specific data and state
+- **Lifecycle**: Tied to project development lifecycle
+
+This separation ensures:
+- **Data Ownership**: Project data stays with the project code
+- **Version Control**: Project management data versioned with code changes
+- **Portability**: Projects can move between orchestration instances
+- **Security**: Clear boundaries between global and project-specific access
+
 ## System Architecture
 
 ```mermaid

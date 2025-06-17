@@ -484,6 +484,130 @@ class WorkflowBot(commands.Bot):
             await interaction.followup.send(embed=embed)
         else:
             await interaction.followup.send(f"❌ {result.get('error', 'Unknown error')}")
+    
+    @app_commands.command(name="project", description="Project management commands")
+    @app_commands.describe(
+        action="Action to perform (register)",
+        path="Path to the project repository",
+        name="Optional project name (defaults to directory name)"
+    )
+    async def project_command(self, interaction: discord.Interaction, action: str, path: str, name: str = ""):
+        """Handle /project command"""
+        await interaction.response.defer()
+        
+        if action.lower() == "register":
+            result = await self._handle_project_register(path, name, interaction.guild)
+            
+            if result["success"]:
+                embed = discord.Embed(
+                    title="📁 Project Registered",
+                    description=f"Project registered successfully",
+                    color=discord.Color.green()
+                )
+                embed.add_field(name="Project Name", value=result["project_name"], inline=True)
+                embed.add_field(name="Path", value=result["path"], inline=True)
+                embed.add_field(name="Channel", value=result["channel"], inline=True)
+                embed.add_field(name="Next Step", value=result.get("next_step", ""), inline=False)
+                
+                await interaction.followup.send(embed=embed)
+            else:
+                await interaction.followup.send(f"❌ {result.get('error', 'Unknown error')}")
+        else:
+            await interaction.followup.send(f"❌ Unknown project action: {action}")
+    
+    async def _handle_project_register(self, path: str, name: str, guild: discord.Guild) -> Dict[str, Any]:
+        """Handle project registration"""
+        try:
+            # Validate path exists and is a git repository
+            from pathlib import Path
+            project_path = Path(path).resolve()
+            
+            if not project_path.exists():
+                return {
+                    "success": False,
+                    "error": f"Path does not exist: {path}"
+                }
+            
+            if not (project_path / ".git").exists():
+                return {
+                    "success": False,
+                    "error": f"Path is not a git repository: {path}"
+                }
+            
+            # Determine project name
+            project_name = name if name else project_path.name
+            
+            # Check for existing project
+            if project_name in self.orchestrator.projects:
+                return {
+                    "success": False,
+                    "error": f"Project already registered: {project_name}"
+                }
+            
+            # Check for existing Discord channel
+            hostname = os.getenv("HOSTNAME", "localhost")
+            channel_name = f"{hostname}-{project_name}"
+            existing_channel = discord.utils.get(guild.channels, name=channel_name)
+            
+            if existing_channel:
+                return {
+                    "success": False,
+                    "error": f"Channel already exists: {channel_name}. This might indicate the project is already being worked on."
+                }
+            
+            # Initialize project storage and structure
+            from project_storage import ProjectStorage
+            storage = ProjectStorage(str(project_path))
+            
+            if not storage.initialize_project():
+                return {
+                    "success": False,
+                    "error": "Failed to initialize project structure"
+                }
+            
+            # Create Discord channel
+            try:
+                channel = await guild.create_text_channel(
+                    name=channel_name,
+                    topic=f"AI Agent workflow for project: {project_name}"
+                )
+                self.project_channels[project_name] = channel.id
+            except Exception as e:
+                return {
+                    "success": False,
+                    "error": f"Failed to create Discord channel: {e}"
+                }
+            
+            # Add project to orchestrator
+            from orchestrator import Project, OrchestrationMode
+            from state_machine import StateMachine
+            
+            new_project = Project(
+                name=project_name,
+                path=project_path,
+                orchestration_mode=OrchestrationMode.BLOCKING,
+                state_machine=StateMachine(),
+                active_tasks=[],
+                pending_approvals=[],
+                storage=storage
+            )
+            
+            self.orchestrator.projects[project_name] = new_project
+            
+            return {
+                "success": True,
+                "project_name": project_name,
+                "path": str(project_path),
+                "channel": f"#{channel_name}",
+                "next_step": f"Project initialized! Use commands in #{channel_name} to manage this project."
+            }
+            
+        except Exception as e:
+            logger.error(f"Error registering project: {e}")
+            return {
+                "success": False,
+                "error": f"Failed to register project: {e}"
+            }
 
 
 async def run_discord_bot():

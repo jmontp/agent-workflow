@@ -23,6 +23,8 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "lib"))
 
 from state_machine import StateMachine, State, CommandResult
 from agents import create_agent, get_available_agents, Task, TaskStatus, AgentResult
+from project_storage import ProjectStorage
+from data_models import ProjectData, Epic, Story, Sprint, EpicStatus, StoryStatus, SprintStatus
 
 logger = logging.getLogger(__name__)
 
@@ -43,6 +45,7 @@ class Project:
     state_machine: StateMachine
     active_tasks: List[Task]
     pending_approvals: List[str]
+    storage: ProjectStorage
     
     def to_dict(self) -> Dict[str, Any]:
         """Convert project to dictionary for serialization"""
@@ -107,14 +110,16 @@ class Orchestrator:
                     project_path = Path(project_config["path"])
                     orchestration_mode = OrchestrationMode(project_config.get("orchestration", "blocking"))
                     
-                    # Create project with state machine
+                    # Create project with state machine and storage
+                    storage = ProjectStorage(str(project_path))
                     project = Project(
                         name=project_name,
                         path=project_path,
                         orchestration_mode=orchestration_mode,
                         state_machine=StateMachine(),
                         active_tasks=[],
-                        pending_approvals=[]
+                        pending_approvals=[],
+                        storage=storage
                     )
                     
                     self.projects[project_name] = project
@@ -130,13 +135,15 @@ class Orchestrator:
     
     def _create_default_project(self) -> None:
         """Create default project configuration"""
+        storage = ProjectStorage(".")
         default_project = Project(
             name="default",
             path=Path("."),
             orchestration_mode=OrchestrationMode.BLOCKING,
             state_machine=StateMachine(),
             active_tasks=[],
-            pending_approvals=[]
+            pending_approvals=[],
+            storage=storage
         )
         self.projects["default"] = default_project
         logger.info("Created default project")
@@ -280,39 +287,63 @@ class Orchestrator:
                 "error": str(e)
             }
     
-    async def _handle_epic_command(self, project: Project, description: str = "", **kwargs) -> Dict[str, Any]:
+    async def _handle_epic_command(self, project: Project, description: str = "", title: str = "", **kwargs) -> Dict[str, Any]:
         """Handle /epic command - create high-level initiative"""
-        if not description:
+        if not description and not title:
             return {
                 "success": False,
-                "error": "Epic description is required"
+                "error": "Epic title or description is required"
             }
         
-        # TODO: Use DesignAgent to decompose epic into stories
-        design_agent = self.agents.get("DesignAgent")
-        if design_agent:
-            task = Task(
-                id=f"epic-{datetime.now().timestamp()}",
-                agent_type="DesignAgent",
-                command=f"Decompose epic into user stories: {description}",
-                context={"epic_description": description}
+        try:
+            project_data = project.storage.load_project_data()
+            
+            # Create new epic
+            new_epic = Epic(
+                title=title or description[:50] + "..." if len(description) > 50 else description,
+                description=description,
+                status=EpicStatus.ACTIVE
             )
             
-            result = await self._dispatch_task(task, project)
-            if result.success:
-                return {
-                    "success": True,
-                    "message": f"Epic created: {description}",
-                    "stories": ["AUTH-1: User authentication", "AUTH-2: Session management"],  # Placeholder
-                    "next_step": "Use /approve to approve proposed stories"
-                }
-        
-        return {
-            "success": True,
-            "message": f"Epic created: {description}",
-            "stories": ["Placeholder stories - integrate with DesignAgent"],
-            "next_step": "Use /approve to approve proposed stories"
-        }
+            project_data.epics.append(new_epic)
+            project.storage.save_project_data(project_data)
+            
+            # TODO: Use DesignAgent to decompose epic into stories
+            design_agent = self.agents.get("DesignAgent")
+            if design_agent:
+                task = Task(
+                    id=f"epic-{datetime.now().timestamp()}",
+                    agent_type="DesignAgent",
+                    command=f"Decompose epic into user stories: {description}",
+                    context={"epic_id": new_epic.id, "epic_description": description}
+                )
+                
+                result = await self._dispatch_task(task, project)
+                if result.success:
+                    return {
+                        "success": True,
+                        "message": f"Epic {new_epic.id} created: {new_epic.title}",
+                        "epic_id": new_epic.id,
+                        "title": new_epic.title,
+                        "description": new_epic.description,
+                        "next_step": "DesignAgent will propose user stories for approval"
+                    }
+            
+            return {
+                "success": True,
+                "message": f"Epic {new_epic.id} created: {new_epic.title}",
+                "epic_id": new_epic.id,
+                "title": new_epic.title,
+                "description": new_epic.description,
+                "next_step": "Add stories with /backlog add_story"
+            }
+            
+        except Exception as e:
+            logger.error(f"Error creating epic: {e}")
+            return {
+                "success": False,
+                "error": f"Failed to create epic: {e}"
+            }
     
     async def _handle_approve_command(self, project: Project, item_ids: List[str] = None, **kwargs) -> Dict[str, Any]:
         """Handle /approve command - approve pending items"""
@@ -438,38 +469,150 @@ class Orchestrator:
     
     def _view_backlog(self, project: Project, backlog_type: str = "product", **kwargs) -> Dict[str, Any]:
         """View product or sprint backlog"""
-        # Placeholder implementation
-        return {
-            "success": True,
-            "backlog_type": backlog_type,
-            "items": [
-                {"id": "AUTH-1", "title": "User authentication", "priority": "high"},
-                {"id": "AUTH-2", "title": "Session management", "priority": "medium"}
-            ]
-        }
-    
-    def _add_story(self, project: Project, description: str = "", feature: str = "", **kwargs) -> Dict[str, Any]:
-        """Add story to backlog"""
-        if not description:
+        try:
+            project_data = project.storage.load_project_data()
+            
+            if backlog_type == "sprint":
+                # Show current sprint backlog
+                active_sprint = project_data.get_active_sprint()
+                if not active_sprint:
+                    return {
+                        "success": False,
+                        "error": "No active sprint found"
+                    }
+                
+                stories = project_data.get_stories_by_sprint(active_sprint.id)
+                items = [
+                    {
+                        "id": story.id,
+                        "title": story.title,
+                        "status": story.status.value,
+                        "priority": story.priority
+                    }
+                    for story in stories
+                ]
+                return {
+                    "success": True,
+                    "backlog_type": "sprint",
+                    "sprint_id": active_sprint.id,
+                    "sprint_goal": active_sprint.goal,
+                    "items": items
+                }
+            else:
+                # Show product backlog
+                backlog_stories = project_data.get_backlog_stories()
+                items = [
+                    {
+                        "id": story.id,
+                        "title": story.title,
+                        "description": story.description,
+                        "priority": story.priority,
+                        "epic_id": story.epic_id
+                    }
+                    for story in sorted(backlog_stories, key=lambda s: s.priority)
+                ]
+                
+                return {
+                    "success": True,
+                    "backlog_type": "product",
+                    "items": items,
+                    "total_stories": len(items)
+                }
+                
+        except Exception as e:
+            logger.error(f"Error viewing backlog: {e}")
             return {
                 "success": False,
-                "error": "Story description is required"
+                "error": f"Failed to load backlog: {e}"
+            }
+    
+    def _add_story(self, project: Project, description: str = "", title: str = "", epic_id: str = "", priority: int = 3, **kwargs) -> Dict[str, Any]:
+        """Add story to backlog"""
+        if not description and not title:
+            return {
+                "success": False,
+                "error": "Story title or description is required"
             }
         
-        story_id = f"{feature.upper()}-{len(project.active_tasks) + 1}"
-        return {
-            "success": True,
-            "message": f"Story {story_id} created",
-            "story_id": story_id,
-            "description": description
-        }
+        try:
+            project_data = project.storage.load_project_data()
+            
+            # Validate epic_id if provided
+            if epic_id and not project_data.get_epic_by_id(epic_id):
+                return {
+                    "success": False,
+                    "error": f"Epic not found: {epic_id}"
+                }
+            
+            # Create new story
+            new_story = Story(
+                title=title or description[:50] + "..." if len(description) > 50 else description,
+                description=description,
+                epic_id=epic_id if epic_id else None,
+                priority=priority,
+                status=StoryStatus.BACKLOG
+            )
+            
+            project_data.stories.append(new_story)
+            project.storage.save_project_data(project_data)
+            
+            return {
+                "success": True,
+                "message": f"Story {new_story.id} created",
+                "story_id": new_story.id,
+                "title": new_story.title,
+                "description": new_story.description
+            }
+            
+        except Exception as e:
+            logger.error(f"Error adding story: {e}")
+            return {
+                "success": False,
+                "error": f"Failed to add story: {e}"
+            }
     
-    def _prioritize_story(self, project: Project, story_id: str = "", priority: str = "", **kwargs) -> Dict[str, Any]:
+    def _prioritize_story(self, project: Project, story_id: str = "", priority: int = None, **kwargs) -> Dict[str, Any]:
         """Prioritize story in backlog"""
-        return {
-            "success": True,
-            "message": f"Story {story_id} priority set to {priority}"
-        }
+        if not story_id:
+            return {
+                "success": False,
+                "error": "Story ID is required"
+            }
+        
+        if priority is None or priority < 1 or priority > 5:
+            return {
+                "success": False,
+                "error": "Priority must be between 1 (highest) and 5 (lowest)"
+            }
+        
+        try:
+            project_data = project.storage.load_project_data()
+            story = project_data.get_story_by_id(story_id)
+            
+            if not story:
+                return {
+                    "success": False,
+                    "error": f"Story not found: {story_id}"
+                }
+            
+            old_priority = story.priority
+            story.priority = priority
+            project.storage.save_project_data(project_data)
+            
+            return {
+                "success": True,
+                "message": f"Story {story_id} priority updated from {old_priority} to {priority}",
+                "story_id": story_id,
+                "old_priority": old_priority,
+                "new_priority": priority
+            }
+            
+        except Exception as e:
+            logger.error(f"Error prioritizing story: {e}")
+            return {
+                "success": False,
+                "error": f"Failed to prioritize story: {e}"
+            }
     
     async def _handle_request_changes(self, project: Project, description: str = "", **kwargs) -> Dict[str, Any]:
         """Handle request for changes during review"""

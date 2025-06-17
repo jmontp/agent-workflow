@@ -70,10 +70,14 @@ nav:
   - User Guide:
     - HITL Commands: user-guide/hitl-commands.md
     - State Machine: user-guide/state-machine.md
+    - Project Setup: user-guide/project-setup.md
     - Workflow Sequences: user-guide/workflow-sequences.md
     - User Profile: user-guide/user-profile.md
   - Architecture:
     - Overview: architecture/overview.md
+    - Orchestration Repository: architecture/orchestration-repo.md
+    - Project Repository: architecture/project-repo.md
+    - Data Flow: architecture/data-flow.md
     - Security: architecture/security.md
     - Context Diagram: architecture/context.md
     - Container Diagram: architecture/container.md
