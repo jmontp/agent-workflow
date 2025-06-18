@@ -137,12 +137,12 @@ class TestStateMachine(unittest.TestCase):
     def test_get_allowed_commands(self):
         """Test get_allowed_commands returns correct commands for each state"""
         expected_commands = {
-            State.IDLE: ["/epic", "/state"] + ["/backlog view", "/backlog add_story", "/backlog prioritize"],
-            State.BACKLOG_READY: ["/approve", "/epic", "/sprint plan", "/state"] + ["/backlog view", "/backlog add_story", "/backlog prioritize"],
-            State.SPRINT_PLANNED: ["/sprint start", "/state"] + ["/backlog view", "/backlog add_story", "/backlog prioritize"],
-            State.SPRINT_ACTIVE: ["/sprint pause", "/sprint status", "/state"] + ["/backlog view", "/backlog add_story", "/backlog prioritize"],
-            State.SPRINT_PAUSED: ["/sprint resume", "/sprint status", "/state"] + ["/backlog view", "/backlog add_story", "/backlog prioritize"],
-            State.BLOCKED: ["/skip_task", "/sprint status", "/state", "/suggest_fix"] + ["/backlog view", "/backlog add_story", "/backlog prioritize"],
+            State.IDLE: ["/epic", "/state"] + ["/backlog view", "/backlog add_story", "/backlog prioritize", "/backlog remove"],
+            State.BACKLOG_READY: ["/approve", "/epic", "/sprint plan", "/state"] + ["/backlog view", "/backlog add_story", "/backlog prioritize", "/backlog remove"],
+            State.SPRINT_PLANNED: ["/sprint start", "/state"] + ["/backlog view", "/backlog add_story", "/backlog prioritize", "/backlog remove"],
+            State.SPRINT_ACTIVE: ["/sprint pause", "/sprint status", "/state"] + ["/backlog view", "/backlog add_story", "/backlog prioritize", "/backlog remove"],
+            State.SPRINT_PAUSED: ["/sprint resume", "/sprint status", "/state"] + ["/backlog view", "/backlog add_story", "/backlog prioritize", "/backlog remove"],
+            State.BLOCKED: ["/skip_task", "/sprint status", "/state", "/suggest_fix"] + ["/backlog view", "/backlog add_story", "/backlog prioritize", "/backlog remove"],
             State.SPRINT_REVIEW: ["/feedback", "/request_changes", "/state"],  # No backlog commands
         }
         
