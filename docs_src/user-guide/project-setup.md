@@ -308,3 +308,422 @@ For projects with different environments:
 - Project channels provide access control
 - Bot permissions scoped to workflow operations
 - Team members need appropriate Discord roles
+
+## TDD Workflow Setup
+
+### Prerequisites for TDD Integration
+
+Before enabling TDD workflows, ensure your project meets these requirements:
+
+1. **Testing Framework**: Your project must have a test framework configured (pytest, unittest, jest, etc.)
+2. **CI/CD Pipeline**: Basic CI integration for automated test execution
+3. **Project Structure**: Clear separation between source and test directories
+4. **Coverage Tools**: Code coverage measurement tools installed
+
+### Enabling TDD Mode
+
+#### Step 1: Configure TDD Settings
+
+Create or update `.orch-state/tdd-config.json`:
+
+```json
+{
+  "tdd_enabled": true,
+  "test_framework": "pytest",
+  "test_directory": "tests",
+  "tdd_test_directory": "tests/tdd",
+  "coverage_threshold": 90.0,
+  "quality_gates": {
+    "complexity_limit": 10,
+    "duplication_threshold": 5.0,
+    "security_scan": true
+  },
+  "ci_integration": {
+    "enabled": true,
+    "provider": "github_actions",
+    "trigger_on_commit": true
+  },
+  "auto_progression": {
+    "enabled": false,
+    "require_human_approval": true,
+    "stuck_cycle_timeout": 30
+  }
+}
+```
+
+#### Step 2: Test Framework Setup
+
+**For Python projects (pytest):**
+
+```bash
+# Install dependencies
+pip install pytest pytest-cov pytest-xdist
+
+# Create pytest.ini
+cat > pytest.ini << EOF
+[tool:pytest]
+testpaths = tests
+python_files = test_*.py
+python_classes = Test*
+python_functions = test_*
+addopts = --cov=src --cov-report=html --cov-report=term-missing
+EOF
+```
+
+**For JavaScript projects (jest):**
+
+```bash
+# Install dependencies
+npm install --save-dev jest @jest/globals
+
+# Create jest.config.js
+cat > jest.config.js << EOF
+module.exports = {
+  testEnvironment: 'node',
+  coverageDirectory: 'coverage',
+  collectCoverageFrom: [
+    'src/**/*.js',
+    '!src/**/*.test.js'
+  ],
+  testMatch: ['**/tests/**/*.test.js']
+};
+EOF
+```
+
+#### Step 3: Directory Structure Setup
+
+The TDD workflow requires specific directory organization:
+
+```
+your-project/
+├── src/                      # Source code
+├── tests/
+│   ├── unit/                # Permanent unit tests
+│   ├── integration/         # Permanent integration tests
+│   └── tdd/                 # TDD workspace (managed by system)
+│       ├── AUTH-001/        # Story-specific tests
+│       │   ├── test_login.py
+│       │   └── test_auth.py
+│       └── USER-002/
+│           └── test_profile.py
+├── .orch-state/
+│   ├── tdd-config.json      # TDD configuration
+│   ├── tdd-cycles/          # Active TDD cycle data
+│   │   ├── AUTH-001.json    # TDD cycle state
+│   │   └── USER-002.json
+│   └── tdd-metrics.json     # Performance metrics
+└── [existing project files]
+```
+
+#### Step 4: CI/CD Integration
+
+**GitHub Actions (`.github/workflows/tdd.yml`):**
+
+```yaml
+name: TDD Workflow
+
+on:
+  push:
+    paths:
+      - 'tests/tdd/**'
+      - 'src/**'
+  pull_request:
+    paths:
+      - 'tests/tdd/**'
+      - 'src/**'
+
+jobs:
+  tdd-validation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install pytest pytest-cov
+      
+      - name: Run TDD tests
+        run: |
+          pytest tests/tdd/ --cov=src --cov-fail-under=90
+      
+      - name: Validate RED state
+        if: contains(github.ref, 'tdd-red')
+        run: |
+          # Expect tests to fail in RED state
+          pytest tests/tdd/ || true
+      
+      - name: Validate GREEN state
+        if: contains(github.ref, 'tdd-green')
+        run: |
+          # Expect all tests to pass in GREEN state
+          pytest tests/tdd/ --cov=src --cov-fail-under=90
+      
+      - name: Upload coverage
+        uses: codecov/codecov-action@v3
+```
+
+### TDD Workflow Configuration Options
+
+#### Coverage Requirements
+
+Configure different coverage thresholds for different story types:
+
+```json
+{
+  "coverage_profiles": {
+    "critical": {
+      "threshold": 95.0,
+      "branch_coverage": 90.0,
+      "exclude_patterns": []
+    },
+    "standard": {
+      "threshold": 90.0,
+      "branch_coverage": 80.0,
+      "exclude_patterns": ["**/migrations/**"]
+    },
+    "experimental": {
+      "threshold": 75.0,
+      "branch_coverage": 70.0,
+      "exclude_patterns": ["**/prototypes/**"]
+    }
+  }
+}
+```
+
+#### Quality Gates
+
+Define automated quality checks:
+
+```json
+{
+  "quality_gates": {
+    "static_analysis": {
+      "enabled": true,
+      "tools": ["pylint", "mypy", "black"],
+      "fail_threshold": "error"
+    },
+    "security_scan": {
+      "enabled": true,
+      "tools": ["bandit", "safety"],
+      "fail_on_high": true
+    },
+    "performance": {
+      "enabled": true,
+      "max_execution_time": 5.0,
+      "memory_threshold": "100MB"
+    },
+    "complexity": {
+      "enabled": true,
+      "cyclomatic_complexity": 10,
+      "cognitive_complexity": 15
+    }
+  }
+}
+```
+
+#### Agent Behavior Configuration
+
+Customize how TDD agents operate:
+
+```json
+{
+  "agent_config": {
+    "design_agent": {
+      "design_template": "api_specification",
+      "include_acceptance_criteria": true,
+      "generate_test_scenarios": true
+    },
+    "qa_agent": {
+      "test_types": ["unit", "integration", "edge_cases"],
+      "mock_external_dependencies": true,
+      "generate_test_data": true,
+      "ensure_red_state": true
+    },
+    "code_agent": {
+      "minimal_implementation": true,
+      "avoid_premature_optimization": true,
+      "follow_design_patterns": ["SOLID", "DRY"]
+    }
+  }
+}
+```
+
+### TDD-Specific Project Templates
+
+#### API Development Template
+
+```json
+{
+  "project_type": "api",
+  "tdd_config": {
+    "test_patterns": {
+      "unit": "test_unit_*.py",
+      "integration": "test_api_*.py",
+      "contract": "test_contract_*.py"
+    },
+    "phases": {
+      "design": {
+        "artifacts": ["openapi_spec", "data_models", "error_schemas"],
+        "validation": "schema_validation"
+      },
+      "test_red": {
+        "test_types": ["unit", "integration", "contract"],
+        "mock_strategy": "external_services"
+      },
+      "code_green": {
+        "implementation_style": "minimal_viable",
+        "database_strategy": "in_memory"
+      },
+      "refactor": {
+        "focus_areas": ["performance", "security", "maintainability"]
+      }
+    }
+  }
+}
+```
+
+#### Frontend Component Template
+
+```json
+{
+  "project_type": "frontend",
+  "tdd_config": {
+    "test_patterns": {
+      "unit": "*.test.js",
+      "integration": "*.integration.test.js",
+      "e2e": "*.e2e.test.js"
+    },
+    "testing_library": "react-testing-library",
+    "phases": {
+      "design": {
+        "artifacts": ["component_interface", "props_schema", "state_diagram"],
+        "validation": "typescript_compilation"
+      },
+      "test_red": {
+        "test_types": ["unit", "integration"],
+        "mock_strategy": "api_calls"
+      },
+      "code_green": {
+        "implementation_style": "component_first",
+        "styling_approach": "css_modules"
+      }
+    }
+  }
+}
+```
+
+### TDD Project Initialization
+
+#### New Project with TDD
+
+For new projects starting with TDD:
+
+```bash
+# Create project structure
+mkdir my-tdd-project
+cd my-tdd-project
+git init
+
+# Initialize TDD-ready structure
+mkdir -p src tests/{unit,integration,tdd} .orch-state
+
+# Register with TDD enabled
+/project register path:/path/to/my-tdd-project
+# System detects TDD configuration and enables TDD mode
+
+# Create first epic with TDD
+/epic "Build user authentication system with TDD"
+/tdd configure AUTH coverage_profile:critical
+```
+
+#### Existing Project TDD Migration
+
+For existing projects adopting TDD:
+
+```bash
+# Backup existing tests
+cp -r tests tests_backup
+
+# Create TDD structure
+mkdir -p tests/tdd .orch-state/tdd-cycles
+
+# Move existing tests to permanent locations
+mv tests/test_*.py tests/unit/
+mv tests/integration_*.py tests/integration/
+
+# Enable TDD mode
+echo '{"tdd_enabled": true}' > .orch-state/tdd-config.json
+
+# Re-register project to detect TDD
+/project register path:/path/to/existing/project
+```
+
+### TDD Troubleshooting Setup
+
+#### Common Setup Issues
+
+**TDD directory not created:**
+- Verify `.orch-state/tdd-config.json` exists
+- Check project registration detected TDD configuration
+- Ensure bot has write permissions to project directory
+
+**Tests not running in CI:**
+- Verify test framework is properly configured
+- Check CI workflow includes TDD test paths
+- Ensure coverage tools are installed in CI environment
+
+**Agent access errors:**
+- Verify agent security profiles allow TDD operations
+- Check file permissions in tests/tdd/ directory
+- Ensure git repository allows automated commits
+
+#### Validation Commands
+
+Verify TDD setup is working:
+
+```bash
+# Check TDD configuration
+/tdd status
+
+# Validate test framework
+pytest tests/tdd/ --collect-only
+
+# Verify CI integration
+git add .orch-state/tdd-config.json
+git commit -m "Enable TDD workflow"
+git push  # Should trigger CI validation
+
+# Test agent permissions
+/tdd start TEST-001  # Should create TDD cycle
+```
+
+### TDD Best Practices for Setup
+
+#### Project Organization
+
+1. **Separate TDD Workspace**: Keep TDD tests separate from permanent test suite
+2. **Story-Based Organization**: Organize TDD tests by story ID for clarity
+3. **Clear Naming Conventions**: Use consistent naming for TDD test files
+4. **Version Control Integration**: Ensure TDD artifacts are properly tracked
+
+#### CI/CD Configuration
+
+1. **Separate TDD Pipelines**: Different CI behavior for RED vs GREEN states
+2. **Quality Gate Integration**: Automated quality checks at each TDD phase
+3. **Artifact Preservation**: Maintain TDD test history for audit trails
+4. **Performance Monitoring**: Track TDD cycle times and success rates
+
+#### Team Coordination
+
+1. **Shared TDD Standards**: Document TDD practices for the team
+2. **Review Processes**: Define review requirements for TDD phases
+3. **Escalation Procedures**: Clear processes when TDD cycles get stuck
+4. **Metrics Tracking**: Regular review of TDD performance metrics
+
+With this setup, your project will be fully configured for TDD workflows with proper tooling, CI integration, and team processes.

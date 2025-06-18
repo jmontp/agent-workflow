@@ -485,4 +485,483 @@ class DocumentationAgent(BaseAgent):
         return "Generated API documentation"
 ```
 
+## TDD System APIs
+
+### TDDStateMachine
+
+Finite state machine that enforces proper TDD command sequencing according to Test-Driven Development best practices.
+
+```python
+from lib.tdd_state_machine import TDDStateMachine, TDDCommandResult
+from lib.tdd_models import TDDState, TDDCycle
+
+state_machine = TDDStateMachine()
+```
+
+#### Methods
+
+**`validate_command(command: str, cycle: Optional[TDDCycle] = None) -> TDDCommandResult`**
+
+Validate if a TDD command is allowed in the current state.
+
+**Parameters:**
+- `command` (str): The TDD command to validate (e.g., "/tdd test", "/tdd code")
+- `cycle` (TDDCycle, optional): TDD cycle for context validation
+
+**Returns:**
+- `TDDCommandResult`: Validation outcome with success flag, new state, error message, and hints
+
+**Example:**
+```python
+result = state_machine.validate_command("/tdd code", active_cycle)
+if result.success:
+    print(f"Command allowed, new state: {result.new_state}")
+else:
+    print(f"Error: {result.error_message}")
+    print(f"Hint: {result.hint}")
+```
+
+**`transition(command: str, cycle: Optional[TDDCycle] = None) -> TDDCommandResult`**
+
+Execute a TDD state transition if the command is valid.
+
+**`get_allowed_commands(cycle: Optional[TDDCycle] = None) -> List[str]`**
+
+Get list of TDD commands allowed in current state.
+
+**`get_next_suggested_command(cycle: Optional[TDDCycle] = None) -> Optional[str]`**
+
+Get the next suggested command based on current state and conditions.
+
+**`get_state_info(cycle: Optional[TDDCycle] = None) -> Dict[str, Any]`**
+
+Get comprehensive TDD state information for debugging and visualization.
+
+**`can_auto_progress(cycle: Optional[TDDCycle] = None) -> bool`**
+
+Check if state machine can automatically progress to next state.
+
+**`get_mermaid_diagram() -> str`**
+
+Generate Mermaid state diagram for TDD workflow visualization.
+
+### TDD Data Models
+
+#### TDDState Enum
+
+TDD cycle states with their purposes:
+
+```python
+from lib.tdd_models import TDDState
+
+class TDDState(Enum):
+    DESIGN = "design"           # Create specifications and acceptance criteria
+    TEST_RED = "test_red"       # Write failing tests
+    CODE_GREEN = "code_green"   # Implement minimal code to pass tests
+    REFACTOR = "refactor"       # Improve code quality while keeping tests green
+    COMMIT = "commit"           # Save progress and mark task complete
+```
+
+#### TDDCycle
+
+TDD cycle linked to a story with task management and progress tracking.
+
+```python
+from lib.tdd_models import TDDCycle, TDDTask
+
+cycle = TDDCycle(
+    id="tdd-cycle-abc123",
+    story_id="AUTH-001",
+    current_state=TDDState.DESIGN
+)
+```
+
+**Attributes:**
+- `id` (str): Unique identifier
+- `story_id` (str): Associated story identifier
+- `current_state` (TDDState): Current TDD phase
+- `current_task_id` (Optional[str]): Active task identifier
+- `tasks` (List[TDDTask]): All tasks in the cycle
+- `started_at` (str): Cycle start timestamp
+- `completed_at` (Optional[str]): Cycle completion timestamp
+- `total_test_runs` (int): Count of test executions
+- `total_refactors` (int): Count of refactor operations
+- `total_commits` (int): Count of commits made
+- `ci_status` (CIStatus): Overall CI status
+- `overall_test_coverage` (float): Average test coverage
+
+**Methods:**
+
+**`get_current_task() -> Optional[TDDTask]`**
+
+Get the currently active task.
+
+**`add_task(task: TDDTask) -> None`**
+
+Add a new task to the cycle.
+
+**`start_task(task_id: str) -> bool`**
+
+Start a specific task (only one can be active).
+
+**`complete_current_task() -> bool`**
+
+Mark current task as complete and advance cycle.
+
+**`get_progress_summary() -> Dict[str, Any]`**
+
+Get detailed progress information including task counts and metrics.
+
+**`calculate_overall_coverage() -> float`**
+
+Calculate overall test coverage for the entire cycle.
+
+#### TDDTask
+
+Individual task within a TDD cycle with test management and state tracking.
+
+```python
+from lib.tdd_models import TDDTask, TestFile, TestResult
+
+task = TDDTask(
+    id="tdd-task-xyz789",
+    cycle_id="tdd-cycle-abc123",
+    description="Implement user authentication API",
+    current_state=TDDState.DESIGN
+)
+```
+
+**Attributes:**
+- `id` (str): Unique identifier
+- `cycle_id` (str): Parent cycle identifier
+- `description` (str): Task description
+- `acceptance_criteria` (List[str]): Acceptance criteria list
+- `current_state` (TDDState): Current task state
+- `test_files` (List[str]): Test file paths
+- `test_file_objects` (List[TestFile]): TestFile objects with metadata
+- `source_files` (List[str]): Source file paths
+- `test_results` (List[TestResult]): Test execution results
+- `design_notes` (str): Design phase documentation
+- `implementation_notes` (str): Implementation notes
+- `refactor_notes` (str): Refactoring documentation
+- `ci_status` (CIStatus): CI pipeline status
+- `test_coverage` (float): Task-specific test coverage
+
+**Methods:**
+
+**`has_passing_tests() -> bool`**
+
+Check if all tests are currently passing.
+
+**`has_failing_tests() -> bool`**
+
+Check if any tests are currently failing.
+
+**`add_test_file(test_file: TestFile) -> None`**
+
+Add a test file to this task.
+
+**`get_committed_test_files() -> List[TestFile]`**
+
+Get all test files that have been committed to repository.
+
+**`can_commit_tests() -> bool`**
+
+Check if tests are ready to be committed (RED state with failing tests).
+
+**`can_commit_code() -> bool`**
+
+Check if code can be committed (tests passing with committed test files).
+
+**`can_commit_refactor() -> bool`**
+
+Check if refactored code can be committed (tests still passing).
+
+#### TestFile
+
+Test file lifecycle management with CI integration.
+
+```python
+from lib.tdd_models import TestFile, TestFileStatus, CIStatus
+
+test_file = TestFile(
+    file_path="/path/to/test_auth.py",
+    relative_path="tests/tdd/AUTH-001/test_auth.py",
+    story_id="AUTH-001",
+    status=TestFileStatus.DRAFT
+)
+```
+
+**Attributes:**
+- `id` (str): Unique identifier
+- `file_path` (str): Absolute file path
+- `relative_path` (str): Path relative to project root
+- `story_id` (str): Associated story identifier
+- `task_id` (str): Associated task identifier
+- `status` (TestFileStatus): File lifecycle status
+- `ci_status` (CIStatus): CI pipeline status
+- `test_count` (int): Total number of tests
+- `passing_tests` (int): Count of passing tests
+- `failing_tests` (int): Count of failing tests
+- `coverage_percentage` (float): Code coverage percentage
+
+**Methods:**
+
+**`exists() -> bool`**
+
+Check if test file exists on filesystem.
+
+**`is_committed() -> bool`**
+
+Check if test file has been committed to repository.
+
+**`is_passing() -> bool`**
+
+Check if all tests in file are passing.
+
+**`get_permanent_location() -> str`**
+
+Get the permanent test location after integration (tests/unit/ or tests/integration/).
+
+#### TestResult
+
+Individual test execution result with timing and output capture.
+
+```python
+from lib.tdd_models import TestResult, TestStatus
+
+result = TestResult(
+    test_file="test_auth.py",
+    test_name="test_login_success",
+    status=TestStatus.GREEN,
+    execution_time=0.045
+)
+```
+
+**Attributes:**
+- `id` (str): Unique identifier
+- `test_file` (str): Test file name
+- `test_name` (str): Specific test name
+- `status` (TestStatus): Execution status (RED, GREEN, ERROR)
+- `output` (str): Test output capture
+- `error_message` (Optional[str]): Error details if failed
+- `execution_time` (float): Test execution time in seconds
+- `timestamp` (str): Execution timestamp
+
+### Enhanced Agent APIs for TDD
+
+#### DesignAgent (TDD Mode)
+
+Extended capabilities for TDD design phase.
+
+```python
+from lib.agents.design_agent import DesignAgent
+
+agent = DesignAgent()
+result = await agent.run_tdd_design(
+    story="Implement user authentication", 
+    acceptance_criteria=["User can login", "Passwords are hashed"]
+)
+```
+
+**TDD-Specific Methods:**
+
+**`async run_tdd_design(story: str, acceptance_criteria: List[str]) -> TDDTask`**
+
+Create detailed technical specifications for TDD implementation.
+
+**`async create_acceptance_tests(task: TDDTask) -> List[str]`**
+
+Generate acceptance test scenarios from design specifications.
+
+#### QAAgent (TDD Mode)
+
+Specialized for TDD test creation and validation.
+
+```python
+from lib.agents.qa_agent import QAAgent
+
+agent = QAAgent()
+result = await agent.run_tdd_test_creation(
+    task=tdd_task,
+    ensure_failures=True
+)
+```
+
+**TDD-Specific Methods:**
+
+**`async run_tdd_test_creation(task: TDDTask, ensure_failures: bool = True) -> List[TestFile]`**
+
+Create comprehensive failing tests based on design specifications.
+
+**`async validate_test_red_state(task: TDDTask) -> bool`**
+
+Verify that tests are properly failing before implementation.
+
+**`async run_tdd_test_validation(task: TDDTask) -> List[TestResult]`**
+
+Execute tests and validate results against TDD requirements.
+
+#### CodeAgent (TDD Mode)
+
+Implementation with TDD constraints and refactoring support.
+
+```python
+from lib.agents.code_agent import CodeAgent
+
+agent = CodeAgent()
+result = await agent.run_tdd_implementation(
+    task=tdd_task,
+    minimal_implementation=True
+)
+```
+
+**TDD-Specific Methods:**
+
+**`async run_tdd_implementation(task: TDDTask, minimal_implementation: bool = True) -> List[str]`**
+
+Implement minimal code to make tests pass in CODE_GREEN phase.
+
+**`async run_tdd_refactor(task: TDDTask, maintain_green: bool = True) -> List[str]`**
+
+Improve code quality while ensuring all tests remain green.
+
+**`async validate_green_state(task: TDDTask) -> bool`**
+
+Verify that all tests are passing after implementation.
+
+### TDD Orchestration APIs
+
+#### TDDOrchestrator
+
+Coordinates TDD cycles with the main Scrum workflow.
+
+```python
+from lib.tdd_orchestrator import TDDOrchestrator
+
+orchestrator = TDDOrchestrator()
+```
+
+**Methods:**
+
+**`async start_tdd_cycle(story_id: str, tasks: List[str]) -> TDDCycle`**
+
+Start a new TDD cycle for a story with specified tasks.
+
+**`async progress_tdd_cycle(cycle_id: str, command: str) -> TDDCommandResult`**
+
+Advance a TDD cycle through the next state based on command.
+
+**`async get_active_tdd_cycles() -> List[TDDCycle]`**
+
+Get all currently active TDD cycles across all stories.
+
+**`async pause_tdd_cycle(cycle_id: str) -> bool`**
+
+Temporarily pause a TDD cycle.
+
+**`async resume_tdd_cycle(cycle_id: str) -> bool`**
+
+Resume a paused TDD cycle.
+
+**`async get_tdd_metrics(time_period: str = "30d") -> Dict[str, Any]`**
+
+Get TDD performance metrics and analytics.
+
+### TDD Integration Examples
+
+#### Complete TDD Cycle Management
+
+```python
+import asyncio
+from lib.tdd_state_machine import TDDStateMachine
+from lib.tdd_models import TDDCycle, TDDTask
+from lib.agents.design_agent import DesignAgent
+from lib.agents.qa_agent import QAAgent
+from lib.agents.code_agent import CodeAgent
+
+async def run_complete_tdd_cycle():
+    # Initialize TDD cycle
+    cycle = TDDCycle(story_id="AUTH-001")
+    task = TDDTask(
+        description="Implement user login API",
+        acceptance_criteria=["User can authenticate", "Invalid credentials rejected"]
+    )
+    cycle.add_task(task)
+    
+    # Initialize state machine
+    tdd_sm = TDDStateMachine()
+    tdd_sm.set_active_cycle(cycle)
+    
+    # Phase 1: Design
+    design_agent = DesignAgent()
+    design_result = await design_agent.run_tdd_design(
+        story=task.description,
+        acceptance_criteria=task.acceptance_criteria
+    )
+    
+    # Transition to TEST_RED
+    transition_result = tdd_sm.transition("/tdd test", cycle)
+    if transition_result.success:
+        # Phase 2: Write failing tests
+        qa_agent = QAAgent()
+        test_files = await qa_agent.run_tdd_test_creation(task)
+        
+        # Commit tests
+        commit_result = tdd_sm.transition("/tdd commit-tests", cycle)
+        if commit_result.success:
+            # Phase 3: Implement code
+            code_agent = CodeAgent()
+            source_files = await code_agent.run_tdd_implementation(task)
+            
+            # Validate green state
+            is_green = await code_agent.validate_green_state(task)
+            if is_green:
+                # Phase 4: Refactor
+                refactor_result = tdd_sm.transition("/tdd refactor", cycle)
+                if refactor_result.success:
+                    refactored_files = await code_agent.run_tdd_refactor(task)
+                    
+                    # Final commit
+                    final_result = tdd_sm.transition("/tdd commit", cycle)
+                    return final_result.success
+    
+    return False
+
+# Usage
+success = asyncio.run(run_complete_tdd_cycle())
+```
+
+#### TDD Metrics and Monitoring
+
+```python
+from lib.tdd_orchestrator import TDDOrchestrator
+
+async def monitor_tdd_progress():
+    orchestrator = TDDOrchestrator()
+    
+    # Get all active cycles
+    active_cycles = await orchestrator.get_active_tdd_cycles()
+    
+    for cycle in active_cycles:
+        progress = cycle.get_progress_summary()
+        print(f"Story {cycle.story_id}: {progress['current_state']} "
+              f"({progress['progress']} tasks complete)")
+        
+        current_task = cycle.get_current_task()
+        if current_task:
+            if current_task.has_failing_tests():
+                print(f"  - RED: {len(current_task.test_results)} tests failing")
+            elif current_task.has_passing_tests():
+                print(f"  - GREEN: All tests passing, coverage: {current_task.test_coverage:.1f}%")
+    
+    # Get performance metrics
+    metrics = await orchestrator.get_tdd_metrics("7d")
+    print(f"Last 7 days: {metrics['total_cycles']} cycles, "
+          f"avg cycle time: {metrics['avg_cycle_time']} minutes")
+
+# Usage
+asyncio.run(monitor_tdd_progress())
+```
+
 This API reference provides comprehensive coverage of the system's public interfaces and usage patterns.

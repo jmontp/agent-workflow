@@ -184,3 +184,126 @@ For solo development with AI assistance:
 - Include context about existing code and patterns
 - Use descriptive names for features and stories
 - Give feedback regularly to improve agent performance
+
+## TDD Workflow Questions
+
+### What is the TDD workflow in the AI Agent system?
+
+The system implements a parallel TDD state machine that runs alongside the main Scrum workflow. Each story in an active sprint follows a strict Test-Driven Development cycle: DESIGN → TEST_RED → CODE_GREEN → REFACTOR → COMMIT.
+
+### How does TDD work with multiple stories?
+
+Multiple stories can run TDD cycles simultaneously. Each story has its own independent TDD state machine, allowing parallel development while maintaining TDD discipline for each feature.
+
+### What are the TDD states and what happens in each?
+
+- **DESIGN**: Design Agent creates technical specifications and acceptance criteria
+- **TEST_RED**: QA Agent writes comprehensive failing tests based on specifications  
+- **CODE_GREEN**: Code Agent implements minimal code to make tests pass
+- **REFACTOR**: Code Agent improves code quality while keeping tests green
+- **COMMIT**: Final commit with complete feature and clean code
+
+### How do I monitor TDD progress?
+
+Use these commands:
+- `/tdd overview` - See status of all active TDD cycles
+- `/tdd status <STORY_ID>` - Get detailed information for a specific story
+- `/tdd metrics` - View cycle times, success rates, and quality metrics
+
+### Can I control the TDD cycle manually?
+
+Yes, you have several control options:
+- `/tdd pause <STORY_ID>` - Temporarily halt a TDD cycle
+- `/tdd resume <STORY_ID>` - Resume a paused cycle
+- `/tdd skip_phase <STORY_ID>` - Skip current phase (requires approval)
+- `/tdd review_cycle <STORY_ID>` - Request human review at any phase
+
+### What happens if a TDD cycle gets stuck?
+
+The system has several recovery mechanisms:
+- After failed attempts, tasks escalate to human review
+- Use `/suggest_fix "description"` to provide guidance to agents
+- Use `/tdd skip_phase` to move past problematic phases
+- Human approval gates allow intervention at any point
+
+### How do I ensure test quality in TDD cycles?
+
+The system enforces several quality gates:
+- Tests must fail initially (RED state) before implementation
+- All tests must pass before refactoring (GREEN requirement)
+- Code coverage thresholds are maintained
+- CI integration validates all changes
+
+### Can I run traditional sprints without TDD?
+
+Yes, TDD is optional. Stories without TDD requirements follow the traditional agent workflow. You can mix TDD and non-TDD stories within the same sprint.
+
+### How does TDD integrate with CI/CD?
+
+TDD cycles integrate with CI/CD pipelines:
+- Tests are committed in RED state for continuous validation
+- Implementation commits trigger CI builds
+- Quality gates can include external tools (SonarQube, security scans)
+- Failed CI runs pause TDD cycles for human intervention
+
+### What metrics does the TDD system track?
+
+Key metrics include:
+- Cycle time per TDD phase
+- Success rates for each state transition
+- Test coverage percentages
+- Refactor frequency and impact
+- CI success rates and failure patterns
+
+### How do I troubleshoot stuck TDD cycles?
+
+Common issues and solutions:
+
+**Cycle stuck in CODE_GREEN:**
+- Check test failures in CI logs
+- Provide guidance with `/suggest_fix`
+- Consider `/tdd skip_phase` if persistently blocked
+
+**Tests failing after refactor:**
+- System automatically rolls back to last green state
+- Use `/tdd review_cycle` for manual intervention
+- Adjust refactor scope and retry
+
+**Design phase taking too long:**
+- Check story complexity and requirements clarity
+- Use `/tdd design_complete` to manually advance
+- Consider splitting complex stories
+
+### Are there different TDD profiles for different story types?
+
+Yes, you can configure TDD parameters:
+- Coverage thresholds per story type
+- Complexity limits for different components
+- Custom phase timeouts for API vs UI development
+- Different quality gates for critical vs non-critical features
+
+### How do TDD cycles handle dependencies between stories?
+
+TDD supports story dependencies:
+- Stories can wait for other stories to complete specific phases
+- Use `/tdd depends <STORY_A> <STORY_B>` to define dependencies
+- Dependency chains are visualized in `/tdd overview`
+- Circular dependencies are detected and prevented
+
+### Can I integrate external quality tools with TDD?
+
+Yes, TDD cycles support external tool integration:
+- Security scanning during CODE_GREEN phase
+- Performance benchmarking during REFACTOR
+- Custom quality gates with `/tdd gate` commands
+- Manual overrides with justification tracking
+
+### What's the difference between TDD commit types?
+
+TDD uses incremental commits to preserve test development:
+- `/tdd commit-tests` - Commits failing tests (TEST_RED → CODE_GREEN)
+- `/tdd commit-code` - Commits working implementation (CODE_GREEN → REFACTOR)  
+- `/tdd commit-refactor` - Commits refactored code (REFACTOR → COMMIT)
+- `/tdd commit` - Final commit when satisfied with quality
+
+This approach ensures tests are preserved in the repository even if implementation fails, maintaining TDD audit trail.
