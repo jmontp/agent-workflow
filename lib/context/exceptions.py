@@ -84,3 +84,35 @@ class ContextTimeoutError(ContextError):
         super().__init__(message, **kwargs)
         self.operation = operation
         self.timeout_seconds = timeout_seconds
+
+
+class ContextCacheError(ContextError):
+    """Raised when context cache operations fail"""
+    
+    def __init__(self, message: str, cache_key: Optional[str] = None, **kwargs):
+        super().__init__(message, **kwargs)
+        self.cache_key = cache_key
+
+
+class ContextMonitoringError(ContextError):
+    """Raised when context monitoring operations fail"""
+    
+    def __init__(self, message: str, metric_type: Optional[str] = None, **kwargs):
+        super().__init__(message, **kwargs)
+        self.metric_type = metric_type
+
+
+class ContextBackgroundError(ContextError):
+    """Raised when background context processing operations fail"""
+    
+    def __init__(self, message: str, task_id: Optional[str] = None, **kwargs):
+        super().__init__(message, **kwargs)
+        self.task_id = task_id
+
+
+class ContextLearningError(ContextError):
+    """Raised when context learning operations fail"""
+    
+    def __init__(self, message: str, learning_type: Optional[str] = None, **kwargs):
+        super().__init__(message, **kwargs)
+        self.learning_type = learning_type

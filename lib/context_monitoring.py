@@ -8,9 +8,14 @@ performance tracking, alerting, and comprehensive analytics.
 import asyncio
 import logging
 import time
-import psutil
 import json
-from typing import Dict, List, Optional, Any, Callable, Union
+
+# Graceful fallback for psutil
+try:
+    import psutil
+except ImportError:
+    psutil = None
+from typing import Dict, List, Optional, Any, Callable, Union, Tuple
 from datetime import datetime, timedelta
 from dataclasses import dataclass, field, asdict
 from enum import Enum
@@ -601,6 +606,34 @@ class ContextMonitor:
     async def _collect_system_metrics(self) -> None:
         """Collect system-level metrics"""
         try:
+            if psutil is None:
+                # Fallback values when psutil is not available
+                self.record_metric(
+                    name="system_cpu_percent",
+                    value=50.0,  # Mock moderate usage
+                    metric_type=MetricType.GAUGE,
+                    tags={"component": "system", "mock": "true"}
+                )
+                self.record_metric(
+                    name="system_memory_percent",
+                    value=60.0,  # Mock moderate usage
+                    metric_type=MetricType.GAUGE,
+                    tags={"component": "system", "mock": "true"}
+                )
+                self.record_metric(
+                    name="system_memory_available_mb",
+                    value=2048.0,  # Mock 2GB available
+                    metric_type=MetricType.GAUGE,
+                    tags={"component": "system", "mock": "true"}
+                )
+                self.record_metric(
+                    name="system_disk_percent",
+                    value=70.0,  # Mock moderate usage
+                    metric_type=MetricType.GAUGE,
+                    tags={"component": "system", "mock": "true"}
+                )
+                return
+            
             # CPU usage
             cpu_percent = psutil.cpu_percent(interval=1)
             self.record_metric(
