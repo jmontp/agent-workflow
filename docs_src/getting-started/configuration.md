@@ -198,9 +198,324 @@ python scripts/test-discord.py
 python scripts/test-agents.py
 ```
 
+## TDD Configuration
+
+### TDD State Machine Settings
+
+Configure TDD behavior in your project configuration:
+
+```yaml
+# config.yml
+orchestrator:
+  mode: blocking
+  tdd:
+    enabled: true
+    auto_start_cycles: true  # Automatically start TDD for active stories
+    preserve_tests: true     # Enable test preservation workflow
+    parallel_execution: true # Allow multiple TDD cycles simultaneously
+    
+    # State machine configuration
+    state_machine:
+      auto_transitions: true    # Enable /tdd next auto-advancement
+      require_conditions: true  # Enforce transition conditions
+      validation_mode: strict   # strict, relaxed, or disabled
+    
+    # Test preservation settings
+    test_preservation:
+      base_directory: "tests/tdd"
+      structure_mode: "story_based"  # story_based or flat
+      integration_target: "tests/unit"  # Where to move tests after completion
+      backup_enabled: true
+      max_backup_age_days: 30
+```
+
+### TDD Cycle Timeouts
+
+Configure timeouts for different TDD phases:
+
+```yaml
+tdd:
+  timeouts:
+    design_phase_minutes: 30      # Design Agent specification creation
+    test_red_phase_minutes: 45    # QA Agent test writing
+    code_green_phase_minutes: 60  # Code Agent implementation
+    refactor_phase_minutes: 30    # Code Agent refactoring
+    commit_phase_minutes: 15      # Final commit and cleanup
+    
+    # Global timeout settings
+    max_cycle_hours: 4           # Maximum time for complete TDD cycle
+    stuck_detection_minutes: 15  # How long before marking phase as stuck
+    auto_recovery_enabled: true  # Enable automatic recovery attempts
+```
+
+### Test Execution Configuration
+
+Configure how tests are executed during TDD cycles:
+
+```yaml
+tdd:
+  test_execution:
+    runner: "pytest"              # Test runner: pytest, unittest, nose2
+    parallel_jobs: 4              # Number of parallel test jobs
+    timeout_seconds: 300          # Individual test timeout
+    coverage_threshold: 90        # Minimum coverage percentage
+    
+    # Test discovery
+    test_patterns:
+      - "test_*.py"
+      - "*_test.py"
+    
+    # Coverage configuration
+    coverage:
+      enabled: true
+      fail_under: 90
+      exclude_patterns:
+        - "*/migrations/*"
+        - "*/venv/*"
+        - "test_*"
+    
+    # CI integration
+    ci_integration:
+      enabled: true
+      provider: "github_actions"  # github_actions, gitlab_ci, jenkins
+      trigger_on_commit: true
+      require_passing_ci: true
+```
+
+### Agent Behavior in TDD
+
+Configure how agents behave during TDD cycles:
+
+```yaml
+tdd:
+  agents:
+    design_agent:
+      max_specification_length: 2000
+      include_diagrams: true
+      detail_level: "comprehensive"  # minimal, standard, comprehensive
+      
+    qa_agent:
+      test_types:
+        - "unit"
+        - "integration"
+        - "acceptance"
+      mock_external_services: true
+      generate_test_data: true
+      
+    code_agent:
+      implementation_style: "minimal"  # minimal, complete, extensive
+      refactor_automatically: true
+      apply_best_practices: true
+      
+    # Agent coordination
+    coordination:
+      exclusive_phases: true        # Only one agent active per phase
+      handoff_validation: true      # Validate work before handoff
+      conflict_resolution: "human"  # human, automatic, priority_based
+```
+
+### TDD Quality Gates
+
+Configure quality requirements for TDD progression:
+
+```yaml
+tdd:
+  quality_gates:
+    test_red_phase:
+      min_test_count: 3
+      require_failing_tests: true
+      max_test_errors: 0
+      
+    code_green_phase:
+      require_all_tests_passing: true
+      max_complexity_score: 10
+      min_coverage_increase: 5  # Percentage points
+      
+    refactor_phase:
+      maintain_test_coverage: true
+      max_complexity_regression: 0
+      code_quality_threshold: 8.0  # SonarQube-style rating
+      
+    commit_phase:
+      require_commit_message: true
+      run_full_test_suite: true
+      validate_ci_config: true
+```
+
+### TDD Metrics and Monitoring
+
+Configure metrics collection and monitoring:
+
+```yaml
+tdd:
+  metrics:
+    collection_enabled: true
+    
+    # Cycle metrics
+    track_cycle_times: true
+    track_phase_durations: true
+    track_success_rates: true
+    
+    # Quality metrics
+    track_test_coverage: true
+    track_code_complexity: true
+    track_refactor_frequency: true
+    
+    # Export configuration
+    export:
+      format: "json"  # json, csv, prometheus
+      interval_minutes: 15
+      destination: "logs/tdd_metrics.json"
+      
+    # Alerting
+    alerts:
+      stuck_cycle_threshold_minutes: 60
+      low_coverage_threshold: 80
+      high_complexity_threshold: 15
+      notification_webhook: "https://hooks.slack.com/..."
+```
+
+### Environment-Specific TDD Settings
+
+Configure TDD behavior for different environments:
+
+```yaml
+# Development environment
+development:
+  tdd:
+    timeouts:
+      design_phase_minutes: 15    # Faster for dev
+      test_red_phase_minutes: 20
+    quality_gates:
+      code_green_phase:
+        min_coverage_increase: 2  # Relaxed for dev
+    test_execution:
+      parallel_jobs: 2            # Lower resource usage
+
+# Production environment  
+production:
+  tdd:
+    timeouts:
+      design_phase_minutes: 60    # More thorough for prod
+      test_red_phase_minutes: 90
+    quality_gates:
+      code_green_phase:
+        min_coverage_increase: 10 # Stricter for prod
+    test_execution:
+      parallel_jobs: 8            # Full resource utilization
+```
+
+### TDD Integration Settings
+
+Configure integration with external tools and services:
+
+```yaml
+tdd:
+  integrations:
+    # Git integration
+    git:
+      auto_commit_tests: true
+      commit_message_template: "TDD: {phase} for {story_id} - {description}"
+      branch_strategy: "feature"  # feature, tdd_cycles, main
+      
+    # CI/CD integration  
+    ci:
+      provider: "github_actions"
+      config_file: ".github/workflows/tdd.yml"
+      trigger_events:
+        - "test_commit"
+        - "code_commit" 
+        - "refactor_commit"
+      
+    # Code quality tools
+    quality_tools:
+      sonarqube:
+        enabled: true
+        server_url: "https://sonar.company.com"
+        project_key: "my-project"
+      
+      codecov:
+        enabled: true
+        token: "${CODECOV_TOKEN}"
+        
+    # Notification services
+    notifications:
+      slack:
+        webhook_url: "${SLACK_WEBHOOK}"
+        channels:
+          - "#tdd-cycles"
+          - "#development"
+      
+      email:
+        smtp_server: "smtp.company.com"
+        from_address: "tdd-bot@company.com"
+        recipients:
+          - "team-lead@company.com"
+```
+
+### Validating TDD Configuration
+
+Test your TDD configuration:
+
+```bash
+# Validate TDD configuration syntax
+python -c "import yaml; yaml.safe_load(open('config.yml'))"
+
+# Test TDD state machine initialization
+python -c "
+from lib.tdd_state_machine import TDDStateMachine
+machine = TDDStateMachine()
+print('TDD state machine initialized successfully')
+"
+
+# Validate TDD directory structure
+python scripts/validate_tdd_config.py
+
+# Test TDD integration with main system
+python scripts/test_tdd_integration.py
+```
+
+### Common TDD Configuration Issues
+
+**TDD cycles not starting automatically:**
+```yaml
+# Ensure auto_start_cycles is enabled
+tdd:
+  auto_start_cycles: true
+```
+
+**Test preservation not working:**
+```yaml
+# Check directory permissions and paths
+tdd:
+  test_preservation:
+    base_directory: "tests/tdd"  # Must be writable
+    structure_mode: "story_based"
+```
+
+**Agent coordination conflicts:**
+```yaml
+# Enable exclusive phases to prevent conflicts
+tdd:
+  agents:
+    coordination:
+      exclusive_phases: true
+      handoff_validation: true
+```
+
+**Performance issues with large test suites:**
+```yaml
+# Optimize test execution
+tdd:
+  test_execution:
+    parallel_jobs: 8
+    timeout_seconds: 60  # Reduce if needed
+```
+
 ## Next Steps
 
 After configuration:
 1. [Run the quick start guide](quick-start.md)
 2. [Set up your first project](../user-guide/project-setup.md)
 3. [Learn the HITL commands](../user-guide/hitl-commands.md)
+4. [Explore TDD workflows](../user-guide/tdd-workflow.md)

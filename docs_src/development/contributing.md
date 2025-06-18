@@ -266,6 +266,11 @@ pytest -m "not slow"
 
 # Security tests
 pytest tests/unit/test_agent_tool_config.py
+
+# TDD-specific tests
+pytest tests/unit/test_tdd_models.py
+pytest tests/unit/test_tdd_state_machine.py
+pytest test_tdd_e2e.py
 ```
 
 ### Test Requirements
@@ -274,6 +279,224 @@ pytest tests/unit/test_agent_tool_config.py
 - **Security tests**: Required for any security-related changes
 - **Integration tests**: Required for cross-component changes
 - **Performance tests**: For changes affecting system performance
+- **TDD tests**: Required for all TDD state machine and model changes
+
+## TDD Development Practices
+
+### Working with TDD Features
+
+The AI Agent TDD-Scrum system includes a comprehensive TDD workflow system. When contributing to TDD-related functionality, follow these practices:
+
+#### TDD State Machine Development
+
+**State Transition Testing:**
+```python
+def test_tdd_state_transition():
+    """Test TDD state transitions follow RED-GREEN-REFACTOR cycle"""
+    machine = TDDStateMachine(TDDState.DESIGN)
+    
+    # Test valid transition
+    result = machine.transition("/tdd test")
+    assert result.success
+    assert result.new_state == TDDState.TEST_RED
+    
+    # Test invalid transition
+    result = machine.transition("/tdd refactor") 
+    assert not result.success
+    assert "Write failing tests first" in result.hint
+```
+
+**Condition Validation:**
+```python
+def test_transition_conditions():
+    """Test that transition conditions are properly validated"""
+    task = TDDTask(description="Test login API")
+    task.test_results = [TestResult(status=TestStatus.RED)]
+    
+    machine = TDDStateMachine()
+    cycle = TDDCycle(current_task_id=task.id)
+    cycle.add_task(task)
+    
+    # Should allow transition when conditions are met
+    result = machine.validate_command("/tdd code", cycle)
+    assert result.success
+```
+
+#### TDD Model Development
+
+**Data Model Changes:**
+- All TDD models must include `to_dict()` and `from_dict()` methods
+- Ensure serialization compatibility for persistence
+- Add proper type hints and documentation
+
+```python
+@dataclass
+class TDDTask:
+    """Individual task within a TDD cycle"""
+    id: str = field(default_factory=lambda: f"tdd-task-{uuid.uuid4().hex[:8]}")
+    # ... other fields
+    
+    def to_dict(self) -> Dict[str, Any]:
+        """Serialize to dictionary for persistence"""
+        return {
+            "id": self.id,
+            # ... serialize all fields including nested objects
+        }
+```
+
+#### Test Preservation Workflow
+
+When working on test preservation features:
+
+**File Management:**
+```python
+def test_test_file_lifecycle():
+    """Test the complete test file lifecycle"""
+    test_file = TestFile(
+        file_path="/tests/tdd/story-123/test_login.py",
+        story_id="story-123",
+        status=TestFileStatus.DRAFT
+    )
+    
+    # Test commit transition
+    test_file.committed_at = datetime.now().isoformat()
+    assert test_file.is_committed()
+    
+    # Test integration
+    permanent_path = test_file.get_permanent_location()
+    assert "tests/unit/" in permanent_path
+```
+
+**CI Integration:**
+```python
+def test_ci_status_updates():
+    """Test CI status tracking for TDD cycles"""
+    cycle = TDDCycle(story_id="story-123")
+    cycle.update_ci_status(CIStatus.RUNNING)
+    
+    assert cycle.ci_status == CIStatus.RUNNING
+    # Test status propagation to tasks
+```
+
+### TDD Code Style Guidelines
+
+#### Command Validation
+```python
+# Good: Clear error messages with helpful hints
+if command not in self.TRANSITIONS:
+    return TDDCommandResult(
+        success=False,
+        error_message=f"Unknown TDD command: {command}",
+        hint="Use /tdd status to see available commands"
+    )
+
+# Bad: Generic error without guidance
+if command not in self.TRANSITIONS:
+    return TDDCommandResult(success=False)
+```
+
+#### State Management
+```python
+# Good: Atomic state updates with logging
+def transition(self, command: str) -> TDDCommandResult:
+    result = self.validate_command(command)
+    if result.success:
+        old_state = self.current_state
+        self.current_state = result.new_state
+        logger.info(f"TDD transition: {old_state} → {self.current_state}")
+    return result
+
+# Bad: State changes without validation or logging
+def transition(self, command: str):
+    self.current_state = new_state  # No validation
+```
+
+#### Error Handling
+```python
+# Good: Specific error handling with context
+try:
+    test_results = self.run_tests(test_files)
+except TestExecutionError as e:
+    return TDDCommandResult(
+        success=False,
+        error_message=f"Test execution failed: {e}",
+        hint="Check test file syntax and dependencies"
+    )
+
+# Bad: Silent failures or generic exceptions
+try:
+    self.run_tests(test_files)
+except:
+    pass  # Silent failure
+```
+
+### TDD Testing Requirements
+
+#### State Machine Tests
+- **Transition Matrix**: Test all valid and invalid state transitions
+- **Command Validation**: Verify command parsing and validation logic
+- **Condition Checking**: Test all transition conditions and hints
+- **Error Scenarios**: Test malformed commands and edge cases
+
+#### Model Tests
+- **Serialization**: Test `to_dict()` and `from_dict()` for all models
+- **Lifecycle**: Test complete object lifecycles (create → update → complete)
+- **Relationships**: Test task-cycle-story relationships
+- **Business Logic**: Test domain-specific methods and calculations
+
+#### Integration Tests
+- **E2E Workflows**: Test complete TDD cycles from start to finish
+- **Persistence**: Test data persistence and recovery
+- **Agent Coordination**: Test TDD workflow with multiple agents
+- **Error Recovery**: Test recovery from failed states
+
+#### Example Test Structure
+```python
+class TestTDDStateMachine:
+    """Comprehensive test suite for TDD state machine"""
+    
+    @pytest.fixture
+    def machine(self):
+        return TDDStateMachine(TDDState.DESIGN)
+    
+    @pytest.fixture
+    def sample_cycle(self):
+        cycle = TDDCycle(story_id="test-story")
+        task = TDDTask(description="Test task")
+        cycle.add_task(task)
+        cycle.start_task(task.id)
+        return cycle
+    
+    def test_valid_transitions(self, machine):
+        """Test all valid state transitions"""
+        # Test each transition in TRANSITIONS matrix
+    
+    def test_invalid_transitions(self, machine):
+        """Test invalid transitions return helpful errors"""
+        # Test transitions not in matrix
+    
+    def test_condition_validation(self, machine, sample_cycle):
+        """Test transition conditions are properly checked"""
+        # Test each condition in TRANSITION_CONDITIONS
+    
+    @pytest.mark.parametrize("command,state,expected_hint", [
+        ("/tdd code", TDDState.DESIGN, "Write failing tests first"),
+        # ... more test cases
+    ])
+    def test_error_hints(self, machine, command, state, expected_hint):
+        """Test that error hints are helpful and accurate"""
+        machine.current_state = state
+        result = machine.validate_command(command)
+        assert not result.success
+        assert expected_hint in result.hint
+```
+
+### Performance Considerations
+
+- **State Transitions**: Should complete in <1ms for local operations
+- **Model Serialization**: Should handle cycles with 100+ tasks efficiently
+- **Test File Management**: Should support 1000+ test files per cycle
+- **Memory Usage**: Avoid memory leaks in long-running TDD cycles
 
 ## Review Process
 
