@@ -57,6 +57,12 @@ Agents should escalate when:
 * **Communication:** Discord bot (#orchestrator) for agent updates.
 * **Observability:** Sentry + Prometheus (planned).
 
+### TDD Workflow Preferences
+* **Test Quality Gates:** Minimum 90% coverage for story completion
+* **TDD Cycle Timeouts:** Red phase ≤ 5min, Green phase ≤ 15min, Refactor ≤ 10min
+* **Auto-commit Policy:** Commit after each successful Green phase
+* **TDD Notifications:** Alert on prolonged Red states (>20min), cycle completion
+
 ---
 
 ## 7. Preferred Output Formats for Agents

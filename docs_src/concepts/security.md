@@ -37,6 +37,13 @@ The system enforces tool restrictions through:
 - Runtime validation of agent actions
 - Comprehensive audit logging
 
+### TDD Workflow Security
+During TDD cycles, additional security controls apply:
+- Test file modifications are isolated to the current story
+- Code agents cannot modify tests written by other agents
+- Red-Green-Refactor phases enforce sequential tool access
+- Story-level isolation prevents cross-contamination of test suites
+
 ### Human Approval Gates
 Critical operations require explicit approval:
 - Code deployment and publishing
