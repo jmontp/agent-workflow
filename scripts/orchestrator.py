@@ -28,6 +28,14 @@ from data_models import ProjectData, Epic, Story, Sprint, EpicStatus, StoryStatu
 from tdd_state_machine import TDDStateMachine, TDDCommandResult
 from tdd_models import TDDCycle, TDDTask, TDDState, TestResult, TestStatus
 
+# Import state broadcaster for real-time visualization
+try:
+    from state_broadcaster import emit_agent_activity
+except ImportError:
+    # Graceful fallback if broadcaster is not available
+    def emit_agent_activity(agent_type, story_id, action, status, project_name="default"):
+        pass
+
 logger = logging.getLogger(__name__)
 
 
@@ -253,7 +261,8 @@ class Orchestrator:
             
             # Transition state if command was successful
             if result["success"] and validation_result.new_state:
-                project.state_machine.current_state = validation_result.new_state
+                # Use the transition method with broadcasting
+                project.state_machine.transition(command, project_name)
                 self._save_project_state(project)
             
             return result
@@ -858,7 +867,7 @@ class Orchestrator:
             project.tdd_state_machine.set_active_cycle(active_cycle)
             
             # Validate and transition
-            result = project.tdd_state_machine.transition("/tdd next")
+            result = project.tdd_state_machine.transition("/tdd next", project_name=project.name)
             
             if result.success:
                 # Save updated cycle
@@ -985,7 +994,7 @@ class Orchestrator:
             command = f"/tdd {action}"
             
             # Validate and transition
-            result = project.tdd_state_machine.transition(command)
+            result = project.tdd_state_machine.transition(command, project_name=project.name)
             
             if result.success:
                 # Handle specific actions
@@ -1190,6 +1199,15 @@ class Orchestrator:
                 error=f"Agent not available: {task.agent_type}"
             )
         
+        # Get story ID from task context for broadcasting
+        story_id = task.context.get("story_id", task.context.get("stories", ["unknown"])[0] if isinstance(task.context.get("stories"), list) else "unknown")
+        
+        # Emit agent activity start
+        try:
+            emit_agent_activity(task.agent_type, story_id, "task_execution", "started", project.name)
+        except Exception as e:
+            logger.warning(f"Failed to emit agent activity start: {e}")
+        
         # Check orchestration mode
         if project.orchestration_mode == OrchestrationMode.BLOCKING:
             # Add to approval queue
@@ -1203,6 +1221,12 @@ class Orchestrator:
             self.approval_queue.append(approval_request)
             project.pending_approvals.append(task.id)
             
+            # Emit agent activity queued
+            try:
+                emit_agent_activity(task.agent_type, story_id, "task_execution", "queued", project.name)
+            except Exception as e:
+                logger.warning(f"Failed to emit agent activity queued: {e}")
+            
             return AgentResult(
                 success=True,
                 output=f"Task queued for approval: {task.id}"
@@ -1211,11 +1235,27 @@ class Orchestrator:
         elif project.orchestration_mode == OrchestrationMode.PARTIAL:
             # Execute but quarantine output
             result = await agent._execute_with_retry(task, dry_run=True)
+            
+            # Emit agent activity completion
+            try:
+                status = "completed" if result.success else "failed"
+                emit_agent_activity(task.agent_type, story_id, "task_execution", status, project.name)
+            except Exception as e:
+                logger.warning(f"Failed to emit agent activity completion: {e}")
+            
             return result
         
         else:  # AUTONOMOUS
             # Execute directly
             result = await agent._execute_with_retry(task, dry_run=False)
+            
+            # Emit agent activity completion
+            try:
+                status = "completed" if result.success else "failed"
+                emit_agent_activity(task.agent_type, story_id, "task_execution", status, project.name)
+            except Exception as e:
+                logger.warning(f"Failed to emit agent activity completion: {e}")
+            
             return result
     
     async def _coordinate_tdd_agent_handoff(self, project: Project, from_state: str, to_state: str, cycle_id: str) -> Dict[str, Any]:

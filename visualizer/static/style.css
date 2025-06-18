@@ -1,0 +1,507 @@
+/* TDD State Visualizer Styles */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+header h1 {
+    color: #2c3e50;
+    margin-bottom: 15px;
+    font-size: 2rem;
+}
+
+.status-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.status-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.label {
+    font-weight: 600;
+    color: #555;
+}
+
+.status {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.status.connected {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.status.disconnected {
+    background-color: #f44336;
+    color: white;
+}
+
+.state {
+    background-color: #2196F3;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.count {
+    background-color: #FF9800;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.timestamp {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.visualization-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+@media (max-width: 1024px) {
+    .visualization-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.diagram-container {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.diagram-container h2 {
+    color: #2c3e50;
+    margin-bottom: 15px;
+    font-size: 1.3rem;
+}
+
+.diagram-wrapper {
+    background-color: #fafafa;
+    border-radius: 8px;
+    padding: 20px;
+    overflow-x: auto;
+}
+
+.mermaid {
+    text-align: center;
+    min-height: 300px;
+}
+
+.cycles-panel {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.cycles-panel h2 {
+    color: #2c3e50;
+    margin-bottom: 15px;
+    font-size: 1.3rem;
+}
+
+.cycles-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 15px;
+}
+
+.no-cycles {
+    text-align: center;
+    color: #999;
+    font-style: italic;
+    padding: 40px;
+}
+
+.tdd-cycle-card {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 15px;
+    transition: all 0.3s ease;
+}
+
+.tdd-cycle-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.cycle-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.story-id {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.cycle-state {
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.cycle-state.DESIGN {
+    background-color: #e3f2fd;
+    color: #1976d2;
+}
+
+.cycle-state.TEST_RED {
+    background-color: #ffebee;
+    color: #d32f2f;
+}
+
+.cycle-state.CODE_GREEN {
+    background-color: #e8f5e9;
+    color: #388e3c;
+}
+
+.cycle-state.REFACTOR {
+    background-color: #fff3e0;
+    color: #f57c00;
+}
+
+.cycle-state.COMMIT {
+    background-color: #f3e5f5;
+    color: #7b1fa2;
+}
+
+.cycle-details {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.activity-panel {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.activity-panel h2 {
+    color: #2c3e50;
+    margin-bottom: 15px;
+    font-size: 1.3rem;
+}
+
+.log-controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+.btn-secondary.active {
+    background-color: #28a745;
+}
+
+.activity-log {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 15px;
+    height: 300px;
+    overflow-y: auto;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.log-entry {
+    margin-bottom: 8px;
+    padding: 5px;
+    border-radius: 3px;
+}
+
+.log-entry.workflow {
+    background-color: #e3f2fd;
+    border-left: 4px solid #2196F3;
+}
+
+.log-entry.tdd {
+    background-color: #fff3e0;
+    border-left: 4px solid #FF9800;
+}
+
+.log-entry.agent {
+    background-color: #e8f5e9;
+    border-left: 4px solid #4CAF50;
+}
+
+.log-entry.error {
+    background-color: #ffebee;
+    border-left: 4px solid #f44336;
+}
+
+.log-timestamp {
+    color: #666;
+    font-size: 0.8rem;
+}
+
+.log-content {
+    margin-left: 10px;
+}
+
+/* Mermaid diagram state highlighting */
+.node.current {
+    fill: #4CAF50 !important;
+    stroke: #333 !important;
+    stroke-width: 3px !important;
+    color: white !important;
+}
+
+.node.inactive {
+    fill: #f9f9f9 !important;
+    stroke: #ddd !important;
+    stroke-width: 1px !important;
+}
+
+/* Loading spinner */
+.spinner {
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #3498db;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: spin 1s linear infinite;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Pulse animation for active elements */
+.pulse {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.7; }
+    100% { opacity: 1; }
+}
+
+/* Offline/Error messaging */
+.offline-message {
+    text-align: center;
+    color: #f44336;
+    background-color: #ffebee;
+    border: 2px dashed #f44336;
+    border-radius: 8px;
+    padding: 40px 20px;
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+.error-banner {
+    background: #ffebee;
+    border: 1px solid #f44336;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px 0;
+    text-align: center;
+    color: #d32f2f;
+}
+
+.error-banner h3 {
+    margin: 0 0 10px 0;
+    color: #d32f2f;
+}
+
+.error-banner button {
+    background: #f44336;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.error-banner button:hover {
+    background: #d32f2f;
+}
+
+/* Enhanced log entry types */
+.log-entry.success {
+    background-color: #e8f5e9;
+    border-left: 4px solid #4CAF50;
+}
+
+.log-entry.warning {
+    background-color: #fff8e1;
+    border-left: 4px solid #ff9800;
+}
+
+.log-entry.info {
+    background-color: #e3f2fd;
+    border-left: 4px solid #2196F3;
+}
+
+/* Connection status enhancements */
+.status.connected {
+    animation: pulse 2s infinite;
+}
+
+.status.disconnected {
+    animation: none;
+}
+
+/* Enhanced Mermaid state highlighting */
+.mermaid .node.current rect,
+.mermaid .node.current circle,
+.mermaid .node.current polygon {
+    fill: #4CAF50 !important;
+    stroke: #2E7D32 !important;
+    stroke-width: 3px !important;
+}
+
+.mermaid .node.current text {
+    fill: white !important;
+    font-weight: bold !important;
+}
+
+.mermaid .node.inactive rect,
+.mermaid .node.inactive circle,
+.mermaid .node.inactive polygon {
+    fill: #f5f5f5 !important;
+    stroke: #bdbdbd !important;
+    stroke-width: 1px !important;
+}
+
+.mermaid .node.inactive text {
+    fill: #757575 !important;
+}
+
+/* TDD Cycle card enhancements */
+.tdd-cycle-card.pulse {
+    animation: pulse 2s infinite;
+}
+
+.tdd-cycle-card[data-story-id] {
+    position: relative;
+}
+
+.tdd-cycle-card[data-story-id]:before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #4CAF50, #2196F3, #FF9800, #f44336);
+    border-radius: 8px;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.tdd-cycle-card:hover:before {
+    opacity: 0.3;
+}
+
+/* Button state enhancements */
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn:disabled:hover {
+    background-color: inherit;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+    
+    .status-bar {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .cycles-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .log-controls {
+        flex-direction: column;
+    }
+    
+    .offline-message {
+        padding: 20px 10px;
+        font-size: 1rem;
+    }
+}

@@ -14,6 +14,14 @@ try:
 except ImportError:
     from tdd_models import TDDState, TDDCycle, TDDTask, TestResult, TestStatus
 
+# Import state broadcaster for real-time visualization
+try:
+    from .state_broadcaster import emit_tdd_transition
+except ImportError:
+    # Graceful fallback if broadcaster is not available
+    def emit_tdd_transition(story_id, old_state, new_state, project_name="default"):
+        pass
+
 logger = logging.getLogger(__name__)
 
 
@@ -229,13 +237,14 @@ class TDDStateMachine:
         new_state = allowed_states[current_state]
         return TDDCommandResult(success=True, new_state=new_state)
     
-    def transition(self, command: str, cycle: Optional[TDDCycle] = None) -> TDDCommandResult:
+    def transition(self, command: str, cycle: Optional[TDDCycle] = None, project_name: str = "default") -> TDDCommandResult:
         """
         Execute a TDD state transition if the command is valid.
         
         Args:
             command: The command to execute
             cycle: Optional TDD cycle for state updates
+            project_name: Name of the project for broadcasting
             
         Returns:
             TDDCommandResult with transition outcome
@@ -257,6 +266,13 @@ class TDDStateMachine:
             
             self.current_state = result.new_state
             logger.info(f"TDD state transition: {old_state.value} → {self.current_state.value} via {command}")
+            
+            # Emit TDD transition for real-time visualization
+            try:
+                story_id = target_cycle.story_id if target_cycle else "unknown"
+                emit_tdd_transition(story_id, old_state, self.current_state, project_name)
+            except Exception as e:
+                logger.warning(f"Failed to emit TDD transition: {e}")
         
         return result
     

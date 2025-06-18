@@ -10,6 +10,14 @@ from typing import Dict, List, Optional, Tuple, Any
 from dataclasses import dataclass
 import logging
 
+# Import state broadcaster for real-time visualization
+try:
+    from .state_broadcaster import emit_workflow_transition
+except ImportError:
+    # Graceful fallback if broadcaster is not available
+    def emit_workflow_transition(old_state, new_state, project_name="default"):
+        pass
+
 logger = logging.getLogger(__name__)
 
 
@@ -153,12 +161,13 @@ class StateMachine:
         new_state = allowed_states[self.current_state]
         return CommandResult(success=True, new_state=new_state)
     
-    def transition(self, command: str) -> CommandResult:
+    def transition(self, command: str, project_name: str = "default") -> CommandResult:
         """
         Execute a state transition if the command is valid.
         
         Args:
             command: The command to execute
+            project_name: Name of the project for broadcasting
             
         Returns:
             CommandResult with transition outcome
@@ -169,6 +178,12 @@ class StateMachine:
             old_state = self.current_state
             self.current_state = result.new_state
             logger.info(f"State transition: {old_state.value} → {self.current_state.value} via {command}")
+            
+            # Emit workflow transition for real-time visualization
+            try:
+                emit_workflow_transition(old_state, self.current_state, project_name)
+            except Exception as e:
+                logger.warning(f"Failed to emit workflow transition: {e}")
         
         return result
     

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TDD State Visualizer</title>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.4.0/dist/mermaid.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔄 TDD State Machine Visualizer</h1>
+            <div class="status-bar">
+                <div class="status-item">
+                    <span class="label">Connection:</span>
+                    <span id="connection-status" class="status disconnected">Disconnected</span>
+                </div>
+                <div class="status-item">
+                    <span class="label">Workflow State:</span>
+                    <span id="workflow-state" class="state">IDLE</span>
+                </div>
+                <div class="status-item">
+                    <span class="label">Active TDD Cycles:</span>
+                    <span id="active-cycles" class="count">0</span>
+                </div>
+                <div class="status-item">
+                    <span class="label">Last Update:</span>
+                    <span id="last-update" class="timestamp">Never</span>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <div class="visualization-grid">
+                <!-- Workflow State Machine -->
+                <div class="diagram-container">
+                    <h2>📋 Workflow State Machine</h2>
+                    <div class="diagram-wrapper">
+                        <div id="workflow-diagram" class="mermaid">
+                            stateDiagram-v2
+                                [*] --> IDLE
+                                IDLE --> BACKLOG_READY : /epic
+                                BACKLOG_READY --> SPRINT_PLANNED : /sprint plan
+                                SPRINT_PLANNED --> SPRINT_ACTIVE : /sprint start
+                                SPRINT_ACTIVE --> SPRINT_REVIEW : tasks complete
+                                SPRINT_REVIEW --> IDLE : /feedback
+                                SPRINT_ACTIVE --> SPRINT_PAUSED : /sprint pause
+                                SPRINT_PAUSED --> SPRINT_ACTIVE : /sprint resume
+                                SPRINT_ACTIVE --> BLOCKED : CI fails 3×
+                                BLOCKED --> SPRINT_ACTIVE : /suggest_fix
+                                
+                                classDef current fill:#4CAF50,stroke:#333,stroke-width:3px,color:#fff
+                                classDef inactive fill:#f9f9f9,stroke:#ddd,stroke-width:1px
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TDD State Machine -->
+                <div class="diagram-container">
+                    <h2>🧪 TDD State Machine</h2>
+                    <div class="diagram-wrapper">
+                        <div id="tdd-diagram" class="mermaid">
+                            stateDiagram-v2
+                                [*] --> DESIGN
+                                DESIGN --> TEST_RED : specs complete
+                                TEST_RED --> CODE_GREEN : tests failing
+                                CODE_GREEN --> REFACTOR : tests passing
+                                REFACTOR --> COMMIT : quality gates met
+                                COMMIT --> [*] : story complete
+
+                                REFACTOR --> CODE_GREEN : tests broken
+                                CODE_GREEN --> TEST_RED : need more tests
+                                TEST_RED --> DESIGN : requirements unclear
+                                
+                                classDef current fill:#FF5722,stroke:#333,stroke-width:3px,color:#fff
+                                classDef inactive fill:#f9f9f9,stroke:#ddd,stroke-width:1px
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TDD Cycles Panel -->
+            <div class="cycles-panel">
+                <h2>🔄 Active TDD Cycles</h2>
+                <div id="tdd-cycles" class="cycles-container">
+                    <div class="no-cycles">No active TDD cycles</div>
+                </div>
+            </div>
+
+            <!-- Activity Log -->
+            <div class="activity-panel">
+                <h2>📝 Activity Log</h2>
+                <div class="log-controls">
+                    <button id="clear-log" class="btn btn-secondary">Clear Log</button>
+                    <button id="auto-scroll-toggle" class="btn btn-secondary active">Auto Scroll</button>
+                </div>
+                <div id="activity-log" class="activity-log"></div>
+            </div>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='visualizer.js') }}"></script>
+</body>
+</html>

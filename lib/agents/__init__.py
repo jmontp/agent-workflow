@@ -601,11 +601,25 @@ class BaseAgent(ABC):
         )
 
 
+# Check for NO_AGENT_MODE environment variable
+import os
+NO_AGENT_MODE = os.getenv("NO_AGENT_MODE", "false").lower() == "true"
+
 # Import specific agent implementations
-from .design_agent import DesignAgent
-from .code_agent import CodeAgent
-from .qa_agent import QAAgent
-from .data_agent import DataAgent
+if NO_AGENT_MODE:
+    # Import mock agents when in NO_AGENT_MODE
+    from .mock_agent import MockDesignAgent as DesignAgent
+    from .mock_agent import MockCodeAgent as CodeAgent
+    from .mock_agent import MockQAAgent as QAAgent
+    from .mock_agent import MockDataAgent as DataAgent
+    from .mock_agent import create_mock_agent
+    logger.info("NO_AGENT_MODE enabled - using mock agents for testing")
+else:
+    # Import real agents for normal operation
+    from .design_agent import DesignAgent
+    from .code_agent import CodeAgent
+    from .qa_agent import QAAgent
+    from .data_agent import DataAgent
 
 # Agent registry for dynamic instantiation
 AGENT_REGISTRY: Dict[str, type] = {
@@ -618,6 +632,10 @@ AGENT_REGISTRY: Dict[str, type] = {
 
 def create_agent(agent_type: str, **kwargs) -> BaseAgent:
     """Factory function to create agent instances"""
+    if NO_AGENT_MODE:
+        # Use mock agent factory in NO_AGENT_MODE
+        return create_mock_agent(agent_type)
+    
     if agent_type not in AGENT_REGISTRY:
         raise ValueError(f"Unknown agent type: {agent_type}")
     
