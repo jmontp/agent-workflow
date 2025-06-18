@@ -1,6 +1,78 @@
 # Architecture Overview
 
-The AI Agent TDD-Scrum Workflow system implements a sophisticated dual state machine architecture that coordinates Test-Driven Development (TDD) cycles within a broader Scrum workflow management framework.
+The AI Agent TDD-Scrum Workflow system implements a sophisticated multi-layered architecture that coordinates Test-Driven Development (TDD) cycles within a broader Scrum workflow management framework. The system supports both single-project workflows and advanced multi-project orchestration with intelligent resource allocation, context management, and cross-project intelligence.
+
+## System Architecture Layers
+
+### 1. Multi-Project Orchestration Layer
+The top-level orchestration system manages multiple projects simultaneously:
+
+```mermaid
+graph TB
+    subgraph "🌐 Multi-Project Orchestration"
+        MPO[Multi-Project Orchestrator]
+        GOS[Global Orchestrator]
+        RES[Resource Scheduler]
+        SEC[Security System]
+        MON[Monitoring System]
+        INT[Intelligence System]
+    end
+    
+    subgraph "📊 Context Management"
+        CM[Context Manager]
+        TC[Token Calculator]
+        AM[Agent Memory]
+        CC[Context Cache]
+    end
+    
+    subgraph "🎯 Project A"
+        PA_WSM[Workflow State Machine A]
+        PA_TDD[TDD State Machines A]
+        PA_AGENTS[Agent Pool A]
+    end
+    
+    subgraph "🎯 Project B" 
+        PB_WSM[Workflow State Machine B]
+        PB_TDD[TDD State Machines B]
+        PB_AGENTS[Agent Pool B]
+    end
+    
+    MPO --> GOS
+    MPO --> RES
+    MPO --> SEC
+    MPO --> MON
+    MPO --> INT
+    
+    GOS --> PA_WSM
+    GOS --> PB_WSM
+    
+    CM --> PA_AGENTS
+    CM --> PB_AGENTS
+    
+    PA_WSM --> PA_TDD
+    PB_WSM --> PB_TDD
+    
+    RES --> PA_AGENTS
+    RES --> PB_AGENTS
+    
+    style MPO fill:#ff6b6b,stroke:#c92a2a,stroke-width:3px
+    style CM fill:#4dabf7,stroke:#1971c2,stroke-width:3px
+```
+
+### 2. Context Management Layer
+Intelligent context sharing and memory management across agents:
+
+- **Context Manager**: Optimizes agent communication and context sharing
+- **Token Calculator**: Manages context size and token usage optimization
+- **Agent Memory**: Persistent memory across agent interactions
+- **Context Cache**: Efficient caching of frequently used context data
+
+### 3. Project Coordination Layer
+Individual project management with dual state machines:
+
+- **Workflow State Machine**: High-level Scrum process coordination
+- **TDD State Machines**: Parallel story-level TDD cycle management
+- **Agent Pools**: Project-specific ephemeral agent management
 
 ## Dual State Machine Architecture
 

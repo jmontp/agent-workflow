@@ -39,7 +39,7 @@ class DesignAgent(BaseAgent):
     - Identify design patterns and anti-patterns
     """
     
-    def __init__(self, claude_code_client=None):
+    def __init__(self, claude_code_client=None, context_manager=None):
         super().__init__(
             name="DesignAgent",
             capabilities=[
@@ -58,12 +58,28 @@ class DesignAgent(BaseAgent):
             ]
         )
         self.claude_client = claude_code_client or create_agent_client(AgentType.DESIGN)
+        self.context_manager = context_manager
         
     async def run(self, task: Task, dry_run: bool = False) -> AgentResult:
         """Execute design-related tasks"""
         start_time = time.time()
         
         try:
+            # Prepare context if context manager is available
+            if self.context_manager:
+                try:
+                    agent_context = await self.context_manager.prepare_context(
+                        agent_type="DesignAgent",
+                        task=task,
+                        story_id=getattr(task, 'story_id', 'default')
+                    )
+                    
+                    # Record context usage for learning
+                    await self._record_context_usage(task, agent_context)
+                    
+                except Exception as e:
+                    logger.warning(f"Context preparation failed, proceeding without: {str(e)}")
+            
             # Parse command to determine specific design task
             command = task.command.lower()
             context = task.context or {}
@@ -912,3 +928,113 @@ Based on the TDD specification, the following test approach will be used:
   ]
 }
         """.strip()
+    
+    # Context management methods
+    
+    async def _record_context_usage(self, task: Task, agent_context) -> None:
+        """Record context usage for learning system"""
+        if not self.context_manager:
+            return
+        
+        try:
+            # Analyze which files were actually relevant for the design task
+            relevant_files = self._analyze_file_relevance(task, agent_context)
+            
+            # Record feedback for learning
+            if hasattr(self.context_manager, 'record_feedback') and relevant_files:
+                await self.context_manager.record_feedback(
+                    context_id=agent_context.request_id,
+                    agent_type="DesignAgent",
+                    story_id=getattr(task, 'story_id', 'default'),
+                    file_relevance_scores=relevant_files,
+                    feedback_type="design_usage"
+                )
+                
+            # Record agent decision
+            if hasattr(self.context_manager, 'record_agent_decision'):
+                await self.context_manager.record_agent_decision(
+                    agent_type="DesignAgent",
+                    story_id=getattr(task, 'story_id', 'default'),
+                    description=f"Design task: {task.command}",
+                    rationale=f"Prepared context with {len(agent_context.file_contents)} files",
+                    outcome="context_prepared",
+                    confidence=0.8
+                )
+                
+        except Exception as e:
+            logger.warning(f"Error recording context usage: {str(e)}")
+    
+    def _analyze_file_relevance(self, task: Task, agent_context) -> Dict[str, float]:
+        """Analyze file relevance for design tasks"""
+        if not agent_context or not agent_context.file_contents:
+            return {}
+        
+        relevant_files = {}
+        command = task.command.lower()
+        
+        for file_path in agent_context.file_contents.keys():
+            file_path_lower = file_path.lower()
+            
+            # High relevance for documentation and configuration files
+            if any(ext in file_path_lower for ext in ['.md', '.rst', '.yaml', '.yml', '.json']):
+                relevant_files[file_path] = 0.9
+            
+            # Medium relevance for architecture-related files
+            elif any(keyword in file_path_lower for keyword in ['architecture', 'design', 'spec', 'interface']):
+                relevant_files[file_path] = 0.8
+            
+            # Lower relevance for implementation files
+            elif any(ext in file_path_lower for ext in ['.py', '.js', '.ts']):
+                if 'test' in file_path_lower:
+                    relevant_files[file_path] = 0.4  # Tests can inform design
+                else:
+                    relevant_files[file_path] = 0.6  # Implementation can inform design decisions
+            
+            # Default relevance for other files
+            else:
+                relevant_files[file_path] = 0.3
+        
+        return relevant_files
+    
+    async def _enrich_context_for_design(self, task: Task, agent_context) -> Dict[str, Any]:
+        """Enrich task context with information from context manager"""
+        enriched_context = task.context.copy() if task.context else {}
+        
+        if not self.context_manager or not agent_context:
+            return enriched_context
+        
+        try:
+            # Add architectural insights from codebase
+            if agent_context.file_contents:
+                architecture_files = [
+                    fp for fp in agent_context.file_contents.keys()
+                    if any(keyword in fp.lower() for keyword in ['architecture', 'design', 'spec'])
+                ]
+                
+                if architecture_files:
+                    enriched_context['existing_architecture'] = {
+                        fp: agent_context.file_contents[fp][:1000]  # First 1000 chars
+                        for fp in architecture_files[:3]  # Limit to 3 files
+                    }
+            
+            # Add project statistics if available
+            if hasattr(self.context_manager, 'get_project_statistics'):
+                project_stats = await self.context_manager.get_project_statistics()
+                enriched_context['project_context'] = {
+                    'file_count': project_stats.get('total_files', 0),
+                    'main_language': project_stats.get('primary_language', 'unknown'),
+                    'complexity_indicators': project_stats.get('complexity_metrics', {})
+                }
+            
+            # Add cross-story context if available
+            story_id = getattr(task, 'story_id', 'default')
+            if hasattr(self.context_manager, 'get_cross_story_context'):
+                conflicts = await self.context_manager.detect_story_conflicts(story_id, [])
+                if conflicts:
+                    cross_story_context = await self.context_manager.get_cross_story_context(story_id, conflicts)
+                    enriched_context['cross_story_context'] = cross_story_context
+            
+        except Exception as e:
+            logger.warning(f"Error enriching context: {str(e)}")
+        
+        return enriched_context

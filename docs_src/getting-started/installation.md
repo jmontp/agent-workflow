@@ -1,112 +1,381 @@
 # Installation Guide
 
-Detailed installation instructions for the AI Agent TDD-Scrum Workflow system.
+This comprehensive guide will help you install and set up the AI Agent TDD-Scrum Workflow system with clear, step-by-step instructions.
 
-## System Requirements
+## Prerequisites
 
-### Python Environment
-- **Python 3.8 or higher**
-- **pip package manager**
-- **Virtual environment** (recommended)
+### System Requirements
 
-### External Services
-- **Discord Application** with bot token
-- **Git** for repository management
-- **Optional**: AI service integration
+- **Operating System**: Linux, macOS, or Windows (with WSL2 recommended)
+- **Python**: Version 3.9 or higher
+- **Git**: Version 2.20 or higher
+- **Memory**: Minimum 4GB RAM, 8GB+ recommended for multi-project setups
+- **Storage**: At least 2GB free space
 
-## Installation Methods
+### Required Accounts & Tokens
 
-### Method 1: Direct Installation (Recommended)
+You'll need these before starting:
+
+1. **Discord Bot Token** (REQUIRED)
+   - Create a Discord application at [Discord Developer Portal](https://discord.com/developers/applications)
+   - Create a bot and copy the token
+   - Invite bot to your server with permissions below
+
+2. **Claude Code CLI** (HIGHLY RECOMMENDED)
+   - Sign up at [claude.ai](https://claude.ai)
+   - Install Claude Code CLI from [official docs](https://docs.anthropic.com/en/docs/claude-code)
+
+3. **GitHub Token** (Optional)
+   - Create at [GitHub Settings > Tokens](https://github.com/settings/tokens)
+   - Enables advanced git operations
+
+## Quick Start Installation
+
+### 🚀 One-Command Setup
 
 ```bash
-# Clone repository
-git clone https://github.com/jmontp/agent-workflow.git
+curl -sSL https://raw.githubusercontent.com/your-username/agent-workflow/main/install.sh | bash
+```
+
+### 📋 Manual Installation (Recommended)
+
+#### Step 1: Clone Repository
+```bash
+git clone https://github.com/your-username/agent-workflow.git
+cd agent-workflow
+```
+
+#### Step 2: Create Virtual Environment
+```bash
+# Create isolated Python environment
+python3 -m venv .venv
+
+# Activate environment
+source .venv/bin/activate  # Linux/macOS
+# OR
+.venv\Scripts\activate     # Windows
+```
+
+#### Step 3: Install Dependencies
+```bash
+# Core dependencies
+pip install -r requirements.txt
+
+# Verify installation
+python -c "import discord, yaml, websockets; print('✅ Core dependencies installed')"
+```
+
+#### Step 4: Configure Environment
+```bash
+# Copy environment template
+cp .env.example .env
+
+# Edit with your tokens (use your preferred editor)
+nano .env
+```
+
+Required `.env` content:
+```bash
+# REQUIRED: Discord bot token
+DISCORD_BOT_TOKEN=your_discord_bot_token_here
+
+# RECOMMENDED: Claude API settings
+ANTHROPIC_API_KEY=your_claude_api_key_here
+ANTHROPIC_MODEL=claude-3-sonnet-20240229
+
+# OPTIONAL: GitHub integration
+GITHUB_TOKEN=your_github_token_here
+
+# SYSTEM: Basic configuration
+HOSTNAME=localhost
+LOG_LEVEL=INFO
+ORCHESTRATOR_MODE=blocking
+```
+
+#### Step 5: Initialize System
+```bash
+# Initialize project structure
+python scripts/multi_project_orchestrator.py --setup
+
+# Run health check
+python scripts/multi_project_orchestrator.py --health-check
+```
+
+#### Step 6: Verify Installation
+```bash
+# Run test suite
+pytest tests/ -v
+
+# Expected: All core tests pass
+# Note: Some integration tests may require additional setup
+```
+
+## Detailed Installation Options
+
+### Option A: Production Installation
+
+For running the system in production:
+
+```bash
+# 1. System dependencies (Ubuntu/Debian)
+sudo apt update && sudo apt install -y python3 python3-pip python3-venv git curl
+
+# 2. Clone and setup
+git clone https://github.com/your-username/agent-workflow.git
+cd agent-workflow
+python3 -m venv .venv
+source .venv/bin/activate
+
+# 3. Install production dependencies
+pip install --upgrade pip
+pip install -r requirements.txt
+pip install gunicorn supervisor  # For production deployment
+
+# 4. Configure for production
+cp config/production.env .env
+# Edit .env with production values
+```
+
+### Option B: Development Installation
+
+For development and contribution:
+
+```bash
+# 1. Clone with development branch
+git clone -b develop https://github.com/your-username/agent-workflow.git
 cd agent-workflow
 
-# Create virtual environment (recommended)
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+# 2. Setup development environment
+python3 -m venv .venv
+source .venv/bin/activate
+
+# 3. Install with development tools
+pip install -e .
+pip install -r requirements-dev.txt
+
+# 4. Setup pre-commit hooks
+pre-commit install
+
+# 5. Run full test suite
+pytest tests/ --cov=lib --cov-report=html
+open htmlcov/index.html  # View coverage report
+```
+
+### Option C: Docker Installation
+
+For containerized deployment:
+
+```bash
+# 1. Clone repository
+git clone https://github.com/your-username/agent-workflow.git
+cd agent-workflow
+
+# 2. Copy environment
+cp .env.example .env
+# Edit .env with your tokens
+
+# 3. Build and run
+docker-compose up -d
+
+# 4. Check status
+docker-compose ps
+docker-compose logs orchestrator
+```
+
+## Discord Bot Setup
+
+### Step 1: Create Discord Application
+
+1. Visit [Discord Developer Portal](https://discord.com/developers/applications)
+2. Click **"New Application"**
+3. Name your application (e.g., "AI Agent Workflow")
+4. Go to **"Bot"** section in sidebar
+5. Click **"Add Bot"** 
+6. Copy the **Bot Token**
+7. Add token to your `.env` file
+
+### Step 2: Configure Bot Permissions
+
+Your bot needs these permissions:
+
+- ✅ **Send Messages** - Post command responses
+- ✅ **Use Slash Commands** - Enable `/epic`, `/sprint`, etc.
+- ✅ **Create Public Threads** - For threaded discussions
+- ✅ **Embed Links** - Rich message formatting
+- ✅ **Attach Files** - Share generated files
+- ✅ **Read Message History** - Context awareness
+- ✅ **Manage Channels** - Create project channels
+
+### Step 3: Invite Bot to Server
+
+Use this URL template (replace `YOUR_CLIENT_ID`):
+
+```
+https://discord.com/api/oauth2/authorize?client_id=YOUR_CLIENT_ID&permissions=274877918208&scope=bot%20applications.commands
+```
+
+Find your Client ID in the **"General Information"** tab.
+
+## Platform-Specific Instructions
+
+### 🐧 Linux (Ubuntu/Debian)
+
+```bash
+# Update system packages
+sudo apt update && sudo apt upgrade -y
+
+# Install system dependencies
+sudo apt install -y python3 python3-pip python3-venv git curl build-essential
+
+# Install the workflow system
+git clone https://github.com/your-username/agent-workflow.git
+cd agent-workflow
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+
+# Test installation
+python -c "import lib.discord_bot; print('✅ Installation successful')"
+```
+
+### 🍎 macOS
+
+```bash
+# Install Homebrew (if not already installed)
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
 # Install dependencies
-make install
-```
+brew install python@3.11 git
 
-### Method 2: Development Installation
-
-For contributors and developers:
-
-```bash
-# Clone repository
-git clone https://github.com/jmontp/agent-workflow.git
+# Install the workflow system
+git clone https://github.com/your-username/agent-workflow.git
 cd agent-workflow
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
 
-# Set up development environment
-make dev-setup
-
-# This installs additional development tools:
-# - black (code formatting)
-# - flake8 (linting)
-# - pytest plugins
+# Test installation
+python -c "import lib.discord_bot; print('✅ Installation successful')"
 ```
 
-### Method 3: Manual Installation
+### 🪟 Windows (with WSL2 - Recommended)
 
-If Make is not available:
+```powershell
+# In PowerShell (as Administrator)
+wsl --install -d Ubuntu
+wsl --set-default-version 2
+
+# Restart computer, then in WSL2 terminal:
+sudo apt update && sudo apt install -y python3 python3-pip python3-venv git
+
+# Install the workflow system
+git clone https://github.com/your-username/agent-workflow.git
+cd agent-workflow
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+### 🪟 Windows (Native)
+
+```cmd
+# Install Python 3.9+ from python.org
+# Install Git from git-scm.com
+
+# In Command Prompt or PowerShell:
+git clone https://github.com/your-username/agent-workflow.git
+cd agent-workflow
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
+```
+
+## Verification & Testing
+
+### ✅ Installation Health Check
 
 ```bash
-# Install core dependencies
-pip install discord.py>=2.3.0
-pip install pygithub>=1.59.0  
-pip install pyyaml>=6.0
-pip install anthropic>=0.3.0
+# Test 1: Import verification
+python -c "
+import lib.discord_bot
+import lib.state_machine
+import lib.data_models
+print('✅ All core modules import successfully')
+"
 
-# Install testing dependencies
-pip install pytest>=7.4.0
-pip install pytest-asyncio>=0.21.0
-pip install pytest-mock>=3.11.0
-pip install pytest-cov>=4.1.0
+# Test 2: Discord integration check
+python -c "
+import os
+if os.getenv('DISCORD_BOT_TOKEN'):
+    print('✅ Discord token configured')
+else:
+    print('❌ Discord token missing - check .env file')
+"
+
+# Test 3: System health check  
+python scripts/multi_project_orchestrator.py --health-check
+```
+
+Expected output:
+```
+✅ Configuration loaded
+✅ State machine initialized
+✅ Discord integration ready  
+✅ Claude integration available
+✅ System ready for operation
+```
+
+### 🧪 Test Suite Execution
+
+```bash
+# Quick test - core functionality
+pytest tests/unit/test_state_machine.py -v
+pytest tests/unit/test_data_models.py -v
+
+# Integration tests (requires Discord token)
+pytest tests/integration/ -v
+
+# Full test suite with coverage
+pytest tests/ --cov=lib --cov-report=term-missing
+
+# Performance tests
+pytest tests/performance/ -v --durations=10
+```
+
+### 📊 Coverage Report
+
+```bash
+# Generate detailed coverage report
+pytest tests/ --cov=lib --cov-report=html
+
+# View in browser
+open htmlcov/index.html  # macOS
+xdg-open htmlcov/index.html  # Linux
+start htmlcov/index.html  # Windows
 ```
 
 ## Documentation Setup (Optional)
 
-To build and serve documentation locally:
+### Local Documentation Server
 
 ```bash
-# Install MkDocs and dependencies
-pip install mkdocs
-pip install mkdocs-material
-pip install mkdocs-mermaid2-plugin
+# Install documentation dependencies
+pip install mkdocs mkdocs-material mkdocs-mermaid2-plugin
 
 # Serve documentation locally
 mkdocs serve
+
+# Access at: http://localhost:8000
 ```
 
-Access documentation at: `http://localhost:8000`
+### Build Static Documentation
 
-## Verification
-
-### 1. Check Installation
 ```bash
-# Verify Python modules
-python -c "import discord, yaml, anthropic; print('All modules imported successfully')"
+# Build documentation
+mkdocs build
 
-# Run basic tests
-make test-unit
-```
-
-### 2. Environment Setup
-```bash
-# Check required environment variables
-echo $DISCORD_BOT_TOKEN
-```
-
-### 3. System Test
-```bash
-# Run orchestrator in test mode
-python scripts/orchestrator.py --help
-
-# Run Discord bot in test mode  
-python lib/discord_bot.py --help
+# Deploy to GitHub Pages
+mkdocs gh-deploy
 ```
 
 ## Configuration Files

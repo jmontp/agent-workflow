@@ -6,7 +6,7 @@ for coordinating software development tasks through AI assistance.
 """
 
 from abc import ABC, abstractmethod
-from typing import Dict, List, Optional, Any
+from typing import Dict, List, Optional, Any, Union
 from dataclasses import dataclass
 from enum import Enum
 import logging
@@ -74,7 +74,7 @@ class BaseAgent(ABC):
     Enhanced with TDD context awareness and workflow integration.
     """
     
-    def __init__(self, name: str, capabilities: List[str]):
+    def __init__(self, name: str, capabilities: List[str], context_manager: Optional[Any] = None):
         self.name = name
         self.capabilities = capabilities
         self.task_history: List[Task] = []
@@ -84,6 +84,10 @@ class BaseAgent(ABC):
         self.tdd_state_machine: Optional[TDDStateMachine] = None
         self.current_tdd_cycle: Optional[TDDCycle] = None
         self.current_tdd_task: Optional[TDDTask] = None
+        
+        # Context management
+        self.context_manager = context_manager
+        self._current_context: Optional[Any] = None  # Will store AgentContext when available
         
     @abstractmethod
     async def run(self, task: Task, dry_run: bool = False) -> AgentResult:
@@ -549,6 +553,219 @@ class BaseAgent(ABC):
         """
         return {}
     
+    # Context Management Methods
+    
+    async def prepare_context(
+        self, 
+        task: Union[TDDTask, Dict[str, Any]], 
+        story_id: Optional[str] = None,
+        max_tokens: Optional[int] = None
+    ) -> Optional[Any]:
+        """
+        Prepare context for task execution using context manager.
+        
+        Args:
+            task: Task to prepare context for
+            story_id: Story ID for context isolation
+            max_tokens: Maximum tokens for context
+            
+        Returns:
+            AgentContext if context manager available, None otherwise
+        """
+        if not self.context_manager:
+            self.logger.warning("No context manager available for context preparation")
+            return None
+        
+        try:
+            context = await self.context_manager.prepare_context(
+                agent_type=self.__class__.__name__,
+                task=task,
+                max_tokens=max_tokens,
+                story_id=story_id
+            )
+            
+            self._current_context = context
+            self.logger.info(f"Context prepared: {context.get_total_token_estimate()} tokens")
+            return context
+            
+        except Exception as e:
+            self.logger.error(f"Context preparation failed: {str(e)}")
+            return None
+    
+    async def record_decision(
+        self,
+        description: str,
+        rationale: str = "",
+        outcome: str = "",
+        confidence: float = 0.0,
+        artifacts: Optional[Dict[str, str]] = None,
+        story_id: Optional[str] = None
+    ) -> Optional[str]:
+        """
+        Record a decision for learning and context handoffs.
+        
+        Args:
+            description: Description of the decision
+            rationale: Reasoning behind the decision
+            outcome: Result of the decision
+            confidence: Confidence level (0.0 to 1.0)
+            artifacts: Associated artifacts
+            story_id: Story ID (extracted from current context if not provided)
+            
+        Returns:
+            Decision ID if recorded successfully, None otherwise
+        """
+        if not self.context_manager:
+            return None
+        
+        # Extract story_id from current context if not provided
+        if not story_id and self._current_context:
+            story_id = getattr(self._current_context, 'story_id', 'default')
+        
+        story_id = story_id or 'default'
+        
+        try:
+            decision_id = await self.context_manager.record_agent_decision(
+                agent_type=self.__class__.__name__,
+                story_id=story_id,
+                description=description,
+                rationale=rationale,
+                outcome=outcome,
+                confidence=confidence,
+                artifacts=artifacts
+            )
+            
+            self.logger.debug(f"Recorded decision {decision_id}")
+            return decision_id
+            
+        except Exception as e:
+            self.logger.error(f"Failed to record decision: {str(e)}")
+            return None
+    
+    async def create_context_snapshot(
+        self,
+        summary: str = "",
+        story_id: Optional[str] = None
+    ) -> Optional[str]:
+        """
+        Create a snapshot of current context for historical reference.
+        
+        Args:
+            summary: Optional summary description
+            story_id: Story ID (extracted from current context if not provided)
+            
+        Returns:
+            Snapshot ID if created successfully, None otherwise
+        """
+        if not self.context_manager or not self._current_context:
+            return None
+        
+        # Extract story_id from current context if not provided
+        if not story_id:
+            story_id = getattr(self._current_context, 'story_id', 'default')
+        
+        try:
+            snapshot_id = await self.context_manager.create_context_snapshot(
+                agent_type=self.__class__.__name__,
+                story_id=story_id,
+                context=self._current_context,
+                summary=summary or f"Context snapshot during {self.__class__.__name__} execution"
+            )
+            
+            self.logger.debug(f"Created context snapshot {snapshot_id}")
+            return snapshot_id
+            
+        except Exception as e:
+            self.logger.error(f"Failed to create context snapshot: {str(e)}")
+            return None
+    
+    async def get_context_history(
+        self,
+        story_id: Optional[str] = None,
+        tdd_phase: Optional[TDDState] = None,
+        limit: int = 10
+    ) -> List[Any]:
+        """
+        Get historical context snapshots for this agent.
+        
+        Args:
+            story_id: Story ID (extracted from current context if not provided)
+            tdd_phase: Optional TDD phase filter
+            limit: Maximum number of snapshots to return
+            
+        Returns:
+            List of context snapshots
+        """
+        if not self.context_manager:
+            return []
+        
+        # Extract story_id from current context if not provided
+        if not story_id and self._current_context:
+            story_id = getattr(self._current_context, 'story_id', 'default')
+        
+        story_id = story_id or 'default'
+        
+        try:
+            return await self.context_manager.get_agent_context_history(
+                agent_type=self.__class__.__name__,
+                story_id=story_id,
+                tdd_phase=tdd_phase,
+                limit=limit
+            )
+        except Exception as e:
+            self.logger.error(f"Failed to get context history: {str(e)}")
+            return []
+    
+    async def get_recent_decisions(
+        self,
+        story_id: Optional[str] = None,
+        limit: int = 10
+    ) -> List[Any]:
+        """
+        Get recent decisions for this agent.
+        
+        Args:
+            story_id: Story ID (extracted from current context if not provided)
+            limit: Maximum number of decisions to return
+            
+        Returns:
+            List of recent decisions
+        """
+        if not self.context_manager:
+            return []
+        
+        # Extract story_id from current context if not provided
+        if not story_id and self._current_context:
+            story_id = getattr(self._current_context, 'story_id', 'default')
+        
+        story_id = story_id or 'default'
+        
+        try:
+            return await self.context_manager.get_recent_decisions(
+                agent_type=self.__class__.__name__,
+                story_id=story_id,
+                limit=limit
+            )
+        except Exception as e:
+            self.logger.error(f"Failed to get recent decisions: {str(e)}")
+            return []
+    
+    def get_current_context_info(self) -> Dict[str, Any]:
+        """Get information about current context"""
+        if not self._current_context:
+            return {"has_context": False}
+        
+        return {
+            "has_context": True,
+            "request_id": getattr(self._current_context, 'request_id', None),
+            "story_id": getattr(self._current_context, 'story_id', None),
+            "tdd_phase": getattr(self._current_context, 'tdd_phase', None),
+            "token_usage": getattr(self._current_context, 'token_usage', None),
+            "preparation_time": getattr(self._current_context, 'preparation_time', None),
+            "cache_hit": getattr(self._current_context, 'cache_hit', False),
+            "compression_applied": getattr(self._current_context, 'compression_applied', False)
+        }
+    
     def handle_tdd_error(self, error: Exception, phase: TDDState, recovery_action: str = None) -> AgentResult:
         """
         Handle TDD-specific errors with appropriate recovery strategies.
@@ -601,6 +818,13 @@ class BaseAgent(ABC):
         )
 
 
+# Import context management
+try:
+    from ..context_manager import ContextManager
+except ImportError:
+    # Graceful fallback if context manager is not available
+    ContextManager = None
+
 # Check for NO_AGENT_MODE environment variable
 import os
 NO_AGENT_MODE = os.getenv("NO_AGENT_MODE", "false").lower() == "true"
@@ -630,16 +854,21 @@ AGENT_REGISTRY: Dict[str, type] = {
 }
 
 
-def create_agent(agent_type: str, **kwargs) -> BaseAgent:
+def create_agent(agent_type: str, context_manager: Optional[Any] = None, **kwargs) -> BaseAgent:
     """Factory function to create agent instances"""
     if NO_AGENT_MODE:
         # Use mock agent factory in NO_AGENT_MODE
-        return create_mock_agent(agent_type)
+        return create_mock_agent(agent_type, context_manager=context_manager)
     
     if agent_type not in AGENT_REGISTRY:
         raise ValueError(f"Unknown agent type: {agent_type}")
     
     agent_class = AGENT_REGISTRY[agent_type]
+    
+    # Add context_manager to kwargs if provided
+    if context_manager is not None:
+        kwargs['context_manager'] = context_manager
+    
     return agent_class(**kwargs)
 
 

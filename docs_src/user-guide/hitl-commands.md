@@ -1,35 +1,113 @@
-# HITL Commands
+# 💬 HITL Commands
 
-Command reference for the AI Agent TDD-Scrum workflow system. These commands provide Human-In-The-Loop control over the dual state machine orchestration process with integrated TDD workflows.
+Complete command reference for the AI Agent TDD-Scrum workflow system. These commands provide Human-In-The-Loop control over the dual state machine orchestration process with integrated TDD workflows.
 
-## Command Quick-Reference
+!!! tip "Quick Command Discovery"
+    Use `/state` in Discord at any time to see available commands for your current workflow state.
 
-## Core Workflow Commands
+## ⚡ Command Quick-Reference
 
-### Project Management
+!!! info "Command Format"
+    - **Required parameters:** `<parameter>`
+    - **Optional parameters:** `[parameter]`
+    - **Multiple values:** `ID ...` (space-separated list)
 
-**`/epic "<description>"`**
-Define a new high-level initiative.
+## 🎯 Core Workflow Commands
 
-**`/approve [ID ...]`**
-Approve proposed stories or epics so they can enter a sprint.
+### 📋 Project Management
 
-### Sprint Management
+=== "Epic Definition"
 
-**`/sprint plan [ID ...]`**
-Plan next sprint with specified story IDs.
+    **`/epic "<description>"`**
+    
+    Define a new high-level initiative.
+    
+    !!! example "Example"
+        ```
+        /epic "Build authentication system with OAuth2 support"
+        ```
+    
+    **What happens next:**
+    
+    - System generates user stories
+    - Stories await approval with `/approve`
+    - Estimated effort and timeline provided
 
-**`/sprint start`**
-Kick off the planned sprint.
+=== "Approval Process"
 
-**`/sprint status`**
-Get a progress snapshot of the current sprint.
+    **`/approve [ID ...]`**
+    
+    Approve proposed stories or epics so they can enter a sprint.
+    
+    !!! example "Example"
+        ```
+        /approve AUTH-1 AUTH-2
+        ```
+    
+    **Approval triggers:**
+    
+    - Stories move to backlog
+    - Available for sprint planning
+    - Effort estimation confirmed
 
-**`/sprint pause`**
-Halt agent work temporarily.
+### 🏃 Sprint Management
 
-**`/sprint resume`**
-Continue paused sprint work.
+=== "Planning"
+
+    **`/sprint plan [ID ...]`**
+    
+    Plan next sprint with specified story IDs.
+    
+    !!! example "Example"
+        ```
+        /sprint plan AUTH-1 AUTH-2 AUTH-3
+        ```
+    
+    **Planning includes:**
+    
+    - Capacity validation
+    - Dependency checking
+    - Sprint goal definition
+
+=== "Execution"
+
+    **`/sprint start`**
+    
+    Kick off the planned sprint.
+    
+    !!! warning "Prerequisites"
+        - Sprint must be planned first
+        - All stories must be approved
+        - No active sprint in progress
+    
+    **Sprint start creates:**
+    
+    - TDD cycles for each story
+    - Agent assignments
+    - Progress tracking
+
+=== "Monitoring"
+
+    **`/sprint status`**
+    
+    Get a progress snapshot of the current sprint.
+    
+    **Status includes:**
+    
+    - Story completion percentage
+    - Active TDD cycles
+    - Blocked or failed tasks
+    - Estimated completion time
+
+=== "Control"
+
+    **`/sprint pause`** / **`/sprint resume`**
+    
+    Halt or continue agent work temporarily.
+    
+    !!! tip "Use Cases"
+        - **Pause:** Emergency maintenance, priority changes
+        - **Resume:** Continue after resolving issues
 
 ### Backlog Operations
 
@@ -109,6 +187,54 @@ Display TDD metrics: cycle time, test coverage, refactor frequency.
 **`/tdd halt_all`**
 Emergency stop all TDD cycles (requires confirmation).
 
+### Multi-Project Commands
+
+**`/global_status`**
+Show status of all projects in multi-project orchestration.
+
+**`/project_list`**
+List all registered projects with their current state.
+
+**`/project_start <PROJECT_NAME>`**
+Start orchestration for a specific project.
+
+**`/project_stop <PROJECT_NAME>`**
+Stop orchestration for a specific project.
+
+**`/project_register <NAME> <PATH>`**
+Register a new project for orchestration.
+
+**`/resource_status`**
+Display resource allocation across all projects.
+
+**`/resource_optimize`**
+Trigger resource optimization across projects.
+
+### Context Management Commands
+
+**`/context status`**
+Show context management system status.
+
+**`/context optimize`**
+Trigger context optimization across all agents.
+
+**`/context memory [AGENT_ID]`**
+Display agent memory usage and cache statistics.
+
+**`/context clear_cache`**
+Clear context cache (use when memory issues occur).
+
+### Cross-Project Intelligence Commands
+
+**`/insights global`**
+Show cross-project insights and pattern analysis.
+
+**`/patterns list`**
+Display detected patterns across projects.
+
+**`/knowledge_transfer`**
+Show recommended knowledge transfers between projects.
+
 ---
 
 ## Examples
@@ -147,6 +273,57 @@ At any time:
 ```bash
 /request_changes "Add duplicate-email guard in registration API"
 /suggest_fix "Database URL is wrong in config.py"
+```
+
+### 5. Multi-Project Management
+```bash
+# Register and start multiple projects
+/project_register frontend-app /path/to/frontend
+/project_register backend-api /path/to/backend
+
+# Check global status
+/global_status
+# Shows: 2 projects registered, 1 active, 3 total agents
+
+# Start specific projects
+/project_start frontend-app
+/project_start backend-api
+
+# Monitor resource allocation
+/resource_status
+# Shows: CPU: 65%, Memory: 4.2GB/8GB, Agents: 5/10
+```
+
+### 6. Context Management
+```bash
+# Check context system status
+/context status
+# Shows: Cache hit rate: 87%, Memory usage: 1.2GB
+
+# Optimize context when performance degrades
+/context optimize
+
+# Check specific agent memory
+/context memory DesignAgent-AUTH-1
+# Shows: Context size: 12K tokens, Cache: 3 items
+
+# Clear cache if needed
+/context clear_cache
+```
+
+### 7. Cross-Project Intelligence
+```bash
+# View insights across projects
+/insights global
+# Shows: 5 patterns detected, 3 transfer opportunities
+
+# List detected patterns
+/patterns list
+# Shows: API design patterns, testing strategies, etc.
+
+# Get knowledge transfer recommendations
+/knowledge_transfer
+# Shows: Transfer logging strategy from backend-api to frontend-app
 /skip_task   # after three failed CI attempts
 ```
 

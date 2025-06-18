@@ -487,5 +487,85 @@ class TestTDDCapabilities(unittest.TestCase):
             self.assertIn("tdd_phases", tdd_caps)
 
 
+class TestAgentToolConfigEdgeCases(unittest.TestCase):
+    """Test edge cases and comprehensive coverage for agent tool configuration"""
+    
+    def test_bash_command_patterns_comprehensive(self):
+        """Test comprehensive bash command pattern matching"""
+        # Test all restricted commands
+        for cmd in RESTRICTED_COMMANDS:
+            for agent_type in [AgentType.DESIGN, AgentType.CODE, AgentType.QA, AgentType.DATA]:
+                self.assertFalse(
+                    validate_agent_access(agent_type, f"Bash({cmd})"),
+                    f"{agent_type} should not have access to {cmd}"
+                )
+        
+        # Test elevated commands
+        for cmd in ELEVATED_COMMANDS:
+            # Only orchestrator should have access
+            self.assertTrue(validate_agent_access(AgentType.ORCHESTRATOR, f"Bash({cmd})"))
+            
+            # Others should not
+            for agent_type in [AgentType.DESIGN, AgentType.CODE, AgentType.QA, AgentType.DATA]:
+                if cmd == "rm":
+                    self.assertFalse(validate_agent_access(agent_type, f"Bash({cmd})"))
+    
+    def test_tool_configuration_consistency(self):
+        """Test that tool configurations are consistent across agent types"""
+        all_configs = {}
+        for agent_type in AgentType:
+            all_configs[agent_type] = {
+                'allowed': get_allowed_tools(agent_type),
+                'disallowed': get_disallowed_tools(agent_type)
+            }
+        
+        # Each agent should have a reasonable number of tools
+        for agent_type, config in all_configs.items():
+            self.assertGreater(
+                len(config['allowed']), 
+                0,
+                f"{agent_type} should have at least some allowed tools"
+            )
+            
+            # Verify orchestrator has unique elevated permissions
+            if agent_type == AgentType.ORCHESTRATOR:
+                orchestrator_tools = set(config['allowed'])
+                # Should have some tools that others don't
+                for other_type, other_config in all_configs.items():
+                    if other_type != AgentType.ORCHESTRATOR:
+                        other_tools = set(other_config['allowed'])
+                        # Orchestrator should have some exclusive tools
+                        exclusive_tools = orchestrator_tools - other_tools
+                        # At least one exclusive tool (likely dangerous commands)
+                        self.assertGreaterEqual(len(exclusive_tools), 1)
+    
+    def test_tdd_capabilities_all_agents(self):
+        """Test TDD capabilities for all agent types"""
+        for agent_type in AgentType:
+            caps = get_tdd_capabilities(agent_type)
+            
+            # All should have capabilities dict
+            self.assertIsInstance(caps, dict)
+            self.assertIn("can_coordinate_tdd_cycles", caps)
+            self.assertIn("tdd_phases", caps)
+            self.assertIn("enhanced_tools", caps)
+            
+            # Verify phase lists
+            self.assertIsInstance(caps["tdd_phases"], list)
+    
+    def test_validate_agent_access_edge_cases(self):
+        """Test validate_agent_access with edge cases"""
+        # Test with None/empty strings
+        self.assertFalse(validate_agent_access(AgentType.CODE, ""))
+        self.assertFalse(validate_agent_access(AgentType.CODE, None))
+        
+        # Test with non-existent tools
+        self.assertFalse(validate_agent_access(AgentType.CODE, "NonExistentTool"))
+        
+        # Test case sensitivity
+        self.assertTrue(validate_agent_access(AgentType.CODE, "Edit"))
+        self.assertFalse(validate_agent_access(AgentType.CODE, "edit"))  # lowercase should fail
+
+
 if __name__ == "__main__":
     unittest.main()

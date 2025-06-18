@@ -216,6 +216,19 @@ class StatebroadCaster:
         asyncio.create_task(self.broadcast_to_all(activity))
         logger.info(f"Agent activity [{story_id}]: {agent_type} {action} - {status}")
         
+    def emit_parallel_status(self, status_data: Dict[str, Any], project_name: str = "default"):
+        """Emit parallel execution status for visualization"""
+        parallel_status = {
+            "type": "parallel_status",
+            "timestamp": datetime.now().isoformat(),
+            "project": project_name,
+            "status_data": status_data
+        }
+        
+        # Broadcast asynchronously
+        asyncio.create_task(self.broadcast_to_all(parallel_status))
+        logger.info(f"Parallel status update [{project_name}]: {status_data}")
+        
     def get_current_state(self) -> Dict[str, Any]:
         """Get current state as dictionary"""
         return {
@@ -243,6 +256,11 @@ def emit_tdd_transition(story_id: str, old_state: Optional[TDDState], new_state:
 def emit_agent_activity(agent_type: str, story_id: str, action: str, status: str, project_name: str = "default"):
     """Convenience function for agent activity"""
     broadcaster.emit_agent_activity(agent_type, story_id, action, status, project_name)
+
+
+def emit_parallel_status(status_data: Dict[str, Any], project_name: str = "default"):
+    """Convenience function for parallel status"""
+    broadcaster.emit_parallel_status(status_data, project_name)
 
 
 async def start_broadcaster(port: int = 8080):

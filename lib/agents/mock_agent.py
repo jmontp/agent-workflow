@@ -26,18 +26,20 @@ class MockAgent(BaseAgent):
     validate state machine execution and data flow.
     """
     
-    def __init__(self, agent_type: str, capabilities: List[str] = None):
+    def __init__(self, agent_type: str, capabilities: List[str] = None, context_manager: Optional[Any] = None):
         super().__init__(
             name=f"Mock{agent_type}",
             capabilities=capabilities or [
                 f"mock_{agent_type.lower()}_task",
                 "mock_execution", 
                 "mock_validation"
-            ]
+            ],
+            context_manager=context_manager
         )
         self.agent_type = agent_type
         self.execution_count = 0
         self.failure_rate = 0.1  # 10% simulated failure rate
+        self.success_rate = 0.95  # 95% success rate for realistic simulation
         
     async def run(self, task: Task, dry_run: bool = False) -> AgentResult:
         """Execute mock task with realistic simulation"""
@@ -54,7 +56,7 @@ class MockAgent(BaseAgent):
                 await asyncio.sleep(processing_time)
             
             # Simulate occasional failures for testing
-            if random.random() < self.failure_rate:
+            if random.random() >= self.success_rate:
                 return self._create_failure_result(task, processing_time)
             
             # Generate mock response based on task type
@@ -127,10 +129,10 @@ class MockAgent(BaseAgent):
             return self._mock_design_response(context)
         elif "test" in command and "red" in command:
             return self._mock_test_red_response(context)
-        elif "implement" in command or "code" in command:
-            return self._mock_code_response(context)
         elif "refactor" in command:
             return self._mock_refactor_response(context)
+        elif "implement" in command or "code" in command:
+            return self._mock_code_response(context)
         elif "analyze" in command or "review" in command:
             return self._mock_analysis_response(context)
         else:
@@ -139,12 +141,14 @@ class MockAgent(BaseAgent):
     def _mock_design_response(self, context: Dict[str, Any]) -> str:
         """Generate mock design/specification response"""
         story_id = context.get("story_id", "STORY-XXX")
-        return f"""MockDesignAgent: Design specifications completed for {story_id}
+        requirements = context.get("requirements", "Mock requirements")
+        return f"""Mock{self.agent_type}: Design specifications completed for {story_id}
 
 # Mock Technical Specification
 
 ## Overview
 Mock implementation specifications generated for testing purposes.
+Requirements: {requirements}
 
 ## Acceptance Criteria
 - ✅ Mock criteria 1: Basic functionality validated
@@ -222,7 +226,9 @@ Ready for REFACTOR phase to improve code quality.
     def _mock_refactor_response(self, context: Dict[str, Any]) -> str:
         """Generate mock refactoring response"""
         story_id = context.get("story_id", "STORY-XXX") 
-        return f"""MockCodeAgent: Refactoring completed for {story_id}
+        # Use CodeAgent branding for refactor responses as they typically come from code agents
+        agent_name = "MockCodeAgent" if self.agent_type != "CodeAgent" else f"Mock{self.agent_type}"
+        return f"""{agent_name}: Refactoring completed for {story_id}
 
 # Mock Refactoring Summary
 
@@ -268,12 +274,13 @@ Ready for COMMIT phase.
 
 This is a mock analysis for state machine validation.
 """
+    
 
 
 class MockDesignAgent(MockAgent):
     """Mock Design Agent specialized for TDD DESIGN phase"""
     
-    def __init__(self):
+    def __init__(self, context_manager: Optional[Any] = None):
         super().__init__(
             "DesignAgent",
             capabilities=[
@@ -282,14 +289,15 @@ class MockDesignAgent(MockAgent):
                 "technical_design",
                 "api_design",
                 "mock_design"
-            ]
+            ],
+            context_manager=context_manager
         )
 
 
 class MockQAAgent(MockAgent):
     """Mock QA Agent specialized for TDD TEST_RED phase"""
     
-    def __init__(self):
+    def __init__(self, context_manager: Optional[Any] = None):
         super().__init__(
             "QAAgent", 
             capabilities=[
@@ -298,14 +306,15 @@ class MockQAAgent(MockAgent):
                 "red_state_verification",
                 "test_organization",
                 "mock_testing"
-            ]
+            ],
+            context_manager=context_manager
         )
 
 
 class MockCodeAgent(MockAgent):
     """Mock Code Agent specialized for TDD CODE_GREEN and REFACTOR phases"""
     
-    def __init__(self):
+    def __init__(self, context_manager: Optional[Any] = None):
         super().__init__(
             "CodeAgent",
             capabilities=[
@@ -314,14 +323,15 @@ class MockCodeAgent(MockAgent):
                 "code_refactoring",
                 "tdd_commits",
                 "mock_implementation"
-            ]
+            ],
+            context_manager=context_manager
         )
 
 
 class MockDataAgent(MockAgent):
     """Mock Data/Analytics Agent for cross-story analysis"""
     
-    def __init__(self):
+    def __init__(self, context_manager: Optional[Any] = None):
         super().__init__(
             "DataAgent",
             capabilities=[
@@ -329,24 +339,25 @@ class MockDataAgent(MockAgent):
                 "performance_tracking",
                 "quality_reporting",
                 "mock_analytics"
-            ]
+            ],
+            context_manager=context_manager
         )
 
 
-def create_mock_agent(agent_type: str) -> MockAgent:
+def create_mock_agent(agent_type: str, context_manager: Optional[Any] = None) -> MockAgent:
     """Factory function to create appropriate mock agent"""
     agent_type_lower = agent_type.lower()
     
     if "design" in agent_type_lower:
-        return MockDesignAgent()
+        return MockDesignAgent(context_manager=context_manager)
     elif "qa" in agent_type_lower or "test" in agent_type_lower:
-        return MockQAAgent()
+        return MockQAAgent(context_manager=context_manager)
     elif "code" in agent_type_lower:
-        return MockCodeAgent()
+        return MockCodeAgent(context_manager=context_manager)
     elif "data" in agent_type_lower or "analytics" in agent_type_lower:
-        return MockDataAgent()
+        return MockDataAgent(context_manager=context_manager)
     else:
-        return MockAgent(agent_type)
+        return MockAgent(agent_type, context_manager=context_manager)
 
 
 # Export for easy importing

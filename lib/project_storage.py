@@ -10,7 +10,7 @@ import os
 from pathlib import Path
 from datetime import datetime, timedelta
 from typing import Optional, Dict, Any
-from data_models import ProjectData, Epic, Story, Sprint
+from lib.data_models import ProjectData, Epic, Story, Sprint
 
 
 class ProjectStorage:
@@ -159,7 +159,7 @@ This document describes the architecture and design decisions for this project.
         """Load a specific TDD cycle from its JSON file."""
         # Import here to avoid circular imports
         try:
-            from .tdd_models import TDDCycle
+            from lib.tdd_models import TDDCycle
         except ImportError:
             from tdd_models import TDDCycle
         
@@ -197,7 +197,7 @@ This document describes the architecture and design decisions for this project.
         """Get the currently active TDD cycle (always fresh from disk)."""
         # Import here to avoid circular imports
         try:
-            from .tdd_models import TDDCycle
+            from lib.tdd_models import TDDCycle
         except ImportError:
             from tdd_models import TDDCycle
         
@@ -439,7 +439,7 @@ This document describes the architecture and design decisions for this project.
             
             # Import here to avoid circular imports
             try:
-                from .tdd_models import TDDCycle
+                from lib.tdd_models import TDDCycle
             except ImportError:
                 from tdd_models import TDDCycle
             

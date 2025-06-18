@@ -1,0 +1,474 @@
+/* ==========================================================================
+   AI Agent TDD-Scrum Workflow Documentation Custom Styles
+   Optimized for maximum information density and professional aesthetics
+   ========================================================================== */
+
+/* Typography Enhancements */
+:root {
+  --md-text-font: "Inter", -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+  --md-code-font: "JetBrains Mono", "Fira Code", "Roboto Mono", monospace;
+  
+  /* Custom Color Palette */
+  --custom-primary: #1976d2;
+  --custom-accent: #ffa726;
+  --custom-success: #4caf50;
+  --custom-warning: #ff9800;
+  --custom-error: #f44336;
+  --custom-info: #2196f3;
+  
+  /* Visual Enhancement Variables */
+  --border-radius-small: 4px;
+  --border-radius-medium: 8px;
+  --border-radius-large: 12px;
+  --box-shadow-light: 0 2px 4px rgba(0,0,0,0.1);
+  --box-shadow-medium: 0 4px 8px rgba(0,0,0,0.15);
+  --box-shadow-heavy: 0 8px 16px rgba(0,0,0,0.2);
+}
+
+/* Enhanced Typography */
+.md-typeset {
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--md-default-fg-color);
+}
+
+.md-typeset h1 {
+  font-weight: 700;
+  font-size: 2.2rem;
+  color: var(--custom-primary);
+  margin-bottom: 1.5rem;
+  border-bottom: 3px solid var(--custom-accent);
+  padding-bottom: 0.5rem;
+}
+
+.md-typeset h2 {
+  font-weight: 600;
+  font-size: 1.6rem;
+  color: var(--custom-primary);
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  border-left: 4px solid var(--custom-accent);
+  padding-left: 1rem;
+}
+
+.md-typeset h3 {
+  font-weight: 600;
+  font-size: 1.3rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.8rem;
+  color: var(--md-default-fg-color--light);
+}
+
+.md-typeset h4 {
+  font-weight: 500;
+  font-size: 1.1rem;
+  margin-top: 1.2rem;
+  margin-bottom: 0.6rem;
+  color: var(--md-default-fg-color--lighter);
+}
+
+/* Enhanced Code Blocks */
+.md-typeset .highlight {
+  border-radius: var(--border-radius-medium);
+  box-shadow: var(--box-shadow-light);
+  margin: 1.5rem 0;
+  overflow: hidden;
+}
+
+.md-typeset .highlight pre {
+  margin: 0;
+  padding: 1.2rem;
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+/* Code block headers with language labels */
+.md-typeset .highlight::before {
+  content: attr(data-lang);
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: var(--custom-primary);
+  color: white;
+  padding: 0.3rem 0.8rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border-bottom-left-radius: var(--border-radius-small);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.md-typeset .highlight[data-lang] {
+  position: relative;
+}
+
+/* Inline code enhancement */
+.md-typeset code {
+  background: var(--md-code-bg-color);
+  color: var(--custom-primary);
+  padding: 0.2rem 0.4rem;
+  border-radius: var(--border-radius-small);
+  font-weight: 500;
+  font-size: 0.85em;
+  border: 1px solid var(--md-default-fg-color--lightest);
+}
+
+/* Enhanced Admonition Styles */
+.md-typeset .admonition {
+  border-radius: var(--border-radius-medium);
+  box-shadow: var(--box-shadow-light);
+  margin: 1.5rem 0;
+  border-left: 4px solid;
+  overflow: hidden;
+}
+
+.md-typeset .admonition-title {
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 0.3px;
+  padding: 0.8rem 1.2rem;
+  margin: 0;
+  background: rgba(var(--md-admonition-bg-color), 0.1);
+}
+
+.md-typeset .admonition-title::before {
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-right: 0.5rem;
+}
+
+/* Specific admonition colors */
+.md-typeset .admonition.tip {
+  border-left-color: var(--custom-success);
+}
+
+.md-typeset .admonition.warning {
+  border-left-color: var(--custom-warning);
+}
+
+.md-typeset .admonition.danger {
+  border-left-color: var(--custom-error);
+}
+
+.md-typeset .admonition.info {
+  border-left-color: var(--custom-info);
+}
+
+/* Enhanced Tables */
+.md-typeset table:not([class]) {
+  border-radius: var(--border-radius-medium);
+  overflow: hidden;
+  box-shadow: var(--box-shadow-light);
+  margin: 1.5rem 0;
+  border: 1px solid var(--md-default-fg-color--lightest);
+}
+
+.md-typeset table:not([class]) th {
+  background: var(--custom-primary);
+  color: white;
+  font-weight: 600;
+  padding: 1rem;
+  text-align: left;
+  font-size: 0.85rem;
+  letter-spacing: 0.3px;
+}
+
+.md-typeset table:not([class]) td {
+  padding: 0.8rem 1rem;
+  border-bottom: 1px solid var(--md-default-fg-color--lightest);
+  font-size: 0.85rem;
+}
+
+.md-typeset table:not([class]) tr:hover {
+  background: var(--md-default-bg-color--light);
+}
+
+/* Command Reference Styling */
+.md-typeset .command-ref {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  border-radius: var(--border-radius-medium);
+  padding: 1.2rem;
+  margin: 1rem 0;
+  border-left: 4px solid var(--custom-primary);
+  box-shadow: var(--box-shadow-light);
+}
+
+.md-typeset .command-syntax {
+  font-family: var(--md-code-font);
+  font-weight: 600;
+  color: var(--custom-primary);
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+/* Enhanced Lists */
+.md-typeset ul li {
+  margin-bottom: 0.3rem;
+}
+
+.md-typeset ul li::marker {
+  color: var(--custom-accent);
+}
+
+.md-typeset ol li::marker {
+  color: var(--custom-primary);
+  font-weight: 600;
+}
+
+/* Navigation Enhancements */
+.md-nav__item--active > .md-nav__link {
+  color: var(--custom-primary);
+  font-weight: 600;
+}
+
+.md-nav__link:hover {
+  color: var(--custom-accent);
+}
+
+/* Search Enhancements */
+.md-search__form {
+  border-radius: var(--border-radius-large);
+  box-shadow: var(--box-shadow-medium);
+}
+
+/* Button Enhancements */
+.md-button {
+  border-radius: var(--border-radius-medium);
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0.3px;
+  transition: all 0.2s ease;
+}
+
+.md-button:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--box-shadow-medium);
+}
+
+.md-button--primary {
+  background: var(--custom-primary);
+  border-color: var(--custom-primary);
+}
+
+.md-button--primary:hover {
+  background: var(--custom-accent);
+  border-color: var(--custom-accent);
+}
+
+/* Enhanced Mermaid Diagrams */
+.mermaid-zoom-container {
+  border: 1px solid var(--md-default-fg-color--lightest) !important;
+  border-radius: var(--border-radius-large) !important;
+  box-shadow: var(--box-shadow-medium) !important;
+  margin: 2rem 0 !important;
+  overflow: hidden !important;
+}
+
+.mermaid svg {
+  max-width: 100%;
+  height: auto;
+  font-family: var(--md-text-font);
+}
+
+/* Zoom controls styling */
+.zoom-controls button {
+  background: var(--custom-primary) !important;
+  border-radius: var(--border-radius-small) !important;
+  font-size: 0.75rem !important;
+  transition: all 0.2s ease !important;
+}
+
+.zoom-controls button:hover {
+  background: var(--custom-accent) !important;
+  transform: scale(1.05) !important;
+}
+
+/* Content Tabs Enhancement */
+.md-typeset .tabbed-set {
+  border-radius: var(--border-radius-medium);
+  box-shadow: var(--box-shadow-light);
+  overflow: hidden;
+  margin: 1.5rem 0;
+}
+
+.md-typeset .tabbed-labels {
+  background: var(--md-default-bg-color--light);
+}
+
+.md-typeset .tabbed-labels > label {
+  border-radius: var(--border-radius-small) var(--border-radius-small) 0 0;
+  font-weight: 500;
+  color: var(--md-default-fg-color--light);
+}
+
+.md-typeset .tabbed-labels > label:hover {
+  color: var(--custom-primary);
+}
+
+.md-typeset .tabbed-set > input:checked + label {
+  background: var(--custom-primary);
+  color: white;
+}
+
+/* Footer Enhancements */
+.md-footer {
+  background: linear-gradient(135deg, var(--custom-primary) 0%, #1565c0 100%);
+}
+
+/* Responsive Enhancements */
+@media screen and (max-width: 76.1875em) {
+  .md-typeset {
+    font-size: 0.8rem;
+  }
+  
+  .md-typeset h1 {
+    font-size: 1.8rem;
+  }
+  
+  .md-typeset h2 {
+    font-size: 1.4rem;
+  }
+  
+  .md-typeset table:not([class]) {
+    font-size: 0.75rem;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .md-typeset {
+    font-size: 11pt;
+    line-height: 1.4;
+  }
+  
+  .md-typeset h1,
+  .md-typeset h2,
+  .md-typeset h3 {
+    page-break-after: avoid;
+  }
+  
+  .md-typeset .highlight,
+  .md-typeset .admonition,
+  .md-typeset table {
+    page-break-inside: avoid;
+  }
+}
+
+/* Accessibility Enhancements */
+@media (prefers-reduced-motion: reduce) {
+  .md-button,
+  .zoom-controls button {
+    transition: none;
+  }
+  
+  .md-button:hover,
+  .zoom-controls button:hover {
+    transform: none;
+  }
+}
+
+/* Focus States */
+.md-typeset a:focus,
+.md-button:focus,
+.md-nav__link:focus {
+  outline: 2px solid var(--custom-accent);
+  outline-offset: 2px;
+  border-radius: var(--border-radius-small);
+}
+
+/* Status Badges */
+.status-badge {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--border-radius-small);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0.3rem;
+}
+
+.status-badge.completed {
+  background: var(--custom-success);
+  color: white;
+}
+
+.status-badge.in-progress {
+  background: var(--custom-warning);
+  color: white;
+}
+
+.status-badge.blocked {
+  background: var(--custom-error);
+  color: white;
+}
+
+.status-badge.pending {
+  background: var(--custom-info);
+  color: white;
+}
+
+/* Command Highlight Classes */
+.command-syntax {
+  font-family: var(--md-code-font);
+  font-weight: 600;
+  color: var(--custom-primary);
+  background: var(--md-code-bg-color);
+  padding: 0.3rem 0.6rem;
+  border-radius: var(--border-radius-small);
+  border: 1px solid var(--md-default-fg-color--lightest);
+}
+
+/* Quick Reference Cards */
+.quick-ref-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 1.5rem;
+  border-radius: var(--border-radius-medium);
+  margin: 1rem 0;
+  box-shadow: var(--box-shadow-medium);
+}
+
+.quick-ref-card h3 {
+  color: white;
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+.quick-ref-card code {
+  background: rgba(255,255,255,0.2);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.3);
+}
+
+/* Performance optimizations */
+.md-typeset .highlight,
+.md-typeset .admonition,
+.md-typeset table {
+  will-change: transform;
+}
+
+/* Enhanced scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar styling for webkit browsers */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--md-default-bg-color);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--custom-primary);
+  border-radius: var(--border-radius-small);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--custom-accent);
+}

@@ -31,7 +31,7 @@ from orchestrator import Orchestrator
 from data_models import Epic, Story
 from tdd_models import TDDCycle, TDDTask, TestResult, TestStatus
 from project_storage import ProjectStorage
-from discord_bot import OrchestratorBot
+from discord_bot import WorkflowBot
 
 
 class UserAcceptanceTestFramework:

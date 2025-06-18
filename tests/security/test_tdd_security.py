@@ -28,7 +28,7 @@ sys.path.insert(0, str(project_root / "lib"))
 sys.path.insert(0, str(project_root / "scripts"))
 
 from orchestrator import Orchestrator
-from agent_tool_config import AgentType, AGENT_SECURITY_PROFILES, get_claude_config_for_agent
+from agent_tool_config import AgentType, AGENT_TOOL_CONFIG, get_claude_tool_args
 from data_models import Epic, Story
 from tdd_models import TDDCycle, TDDTask, TestResult, TestStatus
 from project_storage import ProjectStorage

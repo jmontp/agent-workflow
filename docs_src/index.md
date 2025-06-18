@@ -1,6 +1,9 @@
-# AI Agent TDD-Scrum Workflow
+# 🤖 AI Agent TDD-Scrum Workflow
 
 A sophisticated **Human-In-The-Loop (HITL)** orchestration framework that coordinates multiple specialized AI agents through a Discord interface, following a research-mode Scrum methodology optimized for solo engineers working with AI assistance.
+
+!!! success "What You Get"
+    **Complete AI-powered development team** that handles design, testing, implementation, and quality assurance while keeping you in control of strategic decisions.
 
 ## Overview
 
@@ -115,35 +118,109 @@ graph TB
     style Repo fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
 ```
 
-## Key Features
+## 🎯 Key Features
 
-- **Dual State Machine Architecture**: Primary workflow coordination with secondary TDD state machines
-- **Parallel TDD Processing**: Multiple stories developed simultaneously with proper RED-GREEN-REFACTOR cycles
-- **Ephemeral Agent System**: On-demand agent creation and coordination for optimal resource utilization
-- **Discord Integration**: Complete HITL interface with TDD-aware slash commands and interactive UI
-- **Multi-Project Support**: Simultaneous orchestration across multiple projects with independent TDD cycles
-- **Human Oversight**: Strategic approval gates with automated TDD execution and error escalation
-- **Real-time TDD Monitoring**: Live visibility into all TDD cycles with interactive progress tracking
-- **Comprehensive Testing**: Unit, integration, and E2E test coverage with TDD methodology enforcement
+### 🏗️ Core Architecture
+=== "Dual State Machine"
+    **Primary workflow coordination with secondary TDD state machines**
+    
+    - Scrum workflow orchestration (IDLE → BACKLOG → SPRINT → REVIEW)
+    - Parallel TDD cycles (DESIGN → TEST → CODE → REFACTOR → COMMIT)
+    - Intelligent state transitions and error recovery
 
-## Quick Start
+=== "Ephemeral Agents"
+    **On-demand agent creation and coordination for optimal resource utilization**
+    
+    - Design agents for technical specifications
+    - QA agents for comprehensive testing
+    - Code agents for implementation and refactoring
+    - Analytics agents for performance monitoring
+
+=== "Context Management"
+    **Intelligent agent communication with optimized context sharing**
+    
+    - Memory-efficient context compression
+    - Cross-agent knowledge sharing
+    - Token optimization for large codebases
+
+### 🌐 Multi-Project Orchestration
+=== "Resource Management"
+    **Intelligent allocation of CPU, memory, and agents across projects**
+    
+    - Priority-based scheduling
+    - Dynamic resource allocation
+    - Performance monitoring and optimization
+
+=== "Cross-Project Intelligence"
+    **Pattern recognition and knowledge sharing between projects**
+    
+    - Best practice identification
+    - Anti-pattern detection
+    - Knowledge transfer recommendations
+
+=== "Security Isolation"
+    **Project-level security boundaries and access control**
+    
+    - Agent access restrictions
+    - Data isolation between projects
+    - Audit logging and compliance
+
+### 💬 Human-In-The-Loop Interface
+=== "Discord Integration"
+    **Complete HITL interface with TDD-aware slash commands**
+    
+    - Interactive state visualization
+    - Real-time progress monitoring
+    - Approval gates for strategic decisions
+
+=== "Real-time Monitoring"
+    **Live visibility into all TDD cycles with WebSocket updates**
+    
+    - Multi-project dashboard
+    - Performance metrics
+    - Error escalation and alerts
+
+### 🧪 Quality & Testing
+=== "TDD Enforcement"
+    **Strict RED-GREEN-REFACTOR cycle implementation**
+    
+    - Automated test creation
+    - Minimal implementation approach
+    - Quality-focused refactoring
+
+=== "Comprehensive Testing"
+    **Unit, integration, and E2E test coverage**
+    
+    - >90% code coverage target
+    - Performance benchmarking
+    - Security validation
+
+## 🚀 Quick Start
 
 Get up and running in minutes:
 
-```bash
-# Clone and install
-git clone https://github.com/jmontp/agent-workflow.git
-cd agent-workflow
-make install
+!!! example "Installation"
+    ```bash
+    # Clone and install
+    git clone https://github.com/jmontp/agent-workflow.git
+    cd agent-workflow
+    make install
 
-# Configure
-export DISCORD_BOT_TOKEN="your_token_here"
+    # Configure
+    export DISCORD_BOT_TOKEN="your_token_here"
 
-# Run
-make run
-```
+    # Run
+    make run
+    ```
 
-[**→ Detailed Installation Guide**](getting-started/installation.md)
+!!! tip "Next Steps"
+    Once running, try these commands in Discord:
+    
+    - `/epic "Build authentication system"` - Define your first epic
+    - `/sprint plan` - Plan your first sprint
+    - `/state` - View interactive system state
+
+[**→ Complete Installation Guide**](getting-started/installation.md) | [**→ Quick Start Tutorial**](getting-started/quick-start.md)
 
 ## Dual State Machine Workflow
 
@@ -223,27 +300,30 @@ Specialized agents are created on-demand for optimal resource utilization:
 
 [**→ Agent Capabilities Reference**](concepts/overview.md)
 
-## Essential Commands
+## ⚡ Essential Commands
 
 Master these key slash commands for dual state machine control:
 
-### Workflow Commands
+### 📋 Workflow Commands
 | Command | Purpose | Example |
 |---------|---------|---------|
-| `/epic` | Define high-level initiatives | `/epic "Build authentication system"` |
-| `/sprint plan` | Plan sprint with stories | `/sprint plan AUTH-1 AUTH-2` |
-| `/sprint start` | Begin sprint execution (creates TDD cycles) | `/sprint start` |
-| `/approve` | Approve pending tasks | `/approve AUTH-1 AUTH-2` |
-| `/state` | Interactive state inspection | `/state` |
+| **`/epic`** | Define high-level initiatives | `/epic "Build authentication system"` |
+| **`/sprint plan`** | Plan sprint with stories | `/sprint plan AUTH-1 AUTH-2` |
+| **`/sprint start`** | Begin sprint execution (creates TDD cycles) | `/sprint start` |
+| **`/approve`** | Approve pending tasks | `/approve AUTH-1 AUTH-2` |
+| **`/state`** | Interactive state inspection | `/state` |
 
-### TDD Commands
+### 🧪 TDD Commands
 | Command | Purpose | Example |
 |---------|---------|---------|
-| `/tdd overview` | Monitor all TDD cycles | `/tdd overview` |
-| `/tdd status` | Check specific story progress | `/tdd status AUTH-1` |
-| `/tdd review_cycle` | Request human review | `/tdd review_cycle AUTH-1` |
-| `/tdd metrics` | View TDD performance data | `/tdd metrics` |
-| `/tdd pause/resume` | Control TDD cycle execution | `/tdd pause AUTH-1` |
+| **`/tdd overview`** | Monitor all TDD cycles | `/tdd overview` |
+| **`/tdd status`** | Check specific story progress | `/tdd status AUTH-1` |
+| **`/tdd review_cycle`** | Request human review | `/tdd review_cycle AUTH-1` |
+| **`/tdd metrics`** | View TDD performance data | `/tdd metrics` |
+| **`/tdd pause/resume`** | Control TDD cycle execution | `/tdd pause AUTH-1` |
+
+!!! info "Command Discovery"
+    Use `/state` in Discord to see all available commands for your current workflow state.
 
 [**→ Complete Command Reference**](user-guide/hitl-commands.md)
 
@@ -280,19 +360,69 @@ We welcome contributions! The system is designed for extensibility:
 
 [**→ Contributing Guidelines**](user-guide/faq.md)
 
-## Documentation Sections
+## 📚 Documentation Sections
 
-| Section | Description |
-|---------|-------------|
-| [**Getting Started**](getting-started/quick-start.md) | Installation, setup, and TDD workflow examples |
-| [**User Guide**](user-guide/hitl-commands.md) | Commands, workflows, and daily usage |
-| [**TDD Workflow**](user-guide/tdd-workflow.md) | Complete TDD cycle management and monitoring |
-| [**State Machines**](user-guide/state-machine.md) | Dual state machine architecture and transitions |
-| [**Architecture**](architecture/overview.md) | Dual state machine system design and coordination |
-| [**Context Management**](architecture/context-management-system.md) | Intelligent agent communication and context optimization |
-| [**Concepts**](concepts/overview.md) | Core principles and ephemeral agent patterns |
-| [**Advanced**](advanced/architecture-detailed.md) | Detailed technical implementation |
-| [**Deployment**](deployment/github-pages.md) | Production setup and configuration |
+<div class="grid cards" markdown>
+
+-   :material-rocket-launch:{ .lg .middle } **Getting Started**
+
+    ---
+    
+    Installation, setup, and first workflow examples
+    
+    [:octicons-arrow-right-24: Quick Start](getting-started/quick-start.md)
+
+-   :material-console:{ .lg .middle } **User Guide**
+
+    ---
+    
+    Commands, workflows, and daily usage patterns
+    
+    [:octicons-arrow-right-24: Commands](user-guide/hitl-commands.md)
+
+-   :material-test-tube:{ .lg .middle } **TDD Workflow**
+
+    ---
+    
+    Complete TDD cycle management and monitoring
+    
+    [:octicons-arrow-right-24: TDD Guide](user-guide/tdd-workflow.md)
+
+-   :material-sitemap:{ .lg .middle } **Architecture**
+
+    ---
+    
+    Dual state machine system design and coordination
+    
+    [:octicons-arrow-right-24: Overview](architecture/overview.md)
+
+-   :material-brain:{ .lg .middle } **Context Management**
+
+    ---
+    
+    Intelligent agent communication and optimization
+    
+    [:octicons-arrow-right-24: Context System](architecture/context-management-system.md)
+
+-   :material-security:{ .lg .middle } **Security & Deployment**
+
+    ---
+    
+    Multi-project security and production setup
+    
+    [:octicons-arrow-right-24: Security](advanced/security-implementation.md)
+
+</div>
+
+### 🔍 Quick Reference
+
+| Topic | Best For | Documentation |
+|-------|----------|---------------|
+| **First Time Users** | Getting started quickly | [Installation](getting-started/installation.md) → [Quick Start](getting-started/quick-start.md) |
+| **Daily Usage** | Command reference and workflows | [HITL Commands](user-guide/hitl-commands.md) → [State Machine](user-guide/state-machine.md) |
+| **Multi-Project** | Managing multiple codebases | [Multi-Project Guide](user-guide/multi-project-orchestration.md) |
+| **Technical Deep-Dive** | Understanding the system | [Architecture](architecture/overview.md) → [Advanced](advanced/architecture-detailed.md) |
+| **Troubleshooting** | Fixing issues | [Troubleshooting](user-guide/troubleshooting.md) → [FAQ](user-guide/faq.md) |
 
 ---
 

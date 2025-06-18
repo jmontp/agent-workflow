@@ -1,6 +1,34 @@
 # TDD Workflow Guide
 
-The AI Agent TDD-Scrum system implements a comprehensive Test-Driven Development workflow that runs in parallel with the main Scrum state machine. This guide explains how to use TDD commands and understand the RED-GREEN-REFACTOR cycle.
+The AI Agent TDD-Scrum system implements a comprehensive Test-Driven Development workflow that runs in parallel with the main Scrum state machine. With advanced context management and multi-project support, the system can coordinate multiple TDD cycles simultaneously across different projects while maintaining proper RED-GREEN-REFACTOR methodology. This guide explains how to use TDD commands and understand the complete TDD ecosystem.
+
+## Multi-Project TDD Architecture
+
+The system supports multiple TDD execution modes:
+
+### Single-Project Mode
+Traditional workflow with one project and multiple parallel TDD cycles:
+```bash
+# Standard single-project TDD
+python scripts/orchestrator.py
+/sprint start  # Creates TDD cycles for current project
+```
+
+### Multi-Project Mode
+Advanced orchestration across multiple projects with global resource management:
+```bash
+# Multi-project TDD orchestration
+python scripts/multi_project_orchestrator.py --interactive
+> start backend-api    # Start TDD cycles for backend project
+> start frontend-app   # Start TDD cycles for frontend project
+```
+
+### Context-Managed TDD
+Intelligent context sharing between TDD cycles for optimal agent performance:
+- **Context Manager**: Optimizes agent memory and communication
+- **Token Calculation**: Manages context size for efficient agent operation
+- **Cross-Cycle Learning**: Agents learn from parallel TDD cycles
+- **Resource Optimization**: Smart allocation of agents across TDD cycles
 
 ## TDD State Machine Overview
 
@@ -66,6 +94,31 @@ Display TDD metrics: cycle time, test coverage, refactor frequency.
 
 **`/tdd halt_all`**
 Emergency stop all TDD cycles (requires confirmation).
+
+### Context Management Commands
+
+**`/tdd context <STORY_ID>`**
+Show context information for TDD cycle agents.
+
+**`/tdd context optimize`**
+Trigger context optimization across all active TDD cycles.
+
+**`/tdd memory <STORY_ID>`**
+Display agent memory usage and optimization stats.
+
+**`/tdd context_share <STORY_ID> <TARGET_STORY_ID>`**
+Enable context sharing between related TDD cycles.
+
+### Multi-Project TDD Commands
+
+**`/tdd global_overview`**
+Show TDD status across all projects in multi-project mode.
+
+**`/tdd project_metrics <PROJECT_NAME>`**
+Display TDD metrics for a specific project.
+
+**`/tdd resource_status`**
+Show TDD agent resource allocation across projects.
 
 ## Complete TDD Cycle Walkthrough
 
