@@ -28,6 +28,13 @@ from data_models import ProjectData, Epic, Story, Sprint, EpicStatus, StoryStatu
 from tdd_state_machine import TDDStateMachine, TDDCommandResult
 from tdd_models import TDDCycle, TDDTask, TDDState, TestResult, TestStatus
 
+# Import context management
+try:
+    from context_manager import ContextManager
+except ImportError:
+    # Graceful fallback if context manager is not available
+    ContextManager = None
+
 # Import state broadcaster for real-time visualization
 try:
     from state_broadcaster import emit_agent_activity
@@ -57,6 +64,7 @@ class Project:
     active_tasks: List[Task]
     pending_approvals: List[str]
     storage: ProjectStorage
+    context_manager: Optional[Any] = None  # Will be ContextManager when available
     
     def to_dict(self) -> Dict[str, Any]:
         """Convert project to dictionary for serialization"""
@@ -123,6 +131,16 @@ class Orchestrator:
                     
                     # Create project with state machine and storage
                     storage = ProjectStorage(str(project_path))
+                    
+                    # Initialize context manager for project if available
+                    context_manager = None
+                    if ContextManager:
+                        try:
+                            context_manager = ContextManager(project_path=str(project_path))
+                            logger.info(f"Context manager initialized for project {project_name}")
+                        except Exception as e:
+                            logger.warning(f"Failed to initialize context manager for {project_name}: {str(e)}")
+                    
                     project = Project(
                         name=project_name,
                         path=project_path,
@@ -131,7 +149,8 @@ class Orchestrator:
                         tdd_state_machine=TDDStateMachine(),
                         active_tasks=[],
                         pending_approvals=[],
-                        storage=storage
+                        storage=storage,
+                        context_manager=context_manager
                     )
                     
                     self.projects[project_name] = project
@@ -148,6 +167,16 @@ class Orchestrator:
     def _create_default_project(self) -> None:
         """Create default project configuration"""
         storage = ProjectStorage(".")
+        
+        # Initialize context manager for default project if available
+        context_manager = None
+        if ContextManager:
+            try:
+                context_manager = ContextManager(project_path=".")
+                logger.info("Context manager initialized for default project")
+            except Exception as e:
+                logger.warning(f"Failed to initialize context manager for default project: {str(e)}")
+        
         default_project = Project(
             name="default",
             path=Path("."),
@@ -156,7 +185,8 @@ class Orchestrator:
             tdd_state_machine=TDDStateMachine(),
             active_tasks=[],
             pending_approvals=[],
-            storage=storage
+            storage=storage,
+            context_manager=context_manager
         )
         self.projects["default"] = default_project
         logger.info("Created default project")
@@ -166,12 +196,21 @@ class Orchestrator:
         try:
             available_agents = get_available_agents()
             for agent_type in available_agents:
+                # Create agent without context manager initially (will be set per project)
                 agent = create_agent(agent_type)
                 self.agents[agent_type] = agent
                 logger.info(f"Initialized agent: {agent_type}")
                 
         except Exception as e:
             logger.error(f"Failed to initialize agents: {e}")
+    
+    def _get_agent_for_project(self, agent_type: str, project: Project):
+        """Get agent instance configured for specific project"""
+        agent = self.agents.get(agent_type)
+        if agent and project.context_manager:
+            # Set context manager for this project if available
+            agent.context_manager = project.context_manager
+        return agent
     
     def _load_project_states(self) -> None:
         """Load persisted project states"""
@@ -332,7 +371,7 @@ class Orchestrator:
             project.storage.save_project_data(project_data)
             
             # TODO: Use DesignAgent to decompose epic into stories
-            design_agent = self.agents.get("DesignAgent")
+            design_agent = self._get_agent_for_project("DesignAgent", project)
             if design_agent:
                 task = Task(
                     id=f"epic-{datetime.now().timestamp()}",
@@ -1191,7 +1230,7 @@ class Orchestrator:
     
     async def _dispatch_task(self, task: Task, project: Project) -> AgentResult:
         """Dispatch task to appropriate agent"""
-        agent = self.agents.get(task.agent_type)
+        agent = self._get_agent_for_project(task.agent_type, project)
         if not agent:
             return AgentResult(
                 success=False,
@@ -1305,6 +1344,41 @@ class Orchestrator:
                     command=f"Continue TDD cycle in {to_state} state",
                     context=handoff_context
                 )
+                
+                # Record phase handoff in context manager if available
+                if project.context_manager:
+                    try:
+                        # Map string states to TDDState enum
+                        from tdd_models import TDDState
+                        state_mapping = {
+                            "design": TDDState.DESIGN,
+                            "test_red": TDDState.TEST_RED,
+                            "code_green": TDDState.CODE_GREEN,
+                            "refactor": TDDState.REFACTOR,
+                            "commit": TDDState.COMMIT
+                        }
+                        
+                        from_tdd_state = state_mapping.get(from_state)
+                        to_tdd_state = state_mapping.get(to_state)
+                        
+                        if from_tdd_state and to_tdd_state:
+                            await project.context_manager.record_phase_handoff(
+                                from_agent=from_agent or "Unknown",
+                                to_agent=to_agent,
+                                from_phase=from_tdd_state,
+                                to_phase=to_tdd_state,
+                                story_id=cycle.story_id,
+                                artifacts={
+                                    "task_description": current_task.description,
+                                    "test_files": str(current_task.test_files),
+                                    "source_files": str(current_task.source_files)
+                                },
+                                context_summary=f"TDD handoff from {from_state} to {to_state}",
+                                handoff_notes=f"Continuing TDD cycle in {to_state} state"
+                            )
+                            logger.info(f"Recorded TDD handoff: {from_agent} → {to_agent}")
+                    except Exception as e:
+                        logger.warning(f"Failed to record TDD handoff in context manager: {e}")
                 
                 project.active_tasks.append(task)
                 self._save_project_state(project)
