@@ -515,10 +515,14 @@ class FileBasedAgentMemory(IAgentMemory):
     
     def _get_memory_file_path(self, agent_type: str, story_id: str) -> Path:
         """Get file path for agent memory"""
-        # Sanitize story_id for filename
-        safe_story_id = "".join(c for c in story_id if c.isalnum() or c in '-_').strip()
-        if not safe_story_id:
+        # Handle None or empty story_id
+        if not story_id or not story_id.strip():
             safe_story_id = "default"
+        else:
+            # Sanitize story_id for filename
+            safe_story_id = "".join(c for c in story_id if c.isalnum() or c in '-_').strip()
+            if not safe_story_id:
+                safe_story_id = "default"
         
         return self.memory_dir / agent_type / f"{safe_story_id}.json"
     

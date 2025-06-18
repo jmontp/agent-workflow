@@ -877,9 +877,54 @@ class TestSanitizationAndSecurity:
         memory = AgentMemory(agent_type="TestAgent", story_id="")
         await agent_memory.store_memory(memory)
         
-        # Should use "default" as fallback
+        # Should be able to retrieve with empty story_id
         retrieved = await agent_memory.get_memory("TestAgent", "")
         assert retrieved is not None
+        assert retrieved.story_id == ""
+    
+    def test_get_memory_file_path_edge_cases(self, agent_memory):
+        """Test memory file path generation edge cases"""
+        # Test with None story_id
+        memory_file = agent_memory._get_memory_file_path("TestAgent", None)
+        assert "default.json" in str(memory_file)
+        
+        # Test with whitespace-only story_id  
+        memory_file = agent_memory._get_memory_file_path("TestAgent", "   ")
+        assert "default.json" in str(memory_file)
+        
+        # Test path structure
+        memory_file = agent_memory._get_memory_file_path("TestAgent", "valid_story")
+        assert memory_file.parent.name == "TestAgent"
+        assert memory_file.name == "valid_story.json"
+    
+    def test_recent_activity_summary_edge_cases(self, agent_memory):
+        """Test recent activity summary with edge cases"""
+        from datetime import datetime, timedelta
+        
+        # Create memory with old data (beyond the week threshold)
+        old_time = datetime.utcnow() - timedelta(days=10)
+        
+        memory = AgentMemory(agent_type="TestAgent", story_id="test_story")
+        
+        # Add old decision
+        old_decision = Decision(
+            description="Old decision",
+            rationale="Old rationale", 
+            timestamp=old_time
+        )
+        memory.decisions.append(old_decision)
+        
+        # Get summary (should not include old decision)
+        summary = agent_memory._get_recent_activity_summary(memory)
+        assert summary["recent_decisions"] == 0
+        assert summary["recent_patterns"] == 0
+        assert summary["recent_handoffs"] == 0
+        assert summary["recent_snapshots"] == 0
+        
+        # Test with no updated_at
+        memory.updated_at = None
+        summary = agent_memory._get_recent_activity_summary(memory)
+        assert summary["last_activity"] is None
 
 
 if __name__ == "__main__":

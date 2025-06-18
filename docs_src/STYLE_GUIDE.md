@@ -55,7 +55,7 @@ Technical explanation with visual aids.
 command --option value
 ```
 
-[**→ Detailed Guide**](link-to-detailed-guide.md)
+[**→ User Guide**](user-guide/index.md)
 ```
 
 #### Process Flow Pattern

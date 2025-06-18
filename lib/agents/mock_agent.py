@@ -39,6 +39,7 @@ class MockAgent(BaseAgent):
         self.agent_type = agent_type
         self.execution_count = 0
         self.failure_rate = 0.1  # 10% simulated failure rate
+        self.success_rate = 0.95  # 95% success rate for realistic simulation
         
     async def run(self, task: Task, dry_run: bool = False) -> AgentResult:
         """Execute mock task with realistic simulation"""
@@ -55,7 +56,7 @@ class MockAgent(BaseAgent):
                 await asyncio.sleep(processing_time)
             
             # Simulate occasional failures for testing
-            if random.random() < self.failure_rate:
+            if random.random() >= self.success_rate:
                 return self._create_failure_result(task, processing_time)
             
             # Generate mock response based on task type
@@ -128,10 +129,10 @@ class MockAgent(BaseAgent):
             return self._mock_design_response(context)
         elif "test" in command and "red" in command:
             return self._mock_test_red_response(context)
-        elif "implement" in command or "code" in command:
-            return self._mock_code_response(context)
         elif "refactor" in command:
             return self._mock_refactor_response(context)
+        elif "implement" in command or "code" in command:
+            return self._mock_code_response(context)
         elif "analyze" in command or "review" in command:
             return self._mock_analysis_response(context)
         else:
@@ -140,12 +141,14 @@ class MockAgent(BaseAgent):
     def _mock_design_response(self, context: Dict[str, Any]) -> str:
         """Generate mock design/specification response"""
         story_id = context.get("story_id", "STORY-XXX")
-        return f"""MockDesignAgent: Design specifications completed for {story_id}
+        requirements = context.get("requirements", "Mock requirements")
+        return f"""Mock{self.agent_type}: Design specifications completed for {story_id}
 
 # Mock Technical Specification
 
 ## Overview
 Mock implementation specifications generated for testing purposes.
+Requirements: {requirements}
 
 ## Acceptance Criteria
 - ✅ Mock criteria 1: Basic functionality validated
@@ -223,7 +226,9 @@ Ready for REFACTOR phase to improve code quality.
     def _mock_refactor_response(self, context: Dict[str, Any]) -> str:
         """Generate mock refactoring response"""
         story_id = context.get("story_id", "STORY-XXX") 
-        return f"""MockCodeAgent: Refactoring completed for {story_id}
+        # Use CodeAgent branding for refactor responses as they typically come from code agents
+        agent_name = "MockCodeAgent" if self.agent_type != "CodeAgent" else f"Mock{self.agent_type}"
+        return f"""{agent_name}: Refactoring completed for {story_id}
 
 # Mock Refactoring Summary
 
@@ -270,46 +275,6 @@ Ready for COMMIT phase.
 This is a mock analysis for state machine validation.
 """
     
-    async def run(self, task: Task, dry_run: bool = False) -> AgentResult:
-        """
-        Mock implementation of BaseAgent.run method.
-        
-        Simulates realistic agent execution with configurable delays and success rates.
-        
-        Args:
-            task: Task to execute
-            dry_run: If True, simulate without making changes
-            
-        Returns:
-            AgentResult with mock execution outcome
-        """
-        start_time = time.time()
-        
-        # Simulate realistic execution delay (0.1-2.0 seconds)
-        delay = random.uniform(0.1, 2.0)
-        await asyncio.sleep(delay)
-        
-        # Simulate realistic success rate (95% success)
-        success = random.random() < self.success_rate
-        
-        if success:
-            output = f"Mock agent {self.name} successfully completed task: {task.description}"
-            if dry_run:
-                output += " (dry run mode)"
-                
-            return AgentResult(
-                success=True,
-                output=output,
-                artifacts={"mock_artifact": "mock_content"},
-                execution_time=time.time() - start_time
-            )
-        else:
-            return AgentResult(
-                success=False,
-                output="Mock agent execution failed",
-                error="Simulated random failure for testing",
-                execution_time=time.time() - start_time
-            )
 
 
 class MockDesignAgent(MockAgent):

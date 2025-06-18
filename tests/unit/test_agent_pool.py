@@ -29,11 +29,15 @@ class MockAgent(BaseAgent):
     """Mock agent for testing"""
     
     def __init__(self, agent_type="TestAgent"):
+        super().__init__(name=agent_type, capabilities=["test", "mock"])
         self.agent_type = agent_type
-        self.capabilities = ["test", "mock"]
         self.execution_results = []
         self.fail_next = False
         self.delay_seconds = 0
+    
+    async def run(self, task: Task, dry_run: bool = False) -> AgentResult:
+        """Implementation of abstract run method"""
+        return await self._execute_with_retry(task, dry_run)
     
     async def _execute_with_retry(self, task, dry_run=False):
         """Mock task execution"""

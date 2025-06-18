@@ -808,3 +808,222 @@ class TestWebSocketServerMocking:
         new_broadcaster = StatebroadCaster()
         
         assert global_broadcaster is new_broadcaster
+
+
+class TestStateBroadcasterEdgeCases:
+    """Test edge cases and comprehensive coverage for state broadcaster"""
+    
+    def test_singleton_behavior_across_instances(self):
+        """Test that StatebroadCaster maintains singleton behavior"""
+        # Create multiple instances
+        broadcaster1 = StatebroadCaster()
+        broadcaster2 = StatebroadCaster()
+        broadcaster3 = StatebroadCaster()
+        
+        # All should be the same instance
+        assert broadcaster1 is broadcaster2
+        assert broadcaster2 is broadcaster3
+        
+        # Modifications to one should affect all
+        broadcaster1.current_workflow_state = State.SPRINT_ACTIVE
+        assert broadcaster2.current_workflow_state == State.SPRINT_ACTIVE
+        assert broadcaster3.current_workflow_state == State.SPRINT_ACTIVE
+    
+    @pytest.mark.asyncio
+    async def test_server_lifecycle_edge_cases(self):
+        """Test server start/stop lifecycle edge cases"""
+        broadcaster = StatebroadCaster()
+        
+        # Test starting server with custom port
+        with patch('websockets.serve') as mock_serve:
+            mock_server = Mock()
+            mock_serve.return_value = mock_server
+            
+            await broadcaster.start_server(port=9999)
+            assert broadcaster.port == 9999
+            mock_serve.assert_called_once()
+        
+        # Test stopping when no server is running
+        broadcaster.server = None
+        await broadcaster.stop_server()  # Should not raise exception
+        
+        # Test stopping with server
+        mock_server = Mock()
+        mock_server.close = Mock()
+        mock_server.wait_closed = AsyncMock()
+        broadcaster.server = mock_server
+        
+        await broadcaster.stop_server()
+        mock_server.close.assert_called_once()
+        mock_server.wait_closed.assert_called_once()
+    
+    @pytest.mark.asyncio
+    async def test_client_message_handling_edge_cases(self):
+        """Test client message handling with various edge cases"""
+        broadcaster = StatebroadCaster()
+        mock_websocket = MockWebSocketProtocol()
+        
+        # Test unknown message type
+        unknown_msg = {"type": "unknown_type", "data": "test"}
+        await broadcaster.handle_client_message(mock_websocket, unknown_msg)
+        
+        response = json.loads(mock_websocket.sent_messages[-1])
+        assert response["type"] == "error"
+        assert "Unknown message type" in response["message"]
+        
+        # Test message without type
+        no_type_msg = {"data": "test"}
+        await broadcaster.handle_client_message(mock_websocket, no_type_msg)
+        
+        response = json.loads(mock_websocket.sent_messages[-1])
+        assert response["type"] == "error"
+        
+        # Test get_history request
+        history_msg = {"type": "get_history"}
+        await broadcaster.handle_client_message(mock_websocket, history_msg)
+        
+        response = json.loads(mock_websocket.sent_messages[-1])
+        assert response["type"] == "transition_history"
+        assert "history" in response
+    
+    @pytest.mark.asyncio
+    async def test_broadcast_to_all_error_handling(self):
+        """Test broadcast_to_all with client connection errors"""
+        broadcaster = StatebroadCaster()
+        
+        # Create mock clients with different behaviors
+        good_client = MockWebSocketProtocol()
+        failing_client = MockWebSocketProtocol()
+        closed_client = MockWebSocketProtocol()
+        
+        # Make failing client raise exception
+        async def failing_send(message):
+            raise Exception("Network error")
+        
+        # Make closed client raise ConnectionClosed
+        async def closed_send(message):
+            import websockets
+            raise websockets.exceptions.ConnectionClosed(None, None)
+        
+        failing_client.send = failing_send
+        closed_client.send = closed_send
+        
+        # Add clients to broadcaster
+        broadcaster.clients = {good_client, failing_client, closed_client}
+        
+        test_message = {"type": "test", "data": "test_broadcast"}
+        
+        with patch('lib.state_broadcaster.logger') as mock_logger:
+            await broadcaster.broadcast_to_all(test_message)
+            
+            # Good client should receive message
+            assert len(good_client.sent_messages) == 1
+            
+            # Failed clients should be removed
+            assert failing_client not in broadcaster.clients
+            assert closed_client not in broadcaster.clients
+            assert good_client in broadcaster.clients
+            
+            # Error should be logged
+            assert mock_logger.error.called
+    
+    def test_emit_functions_with_edge_cases(self):
+        """Test emit functions with various edge cases"""
+        broadcaster = StatebroadCaster()
+        broadcaster.transition_history = []
+        broadcaster.tdd_cycles = {}
+        
+        # Test workflow transition with string states (edge case)
+        with patch('asyncio.create_task') as mock_task:
+            broadcaster.emit_workflow_transition("string_old", "string_new", "test_project")
+            
+            assert broadcaster.current_workflow_state == "string_new"
+            assert len(broadcaster.transition_history) == 1
+            assert broadcaster.transition_history[0]["old_state"] == "string_old"
+            assert broadcaster.transition_history[0]["new_state"] == "string_new"
+            assert broadcaster.transition_history[0]["project"] == "test_project"
+            mock_task.assert_called_once()
+        
+        # Test TDD transition with None old_state
+        with patch('asyncio.create_task') as mock_task:
+            broadcaster.emit_tdd_transition("STORY-NEW", None, TDDState.DESIGN, "test_project")
+            
+            assert "STORY-NEW" in broadcaster.tdd_cycles
+            assert broadcaster.tdd_cycles["STORY-NEW"]["current_state"] == "DESIGN"
+            assert len(broadcaster.transition_history) == 2
+            assert broadcaster.transition_history[1]["old_state"] is None
+            assert broadcaster.transition_history[1]["new_state"] == "DESIGN"
+            mock_task.assert_called_once()
+    
+    def test_get_current_state_comprehensive(self):
+        """Test get_current_state with various states"""
+        broadcaster = StatebroadCaster()
+        
+        # Test with enum state
+        broadcaster.current_workflow_state = State.SPRINT_ACTIVE
+        broadcaster.tdd_cycles = {
+            "STORY-1": {"current_state": "GREEN", "project": "test"},
+            "STORY-2": {"current_state": "RED", "project": "test"}
+        }
+        
+        state = broadcaster.get_current_state()
+        
+        assert state["workflow_state"] == "SPRINT_ACTIVE"
+        assert state["active_cycles"] == 2
+        assert "tdd_cycles" in state
+        assert "last_updated" in state
+        
+        # Test with string state (edge case)
+        broadcaster.current_workflow_state = "CUSTOM_STATE"
+        state = broadcaster.get_current_state()
+        assert state["workflow_state"] == "CUSTOM_STATE"
+    
+    @pytest.mark.asyncio
+    async def test_send_current_state_error_handling(self):
+        """Test send_current_state with WebSocket errors"""
+        broadcaster = StatebroadCaster()
+        
+        # Mock failing websocket
+        failing_websocket = Mock()
+        failing_websocket.send = AsyncMock(side_effect=Exception("Send failed"))
+        
+        with patch('lib.state_broadcaster.logger') as mock_logger:
+            await broadcaster.send_current_state(failing_websocket)
+            
+            # Error should be logged
+            mock_logger.error.assert_called_once()
+            assert "Failed to send current state" in str(mock_logger.error.call_args)
+    
+    @pytest.mark.asyncio
+    async def test_handle_client_full_lifecycle(self):
+        """Test complete client handling lifecycle"""
+        broadcaster = StatebroadCaster()
+        mock_websocket = MockWebSocketProtocol()
+        
+        # Mock the async iteration
+        async def mock_message_iteration():
+            yield '{"type": "get_current_state"}'
+            yield '{"type": "get_history"}'
+            yield 'invalid_json'
+            # Simulate client disconnect
+            import websockets
+            raise websockets.exceptions.ConnectionClosed(None, None)
+        
+        mock_websocket.__aiter__ = mock_message_iteration
+        
+        # Add client to set before handling
+        initial_client_count = len(broadcaster.clients)
+        
+        await broadcaster.handle_client(mock_websocket, "/")
+        
+        # Client should have been removed
+        assert mock_websocket not in broadcaster.clients
+        
+        # Should have received messages
+        assert len(mock_websocket.sent_messages) >= 3  # Current state + history + error response
+    
+    def test_emit_convenience_functions(self):
+        """Test module-level convenience functions"""
+        with patch.object(broadcaster, 'emit_workflow_transition') as mock_emit:
+            emit_workflow_transition(State.IDLE, State.BACKLOG_READY, "test_project")
+            mock_emit.assert_called_once_with(State.IDLE, State.BACKLOG_READY, "test_project")

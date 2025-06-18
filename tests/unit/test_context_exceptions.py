@@ -554,3 +554,129 @@ class TestExceptionErrorMessages:
         except Exception as e:
             # Should not raise an exception during creation
             assert False, f"Exception creation failed: {e}"
+
+
+class TestExceptionChaining:
+    """Test exception chaining and complex scenarios"""
+    
+    def test_exception_chaining(self):
+        """Test chaining exceptions with causes"""
+        original_error = ValueError("Original error")
+        
+        try:
+            raise original_error
+        except ValueError as e:
+            try:
+                raise ContextError("Context processing failed") from e
+            except ContextError as context_error:
+                assert context_error.__cause__ is original_error
+                assert "Context processing failed" in str(context_error)
+    
+    def test_multiple_inheritance_check(self):
+        """Test that all exceptions properly inherit from ContextError and Exception"""
+        exception_classes = [
+            TokenBudgetExceededError,
+            ContextNotFoundError,
+            ContextCompressionError,
+            AgentMemoryError,
+            ContextFilterError,
+            ContextIndexError,
+            ContextStorageError,
+            ContextValidationError,
+            ContextTimeoutError,
+            ContextCacheError,
+            ContextMonitoringError,
+            ContextBackgroundError,
+            ContextLearningError
+        ]
+        
+        for exc_class in exception_classes:
+            # Create instance with minimal required args
+            if exc_class == TokenBudgetExceededError:
+                instance = exc_class("Test", requested_tokens=1000, available_tokens=500)
+            elif exc_class == ContextCompressionError:
+                instance = exc_class("Test", original_size=1000, target_size=500)
+            elif exc_class == AgentMemoryError:
+                instance = exc_class("Test", agent_type="TestAgent")
+            elif exc_class == ContextIndexError:
+                instance = exc_class("Test", index_path="/test/path")
+            elif exc_class == ContextStorageError:
+                instance = exc_class("Test", storage_path="/test/path")
+            elif exc_class == ContextValidationError:
+                instance = exc_class("Test", validation_errors=["error1"])
+            elif exc_class == ContextTimeoutError:
+                instance = exc_class("Test", operation="test_op", timeout_seconds=30.0)
+            elif exc_class == ContextCacheError:
+                instance = exc_class("Test", cache_key="test_key")
+            elif exc_class == ContextMonitoringError:
+                instance = exc_class("Test", metric_type="counter")
+            elif exc_class == ContextBackgroundError:
+                instance = exc_class("Test", task_id="task_123")
+            elif exc_class == ContextLearningError:
+                instance = exc_class("Test", learning_type="pattern")
+            else:
+                instance = exc_class("Test")
+            
+            # Check inheritance
+            assert isinstance(instance, ContextError)
+            assert isinstance(instance, Exception)
+            assert issubclass(exc_class, ContextError)
+            assert issubclass(exc_class, Exception)
+    
+    def test_complex_details_preservation(self):
+        """Test that complex details are preserved correctly"""
+        complex_details = {
+            "timestamp": datetime.now().isoformat(),
+            "user_id": 12345,
+            "nested_data": {
+                "level1": {
+                    "level2": ["item1", "item2", {"key": "value"}]
+                }
+            },
+            "list_data": [1, 2, 3, "string", True, None],
+            "none_value": None,
+            "boolean_true": True,
+            "boolean_false": False
+        }
+        
+        error = ContextError(
+            "Complex error",
+            context_id="ctx_complex",
+            details=complex_details
+        )
+        
+        assert error.details == complex_details
+        assert error.details["timestamp"] == complex_details["timestamp"]
+        assert error.details["nested_data"]["level1"]["level2"][2]["key"] == "value"
+        assert error.details["list_data"][4] is True
+        assert error.details["none_value"] is None
+    
+    def test_kwargs_handling_in_specialized_exceptions(self):
+        """Test that specialized exceptions properly handle kwargs"""
+        # Test that context_id and details are properly passed through kwargs
+        token_error = TokenBudgetExceededError(
+            "Budget exceeded",
+            requested_tokens=1000,
+            available_tokens=500,
+            context_id="ctx_budget",
+            details={"operation": "context_prep"}
+        )
+        
+        assert token_error.requested_tokens == 1000
+        assert token_error.available_tokens == 500
+        assert token_error.context_id == "ctx_budget"
+        assert token_error.details["operation"] == "context_prep"
+        
+        # Test AgentMemoryError with full kwargs
+        memory_error = AgentMemoryError(
+            "Memory operation failed",
+            agent_type="TestAgent",
+            story_id="story_123",
+            context_id="ctx_memory",
+            details={"error_code": 500}
+        )
+        
+        assert memory_error.agent_type == "TestAgent"
+        assert memory_error.story_id == "story_123"
+        assert memory_error.context_id == "ctx_memory"
+        assert memory_error.details["error_code"] == 500

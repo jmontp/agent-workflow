@@ -420,3 +420,133 @@ class TestProjectData:
         assert "tdd_settings" in data
         assert len(data["epics"]) == 1
         assert data["epics"][0]["id"] == "EPIC-1"
+
+
+class TestDataModelsEdgeCases:
+    """Test edge cases and additional coverage for data models."""
+    
+    def test_epic_tdd_requirements_handling(self):
+        """Test epic TDD requirements and constraints"""
+        epic = Epic(
+            title="TDD Epic",
+            tdd_requirements=["100% test coverage", "BDD scenarios"],
+            tdd_constraints={"framework": "pytest", "timeout": 30}
+        )
+        
+        # Test serialization includes TDD fields
+        data = epic.to_dict()
+        assert data["tdd_requirements"] == ["100% test coverage", "BDD scenarios"]
+        assert data["tdd_constraints"] == {"framework": "pytest", "timeout": 30}
+        
+        # Test deserialization
+        epic_restored = Epic.from_dict(data)
+        assert epic_restored.tdd_requirements == ["100% test coverage", "BDD scenarios"]
+        assert epic_restored.tdd_constraints == {"framework": "pytest", "timeout": 30}
+    
+    def test_story_tdd_fields_comprehensive(self):
+        """Test story TDD-specific fields comprehensively"""
+        story = Story(
+            title="TDD Story",
+            tdd_cycle_id="cycle-123",
+            test_status="green",
+            test_files=["test_feature.py", "test_integration.py"],
+            ci_status="passed", 
+            test_coverage=95.5
+        )
+        
+        # Verify all TDD fields
+        assert story.tdd_cycle_id == "cycle-123"
+        assert story.test_status == "green"
+        assert story.test_files == ["test_feature.py", "test_integration.py"]
+        assert story.ci_status == "passed"
+        assert story.test_coverage == 95.5
+        
+        # Test serialization roundtrip
+        data = story.to_dict()
+        story_restored = Story.from_dict(data)
+        
+        assert story_restored.tdd_cycle_id == "cycle-123"
+        assert story_restored.test_files == ["test_feature.py", "test_integration.py"]
+        assert story_restored.ci_status == "passed"
+        assert story_restored.test_coverage == 95.5
+    
+    def test_sprint_with_retrospective(self):
+        """Test sprint with retrospective data"""
+        retrospective = Retrospective(
+            what_went_well=["Good test coverage", "Fast feedback"],
+            what_to_improve=["More integration tests"],
+            action_items=["Setup CI/CD pipeline"]
+        )
+        
+        sprint = Sprint(
+            goal="Complete authentication",
+            retrospective=retrospective,
+            active_tdd_cycles=["cycle-1", "cycle-2"],
+            tdd_metrics={"total_cycles": 5, "success_rate": 0.8}
+        )
+        
+        # Test serialization with retrospective
+        data = sprint.to_dict()
+        assert "retrospective" in data
+        assert data["retrospective"]["what_went_well"] == ["Good test coverage", "Fast feedback"]
+        assert data["active_tdd_cycles"] == ["cycle-1", "cycle-2"]
+        assert data["tdd_metrics"]["success_rate"] == 0.8
+        
+        # Test deserialization
+        sprint_restored = Sprint.from_dict(data)
+        assert sprint_restored.retrospective is not None
+        assert sprint_restored.retrospective.what_went_well == ["Good test coverage", "Fast feedback"]
+        assert sprint_restored.active_tdd_cycles == ["cycle-1", "cycle-2"]
+    
+    def test_sprint_without_retrospective(self):
+        """Test sprint serialization without retrospective"""
+        sprint = Sprint(goal="Test sprint")
+        
+        # Should not include retrospective in serialization
+        data = sprint.to_dict()
+        assert "retrospective" not in data
+        
+        # Deserialization should work without retrospective
+        sprint_restored = Sprint.from_dict(data)
+        assert sprint_restored.retrospective is None
+    
+    def test_project_data_missing_tdd_settings_fallback(self):
+        """Test ProjectData fallback when TDD settings are missing"""
+        # Simulate data without TDD settings
+        data = {
+            "epics": [],
+            "stories": [],
+            "sprints": []
+            # No tdd_settings
+        }
+        
+        project_data = ProjectData.from_dict(data)
+        
+        # Should use defaults
+        assert project_data.tdd_settings["enabled"] is True
+        assert project_data.tdd_settings["max_concurrent_cycles"] == 3
+        assert "test_directory_structure" in project_data.tdd_settings
+    
+    def test_all_models_have_unique_ids(self):
+        """Test that all models generate unique IDs"""
+        # Test multiple instances get unique IDs
+        epics = [Epic(title=f"Epic {i}") for i in range(5)]
+        stories = [Story(title=f"Story {i}") for i in range(5)]
+        sprints = [Sprint(goal=f"Sprint {i}") for i in range(5)]
+        
+        # All IDs should be unique
+        epic_ids = [epic.id for epic in epics]
+        story_ids = [story.id for story in stories]
+        sprint_ids = [sprint.id for sprint in sprints]
+        
+        assert len(set(epic_ids)) == 5
+        assert len(set(story_ids)) == 5
+        assert len(set(sprint_ids)) == 5
+        
+        # IDs should follow expected pattern
+        for epic_id in epic_ids:
+            assert epic_id.startswith("epic-")
+        for story_id in story_ids:
+            assert story_id.startswith("story-")
+        for sprint_id in sprint_ids:
+            assert sprint_id.startswith("sprint-")

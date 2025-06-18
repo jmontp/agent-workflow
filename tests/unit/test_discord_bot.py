@@ -1,8 +1,9 @@
 """
-Unit tests for Discord Bot.
+Comprehensive unit tests for Discord Bot - targeting 95%+ line coverage.
 
 Tests the Discord bot for AI Agent TDD-Scrum Workflow management,
-including slash commands, state visualization, and HITL approval processes.
+including slash commands, state visualization, HITL approval processes,
+and all error handling scenarios for government audit compliance.
 """
 
 import pytest
@@ -10,39 +11,118 @@ import asyncio
 import tempfile
 import shutil
 import os
+import json
+import logging
 from pathlib import Path
-from unittest.mock import Mock, patch, AsyncMock, MagicMock
+from unittest.mock import Mock, patch, AsyncMock, MagicMock, call
 
 import sys
 sys.path.append(str(Path(__file__).parent.parent.parent))
 
-# Mock discord before importing
+# Create comprehensive Discord mock structure
+class MockEmbed:
+    def __init__(self, title=None, description=None, color=None):
+        self.title = title
+        self.description = description
+        self.color = color
+        self.fields = []
+    
+    def add_field(self, name, value, inline=True):
+        self.fields.append({"name": name, "value": value, "inline": inline})
+        return self
+
+class MockColor:
+    @staticmethod
+    def green(): return "green"
+    @staticmethod
+    def blue(): return "blue"
+    @staticmethod
+    def red(): return "red"
+    @staticmethod
+    def orange(): return "orange"
+    @staticmethod
+    def yellow(): return "yellow"
+    @staticmethod
+    def purple(): return "purple"
+
+class MockButtonStyle:
+    primary = "primary"
+    secondary = "secondary"
+    success = "success"
+
+class MockIntents:
+    def __init__(self):
+        self.message_content = True
+        self.guilds = True
+    
+    @staticmethod
+    def default():
+        return MockIntents()
+
+class MockUtils:
+    @staticmethod
+    def get(iterable, **kwargs):
+        if not iterable:
+            return None
+        for item in iterable:
+            match = True
+            for key, value in kwargs.items():
+                if not hasattr(item, key) or getattr(item, key) != value:
+                    match = False
+                    break
+            if match:
+                return item
+        return None
+
+class MockInteraction:
+    def __init__(self, channel_id=12345, guild_id=67890):
+        self.channel_id = channel_id
+        self.guild_id = guild_id
+        self.response = Mock()
+        self.response.defer = AsyncMock()
+        self.response.send_message = AsyncMock()
+        self.followup = Mock()
+        self.followup.send = AsyncMock()
+        self.guild = Mock()
+        self.guild.id = guild_id
+        self.guild.channels = []
+        self.guild.create_text_channel = AsyncMock()
+
+class MockView:
+    def __init__(self, timeout=300):
+        self.timeout = timeout
+
+class MockBot:
+    def __init__(self, **kwargs):
+        self.command_prefix = kwargs.get('command_prefix', '!')
+        self.intents = kwargs.get('intents')
+        self.description = kwargs.get('description', '')
+        self.user = Mock()
+        self.user.id = 123456
+        self.guilds = []
+        self.tree = Mock()
+        self.tree.sync = AsyncMock(return_value=[])
+        self.get_channel = Mock()
+        self.start = AsyncMock()
+        self.close = AsyncMock()
+
+# Set up comprehensive Discord mocks
 sys.modules['discord'] = Mock()
 sys.modules['discord.ext'] = Mock()
 sys.modules['discord.ext.commands'] = Mock()
 sys.modules['discord.ui'] = Mock()
 
-# Mock discord classes
 import discord
-discord.Intents = Mock()
-discord.Intents.default = Mock(return_value=Mock())
-discord.Embed = Mock
-discord.Color = Mock()
-discord.Color.green = Mock(return_value="green")
-discord.Color.blue = Mock(return_value="blue")
-discord.Color.red = Mock(return_value="red")
-discord.Color.orange = Mock(return_value="orange")
-discord.Color.yellow = Mock(return_value="yellow")
-discord.Color.purple = Mock(return_value="purple")
-discord.ButtonStyle = Mock()
-discord.ButtonStyle.primary = "primary"
-discord.ButtonStyle.secondary = "secondary"
-discord.ButtonStyle.success = "success"
-discord.utils = Mock()
+discord.Intents = MockIntents
+discord.Embed = MockEmbed
+discord.Color = MockColor
+discord.ButtonStyle = MockButtonStyle
+discord.utils = MockUtils
+discord.Interaction = MockInteraction
 
 # Mock commands
 from discord.ext import commands
-commands.Bot = Mock
+commands.Bot = MockBot
 commands.Context = Mock
 
 # Mock app_commands
@@ -53,7 +133,7 @@ discord.app_commands.choices = lambda **kwargs: lambda func: func
 discord.app_commands.Choice = Mock
 
 # Mock UI components
-discord.ui.View = Mock
+discord.ui.View = MockView
 discord.ui.Button = Mock
 discord.ui.button = lambda **kwargs: lambda func: func
 
@@ -62,13 +142,22 @@ from lib.discord_bot import StateView, WorkflowBot, run_discord_bot
 
 
 class MockOrchestrator:
-    """Mock orchestrator for testing."""
+    """Comprehensive mock orchestrator for testing."""
     
-    def __init__(self):
-        self.projects = {"test_project": Mock()}
+    def __init__(self, fail_commands=False):
+        self.projects = {"test_project": Mock(), "project2": Mock()}
+        self.run_count = 0
+        self.stop_called = False
+        self.fail_commands = fail_commands
         
     async def handle_command(self, command, project_name, **kwargs):
-        """Mock command handling."""
+        """Mock command handling with comprehensive responses."""
+        self.run_count += 1
+        
+        # If set to fail all commands, return failure
+        if self.fail_commands:
+            return {"success": False, "error": "Command failed"}
+        
         if "/state" in command:
             return {
                 "success": True,
@@ -92,7 +181,7 @@ class MockOrchestrator:
         elif "/approve" in command:
             return {
                 "success": True,
-                "approved_items": ["STORY-1", "STORY-2"],
+                "approved_items": kwargs.get("item_ids", ["STORY-1", "STORY-2"]),
                 "next_step": "Plan sprint with /sprint plan"
             }
         elif "/sprint" in command:
@@ -118,8 +207,9 @@ class MockOrchestrator:
                     "backlog_type": "product",
                     "items": [
                         {"id": "STORY-1", "title": "User authentication", "priority": "high"},
-                        {"id": "STORY-2", "title": "Data validation", "priority": "medium"}
-                    ]
+                        {"id": "STORY-2", "title": "Data validation", "priority": "medium"},
+                        {"id": "STORY-3", "title": "UI improvements", "priority": "low"}
+                    ] * 4  # 12 items to test limit
                 }
             else:
                 return {
@@ -127,87 +217,113 @@ class MockOrchestrator:
                     "message": "Backlog updated"
                 }
         elif "/tdd" in command:
-            if "status" in command:
-                return {
-                    "success": True,
-                    "cycle_info": {
-                        "cycle_id": "cycle-123",
-                        "story_id": "STORY-1",
-                        "current_state": "TEST_RED",
-                        "progress": "2/5",
-                        "total_test_runs": 15,
-                        "total_refactors": 3,
-                        "current_task_id": "task-456"
-                    },
-                    "allowed_commands": ["/tdd test", "/tdd code"],
-                    "next_suggested": "/tdd code"
-                }
-            elif "logs" in command:
-                return {
-                    "success": True,
-                    "logs_info": {
-                        "cycle_id": "cycle-123",
-                        "total_events": 25,
-                        "last_activity": "2024-01-01T12:00:00",
-                        "recent_events": [
-                            "Test created for user validation",
-                            "RED state achieved",
-                            "Code implementation started"
-                        ]
-                    }
-                }
-            elif "overview" in command:
-                return {
-                    "success": True,
-                    "overview_info": {
-                        "active_cycles": 2,
-                        "completed_cycles": 8,
-                        "total_test_runs": 150,
-                        "average_coverage": 87.5,
-                        "total_refactors": 25,
-                        "success_rate": 95.2,
-                        "active_stories": ["STORY-1", "STORY-2"]
-                    }
-                }
-            elif "start" in command:
-                return {
-                    "success": True,
-                    "message": "TDD cycle started successfully",
-                    "cycle_id": "cycle-456",
-                    "story_id": kwargs.get("story_id", "STORY-1"),
-                    "current_state": "DESIGN"
-                }
-            else:
-                return {
-                    "success": True,
-                    "message": f"TDD {command.split()[-1]} completed",
-                    "current_state": "CODE_GREEN",
-                    "next_suggested": "/tdd refactor"
-                }
+            return self._handle_tdd_command(command, **kwargs)
+        elif "/request_changes" in command:
+            return {
+                "success": True,
+                "message": "Changes requested",
+                "next_step": "Review and implement changes"
+            }
+        elif "/suggest_fix" in command:
+            return {
+                "success": True, 
+                "message": "Fix suggestion recorded",
+                "next_step": "Apply suggested fix"
+            }
+        elif "/skip_task" in command:
+            return {
+                "success": True,
+                "message": "Task skipped",
+                "next_step": "Continue with next task"
+            }
+        elif "/feedback" in command:
+            return {
+                "success": True,
+                "message": "Feedback recorded",
+                "next_step": "Start next sprint"
+            }
         else:
             return {
                 "success": True,
                 "message": "Command executed successfully",
                 "next_step": "Continue workflow"
             }
-
-
-class MockInteraction:
-    """Mock Discord interaction for testing."""
     
-    def __init__(self, channel_id=12345):
-        self.channel_id = channel_id
-        self.response = Mock()
-        self.response.defer = AsyncMock()
-        self.response.send_message = AsyncMock()
-        self.followup = Mock()
-        self.followup.send = AsyncMock()
-        self.guild = Mock()
-        self.guild.id = 67890
+    def _handle_tdd_command(self, command, **kwargs):
+        """Handle TDD-specific commands."""
+        if "status" in command:
+            return {
+                "success": True,
+                "cycle_info": {
+                    "cycle_id": "cycle-123",
+                    "story_id": "STORY-1",
+                    "current_state": "TEST_RED",
+                    "progress": "2/5",
+                    "total_test_runs": 15,
+                    "total_refactors": 3,
+                    "current_task_id": "task-456"
+                },
+                "allowed_commands": ["/tdd test", "/tdd code"],
+                "next_suggested": "/tdd code"
+            }
+        elif "logs" in command:
+            return {
+                "success": True,
+                "logs_info": {
+                    "cycle_id": "cycle-123",
+                    "total_events": 25,
+                    "last_activity": "2024-01-01T12:00:00",
+                    "recent_events": [
+                        "Test created for user validation",
+                        "RED state achieved",
+                        "Code implementation started",
+                        "Green state achieved",
+                        "Refactoring initiated"
+                    ]
+                }
+            }
+        elif "overview" in command:
+            return {
+                "success": True,
+                "overview_info": {
+                    "active_cycles": 2,
+                    "completed_cycles": 8,
+                    "total_test_runs": 150,
+                    "average_coverage": 87.5,
+                    "total_refactors": 25,
+                    "success_rate": 95.2,
+                    "active_stories": ["STORY-1", "STORY-2", "STORY-3"]
+                }
+            }
+        elif "start" in command:
+            return {
+                "success": True,
+                "message": "TDD cycle started successfully",
+                "cycle_id": "cycle-456",
+                "story_id": kwargs.get("story_id", "STORY-1"),
+                "current_state": "DESIGN",
+                "next_step": "Begin with design phase"
+            }
+        else:
+            return {
+                "success": True,
+                "message": f"TDD {command.split()[-1]} completed",
+                "current_state": "CODE_GREEN",
+                "next_suggested": "/tdd refactor",
+                "next_step": "Continue TDD cycle"
+            }
+    
+    async def run(self):
+        """Mock orchestrator run method."""
+        pass
+    
+    def stop(self):
+        """Mock orchestrator stop method."""
+        self.stop_called = True
 
 
-class TestStateView:
-    """Test the StateView class."""
+class TestStateViewComprehensive:
+    """Comprehensive tests for StateView class."""
     
     @pytest.fixture
     def mock_orchestrator(self):
@@ -225,6 +341,11 @@ class TestStateView:
         assert state_view.project_name == "test_project"
         assert state_view.timeout == 300
     
+    def test_state_view_init_default_project(self, mock_orchestrator):
+        """Test StateView initialization with default project."""
+        view = StateView(mock_orchestrator)
+        assert view.project_name == "default"
+    
     @pytest.mark.asyncio
     async def test_show_allowed_commands_success(self, state_view):
         """Test showing allowed commands successfully."""
@@ -235,7 +356,6 @@ class TestStateView:
         
         interaction.response.send_message.assert_called_once()
         call_args = interaction.response.send_message.call_args
-        assert "ephemeral" in call_args[1]
         assert call_args[1]["ephemeral"] is True
     
     @pytest.mark.asyncio
@@ -261,7 +381,20 @@ class TestStateView:
         
         interaction.response.send_message.assert_called_once()
         call_args = interaction.response.send_message.call_args
-        assert "ephemeral" in call_args[1]
+        assert call_args[1]["ephemeral"] is True
+    
+    @pytest.mark.asyncio
+    async def test_show_state_diagram_failure(self, state_view):
+        """Test showing state diagram when command fails."""
+        state_view.orchestrator.handle_command = AsyncMock(return_value={"success": False})
+        interaction = MockInteraction()
+        button = Mock()
+        
+        await state_view.show_state_diagram(interaction, button)
+        
+        interaction.response.send_message.assert_called_once()
+        call_args = interaction.response.send_message.call_args
+        assert "❌ Failed to get diagram" in str(call_args[0])
     
     @pytest.mark.asyncio
     async def test_show_project_status_success(self, state_view):
@@ -272,6 +405,19 @@ class TestStateView:
         await state_view.show_project_status(interaction, button)
         
         interaction.response.send_message.assert_called_once()
+    
+    @pytest.mark.asyncio
+    async def test_show_project_status_failure(self, state_view):
+        """Test showing project status when command fails."""
+        state_view.orchestrator.handle_command = AsyncMock(return_value={"success": False})
+        interaction = MockInteraction()
+        button = Mock()
+        
+        await state_view.show_project_status(interaction, button)
+        
+        interaction.response.send_message.assert_called_once()
+        call_args = interaction.response.send_message.call_args
+        assert "❌ Failed to get project status" in str(call_args[0])
 
 
 class TestWorkflowBot:

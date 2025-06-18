@@ -303,5 +303,173 @@ class TestStateMachineEdgeCases(unittest.TestCase):
                 self.assertIn("Unknown command", result.error_message)
 
 
+class TestStateMachineEdgeCases(unittest.TestCase):
+    """Test edge cases and additional coverage for state machine"""
+    
+    def setUp(self):
+        """Set up test environment"""
+        self.state_machine = StateMachine()
+    
+    def test_state_broadcaster_integration(self):
+        """Test state broadcaster integration (should not crash if not available)"""
+        # Force state change to test broadcaster integration
+        old_state = self.state_machine.current_state
+        self.state_machine.force_state(State.BACKLOG_READY)
+        
+        # Should not raise exception even if broadcaster is mocked/unavailable
+        result = self.state_machine.validate_command("/epic \"Test Epic\"")
+        self.assertTrue(result.success)
+        
+        # Verify transition was recorded (even if broadcast fails gracefully)
+        self.assertEqual(self.state_machine.current_state, State.BACKLOG_READY)
+    
+    def test_command_result_creation(self):
+        """Test CommandResult dataclass creation and attributes"""
+        # Test successful command result
+        success_result = CommandResult(
+            success=True,
+            new_state=State.BACKLOG_READY,
+            error_message=None,
+            hint=None
+        )
+        
+        self.assertTrue(success_result.success)
+        self.assertEqual(success_result.new_state, State.BACKLOG_READY)
+        self.assertIsNone(success_result.error_message)
+        self.assertIsNone(success_result.hint)
+        
+        # Test failure command result
+        failure_result = CommandResult(
+            success=False,
+            new_state=None,
+            error_message="Command failed",
+            hint="Try using /state to see current state"
+        )
+        
+        self.assertFalse(failure_result.success)
+        self.assertIsNone(failure_result.new_state)
+        self.assertEqual(failure_result.error_message, "Command failed")
+        self.assertEqual(failure_result.hint, "Try using /state to see current state")
+    
+    def test_state_enum_completeness(self):
+        """Test that State enum has all expected values"""
+        expected_states = {
+            "IDLE", "BACKLOG_READY", "SPRINT_PLANNED", 
+            "SPRINT_ACTIVE", "SPRINT_PAUSED", "SPRINT_REVIEW", "BLOCKED"
+        }
+        
+        actual_states = {state.value for state in State}
+        self.assertEqual(actual_states, expected_states)
+        
+        # Test string representations
+        for state in State:
+            self.assertIsInstance(state.value, str)
+            self.assertTrue(state.value.isupper())
+    
+    def test_transition_matrix_completeness(self):
+        """Test that transition matrix covers all necessary transitions"""
+        transitions = StateMachine.TRANSITIONS
+        
+        # Verify all commands have transition definitions
+        essential_commands = [
+            "/epic", "/approve", "/sprint plan", "/sprint start",
+            "/sprint pause", "/sprint resume", "/sprint status",
+            "/request_changes", "/suggest_fix", "/skip_task", "/feedback", "/state"
+        ]
+        
+        for command in essential_commands:
+            self.assertIn(command, transitions, f"Command {command} missing from transitions")
+        
+        # Verify state command exists for all states
+        state_transitions = transitions["/state"]
+        for state in State:
+            self.assertIn(state, state_transitions, f"State command missing for {state}")
+            # State command should not change state
+            self.assertEqual(state_transitions[state], state)
+    
+    def test_backlog_commands_mapping(self):
+        """Test backlog commands mapping and validation"""
+        backlog_commands = StateMachine.BACKLOG_COMMANDS
+        
+        # Should be a list of strings
+        self.assertIsInstance(backlog_commands, list)
+        self.assertGreater(len(backlog_commands), 0)
+        
+        # All should be strings starting with /backlog
+        for command in backlog_commands:
+            self.assertIsInstance(command, str)
+            self.assertTrue(command.startswith("/backlog"))
+        
+        # Test expected backlog commands are present
+        expected_backlog = ["/backlog view", "/backlog add_story", "/backlog prioritize", "/backlog remove"]
+        for expected in expected_backlog:
+            self.assertIn(expected, backlog_commands)
+    
+    def test_error_message_quality(self):
+        """Test that error messages are helpful and informative"""
+        # Test unknown command error
+        result = self.state_machine.validate_command("/unknown")
+        self.assertFalse(result.success)
+        self.assertIn("Unknown command", result.error_message)
+        self.assertIsNotNone(result.hint)
+        self.assertIn("/state", result.hint)
+        
+        # Test invalid transition error
+        self.state_machine.force_state(State.IDLE)
+        result = self.state_machine.validate_command("/sprint start")
+        self.assertFalse(result.success)
+        self.assertIn("cannot", result.error_message.lower())
+        self.assertIsNotNone(result.hint)
+    
+    def test_state_persistence_across_validations(self):
+        """Test that state persists correctly across multiple validations"""
+        initial_state = self.state_machine.current_state
+        
+        # Multiple state inspections should not change state
+        for _ in range(5):
+            result = self.state_machine.validate_command("/state")
+            self.assertTrue(result.success)
+            self.assertEqual(self.state_machine.current_state, initial_state)
+        
+        # Invalid commands should not change state
+        for invalid_command in ["/unknown", "/invalid", ""]:
+            result = self.state_machine.validate_command(invalid_command)
+            self.assertFalse(result.success)
+            self.assertEqual(self.state_machine.current_state, initial_state)
+    
+    def test_complex_workflow_sequences(self):
+        """Test complex multi-step workflow sequences"""
+        # Test complete workflow: IDLE -> BACKLOG_READY -> SPRINT_PLANNED -> SPRINT_ACTIVE -> SPRINT_REVIEW -> IDLE
+        self.state_machine.force_state(State.IDLE)
+        
+        # Start epic
+        result = self.state_machine.validate_command("/epic \"Test Epic\"")
+        self.assertTrue(result.success)
+        self.assertEqual(result.new_state, State.BACKLOG_READY)
+        self.state_machine.force_state(result.new_state)
+        
+        # Plan sprint
+        result = self.state_machine.validate_command("/sprint plan")
+        self.assertTrue(result.success)
+        self.assertEqual(result.new_state, State.SPRINT_PLANNED)
+        self.state_machine.force_state(result.new_state)
+        
+        # Start sprint
+        result = self.state_machine.validate_command("/sprint start")
+        self.assertTrue(result.success)
+        self.assertEqual(result.new_state, State.SPRINT_ACTIVE)
+        self.state_machine.force_state(result.new_state)
+        
+        # Pause and resume
+        result = self.state_machine.validate_command("/sprint pause")
+        self.assertTrue(result.success)
+        self.assertEqual(result.new_state, State.SPRINT_PAUSED)
+        self.state_machine.force_state(result.new_state)
+        
+        result = self.state_machine.validate_command("/sprint resume")
+        self.assertTrue(result.success)
+        self.assertEqual(result.new_state, State.SPRINT_ACTIVE)
+
+
 if __name__ == "__main__":
     unittest.main()
