@@ -13,7 +13,7 @@ import sys
 from pathlib import Path
 sys.path.append(str(Path(__file__).parent.parent.parent))
 
-from lib.data_models import Epic, Story, Sprint, EpicStatus, StoryStatus, SprintStatus, ProjectData
+from lib.data_models import Epic, Story, Sprint, EpicStatus, StoryStatus, SprintStatus, ProjectData, Retrospective
 
 
 class TestStatuses:
@@ -474,7 +474,7 @@ class TestDataModelsEdgeCases:
         """Test sprint with retrospective data"""
         retrospective = Retrospective(
             what_went_well=["Good test coverage", "Fast feedback"],
-            what_to_improve=["More integration tests"],
+            what_could_improve=["More integration tests"],
             action_items=["Setup CI/CD pipeline"]
         )
         
@@ -550,3 +550,355 @@ class TestDataModelsEdgeCases:
             assert story_id.startswith("story-")
         for sprint_id in sprint_ids:
             assert sprint_id.startswith("sprint-")
+
+
+class TestProjectDataTDDIntegration:
+    """Test ProjectData TDD-specific functionality comprehensively"""
+    
+    def test_tdd_cycle_story_queries(self):
+        """Test ProjectData TDD cycle story queries"""
+        # Create stories with and without TDD cycles
+        story1 = Story(id="story-1", title="TDD Story", tdd_cycle_id="cycle-1", 
+                      acceptance_criteria=["AC1", "AC2"], status=StoryStatus.IN_PROGRESS)
+        story2 = Story(id="story-2", title="Regular Story", status=StoryStatus.BACKLOG)
+        story3 = Story(id="story-3", title="Sprint Story", acceptance_criteria=["AC3"], 
+                      status=StoryStatus.SPRINT)
+        
+        project_data = ProjectData(stories=[story1, story2, story3])
+        
+        # Test stories with TDD cycles
+        tdd_stories = project_data.get_stories_with_tdd_cycles()
+        assert len(tdd_stories) == 1
+        assert tdd_stories[0].id == "story-1"
+        
+        # Test stories ready for TDD
+        ready_stories = project_data.get_stories_ready_for_tdd()
+        assert len(ready_stories) == 1
+        assert ready_stories[0].id == "story-3"
+    
+    def test_tdd_settings_comprehensive(self):
+        """Test comprehensive TDD settings functionality"""
+        project_data = ProjectData()
+        
+        # Test default settings
+        assert project_data.is_tdd_enabled()
+        assert project_data.get_max_concurrent_tdd_cycles() == 3
+        assert project_data.get_coverage_threshold() == 80.0
+        
+        # Test directory structure
+        assert project_data.get_test_directory_for_type("tdd") == "tests/tdd"
+        assert project_data.get_test_directory_for_type("unit") == "tests/unit"
+        assert project_data.get_test_directory_for_type("integration") == "tests/integration"
+        assert project_data.get_test_directory_for_type("custom") == "tests/custom"
+        
+        # Test settings updates
+        new_settings = {
+            "enabled": False,
+            "max_concurrent_cycles": 5,
+            "require_coverage_threshold": 90.0,
+            "test_directory_structure": {
+                "tdd": "tests/tdd_custom",
+                "unit": "tests/unit_custom"
+            }
+        }
+        
+        project_data.update_tdd_settings(new_settings)
+        
+        assert not project_data.is_tdd_enabled()
+        assert project_data.get_max_concurrent_tdd_cycles() == 5
+        assert project_data.get_coverage_threshold() == 90.0
+        assert project_data.get_test_directory_for_type("tdd") == "tests/tdd_custom"
+        assert project_data.get_test_directory_for_type("unit") == "tests/unit_custom"
+    
+    def test_sprint_tdd_cycle_management(self):
+        """Test sprint TDD cycle tracking"""
+        sprint = Sprint(id="sprint-1", goal="Test Sprint")
+        project_data = ProjectData(sprints=[sprint])
+        
+        # Initially no TDD cycles
+        assert sprint.active_tdd_cycles == []
+        
+        # Add TDD cycles
+        assert project_data.add_tdd_cycle_to_sprint("sprint-1", "cycle-1")
+        assert project_data.add_tdd_cycle_to_sprint("sprint-1", "cycle-2")
+        
+        # Verify cycles were added
+        assert len(sprint.active_tdd_cycles) == 2
+        assert "cycle-1" in sprint.active_tdd_cycles
+        assert "cycle-2" in sprint.active_tdd_cycles
+        
+        # Test duplicate addition (should not add)
+        assert not project_data.add_tdd_cycle_to_sprint("sprint-1", "cycle-1")
+        assert len(sprint.active_tdd_cycles) == 2
+        
+        # Remove cycle
+        assert project_data.remove_tdd_cycle_from_sprint("sprint-1", "cycle-1")
+        assert len(sprint.active_tdd_cycles) == 1
+        assert "cycle-1" not in sprint.active_tdd_cycles
+        
+        # Test removing non-existent cycle
+        assert not project_data.remove_tdd_cycle_from_sprint("sprint-1", "cycle-nonexistent")
+        
+        # Test with non-existent sprint
+        assert not project_data.add_tdd_cycle_to_sprint("sprint-999", "cycle-3")
+        assert not project_data.remove_tdd_cycle_from_sprint("sprint-999", "cycle-1")
+    
+    def test_sprint_tdd_metrics(self):
+        """Test sprint TDD metrics tracking"""
+        sprint = Sprint(id="sprint-1", goal="Metrics Sprint")
+        project_data = ProjectData(sprints=[sprint])
+        
+        # Initially empty metrics
+        assert sprint.tdd_metrics == {}
+        
+        # Update metrics
+        metrics = {
+            "total_cycles": 5,
+            "completed_cycles": 3,
+            "average_coverage": 85.5,
+            "cycle_success_rate": 0.8
+        }
+        
+        assert project_data.update_sprint_tdd_metrics("sprint-1", metrics)
+        assert sprint.tdd_metrics == metrics
+        
+        # Update with additional metrics
+        additional_metrics = {
+            "total_commits": 15,
+            "refactor_count": 8
+        }
+        
+        project_data.update_sprint_tdd_metrics("sprint-1", additional_metrics)
+        
+        # Should merge metrics
+        expected_metrics = {**metrics, **additional_metrics}
+        assert sprint.tdd_metrics == expected_metrics
+        
+        # Test with non-existent sprint
+        assert not project_data.update_sprint_tdd_metrics("sprint-999", {"test": "value"})
+
+
+class TestDataModelsCompleteWorkflow:
+    """Test complete workflow scenarios using data models"""
+    
+    def test_complete_epic_to_sprint_workflow(self):
+        """Test complete workflow from epic creation to sprint completion"""
+        project_data = ProjectData()
+        
+        # Create epic
+        epic = Epic(
+            title="User Authentication System",
+            description="Complete user authentication with TDD approach",
+            tdd_requirements=["100% test coverage", "BDD scenarios"],
+            tdd_constraints={"framework": "pytest", "timeout": 30}
+        )
+        project_data.epics.append(epic)
+        
+        # Create stories for the epic
+        stories = [
+            Story(
+                title="User Login",
+                description="User can log in with email/password",
+                epic_id=epic.id,
+                acceptance_criteria=[
+                    "User enters valid credentials",
+                    "System validates credentials",
+                    "User is redirected to dashboard"
+                ],
+                priority=1
+            ),
+            Story(
+                title="Password Reset",
+                description="User can reset forgotten password",
+                epic_id=epic.id,
+                acceptance_criteria=[
+                    "User enters email address",
+                    "System sends reset email",
+                    "User sets new password"
+                ],
+                priority=2
+            )
+        ]
+        
+        project_data.stories.extend(stories)
+        
+        # Verify epic-story relationships
+        epic_stories = project_data.get_stories_by_epic(epic.id)
+        assert len(epic_stories) == 2
+        assert all(story.epic_id == epic.id for story in epic_stories)
+        
+        # Create sprint and add stories
+        sprint = Sprint(
+            goal="Implement core authentication features",
+            story_ids=[story.id for story in stories]
+        )
+        project_data.sprints.append(sprint)
+        
+        # Update story statuses to sprint
+        for story in stories:
+            story.status = StoryStatus.SPRINT
+            story.sprint_id = sprint.id
+        
+        # Start sprint
+        sprint.status = SprintStatus.ACTIVE
+        sprint.start_date = "2024-01-01T00:00:00"
+        
+        # Verify sprint-story relationships
+        sprint_stories = project_data.get_stories_by_sprint(sprint.id)
+        assert len(sprint_stories) == 2
+        
+        # Start TDD cycles for stories
+        for i, story in enumerate(stories):
+            story.tdd_cycle_id = f"cycle-{i+1}"
+            story.test_status = "red"
+            story.test_files = [f"test_{story.title.lower().replace(' ', '_')}.py"]
+            project_data.add_tdd_cycle_to_sprint(sprint.id, story.tdd_cycle_id)
+        
+        # Verify TDD integration
+        assert len(sprint.active_tdd_cycles) == 2
+        tdd_stories = project_data.get_stories_with_tdd_cycles()
+        assert len(tdd_stories) == 2
+        
+        # Complete first story
+        stories[0].status = StoryStatus.DONE
+        stories[0].test_status = "green"
+        stories[0].ci_status = "passed"
+        stories[0].test_coverage = 95.0
+        project_data.remove_tdd_cycle_from_sprint(sprint.id, stories[0].tdd_cycle_id)
+        
+        # Update sprint metrics
+        metrics = {
+            "completed_stories": 1,
+            "total_stories": 2,
+            "average_coverage": 95.0
+        }
+        project_data.update_sprint_tdd_metrics(sprint.id, metrics)
+        
+        # Complete second story
+        stories[1].status = StoryStatus.DONE
+        stories[1].test_status = "green"
+        stories[1].ci_status = "passed"
+        stories[1].test_coverage = 88.0
+        project_data.remove_tdd_cycle_from_sprint(sprint.id, stories[1].tdd_cycle_id)
+        
+        # Complete sprint
+        sprint.status = SprintStatus.COMPLETED
+        sprint.end_date = "2024-01-14T23:59:59"
+        
+        # Add retrospective
+        sprint.retrospective = Retrospective(
+            what_went_well=["Good TDD discipline", "High test coverage"],
+            what_could_improve=["Better estimation", "More pair programming"],
+            action_items=["Set up CI/CD pipeline", "TDD training session"]
+        )
+        
+        # Verify final state
+        assert sprint.status == SprintStatus.COMPLETED
+        assert len(sprint.active_tdd_cycles) == 0
+        assert all(story.status == StoryStatus.DONE for story in stories)
+        assert all(story.test_status == "green" for story in stories)
+        assert all(story.ci_status == "passed" for story in stories)
+        
+        # Calculate average coverage
+        total_coverage = sum(story.test_coverage for story in stories)
+        average_coverage = total_coverage / len(stories)
+        assert average_coverage == 91.5
+        
+        # Verify no stories ready for TDD (all completed)
+        ready_stories = project_data.get_stories_ready_for_tdd()
+        assert len(ready_stories) == 0
+    
+    def test_project_data_comprehensive_serialization(self):
+        """Test comprehensive ProjectData serialization with all fields"""
+        # Create comprehensive project data
+        epic = Epic(
+            title="Test Epic",
+            tdd_requirements=["req1"],
+            tdd_constraints={"framework": "pytest"}
+        )
+        
+        story = Story(
+            title="Test Story",
+            epic_id=epic.id,
+            tdd_cycle_id="cycle-1",
+            test_files=["test1.py"],
+            ci_status="passed",
+            test_coverage=85.0
+        )
+        
+        sprint = Sprint(
+            goal="Test Sprint",
+            story_ids=[story.id],
+            active_tdd_cycles=["cycle-1"],
+            tdd_metrics={"coverage": 85.0},
+            retrospective=Retrospective(
+                what_went_well=["Good progress"],
+                what_could_improve=["Better planning"],
+                action_items=["Setup automation"]
+            )
+        )
+        
+        custom_tdd_settings = {
+            "enabled": True,
+            "max_concurrent_cycles": 5,
+            "auto_commit_tests": False,
+            "require_coverage_threshold": 90.0,
+            "test_directory_structure": {
+                "tdd": "tests/tdd_custom",
+                "unit": "tests/unit_custom",
+                "integration": "tests/integration_custom"
+            },
+            "ci_integration": {
+                "enabled": True,
+                "webhook_url": "https://example.com/webhook",
+                "fail_on_coverage_drop": True
+            }
+        }
+        
+        project_data = ProjectData(
+            epics=[epic],
+            stories=[story],
+            sprints=[sprint],
+            tdd_settings=custom_tdd_settings
+        )
+        
+        # Test serialization
+        data = project_data.to_dict()
+        
+        # Verify all sections present
+        assert "epics" in data
+        assert "stories" in data
+        assert "sprints" in data
+        assert "tdd_settings" in data
+        
+        # Verify TDD fields are serialized
+        assert data["epics"][0]["tdd_requirements"] == ["req1"]
+        assert data["stories"][0]["tdd_cycle_id"] == "cycle-1"
+        assert data["stories"][0]["test_coverage"] == 85.0
+        assert data["sprints"][0]["active_tdd_cycles"] == ["cycle-1"]
+        assert data["sprints"][0]["retrospective"]["what_went_well"] == ["Good progress"]
+        assert data["tdd_settings"]["max_concurrent_cycles"] == 5
+        
+        # Test deserialization
+        restored_project = ProjectData.from_dict(data)
+        
+        # Verify everything is restored correctly
+        assert len(restored_project.epics) == 1
+        assert len(restored_project.stories) == 1
+        assert len(restored_project.sprints) == 1
+        
+        restored_epic = restored_project.epics[0]
+        assert restored_epic.tdd_requirements == ["req1"]
+        assert restored_epic.tdd_constraints == {"framework": "pytest"}
+        
+        restored_story = restored_project.stories[0]
+        assert restored_story.tdd_cycle_id == "cycle-1"
+        assert restored_story.test_coverage == 85.0
+        
+        restored_sprint = restored_project.sprints[0]
+        assert restored_sprint.active_tdd_cycles == ["cycle-1"]
+        assert restored_sprint.tdd_metrics == {"coverage": 85.0}
+        assert restored_sprint.retrospective.what_went_well == ["Good progress"]
+        
+        assert restored_project.tdd_settings["max_concurrent_cycles"] == 5
+        assert restored_project.get_test_directory_for_type("tdd") == "tests/tdd_custom"

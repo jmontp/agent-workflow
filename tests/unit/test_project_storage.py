@@ -1000,8 +1000,8 @@ class TestProjectStorage:
         # Mock the backup directory exists, but backup files exist
         with patch('pathlib.Path.exists') as mock_exists:
             # Directory exists but the specific backup file doesn't 
-            def mock_exists_side_effect(self):
-                path_str = str(self)
+            def mock_exists_side_effect(path_self):
+                path_str = str(path_self)
                 if "backups/tdd_cycles" in path_str and not path_str.endswith(".json"):
                     return True  # Directory exists
                 elif path_str.endswith("TDD-1_20230101_120000.json"):
@@ -1010,9 +1010,10 @@ class TestProjectStorage:
             
             mock_exists.side_effect = mock_exists_side_effect
             
-            # Create a mock backup file
+            # Create a mock backup file with proper exists method
             mock_backup_file = Mock()
             mock_backup_file.__str__ = Mock(return_value="TDD-1_20230101_120000.json")
+            mock_backup_file.exists.return_value = False  # This should trigger line 438
             mock_glob.return_value = [mock_backup_file]
             
             result = project_storage.restore_tdd_cycle_from_backup("TDD-1")

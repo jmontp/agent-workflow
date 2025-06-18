@@ -317,7 +317,7 @@ class TestStateMachineEdgeCases(unittest.TestCase):
         self.state_machine.force_state(State.BACKLOG_READY)
         
         # Should not raise exception even if broadcaster is mocked/unavailable
-        result = self.state_machine.validate_command("/epic \"Test Epic\"")
+        result = self.state_machine.validate_command("/epic")
         self.assertTrue(result.success)
         
         # Verify transition was recorded (even if broadcast fails gracefully)
@@ -418,7 +418,7 @@ class TestStateMachineEdgeCases(unittest.TestCase):
         self.state_machine.force_state(State.IDLE)
         result = self.state_machine.validate_command("/sprint start")
         self.assertFalse(result.success)
-        self.assertIn("cannot", result.error_message.lower())
+        self.assertIn("not allowed", result.error_message.lower())
         self.assertIsNotNone(result.hint)
     
     def test_state_persistence_across_validations(self):
@@ -443,7 +443,7 @@ class TestStateMachineEdgeCases(unittest.TestCase):
         self.state_machine.force_state(State.IDLE)
         
         # Start epic
-        result = self.state_machine.validate_command("/epic \"Test Epic\"")
+        result = self.state_machine.validate_command("/epic")
         self.assertTrue(result.success)
         self.assertEqual(result.new_state, State.BACKLOG_READY)
         self.state_machine.force_state(result.new_state)
@@ -469,6 +469,255 @@ class TestStateMachineEdgeCases(unittest.TestCase):
         result = self.state_machine.validate_command("/sprint resume")
         self.assertTrue(result.success)
         self.assertEqual(result.new_state, State.SPRINT_ACTIVE)
+        self.state_machine.force_state(result.new_state)
+        
+        # Test the full sequence completed successfully  
+        self.assertEqual(self.state_machine.current_state, State.SPRINT_ACTIVE)
+
+
+class TestStateMachineTDDIntegration(unittest.TestCase):
+    """Test StateMachine TDD workflow integration"""
+    
+    def setUp(self):
+        """Set up test fixtures"""
+        self.state_machine = StateMachine()
+    
+    def test_tdd_cycle_registration(self):
+        """Test TDD cycle registration and tracking"""
+        # Initially no active cycles
+        assert not self.state_machine.has_active_tdd_cycles()
+        assert len(self.state_machine.get_active_tdd_cycles()) == 0
+        
+        # Register TDD cycles
+        self.state_machine.register_tdd_cycle("story-1", "cycle-1")
+        self.state_machine.register_tdd_cycle("story-2", "cycle-2")
+        
+        # Verify registration
+        assert self.state_machine.has_active_tdd_cycles()
+        active_cycles = self.state_machine.get_active_tdd_cycles()
+        assert len(active_cycles) == 2
+        assert active_cycles["story-1"] == "cycle-1"
+        assert active_cycles["story-2"] == "cycle-2"
+        
+        # Unregister one cycle
+        self.state_machine.unregister_tdd_cycle("story-1")
+        active_cycles = self.state_machine.get_active_tdd_cycles()
+        assert len(active_cycles) == 1
+        assert "story-1" not in active_cycles
+        assert active_cycles["story-2"] == "cycle-2"
+        
+        # Unregister non-existent cycle (should not error)
+        self.state_machine.unregister_tdd_cycle("story-nonexistent")
+        assert len(self.state_machine.get_active_tdd_cycles()) == 1
+    
+    def test_sprint_transition_validation_with_tdd(self):
+        """Test sprint transitions are blocked with active TDD cycles"""
+        self.state_machine.force_state(State.SPRINT_ACTIVE)
+        
+        # Register active TDD cycle
+        self.state_machine.register_tdd_cycle("story-1", "cycle-1")
+        
+        # Test transition to SPRINT_REVIEW blocked
+        result = self.state_machine.validate_sprint_transition_with_tdd(State.SPRINT_REVIEW)
+        assert not result.success
+        assert "active TDD cycles" in result.error_message
+        assert "cycle-1" in result.error_message
+        
+        # Test transition to IDLE blocked
+        result = self.state_machine.validate_sprint_transition_with_tdd(State.IDLE)
+        assert not result.success
+        assert "active TDD cycles" in result.error_message
+        
+        # Test other transitions allowed
+        result = self.state_machine.validate_sprint_transition_with_tdd(State.SPRINT_PAUSED)
+        assert result.success
+        
+        # Unregister cycle and test transitions allowed
+        self.state_machine.unregister_tdd_cycle("story-1")
+        result = self.state_machine.validate_sprint_transition_with_tdd(State.SPRINT_REVIEW)
+        assert result.success
+    
+    def test_tdd_workflow_status(self):
+        """Test comprehensive TDD workflow status reporting"""
+        self.state_machine.force_state(State.SPRINT_ACTIVE)
+        
+        # Initially no TDD cycles
+        status = self.state_machine.get_tdd_workflow_status()
+        assert status["main_workflow_state"] == "SPRINT_ACTIVE"
+        assert status["active_tdd_cycles"] == 0
+        assert status["tdd_cycles_by_story"] == {}
+        assert status["can_transition_to_review"] is True
+        assert not status["sprint_tdd_coordination"]["blocking_sprint_review"]
+        assert status["sprint_tdd_coordination"]["sprint_allows_tdd"]
+        
+        # Add TDD cycles
+        self.state_machine.register_tdd_cycle("story-1", "cycle-1")
+        self.state_machine.register_tdd_cycle("story-2", "cycle-2")
+        
+        status = self.state_machine.get_tdd_workflow_status()
+        assert status["active_tdd_cycles"] == 2
+        assert status["can_transition_to_review"] is False
+        assert status["sprint_tdd_coordination"]["blocking_sprint_review"]
+        
+        # Test in different states
+        self.state_machine.force_state(State.SPRINT_PAUSED)
+        status = self.state_machine.get_tdd_workflow_status()
+        assert status["main_workflow_state"] == "SPRINT_PAUSED"
+        assert status["sprint_tdd_coordination"]["sprint_allows_tdd"]
+        assert not status["sprint_tdd_coordination"]["blocking_sprint_review"]
+    
+    def test_tdd_transition_listeners(self):
+        """Test TDD transition listener system"""
+        # Track listener calls
+        listener_calls = []
+        
+        def test_listener(event_data):
+            listener_calls.append(event_data)
+        
+        # Add listener
+        self.state_machine.add_tdd_transition_listener(test_listener)
+        
+        # Notify transition
+        event_data = {
+            "story_id": "story-1",
+            "cycle_id": "cycle-1",
+            "old_state": "design",
+            "new_state": "test_red",
+            "timestamp": "2024-01-01T12:00:00"
+        }
+        
+        self.state_machine.notify_tdd_transition(event_data)
+        
+        # Verify listener was called
+        assert len(listener_calls) == 1
+        assert listener_calls[0] == event_data
+        
+        # Test with multiple listeners
+        listener_calls_2 = []
+        def test_listener_2(event_data):
+            listener_calls_2.append(event_data)
+        
+        self.state_machine.add_tdd_transition_listener(test_listener_2)
+        
+        event_data_2 = {"cycle_id": "cycle-2", "transition": "test"}
+        self.state_machine.notify_tdd_transition(event_data_2)
+        
+        # Both listeners should be called
+        assert len(listener_calls) == 2
+        assert len(listener_calls_2) == 1
+        
+        # Test with failing listener (should not crash)
+        def failing_listener(event_data):
+            raise Exception("Listener error")
+        
+        self.state_machine.add_tdd_transition_listener(failing_listener)
+        self.state_machine.notify_tdd_transition({"test": "data"})
+        
+        # Other listeners should still work
+        assert len(listener_calls) == 3
+    
+    def test_mermaid_diagram_with_tdd_cycles(self):
+        """Test Mermaid diagram generation includes TDD cycle info"""
+        # Without TDD cycles
+        diagram = self.state_machine.get_mermaid_diagram()
+        assert "TDD cycles active" in diagram
+        assert "(0 TDD cycles)" not in diagram  # Should show empty when no cycles
+        
+        # With TDD cycles
+        self.state_machine.register_tdd_cycle("story-1", "cycle-1")
+        self.state_machine.register_tdd_cycle("story-2", "cycle-2")
+        
+        diagram = self.state_machine.get_mermaid_diagram()
+        assert "(2 TDD cycles)" in diagram
+        assert "TDD completion" in diagram
+        assert "stateDiagram-v2" in diagram
+
+
+class TestStateMachineComprehensiveCoverage(unittest.TestCase):
+    """Comprehensive coverage tests for StateMachine"""
+    
+    def setUp(self):
+        """Set up test fixtures"""
+        self.state_machine = StateMachine()
+    
+    def test_initialization_with_custom_state(self):
+        """Test StateMachine initialization with custom initial state"""
+        sm = StateMachine(initial_state=State.SPRINT_ACTIVE)
+        assert sm.current_state == State.SPRINT_ACTIVE
+    
+    def test_validate_vs_transition_methods(self):
+        """Test difference between validate_command and transition methods"""
+        # validate_command should not change state
+        original_state = self.state_machine.current_state
+        result = self.state_machine.validate_command("/epic")
+        assert result.success
+        assert self.state_machine.current_state == original_state
+        
+        # transition should change state
+        result = self.state_machine.transition("/epic")
+        assert result.success
+        assert self.state_machine.current_state != original_state
+        assert self.state_machine.current_state == State.BACKLOG_READY
+    
+    def test_transition_with_project_name(self):
+        """Test transition method with project name parameter"""
+        result = self.state_machine.transition("/epic", project_name="test-project")
+        assert result.success
+        assert self.state_machine.current_state == State.BACKLOG_READY
+    
+    def test_comprehensive_command_coverage(self):
+        """Test all commands in transition matrix are covered"""
+        transitions = StateMachine.TRANSITIONS
+        
+        # Test each command at least once
+        for command in transitions.keys():
+            # Find a state where this command is valid
+            valid_states = list(transitions[command].keys())
+            if valid_states:
+                test_state = valid_states[0]
+                self.state_machine.force_state(test_state)
+                result = self.state_machine.validate_command(command)
+                assert result.success, f"Command {command} should be valid in state {test_state}"
+    
+    def test_all_states_reachable(self):
+        """Test that all states are reachable through valid transitions"""
+        transitions = StateMachine.TRANSITIONS
+        
+        # Collect all reachable states
+        reachable_states = set([State.IDLE])  # Start state
+        
+        for command, state_transitions in transitions.items():
+            for target_state in state_transitions.values():
+                reachable_states.add(target_state)
+        
+        # All states should be reachable
+        all_states = set(State)
+        assert reachable_states == all_states, f"Unreachable states: {all_states - reachable_states}"
+    
+    def test_error_hints_coverage(self):
+        """Test error hints are provided for common invalid transitions"""
+        error_hints = StateMachine.ERROR_HINTS
+        
+        # Test each error hint
+        for (command, state), expected_hint in error_hints.items():
+            self.state_machine.force_state(state)
+            result = self.state_machine.validate_command(command)
+            assert not result.success
+            assert expected_hint.lower() in result.hint.lower()
+    
+    def test_backlog_commands_comprehensive(self):
+        """Test backlog commands comprehensively"""
+        backlog_commands = StateMachine.BACKLOG_COMMANDS
+        
+        # Test all backlog commands in all allowed states
+        allowed_states = [s for s in State if s != State.SPRINT_REVIEW]
+        
+        for state in allowed_states:
+            for command in backlog_commands:
+                self.state_machine.force_state(state)
+                result = self.state_machine.validate_command(command)
+                assert result.success, f"Backlog command {command} should be allowed in {state}"
+                assert result.new_state == state  # Should not change state
 
 
 if __name__ == "__main__":

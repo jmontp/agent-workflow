@@ -4,6 +4,7 @@ Unit tests for TDD models and data structures.
 
 import pytest
 import json
+import unittest
 from datetime import datetime
 from lib.tdd_models import (
     TDDState, TestStatus, CIStatus, TestFileStatus,
@@ -582,6 +583,41 @@ class TestTDDTaskEnhancements:
         assert task.can_commit_refactor()
 
 
+class TestTDDStateTransitions:
+    """Test TDD state transition logic and validation"""
+    
+    def test_tdd_state_enum_values(self):
+        """Test TDD state enum has correct values"""
+        assert TDDState.DESIGN.value == "design"
+        assert TDDState.TEST_RED.value == "test_red"
+        assert TDDState.CODE_GREEN.value == "code_green"
+        assert TDDState.REFACTOR.value == "refactor"
+        assert TDDState.COMMIT.value == "commit"
+    
+    def test_test_status_enum_values(self):
+        """Test test status enum has correct values"""
+        assert TestStatus.NOT_RUN.value == "not_run"
+        assert TestStatus.RED.value == "red"
+        assert TestStatus.GREEN.value == "green"
+        assert TestStatus.ERROR.value == "error"
+    
+    def test_ci_status_enum_values(self):
+        """Test CI status enum has correct values"""
+        assert CIStatus.NOT_RUN.value == "not_run"
+        assert CIStatus.PENDING.value == "pending"
+        assert CIStatus.RUNNING.value == "running"
+        assert CIStatus.PASSED.value == "passed"
+        assert CIStatus.FAILED.value == "failed"
+        assert CIStatus.ERROR.value == "error"
+    
+    def test_test_file_status_enum_values(self):
+        """Test test file status enum has correct values"""
+        assert TestFileStatus.DRAFT.value == "draft"
+        assert TestFileStatus.COMMITTED.value == "committed"
+        assert TestFileStatus.PASSING.value == "passing"
+        assert TestFileStatus.INTEGRATED.value == "integrated"
+
+
 class TestTDDCycleEnhancements:
     """Test enhanced TDDCycle functionality"""
     
@@ -693,3 +729,283 @@ class TestTDDCycleEnhancements:
         assert summary["total_commits"] == 5
         assert summary["ci_status"] == "passed" 
         assert summary["overall_test_coverage"] == 78.5
+
+
+class TestTDDModelsEdgeCases:
+    """Test edge cases and error conditions for TDD models"""
+    
+    def test_test_result_default_values(self):
+        """Test TestResult defaults and edge cases"""
+        result = TestResult()
+        
+        assert result.id.startswith("test-")
+        assert result.test_file == ""
+        assert result.test_name == ""
+        assert result.status == TestStatus.NOT_RUN
+        assert result.output == ""
+        assert result.error_message is None
+        assert result.execution_time == 0.0
+        assert isinstance(result.timestamp, str)
+    
+    def test_test_result_with_error(self):
+        """Test TestResult with error status"""
+        result = TestResult(
+            test_file="test_broken.py",
+            test_name="test_broken",
+            status=TestStatus.ERROR,
+            error_message="ImportError: module not found",
+            execution_time=0.1
+        )
+        
+        assert result.status == TestStatus.ERROR
+        assert "ImportError" in result.error_message
+        
+        # Test serialization preserves error
+        data = result.to_dict()
+        restored = TestResult.from_dict(data)
+        assert restored.status == TestStatus.ERROR
+        assert restored.error_message == "ImportError: module not found"
+    
+    def test_test_file_exists_method(self):
+        """Test TestFile.exists() method"""
+        # Create with non-existent path
+        test_file = TestFile(file_path="/nonexistent/path/test.py")
+        assert not test_file.exists()
+        
+        # Create with existing file (this file itself)
+        import os
+        current_file = os.path.abspath(__file__)
+        test_file = TestFile(file_path=current_file)
+        assert test_file.exists()
+    
+    def test_test_file_directory_edge_cases(self):
+        """Test TestFile directory methods edge cases"""
+        # Test with empty story_id
+        test_file = TestFile(file_path="/test.py", story_id="")
+        assert test_file.get_test_directory() == "tests/tdd"
+        
+        # Test with various path patterns
+        test_file.relative_path = "tests/unit/test_example.py"
+        assert test_file.get_permanent_location() == "tests/unit/test_example.py"
+        
+        test_file.relative_path = "tests/some_other/test_feature.py"
+        assert test_file.get_permanent_location() == "tests/unit/test_feature.py"
+    
+    def test_test_file_update_results_edge_cases(self):
+        """Test TestFile.update_test_results edge cases"""
+        test_file = TestFile(file_path="/test.py")
+        
+        # Update with empty results
+        test_file.update_test_results([])
+        assert test_file.test_count == 0
+        assert test_file.passing_tests == 0
+        assert test_file.failing_tests == 0
+        
+        # Test status transitions
+        test_file.status = TestFileStatus.COMMITTED
+        results = [TestResult(status=TestStatus.RED)]
+        test_file.update_test_results(results)
+        assert test_file.status == TestFileStatus.COMMITTED  # Should stay committed with failing tests
+        
+        # Test transition to passing
+        test_file.status = TestFileStatus.COMMITTED
+        results = [TestResult(status=TestStatus.GREEN)]
+        test_file.update_test_results(results)
+        assert test_file.status == TestFileStatus.PASSING
+        
+        # Test transition back to committed when tests fail
+        test_file.status = TestFileStatus.PASSING
+        results = [TestResult(status=TestStatus.RED)]
+        test_file.update_test_results(results)
+        assert test_file.status == TestFileStatus.COMMITTED
+    
+    def test_tdd_task_edge_cases(self):
+        """Test TDDTask edge cases and boundary conditions"""
+        task = TDDTask()
+        
+        # Test defaults
+        assert task.id.startswith("tdd-task-")
+        assert task.cycle_id == ""
+        assert task.description == ""
+        assert task.acceptance_criteria == []
+        assert task.current_state == TDDState.DESIGN
+        assert task.test_files == []
+        assert task.test_file_objects == []
+        assert task.source_files == []
+        assert task.test_results == []
+        assert task.ci_status == CIStatus.NOT_RUN
+        assert task.test_coverage == 0.0
+        assert not task.is_complete()
+        
+        # Test coverage calculation with no test files
+        coverage = task.calculate_test_coverage()
+        assert coverage == 0.0
+        
+        # Test commit conditions in wrong states
+        task.current_state = TDDState.DESIGN
+        assert not task.can_commit_tests()
+        assert not task.can_commit_code()
+        assert not task.can_commit_refactor()
+    
+    def test_tdd_cycle_edge_cases(self):
+        """Test TDDCycle edge cases and boundary conditions"""
+        cycle = TDDCycle()
+        
+        # Test defaults
+        assert cycle.id.startswith("tdd-cycle-")
+        assert cycle.story_id == ""
+        assert cycle.current_state == TDDState.DESIGN
+        assert cycle.current_task_id is None
+        assert cycle.tasks == []
+        assert cycle.total_test_runs == 0
+        assert cycle.total_refactors == 0
+        assert cycle.total_commits == 0
+        assert cycle.ci_status == CIStatus.NOT_RUN
+        assert cycle.overall_test_coverage == 0.0
+        assert not cycle.is_complete()
+        
+        # Test with invalid task ID
+        assert not cycle.start_task("nonexistent-task")
+        assert cycle.current_task_id is None
+        
+        # Test complete with no current task
+        assert not cycle.complete_current_task()
+        
+        # Test coverage calculation with no test files
+        coverage = cycle.calculate_overall_coverage()
+        assert coverage == 0.0
+    
+    def test_tdd_cycle_complex_task_management(self):
+        """Test complex task management scenarios in TDDCycle"""
+        cycle = TDDCycle(story_id="story-complex")
+        
+        # Add multiple tasks
+        task1 = TDDTask(description="Task 1")
+        task2 = TDDTask(description="Task 2")
+        task3 = TDDTask(description="Task 3")
+        
+        cycle.add_task(task1)
+        cycle.add_task(task2)
+        cycle.add_task(task3)
+        
+        # Complete tasks in sequence
+        cycle.start_task(task1.id)
+        cycle.complete_current_task()
+        
+        cycle.start_task(task2.id)
+        cycle.complete_current_task()
+        
+        # Verify states before final task
+        assert not cycle.is_complete()
+        assert len(cycle.get_completed_tasks()) == 2
+        assert len(cycle.get_pending_tasks()) == 1
+        
+        # Complete final task
+        cycle.start_task(task3.id)
+        cycle.complete_current_task()
+        
+        # Now cycle should be complete
+        assert cycle.is_complete()
+        assert cycle.current_state == TDDState.COMMIT
+        assert len(cycle.get_completed_tasks()) == 3
+        assert len(cycle.get_pending_tasks()) == 0
+    
+    def test_comprehensive_tdd_workflow(self):
+        """Test complete TDD workflow from start to finish"""
+        # Create a complete TDD cycle
+        cycle = TDDCycle(story_id="story-comprehensive")
+        
+        # Create task with full workflow
+        task = TDDTask(
+            description="Implement calculator addition",
+            acceptance_criteria=[
+                "Should handle positive integers",
+                "Should handle negative integers",
+                "Should return correct sum"
+            ],
+            current_state=TDDState.DESIGN
+        )
+        
+        cycle.add_task(task)
+        cycle.start_task(task.id)
+        
+        # Design phase - add design notes
+        task.design_notes = "Simple addition function with input validation"
+        
+        # Move to TEST_RED - create test file
+        task.current_state = TDDState.TEST_RED
+        test_file = TestFile(
+            file_path="/project/tests/tdd/story-comprehensive/test_calculator.py",
+            relative_path="tests/tdd/story-comprehensive/test_calculator.py",
+            story_id="story-comprehensive",
+            status=TestFileStatus.DRAFT
+        )
+        task.add_test_file(test_file)
+        
+        # Add failing test results
+        failing_result = TestResult(
+            test_file="test_calculator.py",
+            test_name="test_addition",
+            status=TestStatus.RED,
+            output="AssertionError: Function not implemented"
+        )
+        task.test_results.append(failing_result)
+        
+        # Verify can commit tests
+        assert task.can_commit_tests()
+        
+        # Commit test (mark as committed)
+        test_file.committed_at = datetime.now().isoformat()
+        test_file.status = TestFileStatus.COMMITTED
+        
+        # Move to CODE_GREEN
+        task.current_state = TDDState.CODE_GREEN
+        task.implementation_notes = "Basic addition implementation"
+        
+        # Add passing test result
+        passing_result = TestResult(
+            test_file="test_calculator.py",
+            test_name="test_addition",
+            status=TestStatus.GREEN,
+            output="All tests passed",
+            execution_time=0.05
+        )
+        task.test_results.append(passing_result)
+        
+        # Update test file with results
+        test_file.update_test_results([passing_result])
+        
+        # Verify can commit code
+        assert task.can_commit_code()
+        
+        # Move to REFACTOR
+        task.current_state = TDDState.REFACTOR
+        task.refactor_notes = "Optimized algorithm and improved readability"
+        
+        # Add CI status
+        task.update_ci_status(CIStatus.PASSED, "ci-run-123", "https://ci.example.com/123")
+        test_file.coverage_percentage = 95.0
+        task.calculate_test_coverage()
+        
+        # Verify can commit refactor
+        assert task.can_commit_refactor()
+        
+        # Complete task
+        task.current_state = TDDState.COMMIT
+        cycle.complete_current_task()
+        cycle.increment_commits()
+        cycle.update_ci_status(CIStatus.PASSED)
+        cycle.calculate_overall_coverage()
+        
+        # Verify final state
+        assert cycle.is_complete()
+        assert cycle.total_commits == 1
+        assert cycle.ci_status == CIStatus.PASSED
+        assert task.test_coverage == 95.0
+        
+        # Test progress summary
+        summary = cycle.get_progress_summary()
+        assert summary["is_complete"] is True
+        assert summary["completed_tasks"] == 1
+        assert summary["total_tasks"] == 1
+        assert summary["overall_test_coverage"] == 95.0
