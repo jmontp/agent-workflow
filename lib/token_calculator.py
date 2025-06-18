@@ -83,14 +83,16 @@ class TokenCalculator(ITokenCalculator):
         Returns:
             TokenBudget with allocation breakdown
         """
+        # Validate input parameters
+        if total_tokens <= 0:
+            raise ValueError("Total tokens must be positive")
+        
         self._budget_calculations += 1
         start_time = datetime.utcnow()
         
         try:
-            # Validate inputs
+            # Clamp to maximum allowed tokens
             total_tokens = min(total_tokens, self.max_tokens)
-            if total_tokens <= 0:
-                raise ValueError("Total tokens must be positive")
             
             # Get agent profile
             profile = self.agent_profiles.get(agent_type, self.agent_profiles["default"])
@@ -112,10 +114,32 @@ class TokenCalculator(ITokenCalculator):
             # Normalize allocations to ensure they don't exceed 1.0 total
             total_allocation = sum(base_allocation.values())
             if total_allocation > 1.0:
-                # Scale down proportionally
-                scale_factor = 1.0 / total_allocation
-                for key in base_allocation:
-                    base_allocation[key] *= scale_factor
+                # Apply smart normalization: preserve TDD phase modifier intentions
+                excess = total_allocation - 1.0
+                
+                # If we have phase modifiers, reduce buffer and non-modified components first
+                if tdd_phase and tdd_phase in profile.tdd_phase_modifiers:
+                    phase_modifiers = profile.tdd_phase_modifiers[tdd_phase]
+                    # Reduce buffer first
+                    buffer_reduction = min(base_allocation["buffer"] * 0.5, excess)
+                    base_allocation["buffer"] -= buffer_reduction
+                    excess -= buffer_reduction
+                    
+                    # Then reduce non-boosted components proportionally
+                    if excess > 0:
+                        non_boosted = [k for k in base_allocation.keys() if k not in phase_modifiers and k != "buffer"]
+                        if non_boosted:
+                            reduction_per_component = excess / len(non_boosted)
+                            for key in non_boosted:
+                                reduction = min(base_allocation[key] * 0.3, reduction_per_component)
+                                base_allocation[key] -= reduction
+                                excess -= reduction
+                
+                # Final proportional scaling if still over budget
+                if excess > 0:
+                    scale_factor = 1.0 / sum(base_allocation.values())
+                    for key in base_allocation:
+                        base_allocation[key] *= scale_factor
             
             # Calculate absolute token amounts
             budget = TokenBudget(
