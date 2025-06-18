@@ -85,6 +85,7 @@ nav:
   - User Guide:
     - HITL Commands: user-guide/hitl-commands.md
     - State Machine: user-guide/state-machine.md
+    - TDD Workflow: user-guide/tdd-workflow.md
     - Project Setup: user-guide/project-setup.md
     - Workflow Sequences: user-guide/workflow-sequences.md
     - User Profile: user-guide/user-profile.md
@@ -104,6 +105,10 @@ nav:
     - Security Implementation: advanced/security-implementation.md
     - Testing Strategy: advanced/testing.md
     - Code Structure: advanced/code.md
+  - Architecture:
+    - System Overview: architecture/overview.md
+    - Context Management: architecture/context-management-system.md
+    - Parallel TDD Design: architecture/parallel-tdd-architecture.md
   - Development:
     - Contributing: development/contributing.md
     - API Reference: development/api-reference.md
