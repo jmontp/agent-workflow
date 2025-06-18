@@ -12,54 +12,120 @@ docs_dir: docs_src
 theme:
   name: material
   custom_dir: overrides
+  logo: assets/images/favicon.png
+  favicon: assets/images/favicon.png
+  font:
+    text: Inter
+    code: JetBrains Mono
   palette:
     - scheme: default
       primary: blue
-      accent: blue
+      accent: amber
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
     - scheme: slate
       primary: blue
-      accent: blue
+      accent: amber
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
   features:
+    - announce.dismiss
+    - content.action.edit
+    - content.action.view
+    - content.code.annotate
+    - content.code.copy
+    - content.code.select
+    - content.tabs.link
+    - content.tooltips
+    - header.autohide
+    - navigation.expand
+    - navigation.footer
+    - navigation.indexes
+    - navigation.instant
+    - navigation.instant.prefetch
+    - navigation.instant.progress
+    - navigation.path
+    - navigation.prune
+    - navigation.sections
     - navigation.tabs
     - navigation.tabs.sticky
-    - navigation.sections
-    - navigation.expand
-    - navigation.path
     - navigation.top
+    - navigation.tracking
     - search.highlight
+    - search.share
     - search.suggest
-    - content.code.copy
-    - content.code.annotate
+    - toc.follow
+    - toc.integrate
+
+extra:
+  analytics:
+    provider: google
+    property: !ENV GOOGLE_ANALYTICS_KEY
+  consent:
+    title: Cookie consent
+    description: >- 
+      We use cookies to recognize your repeated visits and preferences, as well
+      as to measure the effectiveness of our documentation and whether users
+      find what they're searching for. With your consent, you're helping us to
+      make our documentation better.
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/jmontp/agent-workflow
+      name: GitHub Repository
+    - icon: fontawesome/solid/book
+      link: https://jmontp.github.io/agent-workflow/
+      name: Documentation Site
+
+extra_css:
+  - stylesheets/extra.css
 
 extra_javascript:
   - https://cdn.jsdelivr.net/npm/svg-pan-zoom@3.6.1/dist/svg-pan-zoom.min.js
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
   - js/mermaid-zoom.js
 
 plugins:
-  - search
-  - mermaid2:
-      version: 10.4.0
-      arguments:
-        securityLevel: loose
-        theme: default
-        themeCSS: |
-          .mermaid svg {
-            max-width: 100%;
-            height: auto;
-          }
-        zoom: true
+  - search:
+      separator: '[\s\-,:!=\[\]()"`/]+|\.(?!\d)|&[lg]t;|(?!\b)(?=[A-Z][a-z])'
 
 markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - toc:
+      permalink: true
+      title: On this page
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
   - pymdownx.highlight:
       anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
   - pymdownx.inlinehilite
-  - pymdownx.snippets
+  - pymdownx.keys
+  - pymdownx.magiclink:
+      normalize_issue_symbols: true
+      repo_url_shorthand: true
+      user: jmontp
+      repo: agent-workflow
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.snippets:
+      auto_append:
+        - includes/mkdocs.md
   - pymdownx.superfences:
       custom_fences:
         - name: mermaid
@@ -67,34 +133,51 @@ markdown_extensions:
           format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.tabbed:
       alternate_style: true
+      combine_header_slug: true
+      slugify: !!python/object/apply:pymdownx.slugs.slugify
+        kwds:
+          case: lower
   - pymdownx.tasklist:
       custom_checkbox: true
-  - admonition
-  - pymdownx.details
-  - attr_list
-  - md_in_html
-  - toc:
-      permalink: true
+  - pymdownx.tilde
 
 nav:
   - Home: index.md
-  - Getting Started:
+  - 🚀 Getting Started:
+    - getting-started/index.md
     - Quick Start: getting-started/quick-start.md
     - Installation: getting-started/installation.md
     - Configuration: getting-started/configuration.md
-  - User Guide:
+  - 📖 User Guide:
+    - user-guide/index.md
     - HITL Commands: user-guide/hitl-commands.md
     - State Machine: user-guide/state-machine.md
     - TDD Workflow: user-guide/tdd-workflow.md
+    - Multi-Project Orchestration: user-guide/multi-project-orchestration.md
     - Project Setup: user-guide/project-setup.md
     - Workflow Sequences: user-guide/workflow-sequences.md
+    - CLI Reference: user-guide/cli-reference.md
+    - Testing: user-guide/testing.md
+    - Performance Optimization: user-guide/performance-optimization.md
+    - Integration Examples: user-guide/integration-examples.md
     - User Profile: user-guide/user-profile.md
     - Troubleshooting: user-guide/troubleshooting.md
     - FAQ: user-guide/faq.md
-  - Concepts:
+  - 🧠 Core Concepts:
+    - concepts/index.md
     - System Overview: concepts/overview.md
     - Security Model: concepts/security.md
-  - Advanced:
+  - 🏗️ Architecture:
+    - architecture/index.md
+    - System Overview: architecture/overview.md
+    - Context Management: architecture/context-management-system.md
+    - Context API Specification: architecture/context-api-specification.md
+    - Context Algorithms: architecture/context-algorithms.md
+    - Parallel TDD Design: architecture/parallel-tdd-architecture.md
+    - Parallel TDD Implementation: architecture/parallel-tdd-technical-specification.md
+    - Parallel Conflict Resolution: architecture/parallel-conflict-algorithms.md
+  - 🔬 Advanced Topics:
+    - advanced/index.md
     - Context Diagram: advanced/context.md
     - Detailed Architecture: advanced/architecture-detailed.md
     - Container Architecture: advanced/container.md
@@ -105,14 +188,12 @@ nav:
     - Security Implementation: advanced/security-implementation.md
     - Testing Strategy: advanced/testing.md
     - Code Structure: advanced/code.md
-  - Architecture:
-    - System Overview: architecture/overview.md
-    - Context Management: architecture/context-management-system.md
-    - Parallel TDD Design: architecture/parallel-tdd-architecture.md
-  - Development:
+  - 👨‍💻 Development:
+    - development/index.md
     - Contributing: development/contributing.md
     - API Reference: development/api-reference.md
-  - Deployment:
+  - 🚀 Deployment:
+    - deployment/index.md
     - Discord Setup: deployment/discord-setup.md
     - Production Deployment: deployment/production.md
     - GitHub Pages: deployment/github-pages.md
