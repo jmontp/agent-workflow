@@ -4,15 +4,141 @@ Complete command-line interface reference for the AI Agent TDD-Scrum workflow sy
 
 ## Overview
 
-The system provides several CLI entry points for different operational modes:
+The system provides several CLI entry points for different operational modes, with seamless integration to a modern web-based UI portal:
 
+- **`agent-orch ui`** - Holistic web portal with CLI integration
 - **`scripts/orchestrator.py`** - Single-project orchestrator
 - **`scripts/multi_project_orchestrator.py`** - Multi-project management
 - **`lib/discord_bot.py`** - Discord bot interface
 - **`visualizer/app.py`** - Real-time state visualizer
 - **Management scripts** - Various operational tools
 
+### UI Portal Integration
+
+The CLI now provides holistic UI portal capabilities through the `agent-orch ui` command family, offering:
+
+- **Cross-Platform Access**: Web portal accessible from any device with a browser
+- **Bidirectional Sync**: CLI commands reflect instantly in UI, UI actions update CLI state
+- **Multiple Launch Modes**: Interactive, headless, development, and production modes
+- **Mobile Optimization**: Responsive design with PWA capabilities and QR code access
+- **Team Collaboration**: Multi-user support with real-time synchronization
+- **Security Integration**: Session-based authentication with role-based access control
+
 ## Core CLI Commands
+
+### UI Portal Commands
+
+#### `agent-orch ui`
+Holistic web portal for comprehensive project management with CLI integration.
+
+```bash
+agent-orch ui [OPTIONS]
+```
+
+**Options:**
+```bash
+--port PORT                 Custom port for UI server [default: 8080]
+--host HOST                 Host to bind server [default: localhost]
+--mode MODE                 Launch specific UI mode [dashboard|chat|config|monitor]
+--project PROJECT           Open specific project view directly
+--headless                  Run background server without opening browser
+--theme THEME               Set UI theme [light|dark|auto]
+--dev-mode                  Enable hot-reload and development features
+--production                Enable production optimizations and security
+--team-mode                 Enable multi-user collaboration features
+--mobile-optimized          Optimize for mobile device access
+--qr-code                   Display QR code for mobile access
+--browser BROWSER           Specify browser [chrome|firefox|safari|edge]
+--network-detect            Auto-detect best network interface
+--ssl-cert FILE             SSL certificate for HTTPS (production)
+--ssl-key FILE              SSL private key for HTTPS (production)
+```
+
+**Examples:**
+```bash
+# Basic UI portal launch
+agent-orch ui
+
+# Development mode with hot-reload
+agent-orch ui --dev-mode
+
+# Team collaboration mode
+agent-orch ui --team-mode --network-detect
+
+# Production deployment
+agent-orch ui --production --ssl-cert /etc/ssl/certs/agent-workflow.crt
+
+# Mobile-optimized with QR code
+agent-orch ui --mobile-optimized --qr-code
+
+# Headless server mode
+agent-orch ui --headless --port 8080
+
+# Project-specific dashboard
+agent-orch ui --mode dashboard --project webapp
+```
+
+#### `agent-orch ui-status`
+Check UI portal server status and integration health.
+
+```bash
+agent-orch ui-status [OPTIONS]
+```
+
+**Options:**
+```bash
+--json                      Output in JSON format
+--verbose                   Show detailed component status
+--health-check              Run comprehensive health check
+--performance               Include performance metrics
+--integration-health        Check CLI-UI integration health
+```
+
+#### `agent-orch ui-config`
+Configure UI portal settings and integrations.
+
+```bash
+agent-orch ui-config [SUBCOMMAND] [OPTIONS]
+```
+
+**Subcommands:**
+```bash
+setup                       Interactive UI configuration wizard
+validate                    Validate current UI configuration
+sync                        Synchronize CLI and UI configurations
+export FILE                 Export UI configuration to file
+import FILE                 Import UI configuration from file
+```
+
+#### `agent-orch ui-token`
+Manage UI portal authentication tokens.
+
+```bash
+agent-orch ui-token [SUBCOMMAND] [OPTIONS]
+```
+
+**Subcommands:**
+```bash
+generate                    Generate new access token
+list                        List active tokens
+revoke TOKEN                Revoke specific token
+cleanup                     Remove expired tokens
+```
+
+#### `agent-orch mobile`
+Configure mobile device access and optimization.
+
+```bash
+agent-orch mobile [SUBCOMMAND] [OPTIONS]
+```
+
+**Subcommands:**
+```bash
+setup                       Configure mobile access
+qr [PROJECT]               Generate QR code for mobile access
+optimize                    Enable mobile optimizations
+pwa-config                 Configure Progressive Web App features
+```
 
 ### Primary Orchestrator
 
@@ -596,6 +722,73 @@ export HEALTH_CHECK_INTERVAL="300"
 export ENCRYPTION_KEY="your_encryption_key"
 export API_RATE_LIMIT="100"
 export ALLOWED_HOSTS="localhost,your-domain.com"
+```
+
+### UI Portal Configuration
+```bash
+# UI Portal server settings
+export UI_PORTAL_ENABLED="true"
+export UI_PORTAL_PORT="8080"
+export UI_PORTAL_HOST="localhost"            # Use 0.0.0.0 for external access
+export UI_API_PORT="8000"
+export UI_WEBSOCKET_PORT="8001"
+
+# UI Portal features
+export UI_THEME="auto"                       # light|dark|auto
+export UI_AUTO_LAUNCH="true"                 # Auto-launch browser
+export UI_MOBILE_OPTIMIZED="true"
+export UI_PWA_ENABLED="true"
+export UI_QR_CODE_ENABLED="true"
+
+# Team collaboration
+export UI_TEAM_MODE="false"                  # Enable multi-user features
+export UI_MAX_CONCURRENT_USERS="50"
+export UI_SESSION_TIMEOUT="3600"            # Session timeout in seconds
+export UI_SHARED_COMMAND_HISTORY="true"
+
+# Security and authentication
+export UI_AUTH_METHOD="session"             # session|token|none
+export UI_SESSION_SECRET="your_session_secret"
+export UI_CORS_ORIGINS="*"                  # Comma-separated origins
+export UI_RATE_LIMIT="1000"                 # Requests per hour per user
+
+# SSL/TLS configuration
+export UI_HTTPS_ENABLED="false"             # Enable HTTPS
+export UI_SSL_CERT_PATH="/path/to/cert.pem"
+export UI_SSL_KEY_PATH="/path/to/key.pem"
+export UI_SSL_REDIRECT="true"               # Redirect HTTP to HTTPS
+
+# Development settings
+export UI_DEV_MODE="false"                  # Enable development features
+export UI_HOT_RELOAD="false"                # Enable hot module replacement
+export UI_DEBUG_MODE="false"                # Enable debug logging
+export UI_SOURCE_MAPS="false"               # Generate source maps
+
+# Performance optimization
+export UI_CACHE_ENABLED="true"
+export UI_CACHE_TTL="3600"                  # Cache TTL in seconds
+export UI_COMPRESSION_ENABLED="true"
+export UI_STATIC_CDN_URL=""                 # CDN URL for static assets
+
+# Mobile and PWA settings
+export UI_PWA_NAME="Agent-Workflow Portal"
+export UI_PWA_SHORT_NAME="AgentWorkflow"
+export UI_PWA_THEME_COLOR="#1976d2"
+export UI_PWA_BACKGROUND_COLOR="#ffffff"
+export UI_OFFLINE_SUPPORT="true"
+export UI_PUSH_NOTIFICATIONS="true"
+
+# Integration settings
+export UI_CLI_SYNC_ENABLED="true"           # Enable CLI-UI synchronization
+export UI_DISCORD_MIRROR="true"             # Mirror Discord commands
+export UI_CONFIG_HOT_RELOAD="true"          # Auto-reload configuration
+export UI_STATE_BROADCAST="true"            # Real-time state broadcasting
+
+# Network and browser settings
+export UI_NETWORK_AUTO_DETECT="true"        # Auto-detect network interfaces
+export UI_BROWSER_AUTO_LAUNCH="true"        # Auto-launch browser
+export UI_PREFERRED_BROWSER=""              # chrome|firefox|safari|edge
+export UI_BROWSER_DEV_TOOLS="false"         # Open with dev tools
 ```
 
 ### TDD-Specific Variables

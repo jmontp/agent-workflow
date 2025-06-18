@@ -583,10 +583,10 @@ class ContextFilter:
             # TDD phase relevance
             if request.task and hasattr(request.task, 'current_state'):
                 tdd_state = request.task.current_state
-                if tdd_state == TDDState.RED:
+                if tdd_state == TDDState.TEST_RED:
                     if file_type == FileType.TEST:
                         score += 0.2
-                elif tdd_state == TDDState.GREEN:
+                elif tdd_state == TDDState.CODE_GREEN:
                     if file_type == FileType.PYTHON and file_type != FileType.TEST:
                         score += 0.2
                 elif tdd_state == TDDState.REFACTOR:
@@ -610,7 +610,7 @@ class ContextFilter:
             score = 0.0
             file_name = Path(file_path).name.lower()
             
-            if tdd_phase == TDDState.RED:
+            if tdd_phase == TDDState.TEST_RED:
                 # Favor test files during RED phase
                 if file_type == FileType.TEST:
                     score += 0.8
@@ -619,7 +619,7 @@ class ContextFilter:
                 elif file_type == FileType.PYTHON and 'test' in file_path.lower():
                     score += 0.4
             
-            elif tdd_phase == TDDState.GREEN:
+            elif tdd_phase == TDDState.CODE_GREEN:
                 # Favor implementation files during GREEN phase
                 if file_type == FileType.PYTHON and file_type != FileType.TEST:
                     score += 0.8

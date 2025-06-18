@@ -34,14 +34,14 @@ You'll need these before starting:
 ### 🚀 One-Command Setup
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/your-username/agent-workflow/main/install.sh | bash
+curl -sSL https://raw.githubusercontent.com/jmontp/agent-workflow/main/install.sh | bash
 ```
 
 ### 📋 Manual Installation (Recommended)
 
 #### Step 1: Clone Repository
 ```bash
-git clone https://github.com/your-username/agent-workflow.git
+git clone https://github.com/jmontp/agent-workflow.git
 cd agent-workflow
 ```
 
@@ -121,7 +121,7 @@ For running the system in production:
 sudo apt update && sudo apt install -y python3 python3-pip python3-venv git curl
 
 # 2. Clone and setup
-git clone https://github.com/your-username/agent-workflow.git
+git clone https://github.com/jmontp/agent-workflow.git
 cd agent-workflow
 python3 -m venv .venv
 source .venv/bin/activate
@@ -167,7 +167,7 @@ For containerized deployment:
 
 ```bash
 # 1. Clone repository
-git clone https://github.com/your-username/agent-workflow.git
+git clone https://github.com/jmontp/agent-workflow.git
 cd agent-workflow
 
 # 2. Copy environment
@@ -228,7 +228,7 @@ sudo apt update && sudo apt upgrade -y
 sudo apt install -y python3 python3-pip python3-venv git curl build-essential
 
 # Install the workflow system
-git clone https://github.com/your-username/agent-workflow.git
+git clone https://github.com/jmontp/agent-workflow.git
 cd agent-workflow
 python3 -m venv .venv
 source .venv/bin/activate
@@ -248,7 +248,7 @@ python -c "import lib.discord_bot; print('✅ Installation successful')"
 brew install python@3.11 git
 
 # Install the workflow system
-git clone https://github.com/your-username/agent-workflow.git
+git clone https://github.com/jmontp/agent-workflow.git
 cd agent-workflow
 python3 -m venv .venv
 source .venv/bin/activate
@@ -269,7 +269,7 @@ wsl --set-default-version 2
 sudo apt update && sudo apt install -y python3 python3-pip python3-venv git
 
 # Install the workflow system
-git clone https://github.com/your-username/agent-workflow.git
+git clone https://github.com/jmontp/agent-workflow.git
 cd agent-workflow
 python3 -m venv .venv
 source .venv/bin/activate
@@ -283,7 +283,7 @@ pip install -r requirements.txt
 # Install Git from git-scm.com
 
 # In Command Prompt or PowerShell:
-git clone https://github.com/your-username/agent-workflow.git
+git clone https://github.com/jmontp/agent-workflow.git
 cd agent-workflow
 python -m venv .venv
 .venv\Scripts\activate

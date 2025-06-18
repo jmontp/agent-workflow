@@ -19,14 +19,14 @@ theme:
     code: JetBrains Mono
   palette:
     - scheme: default
-      primary: blue
-      accent: amber
+      primary: blue grey
+      accent: orange
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
     - scheme: slate
-      primary: blue
-      accent: amber
+      primary: blue grey
+      accent: orange
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
@@ -143,12 +143,12 @@ markdown_extensions:
 
 nav:
   - Home: index.md
-  - 🚀 Getting Started:
+  - ⚡ Getting Started:
     - getting-started/index.md
     - Quick Start: getting-started/quick-start.md
     - Installation: getting-started/installation.md
     - Configuration: getting-started/configuration.md
-  - 📖 User Guide:
+  - 📊 User Guide:
     - user-guide/index.md
     - HITL Commands: user-guide/hitl-commands.md
     - State Machine: user-guide/state-machine.md
@@ -163,11 +163,11 @@ nav:
     - User Profile: user-guide/user-profile.md
     - Troubleshooting: user-guide/troubleshooting.md
     - FAQ: user-guide/faq.md
-  - 🧠 Core Concepts:
+  - 🎯 Core Concepts:
     - concepts/index.md
     - System Overview: concepts/overview.md
     - Security Model: concepts/security.md
-  - 🏗️ Architecture:
+  - 🔥 Architecture:
     - architecture/index.md
     - System Overview: architecture/overview.md
     - Context Management: architecture/context-management-system.md
@@ -176,7 +176,7 @@ nav:
     - Parallel TDD Design: architecture/parallel-tdd-architecture.md
     - Parallel TDD Implementation: architecture/parallel-tdd-technical-specification.md
     - Parallel Conflict Resolution: architecture/parallel-conflict-algorithms.md
-  - 🔬 Advanced Topics:
+  - ⚡ Advanced Topics:
     - advanced/index.md
     - Context Diagram: advanced/context.md
     - Detailed Architecture: advanced/architecture-detailed.md
@@ -188,11 +188,11 @@ nav:
     - Security Implementation: advanced/security-implementation.md
     - Testing Strategy: advanced/testing.md
     - Code Structure: advanced/code.md
-  - 👨‍💻 Development:
+  - 📊 Development:
     - development/index.md
     - Contributing: development/contributing.md
     - API Reference: development/api-reference.md
-  - 🚀 Deployment:
+  - 🔥 Deployment:
     - deployment/index.md
     - Discord Setup: deployment/discord-setup.md
     - Production Deployment: deployment/production.md
