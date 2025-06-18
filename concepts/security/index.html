@@ -159,6 +159,15 @@
         </a>
 </li>
 <li class="md-tabs__item">
+<a class="md-tabs__link" href="../../architecture/overview/">
+          
+  
+  
+  Architecture
+
+        </a>
+</li>
+<li class="md-tabs__item">
 <a class="md-tabs__link" href="../../development/contributing/">
           
   
@@ -286,6 +295,14 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="../../user-guide/tdd-workflow/">
+<span class="md-ellipsis">
+    TDD Workflow
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="../../user-guide/project-setup/">
 <span class="md-ellipsis">
     Project Setup
@@ -402,6 +419,13 @@
 <a class="md-nav__link" href="#command-access-control">
 <span class="md-ellipsis">
       Command Access Control
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-workflow-security">
+<span class="md-ellipsis">
+      TDD Workflow Security
     </span>
 </a>
 </li>
@@ -605,13 +629,55 @@
 <input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_6" type="checkbox"/>
 <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
 <span class="md-ellipsis">
-    Development
+    Architecture
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
 <nav aria-expanded="false" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
 <label class="md-nav__title" for="__nav_6">
+<span class="md-nav__icon md-icon"></span>
+            Architecture
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../architecture/overview/">
+<span class="md-ellipsis">
+    System Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../architecture/context-management-system/">
+<span class="md-ellipsis">
+    Context Management
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../architecture/parallel-tdd-architecture/">
+<span class="md-ellipsis">
+    Parallel TDD Design
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_7" type="checkbox"/>
+<label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+<span class="md-ellipsis">
+    Development
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_7_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_7">
 <span class="md-nav__icon md-icon"></span>
             Development
           </label>
@@ -636,16 +702,16 @@
 </nav>
 </li>
 <li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_7" type="checkbox"/>
-<label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_8" type="checkbox"/>
+<label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
 <span class="md-ellipsis">
     Deployment
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="false" aria-labelledby="__nav_7_label" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="__nav_7">
+<nav aria-expanded="false" aria-labelledby="__nav_8_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_8">
 <span class="md-nav__icon md-icon"></span>
             Deployment
           </label>
@@ -721,6 +787,13 @@
 <a class="md-nav__link" href="#command-access-control">
 <span class="md-ellipsis">
       Command Access Control
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-workflow-security">
+<span class="md-ellipsis">
+      TDD Workflow Security
     </span>
 </a>
 </li>
@@ -851,6 +924,12 @@
 - Automatic security boundary application
 - Runtime validation of agent actions
 - Comprehensive audit logging</p>
+<h3 id="tdd-workflow-security">TDD Workflow Security<a class="headerlink" href="#tdd-workflow-security" title="Permanent link">¶</a></h3>
+<p>During TDD cycles, additional security controls apply:
+- Test file modifications are isolated to the current story
+- Code agents cannot modify tests written by other agents
+- Red-Green-Refactor phases enforce sequential tool access
+- Story-level isolation prevents cross-contamination of test suites</p>
 <h3 id="human-approval-gates">Human Approval Gates<a class="headerlink" href="#human-approval-gates" title="Permanent link">¶</a></h3>
 <p>Critical operations require explicit approval:
 - Code deployment and publishing

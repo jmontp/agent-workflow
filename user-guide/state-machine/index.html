@@ -9,7 +9,7 @@
 <meta content="AI Agent Workflow Team" name="author"/>
 <link href="https://jmontp.github.io/agent-workflow/user-guide/state-machine/" rel="canonical"/>
 <link href="../hitl-commands/" rel="prev"/>
-<link href="../project-setup/" rel="next"/>
+<link href="../tdd-workflow/" rel="next"/>
 <link href="../../assets/images/favicon.png" rel="icon"/>
 <meta content="mkdocs-1.6.1, mkdocs-material-9.6.14" name="generator"/>
 <title>State Machine - AI Agent TDD-Scrum Workflow</title>
@@ -25,7 +25,7 @@
 <input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
 <label class="md-overlay" for="__drawer"></label>
 <div data-md-component="skip">
-<a class="md-skip" href="#orchestrator-command-state-machine">
+<a class="md-skip" href="#dual-state-machine-architecture">
           Skip to content
         </a>
 </div>
@@ -155,6 +155,15 @@
   
   
   Advanced
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../architecture/overview/">
+          
+  
+  
+  Architecture
 
         </a>
 </li>
@@ -299,25 +308,100 @@
     </label>
 <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="#1-top-level-states">
+<a class="md-nav__link" href="#1-primary-workflow-state-machine">
 <span class="md-ellipsis">
-      1. Top-Level States
+      1. Primary Workflow State Machine
+    </span>
+</a>
+<nav aria-label="1. Primary Workflow State Machine" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#top-level-states">
+<span class="md-ellipsis">
+      Top-Level States
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#2-command-state-matrix">
+<a class="md-nav__link" href="#workflow-command-state-matrix">
 <span class="md-ellipsis">
-      2. Command → State Matrix
+      Workflow Command → State Matrix
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#3-mermaid-state-diagram">
+<a class="md-nav__link" href="#primary-workflow-state-diagram">
 <span class="md-ellipsis">
-      3. Mermaid State Diagram
+      Primary Workflow State Diagram
     </span>
 </a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-secondary-tdd-state-machines">
+<span class="md-ellipsis">
+      2. Secondary TDD State Machines
+    </span>
+</a>
+<nav aria-label="2. Secondary TDD State Machines" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-states-per-story">
+<span class="md-ellipsis">
+      TDD States per Story
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-command-state-matrix">
+<span class="md-ellipsis">
+      TDD Command → State Matrix
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-state-diagram">
+<span class="md-ellipsis">
+      TDD State Diagram
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#parallel-tdd-execution">
+<span class="md-ellipsis">
+      Parallel TDD Execution
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-state-machine-interactions">
+<span class="md-ellipsis">
+      3. State Machine Interactions
+    </span>
+</a>
+<nav aria-label="3. State Machine Interactions" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#primary-to-secondary-activation">
+<span class="md-ellipsis">
+      Primary to Secondary Activation
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#cross-state-machine-commands">
+<span class="md-ellipsis">
+      Cross-State Machine Commands
+    </span>
+</a>
+</li>
+</ul>
+</nav>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="#4-standardised-error-hint-response">
@@ -335,6 +419,14 @@
 </li>
 </ul>
 </nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../tdd-workflow/">
+<span class="md-ellipsis">
+    TDD Workflow
+    
+  </span>
+</a>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="../project-setup/">
@@ -515,13 +607,55 @@
 <input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_6" type="checkbox"/>
 <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
 <span class="md-ellipsis">
-    Development
+    Architecture
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
 <nav aria-expanded="false" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
 <label class="md-nav__title" for="__nav_6">
+<span class="md-nav__icon md-icon"></span>
+            Architecture
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../architecture/overview/">
+<span class="md-ellipsis">
+    System Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../architecture/context-management-system/">
+<span class="md-ellipsis">
+    Context Management
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../architecture/parallel-tdd-architecture/">
+<span class="md-ellipsis">
+    Parallel TDD Design
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_7" type="checkbox"/>
+<label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+<span class="md-ellipsis">
+    Development
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_7_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_7">
 <span class="md-nav__icon md-icon"></span>
             Development
           </label>
@@ -546,16 +680,16 @@
 </nav>
 </li>
 <li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_7" type="checkbox"/>
-<label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_8" type="checkbox"/>
+<label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
 <span class="md-ellipsis">
     Deployment
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="false" aria-labelledby="__nav_7_label" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="__nav_7">
+<nav aria-expanded="false" aria-labelledby="__nav_8_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_8">
 <span class="md-nav__icon md-icon"></span>
             Deployment
           </label>
@@ -602,25 +736,100 @@
     </label>
 <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="#1-top-level-states">
+<a class="md-nav__link" href="#1-primary-workflow-state-machine">
 <span class="md-ellipsis">
-      1. Top-Level States
+      1. Primary Workflow State Machine
+    </span>
+</a>
+<nav aria-label="1. Primary Workflow State Machine" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#top-level-states">
+<span class="md-ellipsis">
+      Top-Level States
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#2-command-state-matrix">
+<a class="md-nav__link" href="#workflow-command-state-matrix">
 <span class="md-ellipsis">
-      2. Command → State Matrix
+      Workflow Command → State Matrix
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#3-mermaid-state-diagram">
+<a class="md-nav__link" href="#primary-workflow-state-diagram">
 <span class="md-ellipsis">
-      3. Mermaid State Diagram
+      Primary Workflow State Diagram
     </span>
 </a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-secondary-tdd-state-machines">
+<span class="md-ellipsis">
+      2. Secondary TDD State Machines
+    </span>
+</a>
+<nav aria-label="2. Secondary TDD State Machines" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-states-per-story">
+<span class="md-ellipsis">
+      TDD States per Story
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-command-state-matrix">
+<span class="md-ellipsis">
+      TDD Command → State Matrix
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-state-diagram">
+<span class="md-ellipsis">
+      TDD State Diagram
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#parallel-tdd-execution">
+<span class="md-ellipsis">
+      Parallel TDD Execution
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-state-machine-interactions">
+<span class="md-ellipsis">
+      3. State Machine Interactions
+    </span>
+</a>
+<nav aria-label="3. State Machine Interactions" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#primary-to-secondary-activation">
+<span class="md-ellipsis">
+      Primary to Secondary Activation
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#cross-state-machine-commands">
+<span class="md-ellipsis">
+      Cross-State Machine Commands
+    </span>
+</a>
+</li>
+</ul>
+</nav>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="#4-standardised-error-hint-response">
@@ -643,10 +852,11 @@
 </div>
 <div class="md-content" data-md-component="content">
 <article class="md-content__inner md-typeset">
-<h1 id="orchestrator-command-state-machine">Orchestrator Command State Machine<a class="headerlink" href="#orchestrator-command-state-machine" title="Permanent link">¶</a></h1>
-<p><em>This document formalises when each slash-command is legal, how it changes the orchestrator's state, and the feedback pattern when a command is issued in an improper state.</em></p>
+<h1 id="dual-state-machine-architecture">Dual State Machine Architecture<a class="headerlink" href="#dual-state-machine-architecture" title="Permanent link">¶</a></h1>
+<p><em>This document formalizes the dual state machine system: the primary Workflow State Machine for Scrum coordination and the secondary TDD State Machines for individual story implementation.</em></p>
 <hr/>
-<h2 id="1-top-level-states">1. Top-Level States<a class="headerlink" href="#1-top-level-states" title="Permanent link">¶</a></h2>
+<h2 id="1-primary-workflow-state-machine">1. Primary Workflow State Machine<a class="headerlink" href="#1-primary-workflow-state-machine" title="Permanent link">¶</a></h2>
+<h3 id="top-level-states">Top-Level States<a class="headerlink" href="#top-level-states" title="Permanent link">¶</a></h3>
 <table>
 <thead>
 <tr>
@@ -694,7 +904,7 @@
 </tbody>
 </table>
 <hr/>
-<h2 id="2-command-state-matrix">2. Command → State Matrix<a class="headerlink" href="#2-command-state-matrix" title="Permanent link">¶</a></h2>
+<h3 id="workflow-command-state-matrix">Workflow Command → State Matrix<a class="headerlink" href="#workflow-command-state-matrix" title="Permanent link">¶</a></h3>
 <table>
 <thead>
 <tr>
@@ -770,7 +980,7 @@
 <em><code>/backlog</code> commands are always safe but may show different context (product vs sprint).</em><br/>
 <em><code>BLOCKED</code> is transient: once the user responds the orchestrator returns to <code>SPRINT_ACTIVE</code> or skips forward.</em></p>
 <hr/>
-<h2 id="3-mermaid-state-diagram">3. Mermaid State Diagram<a class="headerlink" href="#3-mermaid-state-diagram" title="Permanent link">¶</a></h2>
+<h3 id="primary-workflow-state-diagram">Primary Workflow State Diagram<a class="headerlink" href="#primary-workflow-state-diagram" title="Permanent link">¶</a></h3>
 <pre class="mermaid"><code>%%{init: {'theme': 'dark'}}%%
 stateDiagram-v2
     [*] --&gt; IDLE
@@ -785,6 +995,258 @@ stateDiagram-v2
     SPRINT_ACTIVE --&gt; SPRINT_REVIEW : all tasks done
     SPRINT_REVIEW --&gt; BACKLOG_READY : /request_changes
     SPRINT_REVIEW --&gt; IDLE : /feedback (retrospective complete)</code></pre>
+<hr/>
+<h2 id="2-secondary-tdd-state-machines">2. Secondary TDD State Machines<a class="headerlink" href="#2-secondary-tdd-state-machines" title="Permanent link">¶</a></h2>
+<h3 id="tdd-states-per-story">TDD States per Story<a class="headerlink" href="#tdd-states-per-story" title="Permanent link">¶</a></h3>
+<p>When the primary state machine enters <code>SPRINT_ACTIVE</code>, individual TDD state machines are created for each story in the sprint.</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>State Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>DESIGN</strong></td>
+<td>Design Phase</td>
+<td>Design Agent creates technical specifications and architecture.</td>
+</tr>
+<tr>
+<td><strong>TEST_RED</strong></td>
+<td>Test Red Phase</td>
+<td>QA Agent writes failing tests based on design specifications.</td>
+</tr>
+<tr>
+<td><strong>CODE_GREEN</strong></td>
+<td>Code Green Phase</td>
+<td>Code Agent implements minimal code to make all tests pass.</td>
+</tr>
+<tr>
+<td><strong>REFACTOR</strong></td>
+<td>Refactor Phase</td>
+<td>Code Agent improves code quality while maintaining green tests.</td>
+</tr>
+<tr>
+<td><strong>COMMIT</strong></td>
+<td>Commit Phase</td>
+<td>Code Agent commits changes and completes the story.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="tdd-command-state-matrix">TDD Command → State Matrix<a class="headerlink" href="#tdd-command-state-matrix" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Allowed in States</th>
+<th>Resulting State</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/tdd start &lt;ID&gt;</code></td>
+<td>Any (auto-started from SPRINT_ACTIVE)</td>
+<td>DESIGN</td>
+</tr>
+<tr>
+<td><code>/tdd status [ID]</code></td>
+<td>Any TDD state</td>
+<td>(no change)</td>
+</tr>
+<tr>
+<td><code>/tdd design_complete &lt;ID&gt;</code></td>
+<td>DESIGN</td>
+<td>TEST_RED</td>
+</tr>
+<tr>
+<td><code>/tdd tests_ready &lt;ID&gt;</code></td>
+<td>TEST_RED</td>
+<td>CODE_GREEN</td>
+</tr>
+<tr>
+<td><code>/tdd code_green &lt;ID&gt;</code></td>
+<td>CODE_GREEN</td>
+<td>REFACTOR</td>
+</tr>
+<tr>
+<td><code>/tdd refactor_done &lt;ID&gt;</code></td>
+<td>REFACTOR</td>
+<td>COMMIT</td>
+</tr>
+<tr>
+<td><code>/tdd review_cycle &lt;ID&gt;</code></td>
+<td>Any TDD state</td>
+<td>(pause for review)</td>
+</tr>
+<tr>
+<td><code>/tdd skip_phase &lt;ID&gt;</code></td>
+<td>Any TDD state</td>
+<td>(next phase)</td>
+</tr>
+<tr>
+<td><code>/tdd pause &lt;ID&gt;</code></td>
+<td>Any active TDD state</td>
+<td>(paused)</td>
+</tr>
+<tr>
+<td><code>/tdd resume &lt;ID&gt;</code></td>
+<td>Paused TDD state</td>
+<td>(previous state)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="tdd-state-diagram">TDD State Diagram<a class="headerlink" href="#tdd-state-diagram" title="Permanent link">¶</a></h3>
+<pre class="mermaid"><code>%%{init: {'theme': 'dark'}}%%
+stateDiagram-v2
+    [*] --&gt; DESIGN
+    DESIGN --&gt; TEST_RED : design complete
+    TEST_RED --&gt; CODE_GREEN : tests failing properly
+    CODE_GREEN --&gt; REFACTOR : all tests passing
+    REFACTOR --&gt; COMMIT : quality gates met
+    COMMIT --&gt; [*] : story complete
+
+    note right of DESIGN
+        Design Agent creates
+        technical specifications
+    end note
+
+    note right of TEST_RED
+        QA Agent writes
+        failing tests
+    end note
+
+    note right of CODE_GREEN
+        Code Agent makes
+        tests pass
+    end note
+
+    note right of REFACTOR
+        Code Agent improves
+        code quality
+    end note
+
+    note right of COMMIT
+        Code Agent commits
+        and closes story
+    end note
+
+    %% Error transitions
+    REFACTOR --&gt; CODE_GREEN : tests broken
+    CODE_GREEN --&gt; TEST_RED : need more tests
+    TEST_RED --&gt; DESIGN : requirements unclear</code></pre>
+<h3 id="parallel-tdd-execution">Parallel TDD Execution<a class="headerlink" href="#parallel-tdd-execution" title="Permanent link">¶</a></h3>
+<p>Multiple TDD state machines run simultaneously during an active sprint:</p>
+<pre class="mermaid"><code>%%{init: {'theme': 'dark'}}%%
+stateDiagram-v2
+    state "Workflow State Machine" as WSM
+    state "Sprint Active" as ACTIVE
+
+    state "Story AUTH-1 TDD" as TDD1 {
+        state "DESIGN" as D1
+        state "TEST_RED" as T1
+        state "CODE_GREEN" as C1
+        state "REFACTOR" as R1
+        state "COMMIT" as CM1
+
+        [*] --&gt; D1
+        D1 --&gt; T1
+        T1 --&gt; C1
+        C1 --&gt; R1
+        R1 --&gt; CM1
+        CM1 --&gt; [*]
+    }
+
+    state "Story AUTH-2 TDD" as TDD2 {
+        state "DESIGN" as D2
+        state "TEST_RED" as T2
+        state "CODE_GREEN" as C2
+        state "REFACTOR" as R2
+        state "COMMIT" as CM2
+
+        [*] --&gt; D2
+        D2 --&gt; T2
+        T2 --&gt; C2
+        C2 --&gt; R2
+        R2 --&gt; CM2
+        CM2 --&gt; [*]
+    }
+
+    state "Story AUTH-3 TDD" as TDD3 {
+        state "DESIGN" as D3
+        state "TEST_RED" as T3
+        state "CODE_GREEN" as C3
+        state "REFACTOR" as R3
+        state "COMMIT" as CM3
+
+        [*] --&gt; D3
+        D3 --&gt; T3
+        T3 --&gt; C3
+        C3 --&gt; R3
+        R3 --&gt; CM3
+        CM3 --&gt; [*]
+    }
+
+    WSM --&gt; ACTIVE
+    ACTIVE --&gt; TDD1 : spawn
+    ACTIVE --&gt; TDD2 : spawn
+    ACTIVE --&gt; TDD3 : spawn</code></pre>
+<h2 id="3-state-machine-interactions">3. State Machine Interactions<a class="headerlink" href="#3-state-machine-interactions" title="Permanent link">¶</a></h2>
+<h3 id="primary-to-secondary-activation">Primary to Secondary Activation<a class="headerlink" href="#primary-to-secondary-activation" title="Permanent link">¶</a></h3>
+<p>When the primary state machine transitions to <code>SPRINT_ACTIVE</code>, it triggers the creation of TDD state machines:</p>
+<pre class="mermaid"><code>sequenceDiagram
+    participant U as User
+    participant WSM as Workflow State Machine
+    participant Coord as Multi-Task Coordinator
+    participant TDD as TDD State Machine
+
+    U-&gt;&gt;WSM: /sprint start
+    WSM-&gt;&gt;WSM: SPRINT_PLANNED → SPRINT_ACTIVE
+    WSM-&gt;&gt;Coord: Create TDD cycles
+
+    loop For each story in sprint
+        Coord-&gt;&gt;TDD: Create TDD instance
+        TDD-&gt;&gt;TDD: Initialize DESIGN phase
+        Note over TDD: Story-specific TDD cycle begins
+    end
+
+    TDD-&gt;&gt;Coord: Progress updates
+    Coord-&gt;&gt;WSM: Sprint progress
+    WSM-&gt;&gt;U: Status updates</code></pre>
+<h3 id="cross-state-machine-commands">Cross-State Machine Commands<a class="headerlink" href="#cross-state-machine-commands" title="Permanent link">¶</a></h3>
+<p>Some commands affect both state machines:</p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Primary Effect</th>
+<th>Secondary Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/sprint pause</code></td>
+<td>SPRINT_ACTIVE → SPRINT_PAUSED</td>
+<td>Pause all TDD cycles</td>
+</tr>
+<tr>
+<td><code>/sprint resume</code></td>
+<td>SPRINT_PAUSED → SPRINT_ACTIVE</td>
+<td>Resume all TDD cycles</td>
+</tr>
+<tr>
+<td><code>/sprint status</code></td>
+<td>Show sprint progress</td>
+<td>Show TDD cycle status</td>
+</tr>
+<tr>
+<td><code>/state</code></td>
+<td>Show workflow state</td>
+<td>Show active TDD states</td>
+</tr>
+</tbody>
+</table>
 <hr/>
 <h2 id="4-standardised-error-hint-response">4. Standardised Error &amp; Hint Response<a class="headerlink" href="#4-standardised-error-hint-response" title="Permanent link">¶</a></h2>
 <p>When a user issues an invalid command for the current state, the orchestrator must reply with:</p>

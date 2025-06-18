@@ -159,6 +159,15 @@
         </a>
 </li>
 <li class="md-tabs__item">
+<a class="md-tabs__link" href="../../architecture/overview/">
+          
+  
+  
+  Architecture
+
+        </a>
+</li>
+<li class="md-tabs__item">
 <a class="md-tabs__link" href="../../development/contributing/">
           
   
@@ -298,12 +307,12 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#core-commands">
+<a class="md-nav__link" href="#core-workflow-commands">
 <span class="md-ellipsis">
-      Core Commands
+      Core Workflow Commands
     </span>
 </a>
-<nav aria-label="Core Commands" class="md-nav">
+<nav aria-label="Core Workflow Commands" class="md-nav">
 <ul class="md-nav__list">
 <li class="md-nav__item">
 <a class="md-nav__link" href="#project-management">
@@ -330,6 +339,13 @@
 <a class="md-nav__link" href="#development-control">
 <span class="md-ellipsis">
       Development Control
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-workflow-commands">
+<span class="md-ellipsis">
+      TDD Workflow Commands
     </span>
 </a>
 </li>
@@ -372,6 +388,20 @@
     </span>
 </a>
 </li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5-tdd-workflow-management">
+<span class="md-ellipsis">
+      5. TDD Workflow Management
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#6-parallel-tdd-monitoring">
+<span class="md-ellipsis">
+      6. Parallel TDD Monitoring
+    </span>
+</a>
+</li>
 </ul>
 </nav>
 </li>
@@ -396,6 +426,14 @@
 <a class="md-nav__link" href="../state-machine/">
 <span class="md-ellipsis">
     State Machine
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../tdd-workflow/">
+<span class="md-ellipsis">
+    TDD Workflow
     
   </span>
 </a>
@@ -579,13 +617,55 @@
 <input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_6" type="checkbox"/>
 <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
 <span class="md-ellipsis">
-    Development
+    Architecture
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
 <nav aria-expanded="false" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
 <label class="md-nav__title" for="__nav_6">
+<span class="md-nav__icon md-icon"></span>
+            Architecture
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../architecture/overview/">
+<span class="md-ellipsis">
+    System Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../architecture/context-management-system/">
+<span class="md-ellipsis">
+    Context Management
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../architecture/parallel-tdd-architecture/">
+<span class="md-ellipsis">
+    Parallel TDD Design
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_7" type="checkbox"/>
+<label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+<span class="md-ellipsis">
+    Development
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_7_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_7">
 <span class="md-nav__icon md-icon"></span>
             Development
           </label>
@@ -610,16 +690,16 @@
 </nav>
 </li>
 <li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_7" type="checkbox"/>
-<label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_8" type="checkbox"/>
+<label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
 <span class="md-ellipsis">
     Deployment
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="false" aria-labelledby="__nav_7_label" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="__nav_7">
+<nav aria-expanded="false" aria-labelledby="__nav_8_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_8">
 <span class="md-nav__icon md-icon"></span>
             Deployment
           </label>
@@ -673,12 +753,12 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#core-commands">
+<a class="md-nav__link" href="#core-workflow-commands">
 <span class="md-ellipsis">
-      Core Commands
+      Core Workflow Commands
     </span>
 </a>
-<nav aria-label="Core Commands" class="md-nav">
+<nav aria-label="Core Workflow Commands" class="md-nav">
 <ul class="md-nav__list">
 <li class="md-nav__item">
 <a class="md-nav__link" href="#project-management">
@@ -705,6 +785,13 @@
 <a class="md-nav__link" href="#development-control">
 <span class="md-ellipsis">
       Development Control
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-workflow-commands">
+<span class="md-ellipsis">
+      TDD Workflow Commands
     </span>
 </a>
 </li>
@@ -747,6 +834,20 @@
     </span>
 </a>
 </li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5-tdd-workflow-management">
+<span class="md-ellipsis">
+      5. TDD Workflow Management
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#6-parallel-tdd-monitoring">
+<span class="md-ellipsis">
+      6. Parallel TDD Monitoring
+    </span>
+</a>
+</li>
 </ul>
 </nav>
 </li>
@@ -772,9 +873,9 @@
 <div class="md-content" data-md-component="content">
 <article class="md-content__inner md-typeset">
 <h1 id="hitl-commands">HITL Commands<a class="headerlink" href="#hitl-commands" title="Permanent link">¶</a></h1>
-<p>Command reference for the AI Agent TDD-Scrum workflow system. These commands provide Human-In-The-Loop control over the multi-agent orchestration process.</p>
+<p>Command reference for the AI Agent TDD-Scrum workflow system. These commands provide Human-In-The-Loop control over the dual state machine orchestration process with integrated TDD workflows.</p>
 <h2 id="command-quick-reference">Command Quick-Reference<a class="headerlink" href="#command-quick-reference" title="Permanent link">¶</a></h2>
-<h2 id="core-commands">Core Commands<a class="headerlink" href="#core-commands" title="Permanent link">¶</a></h2>
+<h2 id="core-workflow-commands">Core Workflow Commands<a class="headerlink" href="#core-workflow-commands" title="Permanent link">¶</a></h2>
 <h3 id="project-management">Project Management<a class="headerlink" href="#project-management" title="Permanent link">¶</a></h3>
 <p><strong><code>/epic "&lt;description&gt;"</code></strong>
 Define a new high-level initiative.</p>
@@ -815,6 +916,33 @@ Abandon the currently blocked task and move on.</p>
 Provide improvement notes after a sprint.</p>
 <p><strong><code>/state</code></strong>
 Inspect current orchestrator state with interactive controls.</p>
+<h3 id="tdd-workflow-commands">TDD Workflow Commands<a class="headerlink" href="#tdd-workflow-commands" title="Permanent link">¶</a></h3>
+<p><strong><code>/tdd start &lt;STORY_ID&gt;</code></strong>
+Manually start TDD cycle for a specific story.</p>
+<p><strong><code>/tdd status [STORY_ID]</code></strong>
+Get current TDD phase and progress for one or all active stories.</p>
+<p><strong><code>/tdd overview</code></strong>
+Show status of all active TDD cycles with visual progress.</p>
+<p><strong><code>/tdd pause &lt;STORY_ID&gt;</code></strong>
+Temporarily halt TDD cycle for a story.</p>
+<p><strong><code>/tdd resume &lt;STORY_ID&gt;</code></strong>
+Resume paused TDD cycle.</p>
+<p><strong><code>/tdd design_complete &lt;STORY_ID&gt;</code></strong>
+Mark design phase complete and advance to TEST_RED.</p>
+<p><strong><code>/tdd tests_ready &lt;STORY_ID&gt;</code></strong>
+Confirm tests are written and failing properly.</p>
+<p><strong><code>/tdd code_green &lt;STORY_ID&gt;</code></strong>
+Confirm all tests are now passing.</p>
+<p><strong><code>/tdd refactor_done &lt;STORY_ID&gt;</code></strong>
+Complete refactoring and proceed to commit.</p>
+<p><strong><code>/tdd review_cycle &lt;STORY_ID&gt;</code></strong>
+Request human review of current TDD cycle.</p>
+<p><strong><code>/tdd skip_phase &lt;STORY_ID&gt;</code></strong>
+Skip current TDD phase (requires approval).</p>
+<p><strong><code>/tdd metrics</code></strong>
+Display TDD metrics: cycle time, test coverage, refactor frequency.</p>
+<p><strong><code>/tdd halt_all</code></strong>
+Emergency stop all TDD cycles (requires confirmation).</p>
 <hr/>
 <h2 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">¶</a></h2>
 <h3 id="1-strategic-planning">1. Strategic Planning<a class="headerlink" href="#1-strategic-planning" title="Permanent link">¶</a></h3>
@@ -843,6 +971,51 @@ Inspect current orchestrator state with interactive controls.</p>
 <div class="highlight"><pre><span></span><code><a href="#__codelineno-5-1" id="__codelineno-5-1" name="__codelineno-5-1"></a>/request_changes<span class="w"> </span><span class="s2">"Add duplicate-email guard in registration API"</span>
 <a href="#__codelineno-5-2" id="__codelineno-5-2" name="__codelineno-5-2"></a>/suggest_fix<span class="w"> </span><span class="s2">"Database URL is wrong in config.py"</span>
 <a href="#__codelineno-5-3" id="__codelineno-5-3" name="__codelineno-5-3"></a>/skip_task<span class="w">   </span><span class="c1"># after three failed CI attempts</span>
+</code></pre></div>
+<h3 id="5-tdd-workflow-management">5. TDD Workflow Management<a class="headerlink" href="#5-tdd-workflow-management" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-6-1" id="__codelineno-6-1" name="__codelineno-6-1"></a><span class="c1"># Monitor TDD progress during active sprint</span>
+<a href="#__codelineno-6-2" id="__codelineno-6-2" name="__codelineno-6-2"></a>/tdd<span class="w"> </span>overview
+<a href="#__codelineno-6-3" id="__codelineno-6-3" name="__codelineno-6-3"></a>
+<a href="#__codelineno-6-4" id="__codelineno-6-4" name="__codelineno-6-4"></a><span class="c1"># Check specific story TDD status</span>
+<a href="#__codelineno-6-5" id="__codelineno-6-5" name="__codelineno-6-5"></a>/tdd<span class="w"> </span>status<span class="w"> </span>AUTH-1
+<a href="#__codelineno-6-6" id="__codelineno-6-6" name="__codelineno-6-6"></a>
+<a href="#__codelineno-6-7" id="__codelineno-6-7" name="__codelineno-6-7"></a><span class="c1"># Manually advance TDD phases when needed</span>
+<a href="#__codelineno-6-8" id="__codelineno-6-8" name="__codelineno-6-8"></a>/tdd<span class="w"> </span>design_complete<span class="w"> </span>AUTH-1
+<a href="#__codelineno-6-9" id="__codelineno-6-9" name="__codelineno-6-9"></a>/tdd<span class="w"> </span>tests_ready<span class="w"> </span>AUTH-1
+<a href="#__codelineno-6-10" id="__codelineno-6-10" name="__codelineno-6-10"></a>/tdd<span class="w"> </span>code_green<span class="w"> </span>AUTH-1
+<a href="#__codelineno-6-11" id="__codelineno-6-11" name="__codelineno-6-11"></a>/tdd<span class="w"> </span>refactor_done<span class="w"> </span>AUTH-1
+<a href="#__codelineno-6-12" id="__codelineno-6-12" name="__codelineno-6-12"></a>
+<a href="#__codelineno-6-13" id="__codelineno-6-13" name="__codelineno-6-13"></a><span class="c1"># Review TDD cycle before proceeding</span>
+<a href="#__codelineno-6-14" id="__codelineno-6-14" name="__codelineno-6-14"></a>/tdd<span class="w"> </span>review_cycle<span class="w"> </span>AUTH-1
+<a href="#__codelineno-6-15" id="__codelineno-6-15" name="__codelineno-6-15"></a>
+<a href="#__codelineno-6-16" id="__codelineno-6-16" name="__codelineno-6-16"></a><span class="c1"># Handle stuck TDD cycles</span>
+<a href="#__codelineno-6-17" id="__codelineno-6-17" name="__codelineno-6-17"></a>/tdd<span class="w"> </span>pause<span class="w"> </span>AUTH-1
+<a href="#__codelineno-6-18" id="__codelineno-6-18" name="__codelineno-6-18"></a>/suggest_fix<span class="w"> </span><span class="s2">"Need to handle async authentication flow"</span>
+<a href="#__codelineno-6-19" id="__codelineno-6-19" name="__codelineno-6-19"></a>/tdd<span class="w"> </span>resume<span class="w"> </span>AUTH-1
+<a href="#__codelineno-6-20" id="__codelineno-6-20" name="__codelineno-6-20"></a>
+<a href="#__codelineno-6-21" id="__codelineno-6-21" name="__codelineno-6-21"></a><span class="c1"># Skip problematic phase with justification</span>
+<a href="#__codelineno-6-22" id="__codelineno-6-22" name="__codelineno-6-22"></a>/tdd<span class="w"> </span>skip_phase<span class="w"> </span>AUTH-1<span class="w">   </span><span class="c1"># Requires approval</span>
+</code></pre></div>
+<h3 id="6-parallel-tdd-monitoring">6. Parallel TDD Monitoring<a class="headerlink" href="#6-parallel-tdd-monitoring" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-7-1" id="__codelineno-7-1" name="__codelineno-7-1"></a><span class="c1"># Start sprint with multiple stories</span>
+<a href="#__codelineno-7-2" id="__codelineno-7-2" name="__codelineno-7-2"></a>/sprint<span class="w"> </span>start
+<a href="#__codelineno-7-3" id="__codelineno-7-3" name="__codelineno-7-3"></a><span class="c1"># Automatically creates TDD cycles for all stories</span>
+<a href="#__codelineno-7-4" id="__codelineno-7-4" name="__codelineno-7-4"></a>
+<a href="#__codelineno-7-5" id="__codelineno-7-5" name="__codelineno-7-5"></a><span class="c1"># Monitor all TDD cycles</span>
+<a href="#__codelineno-7-6" id="__codelineno-7-6" name="__codelineno-7-6"></a>/tdd<span class="w"> </span>overview
+</code></pre></div>
+<blockquote>
+<p>Output shows parallel progress:
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-8-1" id="__codelineno-8-1" name="__codelineno-8-1"></a>AUTH-1: CODE_GREEN (14/15 tests passing)
+<a href="#__codelineno-8-2" id="__codelineno-8-2" name="__codelineno-8-2"></a>AUTH-2: REFACTOR (applying clean patterns)  
+<a href="#__codelineno-8-3" id="__codelineno-8-3" name="__codelineno-8-3"></a>AUTH-3: TEST_RED (8 failing tests written)
+</code></pre></div></p>
+</blockquote>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-9-1" id="__codelineno-9-1" name="__codelineno-9-1"></a><span class="c1"># Get TDD performance metrics</span>
+<a href="#__codelineno-9-2" id="__codelineno-9-2" name="__codelineno-9-2"></a>/tdd<span class="w"> </span>metrics
+<a href="#__codelineno-9-3" id="__codelineno-9-3" name="__codelineno-9-3"></a>
+<a href="#__codelineno-9-4" id="__codelineno-9-4" name="__codelineno-9-4"></a><span class="c1"># Emergency halt all TDD cycles</span>
+<a href="#__codelineno-9-5" id="__codelineno-9-5" name="__codelineno-9-5"></a>/tdd<span class="w"> </span>halt_all
 </code></pre></div>
 <hr/>
 <h2 id="escalation-policy-research-mode">Escalation Policy (Research Mode)<a class="headerlink" href="#escalation-policy-research-mode" title="Permanent link">¶</a></h2>

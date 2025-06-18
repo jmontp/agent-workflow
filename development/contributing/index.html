@@ -8,7 +8,7 @@
 <meta content="Human-In-The-Loop orchestration framework for AI-assisted software development" name="description"/>
 <meta content="AI Agent Workflow Team" name="author"/>
 <link href="https://jmontp.github.io/agent-workflow/development/contributing/" rel="canonical"/>
-<link href="../../advanced/code/" rel="prev"/>
+<link href="../../architecture/parallel-tdd-architecture/" rel="prev"/>
 <link href="../api-reference/" rel="next"/>
 <link href="../../assets/images/favicon.png" rel="icon"/>
 <meta content="mkdocs-1.6.1, mkdocs-material-9.6.14" name="generator"/>
@@ -158,6 +158,15 @@
 
         </a>
 </li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../architecture/overview/">
+          
+  
+  
+  Architecture
+
+        </a>
+</li>
 <li class="md-tabs__item md-tabs__item--active">
 <a class="md-tabs__link" href="./">
           
@@ -281,6 +290,14 @@
 <a class="md-nav__link" href="../../user-guide/state-machine/">
 <span class="md-ellipsis">
     State Machine
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../user-guide/tdd-workflow/">
+<span class="md-ellipsis">
+    TDD Workflow
     
   </span>
 </a>
@@ -460,17 +477,59 @@
 </ul>
 </nav>
 </li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_6" type="checkbox"/>
+<label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+<span class="md-ellipsis">
+    Architecture
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_6">
+<span class="md-nav__icon md-icon"></span>
+            Architecture
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../architecture/overview/">
+<span class="md-ellipsis">
+    System Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../architecture/context-management-system/">
+<span class="md-ellipsis">
+    Context Management
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../architecture/parallel-tdd-architecture/">
+<span class="md-ellipsis">
+    Parallel TDD Design
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
 <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
-<input checked="" class="md-nav__toggle md-toggle" id="__nav_6" type="checkbox"/>
-<label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_7" type="checkbox"/>
+<label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
 <span class="md-ellipsis">
     Development
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="true" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="__nav_6">
+<nav aria-expanded="true" aria-labelledby="__nav_7_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_7">
 <span class="md-nav__icon md-icon"></span>
             Development
           </label>
@@ -672,6 +731,127 @@
 </nav>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-development-practices">
+<span class="md-ellipsis">
+      TDD Development Practices
+    </span>
+</a>
+<nav aria-label="TDD Development Practices" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#working-with-tdd-features">
+<span class="md-ellipsis">
+      Working with TDD Features
+    </span>
+</a>
+<nav aria-label="Working with TDD Features" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-state-machine-development">
+<span class="md-ellipsis">
+      TDD State Machine Development
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-model-development">
+<span class="md-ellipsis">
+      TDD Model Development
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#test-preservation-workflow">
+<span class="md-ellipsis">
+      Test Preservation Workflow
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-code-style-guidelines">
+<span class="md-ellipsis">
+      TDD Code Style Guidelines
+    </span>
+</a>
+<nav aria-label="TDD Code Style Guidelines" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#command-validation">
+<span class="md-ellipsis">
+      Command Validation
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#state-management">
+<span class="md-ellipsis">
+      State Management
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#error-handling">
+<span class="md-ellipsis">
+      Error Handling
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-testing-requirements">
+<span class="md-ellipsis">
+      TDD Testing Requirements
+    </span>
+</a>
+<nav aria-label="TDD Testing Requirements" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#state-machine-tests">
+<span class="md-ellipsis">
+      State Machine Tests
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#model-tests">
+<span class="md-ellipsis">
+      Model Tests
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#integration-tests">
+<span class="md-ellipsis">
+      Integration Tests
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#example-test-structure">
+<span class="md-ellipsis">
+      Example Test Structure
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#performance-considerations">
+<span class="md-ellipsis">
+      Performance Considerations
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="#review-process">
 <span class="md-ellipsis">
       Review Process
@@ -761,16 +941,16 @@
 </nav>
 </li>
 <li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_7" type="checkbox"/>
-<label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_8" type="checkbox"/>
+<label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
 <span class="md-ellipsis">
     Deployment
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="false" aria-labelledby="__nav_7_label" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="__nav_7">
+<nav aria-expanded="false" aria-labelledby="__nav_8_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_8">
 <span class="md-nav__icon md-icon"></span>
             Deployment
           </label>
@@ -985,6 +1165,127 @@
 <a class="md-nav__link" href="#test-requirements">
 <span class="md-ellipsis">
       Test Requirements
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-development-practices">
+<span class="md-ellipsis">
+      TDD Development Practices
+    </span>
+</a>
+<nav aria-label="TDD Development Practices" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#working-with-tdd-features">
+<span class="md-ellipsis">
+      Working with TDD Features
+    </span>
+</a>
+<nav aria-label="Working with TDD Features" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-state-machine-development">
+<span class="md-ellipsis">
+      TDD State Machine Development
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-model-development">
+<span class="md-ellipsis">
+      TDD Model Development
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#test-preservation-workflow">
+<span class="md-ellipsis">
+      Test Preservation Workflow
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-code-style-guidelines">
+<span class="md-ellipsis">
+      TDD Code Style Guidelines
+    </span>
+</a>
+<nav aria-label="TDD Code Style Guidelines" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#command-validation">
+<span class="md-ellipsis">
+      Command Validation
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#state-management">
+<span class="md-ellipsis">
+      State Management
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#error-handling">
+<span class="md-ellipsis">
+      Error Handling
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-testing-requirements">
+<span class="md-ellipsis">
+      TDD Testing Requirements
+    </span>
+</a>
+<nav aria-label="TDD Testing Requirements" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#state-machine-tests">
+<span class="md-ellipsis">
+      State Machine Tests
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#model-tests">
+<span class="md-ellipsis">
+      Model Tests
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#integration-tests">
+<span class="md-ellipsis">
+      Integration Tests
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#example-test-structure">
+<span class="md-ellipsis">
+      Example Test Structure
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#performance-considerations">
+<span class="md-ellipsis">
+      Performance Considerations
     </span>
 </a>
 </li>
@@ -1325,6 +1626,11 @@
 <a href="#__codelineno-13-11" id="__codelineno-13-11" name="__codelineno-13-11"></a>
 <a href="#__codelineno-13-12" id="__codelineno-13-12" name="__codelineno-13-12"></a><span class="c1"># Security tests</span>
 <a href="#__codelineno-13-13" id="__codelineno-13-13" name="__codelineno-13-13"></a>pytest<span class="w"> </span>tests/unit/test_agent_tool_config.py
+<a href="#__codelineno-13-14" id="__codelineno-13-14" name="__codelineno-13-14"></a>
+<a href="#__codelineno-13-15" id="__codelineno-13-15" name="__codelineno-13-15"></a><span class="c1"># TDD-specific tests</span>
+<a href="#__codelineno-13-16" id="__codelineno-13-16" name="__codelineno-13-16"></a>pytest<span class="w"> </span>tests/unit/test_tdd_models.py
+<a href="#__codelineno-13-17" id="__codelineno-13-17" name="__codelineno-13-17"></a>pytest<span class="w"> </span>tests/unit/test_tdd_state_machine.py
+<a href="#__codelineno-13-18" id="__codelineno-13-18" name="__codelineno-13-18"></a>pytest<span class="w"> </span>test_tdd_e2e.py
 </code></pre></div>
 <h3 id="test-requirements">Test Requirements<a class="headerlink" href="#test-requirements" title="Permanent link">¶</a></h3>
 <ul>
@@ -1332,6 +1638,199 @@
 <li><strong>Security tests</strong>: Required for any security-related changes</li>
 <li><strong>Integration tests</strong>: Required for cross-component changes</li>
 <li><strong>Performance tests</strong>: For changes affecting system performance</li>
+<li><strong>TDD tests</strong>: Required for all TDD state machine and model changes</li>
+</ul>
+<h2 id="tdd-development-practices">TDD Development Practices<a class="headerlink" href="#tdd-development-practices" title="Permanent link">¶</a></h2>
+<h3 id="working-with-tdd-features">Working with TDD Features<a class="headerlink" href="#working-with-tdd-features" title="Permanent link">¶</a></h3>
+<p>The AI Agent TDD-Scrum system includes a comprehensive TDD workflow system. When contributing to TDD-related functionality, follow these practices:</p>
+<h4 id="tdd-state-machine-development">TDD State Machine Development<a class="headerlink" href="#tdd-state-machine-development" title="Permanent link">¶</a></h4>
+<p><strong>State Transition Testing:</strong>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-14-1" id="__codelineno-14-1" name="__codelineno-14-1"></a><span class="k">def</span> <span class="nf">test_tdd_state_transition</span><span class="p">():</span>
+<a href="#__codelineno-14-2" id="__codelineno-14-2" name="__codelineno-14-2"></a><span class="w">    </span><span class="sd">"""Test TDD state transitions follow RED-GREEN-REFACTOR cycle"""</span>
+<a href="#__codelineno-14-3" id="__codelineno-14-3" name="__codelineno-14-3"></a>    <span class="n">machine</span> <span class="o">=</span> <span class="n">TDDStateMachine</span><span class="p">(</span><span class="n">TDDState</span><span class="o">.</span><span class="n">DESIGN</span><span class="p">)</span>
+<a href="#__codelineno-14-4" id="__codelineno-14-4" name="__codelineno-14-4"></a>
+<a href="#__codelineno-14-5" id="__codelineno-14-5" name="__codelineno-14-5"></a>    <span class="c1"># Test valid transition</span>
+<a href="#__codelineno-14-6" id="__codelineno-14-6" name="__codelineno-14-6"></a>    <span class="n">result</span> <span class="o">=</span> <span class="n">machine</span><span class="o">.</span><span class="n">transition</span><span class="p">(</span><span class="s2">"/tdd test"</span><span class="p">)</span>
+<a href="#__codelineno-14-7" id="__codelineno-14-7" name="__codelineno-14-7"></a>    <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">success</span>
+<a href="#__codelineno-14-8" id="__codelineno-14-8" name="__codelineno-14-8"></a>    <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">new_state</span> <span class="o">==</span> <span class="n">TDDState</span><span class="o">.</span><span class="n">TEST_RED</span>
+<a href="#__codelineno-14-9" id="__codelineno-14-9" name="__codelineno-14-9"></a>
+<a href="#__codelineno-14-10" id="__codelineno-14-10" name="__codelineno-14-10"></a>    <span class="c1"># Test invalid transition</span>
+<a href="#__codelineno-14-11" id="__codelineno-14-11" name="__codelineno-14-11"></a>    <span class="n">result</span> <span class="o">=</span> <span class="n">machine</span><span class="o">.</span><span class="n">transition</span><span class="p">(</span><span class="s2">"/tdd refactor"</span><span class="p">)</span> 
+<a href="#__codelineno-14-12" id="__codelineno-14-12" name="__codelineno-14-12"></a>    <span class="k">assert</span> <span class="ow">not</span> <span class="n">result</span><span class="o">.</span><span class="n">success</span>
+<a href="#__codelineno-14-13" id="__codelineno-14-13" name="__codelineno-14-13"></a>    <span class="k">assert</span> <span class="s2">"Write failing tests first"</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">hint</span>
+</code></pre></div></p>
+<p><strong>Condition Validation:</strong>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-15-1" id="__codelineno-15-1" name="__codelineno-15-1"></a><span class="k">def</span> <span class="nf">test_transition_conditions</span><span class="p">():</span>
+<a href="#__codelineno-15-2" id="__codelineno-15-2" name="__codelineno-15-2"></a><span class="w">    </span><span class="sd">"""Test that transition conditions are properly validated"""</span>
+<a href="#__codelineno-15-3" id="__codelineno-15-3" name="__codelineno-15-3"></a>    <span class="n">task</span> <span class="o">=</span> <span class="n">TDDTask</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">"Test login API"</span><span class="p">)</span>
+<a href="#__codelineno-15-4" id="__codelineno-15-4" name="__codelineno-15-4"></a>    <span class="n">task</span><span class="o">.</span><span class="n">test_results</span> <span class="o">=</span> <span class="p">[</span><span class="n">TestResult</span><span class="p">(</span><span class="n">status</span><span class="o">=</span><span class="n">TestStatus</span><span class="o">.</span><span class="n">RED</span><span class="p">)]</span>
+<a href="#__codelineno-15-5" id="__codelineno-15-5" name="__codelineno-15-5"></a>
+<a href="#__codelineno-15-6" id="__codelineno-15-6" name="__codelineno-15-6"></a>    <span class="n">machine</span> <span class="o">=</span> <span class="n">TDDStateMachine</span><span class="p">()</span>
+<a href="#__codelineno-15-7" id="__codelineno-15-7" name="__codelineno-15-7"></a>    <span class="n">cycle</span> <span class="o">=</span> <span class="n">TDDCycle</span><span class="p">(</span><span class="n">current_task_id</span><span class="o">=</span><span class="n">task</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+<a href="#__codelineno-15-8" id="__codelineno-15-8" name="__codelineno-15-8"></a>    <span class="n">cycle</span><span class="o">.</span><span class="n">add_task</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
+<a href="#__codelineno-15-9" id="__codelineno-15-9" name="__codelineno-15-9"></a>
+<a href="#__codelineno-15-10" id="__codelineno-15-10" name="__codelineno-15-10"></a>    <span class="c1"># Should allow transition when conditions are met</span>
+<a href="#__codelineno-15-11" id="__codelineno-15-11" name="__codelineno-15-11"></a>    <span class="n">result</span> <span class="o">=</span> <span class="n">machine</span><span class="o">.</span><span class="n">validate_command</span><span class="p">(</span><span class="s2">"/tdd code"</span><span class="p">,</span> <span class="n">cycle</span><span class="p">)</span>
+<a href="#__codelineno-15-12" id="__codelineno-15-12" name="__codelineno-15-12"></a>    <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">success</span>
+</code></pre></div></p>
+<h4 id="tdd-model-development">TDD Model Development<a class="headerlink" href="#tdd-model-development" title="Permanent link">¶</a></h4>
+<p><strong>Data Model Changes:</strong>
+- All TDD models must include <code>to_dict()</code> and <code>from_dict()</code> methods
+- Ensure serialization compatibility for persistence
+- Add proper type hints and documentation</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-16-1" id="__codelineno-16-1" name="__codelineno-16-1"></a><span class="nd">@dataclass</span>
+<a href="#__codelineno-16-2" id="__codelineno-16-2" name="__codelineno-16-2"></a><span class="k">class</span> <span class="nc">TDDTask</span><span class="p">:</span>
+<a href="#__codelineno-16-3" id="__codelineno-16-3" name="__codelineno-16-3"></a><span class="w">    </span><span class="sd">"""Individual task within a TDD cycle"""</span>
+<a href="#__codelineno-16-4" id="__codelineno-16-4" name="__codelineno-16-4"></a>    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"tdd-task-</span><span class="si">{</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span><span class="p">[:</span><span class="mi">8</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<a href="#__codelineno-16-5" id="__codelineno-16-5" name="__codelineno-16-5"></a>    <span class="c1"># ... other fields</span>
+<a href="#__codelineno-16-6" id="__codelineno-16-6" name="__codelineno-16-6"></a>
+<a href="#__codelineno-16-7" id="__codelineno-16-7" name="__codelineno-16-7"></a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<a href="#__codelineno-16-8" id="__codelineno-16-8" name="__codelineno-16-8"></a><span class="w">        </span><span class="sd">"""Serialize to dictionary for persistence"""</span>
+<a href="#__codelineno-16-9" id="__codelineno-16-9" name="__codelineno-16-9"></a>        <span class="k">return</span> <span class="p">{</span>
+<a href="#__codelineno-16-10" id="__codelineno-16-10" name="__codelineno-16-10"></a>            <span class="s2">"id"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+<a href="#__codelineno-16-11" id="__codelineno-16-11" name="__codelineno-16-11"></a>            <span class="c1"># ... serialize all fields including nested objects</span>
+<a href="#__codelineno-16-12" id="__codelineno-16-12" name="__codelineno-16-12"></a>        <span class="p">}</span>
+</code></pre></div>
+<h4 id="test-preservation-workflow">Test Preservation Workflow<a class="headerlink" href="#test-preservation-workflow" title="Permanent link">¶</a></h4>
+<p>When working on test preservation features:</p>
+<p><strong>File Management:</strong>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-17-1" id="__codelineno-17-1" name="__codelineno-17-1"></a><span class="k">def</span> <span class="nf">test_test_file_lifecycle</span><span class="p">():</span>
+<a href="#__codelineno-17-2" id="__codelineno-17-2" name="__codelineno-17-2"></a><span class="w">    </span><span class="sd">"""Test the complete test file lifecycle"""</span>
+<a href="#__codelineno-17-3" id="__codelineno-17-3" name="__codelineno-17-3"></a>    <span class="n">test_file</span> <span class="o">=</span> <span class="n">TestFile</span><span class="p">(</span>
+<a href="#__codelineno-17-4" id="__codelineno-17-4" name="__codelineno-17-4"></a>        <span class="n">file_path</span><span class="o">=</span><span class="s2">"/tests/tdd/story-123/test_login.py"</span><span class="p">,</span>
+<a href="#__codelineno-17-5" id="__codelineno-17-5" name="__codelineno-17-5"></a>        <span class="n">story_id</span><span class="o">=</span><span class="s2">"story-123"</span><span class="p">,</span>
+<a href="#__codelineno-17-6" id="__codelineno-17-6" name="__codelineno-17-6"></a>        <span class="n">status</span><span class="o">=</span><span class="n">TestFileStatus</span><span class="o">.</span><span class="n">DRAFT</span>
+<a href="#__codelineno-17-7" id="__codelineno-17-7" name="__codelineno-17-7"></a>    <span class="p">)</span>
+<a href="#__codelineno-17-8" id="__codelineno-17-8" name="__codelineno-17-8"></a>
+<a href="#__codelineno-17-9" id="__codelineno-17-9" name="__codelineno-17-9"></a>    <span class="c1"># Test commit transition</span>
+<a href="#__codelineno-17-10" id="__codelineno-17-10" name="__codelineno-17-10"></a>    <span class="n">test_file</span><span class="o">.</span><span class="n">committed_at</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+<a href="#__codelineno-17-11" id="__codelineno-17-11" name="__codelineno-17-11"></a>    <span class="k">assert</span> <span class="n">test_file</span><span class="o">.</span><span class="n">is_committed</span><span class="p">()</span>
+<a href="#__codelineno-17-12" id="__codelineno-17-12" name="__codelineno-17-12"></a>
+<a href="#__codelineno-17-13" id="__codelineno-17-13" name="__codelineno-17-13"></a>    <span class="c1"># Test integration</span>
+<a href="#__codelineno-17-14" id="__codelineno-17-14" name="__codelineno-17-14"></a>    <span class="n">permanent_path</span> <span class="o">=</span> <span class="n">test_file</span><span class="o">.</span><span class="n">get_permanent_location</span><span class="p">()</span>
+<a href="#__codelineno-17-15" id="__codelineno-17-15" name="__codelineno-17-15"></a>    <span class="k">assert</span> <span class="s2">"tests/unit/"</span> <span class="ow">in</span> <span class="n">permanent_path</span>
+</code></pre></div></p>
+<p><strong>CI Integration:</strong>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-18-1" id="__codelineno-18-1" name="__codelineno-18-1"></a><span class="k">def</span> <span class="nf">test_ci_status_updates</span><span class="p">():</span>
+<a href="#__codelineno-18-2" id="__codelineno-18-2" name="__codelineno-18-2"></a><span class="w">    </span><span class="sd">"""Test CI status tracking for TDD cycles"""</span>
+<a href="#__codelineno-18-3" id="__codelineno-18-3" name="__codelineno-18-3"></a>    <span class="n">cycle</span> <span class="o">=</span> <span class="n">TDDCycle</span><span class="p">(</span><span class="n">story_id</span><span class="o">=</span><span class="s2">"story-123"</span><span class="p">)</span>
+<a href="#__codelineno-18-4" id="__codelineno-18-4" name="__codelineno-18-4"></a>    <span class="n">cycle</span><span class="o">.</span><span class="n">update_ci_status</span><span class="p">(</span><span class="n">CIStatus</span><span class="o">.</span><span class="n">RUNNING</span><span class="p">)</span>
+<a href="#__codelineno-18-5" id="__codelineno-18-5" name="__codelineno-18-5"></a>
+<a href="#__codelineno-18-6" id="__codelineno-18-6" name="__codelineno-18-6"></a>    <span class="k">assert</span> <span class="n">cycle</span><span class="o">.</span><span class="n">ci_status</span> <span class="o">==</span> <span class="n">CIStatus</span><span class="o">.</span><span class="n">RUNNING</span>
+<a href="#__codelineno-18-7" id="__codelineno-18-7" name="__codelineno-18-7"></a>    <span class="c1"># Test status propagation to tasks</span>
+</code></pre></div></p>
+<h3 id="tdd-code-style-guidelines">TDD Code Style Guidelines<a class="headerlink" href="#tdd-code-style-guidelines" title="Permanent link">¶</a></h3>
+<h4 id="command-validation">Command Validation<a class="headerlink" href="#command-validation" title="Permanent link">¶</a></h4>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-19-1" id="__codelineno-19-1" name="__codelineno-19-1"></a><span class="c1"># Good: Clear error messages with helpful hints</span>
+<a href="#__codelineno-19-2" id="__codelineno-19-2" name="__codelineno-19-2"></a><span class="k">if</span> <span class="n">command</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">TRANSITIONS</span><span class="p">:</span>
+<a href="#__codelineno-19-3" id="__codelineno-19-3" name="__codelineno-19-3"></a>    <span class="k">return</span> <span class="n">TDDCommandResult</span><span class="p">(</span>
+<a href="#__codelineno-19-4" id="__codelineno-19-4" name="__codelineno-19-4"></a>        <span class="n">success</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<a href="#__codelineno-19-5" id="__codelineno-19-5" name="__codelineno-19-5"></a>        <span class="n">error_message</span><span class="o">=</span><span class="sa">f</span><span class="s2">"Unknown TDD command: </span><span class="si">{</span><span class="n">command</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+<a href="#__codelineno-19-6" id="__codelineno-19-6" name="__codelineno-19-6"></a>        <span class="n">hint</span><span class="o">=</span><span class="s2">"Use /tdd status to see available commands"</span>
+<a href="#__codelineno-19-7" id="__codelineno-19-7" name="__codelineno-19-7"></a>    <span class="p">)</span>
+<a href="#__codelineno-19-8" id="__codelineno-19-8" name="__codelineno-19-8"></a>
+<a href="#__codelineno-19-9" id="__codelineno-19-9" name="__codelineno-19-9"></a><span class="c1"># Bad: Generic error without guidance</span>
+<a href="#__codelineno-19-10" id="__codelineno-19-10" name="__codelineno-19-10"></a><span class="k">if</span> <span class="n">command</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">TRANSITIONS</span><span class="p">:</span>
+<a href="#__codelineno-19-11" id="__codelineno-19-11" name="__codelineno-19-11"></a>    <span class="k">return</span> <span class="n">TDDCommandResult</span><span class="p">(</span><span class="n">success</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="state-management">State Management<a class="headerlink" href="#state-management" title="Permanent link">¶</a></h4>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-20-1" id="__codelineno-20-1" name="__codelineno-20-1"></a><span class="c1"># Good: Atomic state updates with logging</span>
+<a href="#__codelineno-20-2" id="__codelineno-20-2" name="__codelineno-20-2"></a><span class="k">def</span> <span class="nf">transition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TDDCommandResult</span><span class="p">:</span>
+<a href="#__codelineno-20-3" id="__codelineno-20-3" name="__codelineno-20-3"></a>    <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate_command</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+<a href="#__codelineno-20-4" id="__codelineno-20-4" name="__codelineno-20-4"></a>    <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">success</span><span class="p">:</span>
+<a href="#__codelineno-20-5" id="__codelineno-20-5" name="__codelineno-20-5"></a>        <span class="n">old_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_state</span>
+<a href="#__codelineno-20-6" id="__codelineno-20-6" name="__codelineno-20-6"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">current_state</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">new_state</span>
+<a href="#__codelineno-20-7" id="__codelineno-20-7" name="__codelineno-20-7"></a>        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"TDD transition: </span><span class="si">{</span><span class="n">old_state</span><span class="si">}</span><span class="s2"> → </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">current_state</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<a href="#__codelineno-20-8" id="__codelineno-20-8" name="__codelineno-20-8"></a>    <span class="k">return</span> <span class="n">result</span>
+<a href="#__codelineno-20-9" id="__codelineno-20-9" name="__codelineno-20-9"></a>
+<a href="#__codelineno-20-10" id="__codelineno-20-10" name="__codelineno-20-10"></a><span class="c1"># Bad: State changes without validation or logging</span>
+<a href="#__codelineno-20-11" id="__codelineno-20-11" name="__codelineno-20-11"></a><span class="k">def</span> <span class="nf">transition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<a href="#__codelineno-20-12" id="__codelineno-20-12" name="__codelineno-20-12"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">current_state</span> <span class="o">=</span> <span class="n">new_state</span>  <span class="c1"># No validation</span>
+</code></pre></div>
+<h4 id="error-handling">Error Handling<a class="headerlink" href="#error-handling" title="Permanent link">¶</a></h4>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-21-1" id="__codelineno-21-1" name="__codelineno-21-1"></a><span class="c1"># Good: Specific error handling with context</span>
+<a href="#__codelineno-21-2" id="__codelineno-21-2" name="__codelineno-21-2"></a><span class="k">try</span><span class="p">:</span>
+<a href="#__codelineno-21-3" id="__codelineno-21-3" name="__codelineno-21-3"></a>    <span class="n">test_results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_tests</span><span class="p">(</span><span class="n">test_files</span><span class="p">)</span>
+<a href="#__codelineno-21-4" id="__codelineno-21-4" name="__codelineno-21-4"></a><span class="k">except</span> <span class="n">TestExecutionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<a href="#__codelineno-21-5" id="__codelineno-21-5" name="__codelineno-21-5"></a>    <span class="k">return</span> <span class="n">TDDCommandResult</span><span class="p">(</span>
+<a href="#__codelineno-21-6" id="__codelineno-21-6" name="__codelineno-21-6"></a>        <span class="n">success</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<a href="#__codelineno-21-7" id="__codelineno-21-7" name="__codelineno-21-7"></a>        <span class="n">error_message</span><span class="o">=</span><span class="sa">f</span><span class="s2">"Test execution failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+<a href="#__codelineno-21-8" id="__codelineno-21-8" name="__codelineno-21-8"></a>        <span class="n">hint</span><span class="o">=</span><span class="s2">"Check test file syntax and dependencies"</span>
+<a href="#__codelineno-21-9" id="__codelineno-21-9" name="__codelineno-21-9"></a>    <span class="p">)</span>
+<a href="#__codelineno-21-10" id="__codelineno-21-10" name="__codelineno-21-10"></a>
+<a href="#__codelineno-21-11" id="__codelineno-21-11" name="__codelineno-21-11"></a><span class="c1"># Bad: Silent failures or generic exceptions</span>
+<a href="#__codelineno-21-12" id="__codelineno-21-12" name="__codelineno-21-12"></a><span class="k">try</span><span class="p">:</span>
+<a href="#__codelineno-21-13" id="__codelineno-21-13" name="__codelineno-21-13"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">run_tests</span><span class="p">(</span><span class="n">test_files</span><span class="p">)</span>
+<a href="#__codelineno-21-14" id="__codelineno-21-14" name="__codelineno-21-14"></a><span class="k">except</span><span class="p">:</span>
+<a href="#__codelineno-21-15" id="__codelineno-21-15" name="__codelineno-21-15"></a>    <span class="k">pass</span>  <span class="c1"># Silent failure</span>
+</code></pre></div>
+<h3 id="tdd-testing-requirements">TDD Testing Requirements<a class="headerlink" href="#tdd-testing-requirements" title="Permanent link">¶</a></h3>
+<h4 id="state-machine-tests">State Machine Tests<a class="headerlink" href="#state-machine-tests" title="Permanent link">¶</a></h4>
+<ul>
+<li><strong>Transition Matrix</strong>: Test all valid and invalid state transitions</li>
+<li><strong>Command Validation</strong>: Verify command parsing and validation logic</li>
+<li><strong>Condition Checking</strong>: Test all transition conditions and hints</li>
+<li><strong>Error Scenarios</strong>: Test malformed commands and edge cases</li>
+</ul>
+<h4 id="model-tests">Model Tests<a class="headerlink" href="#model-tests" title="Permanent link">¶</a></h4>
+<ul>
+<li><strong>Serialization</strong>: Test <code>to_dict()</code> and <code>from_dict()</code> for all models</li>
+<li><strong>Lifecycle</strong>: Test complete object lifecycles (create → update → complete)</li>
+<li><strong>Relationships</strong>: Test task-cycle-story relationships</li>
+<li><strong>Business Logic</strong>: Test domain-specific methods and calculations</li>
+</ul>
+<h4 id="integration-tests">Integration Tests<a class="headerlink" href="#integration-tests" title="Permanent link">¶</a></h4>
+<ul>
+<li><strong>E2E Workflows</strong>: Test complete TDD cycles from start to finish</li>
+<li><strong>Persistence</strong>: Test data persistence and recovery</li>
+<li><strong>Agent Coordination</strong>: Test TDD workflow with multiple agents</li>
+<li><strong>Error Recovery</strong>: Test recovery from failed states</li>
+</ul>
+<h4 id="example-test-structure">Example Test Structure<a class="headerlink" href="#example-test-structure" title="Permanent link">¶</a></h4>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-22-1" id="__codelineno-22-1" name="__codelineno-22-1"></a><span class="k">class</span> <span class="nc">TestTDDStateMachine</span><span class="p">:</span>
+<a href="#__codelineno-22-2" id="__codelineno-22-2" name="__codelineno-22-2"></a><span class="w">    </span><span class="sd">"""Comprehensive test suite for TDD state machine"""</span>
+<a href="#__codelineno-22-3" id="__codelineno-22-3" name="__codelineno-22-3"></a>
+<a href="#__codelineno-22-4" id="__codelineno-22-4" name="__codelineno-22-4"></a>    <span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<a href="#__codelineno-22-5" id="__codelineno-22-5" name="__codelineno-22-5"></a>    <span class="k">def</span> <span class="nf">machine</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a href="#__codelineno-22-6" id="__codelineno-22-6" name="__codelineno-22-6"></a>        <span class="k">return</span> <span class="n">TDDStateMachine</span><span class="p">(</span><span class="n">TDDState</span><span class="o">.</span><span class="n">DESIGN</span><span class="p">)</span>
+<a href="#__codelineno-22-7" id="__codelineno-22-7" name="__codelineno-22-7"></a>
+<a href="#__codelineno-22-8" id="__codelineno-22-8" name="__codelineno-22-8"></a>    <span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<a href="#__codelineno-22-9" id="__codelineno-22-9" name="__codelineno-22-9"></a>    <span class="k">def</span> <span class="nf">sample_cycle</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a href="#__codelineno-22-10" id="__codelineno-22-10" name="__codelineno-22-10"></a>        <span class="n">cycle</span> <span class="o">=</span> <span class="n">TDDCycle</span><span class="p">(</span><span class="n">story_id</span><span class="o">=</span><span class="s2">"test-story"</span><span class="p">)</span>
+<a href="#__codelineno-22-11" id="__codelineno-22-11" name="__codelineno-22-11"></a>        <span class="n">task</span> <span class="o">=</span> <span class="n">TDDTask</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">"Test task"</span><span class="p">)</span>
+<a href="#__codelineno-22-12" id="__codelineno-22-12" name="__codelineno-22-12"></a>        <span class="n">cycle</span><span class="o">.</span><span class="n">add_task</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
+<a href="#__codelineno-22-13" id="__codelineno-22-13" name="__codelineno-22-13"></a>        <span class="n">cycle</span><span class="o">.</span><span class="n">start_task</span><span class="p">(</span><span class="n">task</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+<a href="#__codelineno-22-14" id="__codelineno-22-14" name="__codelineno-22-14"></a>        <span class="k">return</span> <span class="n">cycle</span>
+<a href="#__codelineno-22-15" id="__codelineno-22-15" name="__codelineno-22-15"></a>
+<a href="#__codelineno-22-16" id="__codelineno-22-16" name="__codelineno-22-16"></a>    <span class="k">def</span> <span class="nf">test_valid_transitions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">machine</span><span class="p">):</span>
+<a href="#__codelineno-22-17" id="__codelineno-22-17" name="__codelineno-22-17"></a><span class="w">        </span><span class="sd">"""Test all valid state transitions"""</span>
+<a href="#__codelineno-22-18" id="__codelineno-22-18" name="__codelineno-22-18"></a>        <span class="c1"># Test each transition in TRANSITIONS matrix</span>
+<a href="#__codelineno-22-19" id="__codelineno-22-19" name="__codelineno-22-19"></a>
+<a href="#__codelineno-22-20" id="__codelineno-22-20" name="__codelineno-22-20"></a>    <span class="k">def</span> <span class="nf">test_invalid_transitions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">machine</span><span class="p">):</span>
+<a href="#__codelineno-22-21" id="__codelineno-22-21" name="__codelineno-22-21"></a><span class="w">        </span><span class="sd">"""Test invalid transitions return helpful errors"""</span>
+<a href="#__codelineno-22-22" id="__codelineno-22-22" name="__codelineno-22-22"></a>        <span class="c1"># Test transitions not in matrix</span>
+<a href="#__codelineno-22-23" id="__codelineno-22-23" name="__codelineno-22-23"></a>
+<a href="#__codelineno-22-24" id="__codelineno-22-24" name="__codelineno-22-24"></a>    <span class="k">def</span> <span class="nf">test_condition_validation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">machine</span><span class="p">,</span> <span class="n">sample_cycle</span><span class="p">):</span>
+<a href="#__codelineno-22-25" id="__codelineno-22-25" name="__codelineno-22-25"></a><span class="w">        </span><span class="sd">"""Test transition conditions are properly checked"""</span>
+<a href="#__codelineno-22-26" id="__codelineno-22-26" name="__codelineno-22-26"></a>        <span class="c1"># Test each condition in TRANSITION_CONDITIONS</span>
+<a href="#__codelineno-22-27" id="__codelineno-22-27" name="__codelineno-22-27"></a>
+<a href="#__codelineno-22-28" id="__codelineno-22-28" name="__codelineno-22-28"></a>    <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s2">"command,state,expected_hint"</span><span class="p">,</span> <span class="p">[</span>
+<a href="#__codelineno-22-29" id="__codelineno-22-29" name="__codelineno-22-29"></a>        <span class="p">(</span><span class="s2">"/tdd code"</span><span class="p">,</span> <span class="n">TDDState</span><span class="o">.</span><span class="n">DESIGN</span><span class="p">,</span> <span class="s2">"Write failing tests first"</span><span class="p">),</span>
+<a href="#__codelineno-22-30" id="__codelineno-22-30" name="__codelineno-22-30"></a>        <span class="c1"># ... more test cases</span>
+<a href="#__codelineno-22-31" id="__codelineno-22-31" name="__codelineno-22-31"></a>    <span class="p">])</span>
+<a href="#__codelineno-22-32" id="__codelineno-22-32" name="__codelineno-22-32"></a>    <span class="k">def</span> <span class="nf">test_error_hints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">machine</span><span class="p">,</span> <span class="n">command</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">expected_hint</span><span class="p">):</span>
+<a href="#__codelineno-22-33" id="__codelineno-22-33" name="__codelineno-22-33"></a><span class="w">        </span><span class="sd">"""Test that error hints are helpful and accurate"""</span>
+<a href="#__codelineno-22-34" id="__codelineno-22-34" name="__codelineno-22-34"></a>        <span class="n">machine</span><span class="o">.</span><span class="n">current_state</span> <span class="o">=</span> <span class="n">state</span>
+<a href="#__codelineno-22-35" id="__codelineno-22-35" name="__codelineno-22-35"></a>        <span class="n">result</span> <span class="o">=</span> <span class="n">machine</span><span class="o">.</span><span class="n">validate_command</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+<a href="#__codelineno-22-36" id="__codelineno-22-36" name="__codelineno-22-36"></a>        <span class="k">assert</span> <span class="ow">not</span> <span class="n">result</span><span class="o">.</span><span class="n">success</span>
+<a href="#__codelineno-22-37" id="__codelineno-22-37" name="__codelineno-22-37"></a>        <span class="k">assert</span> <span class="n">expected_hint</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">hint</span>
+</code></pre></div>
+<h3 id="performance-considerations">Performance Considerations<a class="headerlink" href="#performance-considerations" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>State Transitions</strong>: Should complete in &lt;1ms for local operations</li>
+<li><strong>Model Serialization</strong>: Should handle cycles with 100+ tasks efficiently</li>
+<li><strong>Test File Management</strong>: Should support 1000+ test files per cycle</li>
+<li><strong>Memory Usage</strong>: Avoid memory leaks in long-running TDD cycles</li>
 </ul>
 <h2 id="review-process">Review Process<a class="headerlink" href="#review-process" title="Permanent link">¶</a></h2>
 <h3 id="pull-request-guidelines">Pull Request Guidelines<a class="headerlink" href="#pull-request-guidelines" title="Permanent link">¶</a></h3>

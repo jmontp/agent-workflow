@@ -2,114 +2,174 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://jmontp.github.io/agent-workflow/</loc>
-         <lastmod>2025-06-17</lastmod>
+         <lastmod>2025-06-18</lastmod>
     </url>
     <url>
          <loc>https://jmontp.github.io/agent-workflow/advanced/architecture-detailed/</loc>
-         <lastmod>2025-06-17</lastmod>
+         <lastmod>2025-06-18</lastmod>
     </url>
     <url>
          <loc>https://jmontp.github.io/agent-workflow/advanced/code/</loc>
-         <lastmod>2025-06-17</lastmod>
+         <lastmod>2025-06-18</lastmod>
     </url>
     <url>
          <loc>https://jmontp.github.io/agent-workflow/advanced/component/</loc>
-         <lastmod>2025-06-17</lastmod>
+         <lastmod>2025-06-18</lastmod>
     </url>
     <url>
          <loc>https://jmontp.github.io/agent-workflow/advanced/container/</loc>
-         <lastmod>2025-06-17</lastmod>
+         <lastmod>2025-06-18</lastmod>
     </url>
     <url>
          <loc>https://jmontp.github.io/agent-workflow/advanced/context/</loc>
-         <lastmod>2025-06-17</lastmod>
+         <lastmod>2025-06-18</lastmod>
     </url>
     <url>
          <loc>https://jmontp.github.io/agent-workflow/advanced/data-flow/</loc>
-         <lastmod>2025-06-17</lastmod>
+         <lastmod>2025-06-18</lastmod>
     </url>
     <url>
          <loc>https://jmontp.github.io/agent-workflow/advanced/orchestration-repo/</loc>
-         <lastmod>2025-06-17</lastmod>
+         <lastmod>2025-06-18</lastmod>
     </url>
     <url>
          <loc>https://jmontp.github.io/agent-workflow/advanced/project-repo/</loc>
-         <lastmod>2025-06-17</lastmod>
+         <lastmod>2025-06-18</lastmod>
     </url>
     <url>
          <loc>https://jmontp.github.io/agent-workflow/advanced/security-implementation/</loc>
-         <lastmod>2025-06-17</lastmod>
+         <lastmod>2025-06-18</lastmod>
     </url>
     <url>
          <loc>https://jmontp.github.io/agent-workflow/advanced/testing/</loc>
-         <lastmod>2025-06-17</lastmod>
+         <lastmod>2025-06-18</lastmod>
+    </url>
+    <url>
+         <loc>https://jmontp.github.io/agent-workflow/architecture/context-algorithms/</loc>
+         <lastmod>2025-06-18</lastmod>
+    </url>
+    <url>
+         <loc>https://jmontp.github.io/agent-workflow/architecture/context-api-specification/</loc>
+         <lastmod>2025-06-18</lastmod>
+    </url>
+    <url>
+         <loc>https://jmontp.github.io/agent-workflow/architecture/context-evaluation-framework/</loc>
+         <lastmod>2025-06-18</lastmod>
+    </url>
+    <url>
+         <loc>https://jmontp.github.io/agent-workflow/architecture/context-implementation-plan/</loc>
+         <lastmod>2025-06-18</lastmod>
+    </url>
+    <url>
+         <loc>https://jmontp.github.io/agent-workflow/architecture/context-management-system/</loc>
+         <lastmod>2025-06-18</lastmod>
+    </url>
+    <url>
+         <loc>https://jmontp.github.io/agent-workflow/architecture/overview/</loc>
+         <lastmod>2025-06-18</lastmod>
+    </url>
+    <url>
+         <loc>https://jmontp.github.io/agent-workflow/architecture/parallel-agent-pool-management/</loc>
+         <lastmod>2025-06-18</lastmod>
+    </url>
+    <url>
+         <loc>https://jmontp.github.io/agent-workflow/architecture/parallel-conflict-algorithms/</loc>
+         <lastmod>2025-06-18</lastmod>
+    </url>
+    <url>
+         <loc>https://jmontp.github.io/agent-workflow/architecture/parallel-context-integration/</loc>
+         <lastmod>2025-06-18</lastmod>
+    </url>
+    <url>
+         <loc>https://jmontp.github.io/agent-workflow/architecture/parallel-tdd-architecture/</loc>
+         <lastmod>2025-06-18</lastmod>
+    </url>
+    <url>
+         <loc>https://jmontp.github.io/agent-workflow/architecture/parallel-tdd-comprehensive-implementation-plan/</loc>
+         <lastmod>2025-06-18</lastmod>
+    </url>
+    <url>
+         <loc>https://jmontp.github.io/agent-workflow/architecture/parallel-tdd-implementation-strategy/</loc>
+         <lastmod>2025-06-18</lastmod>
+    </url>
+    <url>
+         <loc>https://jmontp.github.io/agent-workflow/architecture/parallel-tdd-technical-specification/</loc>
+         <lastmod>2025-06-18</lastmod>
+    </url>
+    <url>
+         <loc>https://jmontp.github.io/agent-workflow/architecture/parallel-tdd-testing-strategy/</loc>
+         <lastmod>2025-06-18</lastmod>
     </url>
     <url>
          <loc>https://jmontp.github.io/agent-workflow/concepts/overview/</loc>
-         <lastmod>2025-06-17</lastmod>
+         <lastmod>2025-06-18</lastmod>
     </url>
     <url>
          <loc>https://jmontp.github.io/agent-workflow/concepts/security/</loc>
-         <lastmod>2025-06-17</lastmod>
+         <lastmod>2025-06-18</lastmod>
     </url>
     <url>
          <loc>https://jmontp.github.io/agent-workflow/deployment/discord-setup/</loc>
-         <lastmod>2025-06-17</lastmod>
+         <lastmod>2025-06-18</lastmod>
     </url>
     <url>
          <loc>https://jmontp.github.io/agent-workflow/deployment/github-pages/</loc>
-         <lastmod>2025-06-17</lastmod>
+         <lastmod>2025-06-18</lastmod>
     </url>
     <url>
          <loc>https://jmontp.github.io/agent-workflow/deployment/production/</loc>
-         <lastmod>2025-06-17</lastmod>
+         <lastmod>2025-06-18</lastmod>
     </url>
     <url>
          <loc>https://jmontp.github.io/agent-workflow/development/api-reference/</loc>
-         <lastmod>2025-06-17</lastmod>
+         <lastmod>2025-06-18</lastmod>
     </url>
     <url>
          <loc>https://jmontp.github.io/agent-workflow/development/contributing/</loc>
-         <lastmod>2025-06-17</lastmod>
+         <lastmod>2025-06-18</lastmod>
     </url>
     <url>
          <loc>https://jmontp.github.io/agent-workflow/getting-started/configuration/</loc>
-         <lastmod>2025-06-17</lastmod>
+         <lastmod>2025-06-18</lastmod>
     </url>
     <url>
          <loc>https://jmontp.github.io/agent-workflow/getting-started/installation/</loc>
-         <lastmod>2025-06-17</lastmod>
+         <lastmod>2025-06-18</lastmod>
     </url>
     <url>
          <loc>https://jmontp.github.io/agent-workflow/getting-started/quick-start/</loc>
-         <lastmod>2025-06-17</lastmod>
+         <lastmod>2025-06-18</lastmod>
     </url>
     <url>
          <loc>https://jmontp.github.io/agent-workflow/user-guide/faq/</loc>
-         <lastmod>2025-06-17</lastmod>
+         <lastmod>2025-06-18</lastmod>
     </url>
     <url>
          <loc>https://jmontp.github.io/agent-workflow/user-guide/hitl-commands/</loc>
-         <lastmod>2025-06-17</lastmod>
+         <lastmod>2025-06-18</lastmod>
     </url>
     <url>
          <loc>https://jmontp.github.io/agent-workflow/user-guide/project-setup/</loc>
-         <lastmod>2025-06-17</lastmod>
+         <lastmod>2025-06-18</lastmod>
     </url>
     <url>
          <loc>https://jmontp.github.io/agent-workflow/user-guide/state-machine/</loc>
-         <lastmod>2025-06-17</lastmod>
+         <lastmod>2025-06-18</lastmod>
+    </url>
+    <url>
+         <loc>https://jmontp.github.io/agent-workflow/user-guide/tdd-workflow/</loc>
+         <lastmod>2025-06-18</lastmod>
     </url>
     <url>
          <loc>https://jmontp.github.io/agent-workflow/user-guide/troubleshooting/</loc>
-         <lastmod>2025-06-17</lastmod>
+         <lastmod>2025-06-18</lastmod>
     </url>
     <url>
          <loc>https://jmontp.github.io/agent-workflow/user-guide/user-profile/</loc>
-         <lastmod>2025-06-17</lastmod>
+         <lastmod>2025-06-18</lastmod>
     </url>
     <url>
          <loc>https://jmontp.github.io/agent-workflow/user-guide/workflow-sequences/</loc>
-         <lastmod>2025-06-17</lastmod>
+         <lastmod>2025-06-18</lastmod>
     </url>
 </urlset>

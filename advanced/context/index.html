@@ -159,6 +159,15 @@
         </a>
 </li>
 <li class="md-tabs__item">
+<a class="md-tabs__link" href="../../architecture/overview/">
+          
+  
+  
+  Architecture
+
+        </a>
+</li>
+<li class="md-tabs__item">
 <a class="md-tabs__link" href="../../development/contributing/">
           
   
@@ -281,6 +290,14 @@
 <a class="md-nav__link" href="../../user-guide/state-machine/">
 <span class="md-ellipsis">
     State Machine
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../user-guide/tdd-workflow/">
+<span class="md-ellipsis">
+    TDD Workflow
     
   </span>
 </a>
@@ -494,13 +511,55 @@
 <input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_6" type="checkbox"/>
 <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
 <span class="md-ellipsis">
-    Development
+    Architecture
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
 <nav aria-expanded="false" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
 <label class="md-nav__title" for="__nav_6">
+<span class="md-nav__icon md-icon"></span>
+            Architecture
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../architecture/overview/">
+<span class="md-ellipsis">
+    System Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../architecture/context-management-system/">
+<span class="md-ellipsis">
+    Context Management
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../architecture/parallel-tdd-architecture/">
+<span class="md-ellipsis">
+    Parallel TDD Design
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_7" type="checkbox"/>
+<label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+<span class="md-ellipsis">
+    Development
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_7_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_7">
 <span class="md-nav__icon md-icon"></span>
             Development
           </label>
@@ -525,16 +584,16 @@
 </nav>
 </li>
 <li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_7" type="checkbox"/>
-<label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_8" type="checkbox"/>
+<label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
 <span class="md-ellipsis">
     Deployment
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="false" aria-labelledby="__nav_7_label" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="__nav_7">
+<nav aria-expanded="false" aria-labelledby="__nav_8_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_8">
 <span class="md-nav__icon md-icon"></span>
             Deployment
           </label>
@@ -603,32 +662,41 @@
 <article class="md-content__inner md-typeset">
 <h1 id="c4-context-diagram-ai-agent-tdd-scrum-workflow">C4 Context Diagram - AI Agent TDD-Scrum Workflow<a class="headerlink" href="#c4-context-diagram-ai-agent-tdd-scrum-workflow" title="Permanent link">¶</a></h1>
 <h2 id="system-context">System Context<a class="headerlink" href="#system-context" title="Permanent link">¶</a></h2>
+<p>The system context shows how the dual state machine architecture integrates with external systems to support both workflow management and Test-Driven Development cycles.</p>
 <pre class="mermaid"><code>C4Context
-    title System Context - AI Agent TDD-Scrum Workflow
+    title System Context - AI Agent TDD-Scrum Workflow (Dual State Machine)
 
-    Person(user, "Product Owner/Engineer", "Solo developer using AI agents for software development")
+    Person(user, "Product Owner/Engineer", "Solo developer using AI agents for TDD-enhanced software development")
 
     System_Boundary(system, "AI Agent Workflow System") {
-        System(orchestrator, "Agent Orchestrator", "Coordinates multiple AI agents through HITL workflow")
+        System(orchestrator, "Agent Orchestrator", "Coordinates AI agents through dual state machines (Workflow + TDD)")
     }
 
-    System_Ext(discord, "Discord", "Primary interface for human interaction and approval")
-    System_Ext(github, "GitHub", "Source code repository and CI/CD")
-    System_Ext(anthropic, "Anthropic API", "AI agent capabilities")
+    System_Ext(discord, "Discord", "Primary interface for workflow and TDD command interaction")
+    System_Ext(github, "GitHub", "Source code repository, test preservation, and CI/CD")
+    System_Ext(anthropic, "Anthropic API", "AI agent capabilities for TDD phases")
+    System_Ext(ci_system, "CI/CD System", "Test execution, coverage reporting, and quality gates")
 
-    Rel(user, discord, "Issues commands, approves tasks")
-    Rel(discord, orchestrator, "Command execution, notifications")
-    Rel(orchestrator, github, "Code changes, PR management")
-    Rel(orchestrator, anthropic, "Agent task execution")
-    Rel(github, user, "Code review, CI feedback")</code></pre>
+    Rel(user, discord, "Issues workflow/TDD commands, approves tasks")
+    Rel(discord, orchestrator, "Dual command execution, TDD notifications")
+    Rel(orchestrator, github, "Code changes, test commits, PR management")
+    Rel(orchestrator, anthropic, "Agent task execution with TDD context")
+    Rel(orchestrator, ci_system, "Test execution, coverage validation")
+    Rel(github, user, "Code review, TDD cycle feedback")
+    Rel(ci_system, user, "Test results, coverage reports")
+    Rel(github, ci_system, "Test file integration, CI triggers")</code></pre>
 <h2 id="key-interactions">Key Interactions<a class="headerlink" href="#key-interactions" title="Permanent link">¶</a></h2>
 <ol>
-<li><strong>User → Discord</strong>: Issues slash commands (<code>/epic</code>, <code>/sprint</code>, <code>/approve</code>)</li>
-<li><strong>Discord → Orchestrator</strong>: Command parsing and state transitions</li>
-<li><strong>Orchestrator → Agents</strong>: Task dispatch and coordination</li>
-<li><strong>Agents → GitHub</strong>: Code implementation and PR creation</li>
-<li><strong>GitHub → User</strong>: CI results and code review</li>
-<li><strong>User Approval Loop</strong>: HITL gates for strategic decisions</li>
+<li><strong>User → Discord</strong>: Issues workflow and TDD slash commands (<code>/epic</code>, <code>/sprint</code>, <code>/tdd test</code>, <code>/tdd code</code>, <code>/approve</code>)</li>
+<li><strong>Discord → Orchestrator</strong>: Dual command parsing and state transitions (workflow + TDD)</li>
+<li><strong>Orchestrator → Agents</strong>: Task dispatch with TDD phase coordination</li>
+<li><strong>Agents → GitHub</strong>: Code implementation, test preservation, and PR creation</li>
+<li><strong>Agents → CI System</strong>: Test execution, coverage validation, and quality gates</li>
+<li><strong>GitHub → User</strong>: CI results, TDD cycle progress, and code review</li>
+<li><strong>CI System → User</strong>: Test results, coverage reports, and TDD metrics</li>
+<li><strong>User Approval Loop</strong>: HITL gates for strategic workflow and TDD decisions</li>
+<li><strong>Test Preservation Flow</strong>: TDD test files committed and preserved through development cycle</li>
+<li><strong>Dual State Coordination</strong>: Workflow and TDD state machines synchronized for sprint completion</li>
 </ol>
 </article>
 </div>

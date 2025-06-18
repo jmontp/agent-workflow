@@ -158,6 +158,15 @@
 
         </a>
 </li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../architecture/overview/">
+          
+  
+  
+  Architecture
+
+        </a>
+</li>
 <li class="md-tabs__item md-tabs__item--active">
 <a class="md-tabs__link" href="../contributing/">
           
@@ -281,6 +290,14 @@
 <a class="md-nav__link" href="../../user-guide/state-machine/">
 <span class="md-ellipsis">
     State Machine
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../user-guide/tdd-workflow/">
+<span class="md-ellipsis">
+    TDD Workflow
     
   </span>
 </a>
@@ -460,17 +477,59 @@
 </ul>
 </nav>
 </li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_6" type="checkbox"/>
+<label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+<span class="md-ellipsis">
+    Architecture
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_6">
+<span class="md-nav__icon md-icon"></span>
+            Architecture
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../architecture/overview/">
+<span class="md-ellipsis">
+    System Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../architecture/context-management-system/">
+<span class="md-ellipsis">
+    Context Management
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../architecture/parallel-tdd-architecture/">
+<span class="md-ellipsis">
+    Parallel TDD Design
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
 <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
-<input checked="" class="md-nav__toggle md-toggle" id="__nav_6" type="checkbox"/>
-<label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_7" type="checkbox"/>
+<label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
 <span class="md-ellipsis">
     Development
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="true" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="__nav_6">
+<nav aria-expanded="true" aria-labelledby="__nav_7_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_7">
 <span class="md-nav__icon md-icon"></span>
             Development
           </label>
@@ -915,6 +974,156 @@
 </ul>
 </nav>
 </li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-system-apis">
+<span class="md-ellipsis">
+      TDD System APIs
+    </span>
+</a>
+<nav aria-label="TDD System APIs" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tddstatemachine">
+<span class="md-ellipsis">
+      TDDStateMachine
+    </span>
+</a>
+<nav aria-label="TDDStateMachine" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#methods_5">
+<span class="md-ellipsis">
+      Methods
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-data-models">
+<span class="md-ellipsis">
+      TDD Data Models
+    </span>
+</a>
+<nav aria-label="TDD Data Models" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tddstate-enum">
+<span class="md-ellipsis">
+      TDDState Enum
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tddcycle">
+<span class="md-ellipsis">
+      TDDCycle
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tddtask">
+<span class="md-ellipsis">
+      TDDTask
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#testfile">
+<span class="md-ellipsis">
+      TestFile
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#testresult">
+<span class="md-ellipsis">
+      TestResult
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#enhanced-agent-apis-for-tdd">
+<span class="md-ellipsis">
+      Enhanced Agent APIs for TDD
+    </span>
+</a>
+<nav aria-label="Enhanced Agent APIs for TDD" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#designagent-tdd-mode">
+<span class="md-ellipsis">
+      DesignAgent (TDD Mode)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#qaagent-tdd-mode">
+<span class="md-ellipsis">
+      QAAgent (TDD Mode)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#codeagent-tdd-mode">
+<span class="md-ellipsis">
+      CodeAgent (TDD Mode)
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-orchestration-apis">
+<span class="md-ellipsis">
+      TDD Orchestration APIs
+    </span>
+</a>
+<nav aria-label="TDD Orchestration APIs" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tddorchestrator">
+<span class="md-ellipsis">
+      TDDOrchestrator
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-integration-examples">
+<span class="md-ellipsis">
+      TDD Integration Examples
+    </span>
+</a>
+<nav aria-label="TDD Integration Examples" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#complete-tdd-cycle-management">
+<span class="md-ellipsis">
+      Complete TDD Cycle Management
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-metrics-and-monitoring">
+<span class="md-ellipsis">
+      TDD Metrics and Monitoring
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
 </ul>
 </nav>
 </li>
@@ -922,16 +1131,16 @@
 </nav>
 </li>
 <li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_7" type="checkbox"/>
-<label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_8" type="checkbox"/>
+<label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
 <span class="md-ellipsis">
     Deployment
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="false" aria-labelledby="__nav_7_label" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="__nav_7">
+<nav aria-expanded="false" aria-labelledby="__nav_8_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_8">
 <span class="md-nav__icon md-icon"></span>
             Deployment
           </label>
@@ -1388,6 +1597,156 @@
 </ul>
 </nav>
 </li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-system-apis">
+<span class="md-ellipsis">
+      TDD System APIs
+    </span>
+</a>
+<nav aria-label="TDD System APIs" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tddstatemachine">
+<span class="md-ellipsis">
+      TDDStateMachine
+    </span>
+</a>
+<nav aria-label="TDDStateMachine" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#methods_5">
+<span class="md-ellipsis">
+      Methods
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-data-models">
+<span class="md-ellipsis">
+      TDD Data Models
+    </span>
+</a>
+<nav aria-label="TDD Data Models" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tddstate-enum">
+<span class="md-ellipsis">
+      TDDState Enum
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tddcycle">
+<span class="md-ellipsis">
+      TDDCycle
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tddtask">
+<span class="md-ellipsis">
+      TDDTask
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#testfile">
+<span class="md-ellipsis">
+      TestFile
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#testresult">
+<span class="md-ellipsis">
+      TestResult
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#enhanced-agent-apis-for-tdd">
+<span class="md-ellipsis">
+      Enhanced Agent APIs for TDD
+    </span>
+</a>
+<nav aria-label="Enhanced Agent APIs for TDD" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#designagent-tdd-mode">
+<span class="md-ellipsis">
+      DesignAgent (TDD Mode)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#qaagent-tdd-mode">
+<span class="md-ellipsis">
+      QAAgent (TDD Mode)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#codeagent-tdd-mode">
+<span class="md-ellipsis">
+      CodeAgent (TDD Mode)
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-orchestration-apis">
+<span class="md-ellipsis">
+      TDD Orchestration APIs
+    </span>
+</a>
+<nav aria-label="TDD Orchestration APIs" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tddorchestrator">
+<span class="md-ellipsis">
+      TDDOrchestrator
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-integration-examples">
+<span class="md-ellipsis">
+      TDD Integration Examples
+    </span>
+</a>
+<nav aria-label="TDD Integration Examples" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#complete-tdd-cycle-management">
+<span class="md-ellipsis">
+      Complete TDD Cycle Management
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-metrics-and-monitoring">
+<span class="md-ellipsis">
+      TDD Metrics and Monitoring
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
 </ul>
 </nav>
 </div>
@@ -1755,6 +2114,342 @@
 <a href="#__codelineno-20-22" id="__codelineno-20-22" name="__codelineno-20-22"></a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">_generate_api_docs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <a href="#__codelineno-20-23" id="__codelineno-20-23" name="__codelineno-20-23"></a>        <span class="c1"># Implementation for API documentation</span>
 <a href="#__codelineno-20-24" id="__codelineno-20-24" name="__codelineno-20-24"></a>        <span class="k">return</span> <span class="s2">"Generated API documentation"</span>
+</code></pre></div>
+<h2 id="tdd-system-apis">TDD System APIs<a class="headerlink" href="#tdd-system-apis" title="Permanent link">¶</a></h2>
+<h3 id="tddstatemachine">TDDStateMachine<a class="headerlink" href="#tddstatemachine" title="Permanent link">¶</a></h3>
+<p>Finite state machine that enforces proper TDD command sequencing according to Test-Driven Development best practices.</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-21-1" id="__codelineno-21-1" name="__codelineno-21-1"></a><span class="kn">from</span> <span class="nn">lib.tdd_state_machine</span> <span class="kn">import</span> <span class="n">TDDStateMachine</span><span class="p">,</span> <span class="n">TDDCommandResult</span>
+<a href="#__codelineno-21-2" id="__codelineno-21-2" name="__codelineno-21-2"></a><span class="kn">from</span> <span class="nn">lib.tdd_models</span> <span class="kn">import</span> <span class="n">TDDState</span><span class="p">,</span> <span class="n">TDDCycle</span>
+<a href="#__codelineno-21-3" id="__codelineno-21-3" name="__codelineno-21-3"></a>
+<a href="#__codelineno-21-4" id="__codelineno-21-4" name="__codelineno-21-4"></a><span class="n">state_machine</span> <span class="o">=</span> <span class="n">TDDStateMachine</span><span class="p">()</span>
+</code></pre></div>
+<h4 id="methods_5">Methods<a class="headerlink" href="#methods_5" title="Permanent link">¶</a></h4>
+<p><strong><code>validate_command(command: str, cycle: Optional[TDDCycle] = None) -&gt; TDDCommandResult</code></strong></p>
+<p>Validate if a TDD command is allowed in the current state.</p>
+<p><strong>Parameters:</strong>
+- <code>command</code> (str): The TDD command to validate (e.g., "/tdd test", "/tdd code")
+- <code>cycle</code> (TDDCycle, optional): TDD cycle for context validation</p>
+<p><strong>Returns:</strong>
+- <code>TDDCommandResult</code>: Validation outcome with success flag, new state, error message, and hints</p>
+<p><strong>Example:</strong>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-22-1" id="__codelineno-22-1" name="__codelineno-22-1"></a><span class="n">result</span> <span class="o">=</span> <span class="n">state_machine</span><span class="o">.</span><span class="n">validate_command</span><span class="p">(</span><span class="s2">"/tdd code"</span><span class="p">,</span> <span class="n">active_cycle</span><span class="p">)</span>
+<a href="#__codelineno-22-2" id="__codelineno-22-2" name="__codelineno-22-2"></a><span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">success</span><span class="p">:</span>
+<a href="#__codelineno-22-3" id="__codelineno-22-3" name="__codelineno-22-3"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Command allowed, new state: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">new_state</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<a href="#__codelineno-22-4" id="__codelineno-22-4" name="__codelineno-22-4"></a><span class="k">else</span><span class="p">:</span>
+<a href="#__codelineno-22-5" id="__codelineno-22-5" name="__codelineno-22-5"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Error: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">error_message</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<a href="#__codelineno-22-6" id="__codelineno-22-6" name="__codelineno-22-6"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Hint: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">hint</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</code></pre></div></p>
+<p><strong><code>transition(command: str, cycle: Optional[TDDCycle] = None) -&gt; TDDCommandResult</code></strong></p>
+<p>Execute a TDD state transition if the command is valid.</p>
+<p><strong><code>get_allowed_commands(cycle: Optional[TDDCycle] = None) -&gt; List[str]</code></strong></p>
+<p>Get list of TDD commands allowed in current state.</p>
+<p><strong><code>get_next_suggested_command(cycle: Optional[TDDCycle] = None) -&gt; Optional[str]</code></strong></p>
+<p>Get the next suggested command based on current state and conditions.</p>
+<p><strong><code>get_state_info(cycle: Optional[TDDCycle] = None) -&gt; Dict[str, Any]</code></strong></p>
+<p>Get comprehensive TDD state information for debugging and visualization.</p>
+<p><strong><code>can_auto_progress(cycle: Optional[TDDCycle] = None) -&gt; bool</code></strong></p>
+<p>Check if state machine can automatically progress to next state.</p>
+<p><strong><code>get_mermaid_diagram() -&gt; str</code></strong></p>
+<p>Generate Mermaid state diagram for TDD workflow visualization.</p>
+<h3 id="tdd-data-models">TDD Data Models<a class="headerlink" href="#tdd-data-models" title="Permanent link">¶</a></h3>
+<h4 id="tddstate-enum">TDDState Enum<a class="headerlink" href="#tddstate-enum" title="Permanent link">¶</a></h4>
+<p>TDD cycle states with their purposes:</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-23-1" id="__codelineno-23-1" name="__codelineno-23-1"></a><span class="kn">from</span> <span class="nn">lib.tdd_models</span> <span class="kn">import</span> <span class="n">TDDState</span>
+<a href="#__codelineno-23-2" id="__codelineno-23-2" name="__codelineno-23-2"></a>
+<a href="#__codelineno-23-3" id="__codelineno-23-3" name="__codelineno-23-3"></a><span class="k">class</span> <span class="nc">TDDState</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<a href="#__codelineno-23-4" id="__codelineno-23-4" name="__codelineno-23-4"></a>    <span class="n">DESIGN</span> <span class="o">=</span> <span class="s2">"design"</span>           <span class="c1"># Create specifications and acceptance criteria</span>
+<a href="#__codelineno-23-5" id="__codelineno-23-5" name="__codelineno-23-5"></a>    <span class="n">TEST_RED</span> <span class="o">=</span> <span class="s2">"test_red"</span>       <span class="c1"># Write failing tests</span>
+<a href="#__codelineno-23-6" id="__codelineno-23-6" name="__codelineno-23-6"></a>    <span class="n">CODE_GREEN</span> <span class="o">=</span> <span class="s2">"code_green"</span>   <span class="c1"># Implement minimal code to pass tests</span>
+<a href="#__codelineno-23-7" id="__codelineno-23-7" name="__codelineno-23-7"></a>    <span class="n">REFACTOR</span> <span class="o">=</span> <span class="s2">"refactor"</span>       <span class="c1"># Improve code quality while keeping tests green</span>
+<a href="#__codelineno-23-8" id="__codelineno-23-8" name="__codelineno-23-8"></a>    <span class="n">COMMIT</span> <span class="o">=</span> <span class="s2">"commit"</span>           <span class="c1"># Save progress and mark task complete</span>
+</code></pre></div>
+<h4 id="tddcycle">TDDCycle<a class="headerlink" href="#tddcycle" title="Permanent link">¶</a></h4>
+<p>TDD cycle linked to a story with task management and progress tracking.</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-24-1" id="__codelineno-24-1" name="__codelineno-24-1"></a><span class="kn">from</span> <span class="nn">lib.tdd_models</span> <span class="kn">import</span> <span class="n">TDDCycle</span><span class="p">,</span> <span class="n">TDDTask</span>
+<a href="#__codelineno-24-2" id="__codelineno-24-2" name="__codelineno-24-2"></a>
+<a href="#__codelineno-24-3" id="__codelineno-24-3" name="__codelineno-24-3"></a><span class="n">cycle</span> <span class="o">=</span> <span class="n">TDDCycle</span><span class="p">(</span>
+<a href="#__codelineno-24-4" id="__codelineno-24-4" name="__codelineno-24-4"></a>    <span class="nb">id</span><span class="o">=</span><span class="s2">"tdd-cycle-abc123"</span><span class="p">,</span>
+<a href="#__codelineno-24-5" id="__codelineno-24-5" name="__codelineno-24-5"></a>    <span class="n">story_id</span><span class="o">=</span><span class="s2">"AUTH-001"</span><span class="p">,</span>
+<a href="#__codelineno-24-6" id="__codelineno-24-6" name="__codelineno-24-6"></a>    <span class="n">current_state</span><span class="o">=</span><span class="n">TDDState</span><span class="o">.</span><span class="n">DESIGN</span>
+<a href="#__codelineno-24-7" id="__codelineno-24-7" name="__codelineno-24-7"></a><span class="p">)</span>
+</code></pre></div>
+<p><strong>Attributes:</strong>
+- <code>id</code> (str): Unique identifier
+- <code>story_id</code> (str): Associated story identifier
+- <code>current_state</code> (TDDState): Current TDD phase
+- <code>current_task_id</code> (Optional[str]): Active task identifier
+- <code>tasks</code> (List[TDDTask]): All tasks in the cycle
+- <code>started_at</code> (str): Cycle start timestamp
+- <code>completed_at</code> (Optional[str]): Cycle completion timestamp
+- <code>total_test_runs</code> (int): Count of test executions
+- <code>total_refactors</code> (int): Count of refactor operations
+- <code>total_commits</code> (int): Count of commits made
+- <code>ci_status</code> (CIStatus): Overall CI status
+- <code>overall_test_coverage</code> (float): Average test coverage</p>
+<p><strong>Methods:</strong></p>
+<p><strong><code>get_current_task() -&gt; Optional[TDDTask]</code></strong></p>
+<p>Get the currently active task.</p>
+<p><strong><code>add_task(task: TDDTask) -&gt; None</code></strong></p>
+<p>Add a new task to the cycle.</p>
+<p><strong><code>start_task(task_id: str) -&gt; bool</code></strong></p>
+<p>Start a specific task (only one can be active).</p>
+<p><strong><code>complete_current_task() -&gt; bool</code></strong></p>
+<p>Mark current task as complete and advance cycle.</p>
+<p><strong><code>get_progress_summary() -&gt; Dict[str, Any]</code></strong></p>
+<p>Get detailed progress information including task counts and metrics.</p>
+<p><strong><code>calculate_overall_coverage() -&gt; float</code></strong></p>
+<p>Calculate overall test coverage for the entire cycle.</p>
+<h4 id="tddtask">TDDTask<a class="headerlink" href="#tddtask" title="Permanent link">¶</a></h4>
+<p>Individual task within a TDD cycle with test management and state tracking.</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-25-1" id="__codelineno-25-1" name="__codelineno-25-1"></a><span class="kn">from</span> <span class="nn">lib.tdd_models</span> <span class="kn">import</span> <span class="n">TDDTask</span><span class="p">,</span> <span class="n">TestFile</span><span class="p">,</span> <span class="n">TestResult</span>
+<a href="#__codelineno-25-2" id="__codelineno-25-2" name="__codelineno-25-2"></a>
+<a href="#__codelineno-25-3" id="__codelineno-25-3" name="__codelineno-25-3"></a><span class="n">task</span> <span class="o">=</span> <span class="n">TDDTask</span><span class="p">(</span>
+<a href="#__codelineno-25-4" id="__codelineno-25-4" name="__codelineno-25-4"></a>    <span class="nb">id</span><span class="o">=</span><span class="s2">"tdd-task-xyz789"</span><span class="p">,</span>
+<a href="#__codelineno-25-5" id="__codelineno-25-5" name="__codelineno-25-5"></a>    <span class="n">cycle_id</span><span class="o">=</span><span class="s2">"tdd-cycle-abc123"</span><span class="p">,</span>
+<a href="#__codelineno-25-6" id="__codelineno-25-6" name="__codelineno-25-6"></a>    <span class="n">description</span><span class="o">=</span><span class="s2">"Implement user authentication API"</span><span class="p">,</span>
+<a href="#__codelineno-25-7" id="__codelineno-25-7" name="__codelineno-25-7"></a>    <span class="n">current_state</span><span class="o">=</span><span class="n">TDDState</span><span class="o">.</span><span class="n">DESIGN</span>
+<a href="#__codelineno-25-8" id="__codelineno-25-8" name="__codelineno-25-8"></a><span class="p">)</span>
+</code></pre></div>
+<p><strong>Attributes:</strong>
+- <code>id</code> (str): Unique identifier
+- <code>cycle_id</code> (str): Parent cycle identifier
+- <code>description</code> (str): Task description
+- <code>acceptance_criteria</code> (List[str]): Acceptance criteria list
+- <code>current_state</code> (TDDState): Current task state
+- <code>test_files</code> (List[str]): Test file paths
+- <code>test_file_objects</code> (List[TestFile]): TestFile objects with metadata
+- <code>source_files</code> (List[str]): Source file paths
+- <code>test_results</code> (List[TestResult]): Test execution results
+- <code>design_notes</code> (str): Design phase documentation
+- <code>implementation_notes</code> (str): Implementation notes
+- <code>refactor_notes</code> (str): Refactoring documentation
+- <code>ci_status</code> (CIStatus): CI pipeline status
+- <code>test_coverage</code> (float): Task-specific test coverage</p>
+<p><strong>Methods:</strong></p>
+<p><strong><code>has_passing_tests() -&gt; bool</code></strong></p>
+<p>Check if all tests are currently passing.</p>
+<p><strong><code>has_failing_tests() -&gt; bool</code></strong></p>
+<p>Check if any tests are currently failing.</p>
+<p><strong><code>add_test_file(test_file: TestFile) -&gt; None</code></strong></p>
+<p>Add a test file to this task.</p>
+<p><strong><code>get_committed_test_files() -&gt; List[TestFile]</code></strong></p>
+<p>Get all test files that have been committed to repository.</p>
+<p><strong><code>can_commit_tests() -&gt; bool</code></strong></p>
+<p>Check if tests are ready to be committed (RED state with failing tests).</p>
+<p><strong><code>can_commit_code() -&gt; bool</code></strong></p>
+<p>Check if code can be committed (tests passing with committed test files).</p>
+<p><strong><code>can_commit_refactor() -&gt; bool</code></strong></p>
+<p>Check if refactored code can be committed (tests still passing).</p>
+<h4 id="testfile">TestFile<a class="headerlink" href="#testfile" title="Permanent link">¶</a></h4>
+<p>Test file lifecycle management with CI integration.</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-26-1" id="__codelineno-26-1" name="__codelineno-26-1"></a><span class="kn">from</span> <span class="nn">lib.tdd_models</span> <span class="kn">import</span> <span class="n">TestFile</span><span class="p">,</span> <span class="n">TestFileStatus</span><span class="p">,</span> <span class="n">CIStatus</span>
+<a href="#__codelineno-26-2" id="__codelineno-26-2" name="__codelineno-26-2"></a>
+<a href="#__codelineno-26-3" id="__codelineno-26-3" name="__codelineno-26-3"></a><span class="n">test_file</span> <span class="o">=</span> <span class="n">TestFile</span><span class="p">(</span>
+<a href="#__codelineno-26-4" id="__codelineno-26-4" name="__codelineno-26-4"></a>    <span class="n">file_path</span><span class="o">=</span><span class="s2">"/path/to/test_auth.py"</span><span class="p">,</span>
+<a href="#__codelineno-26-5" id="__codelineno-26-5" name="__codelineno-26-5"></a>    <span class="n">relative_path</span><span class="o">=</span><span class="s2">"tests/tdd/AUTH-001/test_auth.py"</span><span class="p">,</span>
+<a href="#__codelineno-26-6" id="__codelineno-26-6" name="__codelineno-26-6"></a>    <span class="n">story_id</span><span class="o">=</span><span class="s2">"AUTH-001"</span><span class="p">,</span>
+<a href="#__codelineno-26-7" id="__codelineno-26-7" name="__codelineno-26-7"></a>    <span class="n">status</span><span class="o">=</span><span class="n">TestFileStatus</span><span class="o">.</span><span class="n">DRAFT</span>
+<a href="#__codelineno-26-8" id="__codelineno-26-8" name="__codelineno-26-8"></a><span class="p">)</span>
+</code></pre></div>
+<p><strong>Attributes:</strong>
+- <code>id</code> (str): Unique identifier
+- <code>file_path</code> (str): Absolute file path
+- <code>relative_path</code> (str): Path relative to project root
+- <code>story_id</code> (str): Associated story identifier
+- <code>task_id</code> (str): Associated task identifier
+- <code>status</code> (TestFileStatus): File lifecycle status
+- <code>ci_status</code> (CIStatus): CI pipeline status
+- <code>test_count</code> (int): Total number of tests
+- <code>passing_tests</code> (int): Count of passing tests
+- <code>failing_tests</code> (int): Count of failing tests
+- <code>coverage_percentage</code> (float): Code coverage percentage</p>
+<p><strong>Methods:</strong></p>
+<p><strong><code>exists() -&gt; bool</code></strong></p>
+<p>Check if test file exists on filesystem.</p>
+<p><strong><code>is_committed() -&gt; bool</code></strong></p>
+<p>Check if test file has been committed to repository.</p>
+<p><strong><code>is_passing() -&gt; bool</code></strong></p>
+<p>Check if all tests in file are passing.</p>
+<p><strong><code>get_permanent_location() -&gt; str</code></strong></p>
+<p>Get the permanent test location after integration (tests/unit/ or tests/integration/).</p>
+<h4 id="testresult">TestResult<a class="headerlink" href="#testresult" title="Permanent link">¶</a></h4>
+<p>Individual test execution result with timing and output capture.</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-27-1" id="__codelineno-27-1" name="__codelineno-27-1"></a><span class="kn">from</span> <span class="nn">lib.tdd_models</span> <span class="kn">import</span> <span class="n">TestResult</span><span class="p">,</span> <span class="n">TestStatus</span>
+<a href="#__codelineno-27-2" id="__codelineno-27-2" name="__codelineno-27-2"></a>
+<a href="#__codelineno-27-3" id="__codelineno-27-3" name="__codelineno-27-3"></a><span class="n">result</span> <span class="o">=</span> <span class="n">TestResult</span><span class="p">(</span>
+<a href="#__codelineno-27-4" id="__codelineno-27-4" name="__codelineno-27-4"></a>    <span class="n">test_file</span><span class="o">=</span><span class="s2">"test_auth.py"</span><span class="p">,</span>
+<a href="#__codelineno-27-5" id="__codelineno-27-5" name="__codelineno-27-5"></a>    <span class="n">test_name</span><span class="o">=</span><span class="s2">"test_login_success"</span><span class="p">,</span>
+<a href="#__codelineno-27-6" id="__codelineno-27-6" name="__codelineno-27-6"></a>    <span class="n">status</span><span class="o">=</span><span class="n">TestStatus</span><span class="o">.</span><span class="n">GREEN</span><span class="p">,</span>
+<a href="#__codelineno-27-7" id="__codelineno-27-7" name="__codelineno-27-7"></a>    <span class="n">execution_time</span><span class="o">=</span><span class="mf">0.045</span>
+<a href="#__codelineno-27-8" id="__codelineno-27-8" name="__codelineno-27-8"></a><span class="p">)</span>
+</code></pre></div>
+<p><strong>Attributes:</strong>
+- <code>id</code> (str): Unique identifier
+- <code>test_file</code> (str): Test file name
+- <code>test_name</code> (str): Specific test name
+- <code>status</code> (TestStatus): Execution status (RED, GREEN, ERROR)
+- <code>output</code> (str): Test output capture
+- <code>error_message</code> (Optional[str]): Error details if failed
+- <code>execution_time</code> (float): Test execution time in seconds
+- <code>timestamp</code> (str): Execution timestamp</p>
+<h3 id="enhanced-agent-apis-for-tdd">Enhanced Agent APIs for TDD<a class="headerlink" href="#enhanced-agent-apis-for-tdd" title="Permanent link">¶</a></h3>
+<h4 id="designagent-tdd-mode">DesignAgent (TDD Mode)<a class="headerlink" href="#designagent-tdd-mode" title="Permanent link">¶</a></h4>
+<p>Extended capabilities for TDD design phase.</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-28-1" id="__codelineno-28-1" name="__codelineno-28-1"></a><span class="kn">from</span> <span class="nn">lib.agents.design_agent</span> <span class="kn">import</span> <span class="n">DesignAgent</span>
+<a href="#__codelineno-28-2" id="__codelineno-28-2" name="__codelineno-28-2"></a>
+<a href="#__codelineno-28-3" id="__codelineno-28-3" name="__codelineno-28-3"></a><span class="n">agent</span> <span class="o">=</span> <span class="n">DesignAgent</span><span class="p">()</span>
+<a href="#__codelineno-28-4" id="__codelineno-28-4" name="__codelineno-28-4"></a><span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">agent</span><span class="o">.</span><span class="n">run_tdd_design</span><span class="p">(</span>
+<a href="#__codelineno-28-5" id="__codelineno-28-5" name="__codelineno-28-5"></a>    <span class="n">story</span><span class="o">=</span><span class="s2">"Implement user authentication"</span><span class="p">,</span> 
+<a href="#__codelineno-28-6" id="__codelineno-28-6" name="__codelineno-28-6"></a>    <span class="n">acceptance_criteria</span><span class="o">=</span><span class="p">[</span><span class="s2">"User can login"</span><span class="p">,</span> <span class="s2">"Passwords are hashed"</span><span class="p">]</span>
+<a href="#__codelineno-28-7" id="__codelineno-28-7" name="__codelineno-28-7"></a><span class="p">)</span>
+</code></pre></div>
+<p><strong>TDD-Specific Methods:</strong></p>
+<p><strong><code>async run_tdd_design(story: str, acceptance_criteria: List[str]) -&gt; TDDTask</code></strong></p>
+<p>Create detailed technical specifications for TDD implementation.</p>
+<p><strong><code>async create_acceptance_tests(task: TDDTask) -&gt; List[str]</code></strong></p>
+<p>Generate acceptance test scenarios from design specifications.</p>
+<h4 id="qaagent-tdd-mode">QAAgent (TDD Mode)<a class="headerlink" href="#qaagent-tdd-mode" title="Permanent link">¶</a></h4>
+<p>Specialized for TDD test creation and validation.</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-29-1" id="__codelineno-29-1" name="__codelineno-29-1"></a><span class="kn">from</span> <span class="nn">lib.agents.qa_agent</span> <span class="kn">import</span> <span class="n">QAAgent</span>
+<a href="#__codelineno-29-2" id="__codelineno-29-2" name="__codelineno-29-2"></a>
+<a href="#__codelineno-29-3" id="__codelineno-29-3" name="__codelineno-29-3"></a><span class="n">agent</span> <span class="o">=</span> <span class="n">QAAgent</span><span class="p">()</span>
+<a href="#__codelineno-29-4" id="__codelineno-29-4" name="__codelineno-29-4"></a><span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">agent</span><span class="o">.</span><span class="n">run_tdd_test_creation</span><span class="p">(</span>
+<a href="#__codelineno-29-5" id="__codelineno-29-5" name="__codelineno-29-5"></a>    <span class="n">task</span><span class="o">=</span><span class="n">tdd_task</span><span class="p">,</span>
+<a href="#__codelineno-29-6" id="__codelineno-29-6" name="__codelineno-29-6"></a>    <span class="n">ensure_failures</span><span class="o">=</span><span class="kc">True</span>
+<a href="#__codelineno-29-7" id="__codelineno-29-7" name="__codelineno-29-7"></a><span class="p">)</span>
+</code></pre></div>
+<p><strong>TDD-Specific Methods:</strong></p>
+<p><strong><code>async run_tdd_test_creation(task: TDDTask, ensure_failures: bool = True) -&gt; List[TestFile]</code></strong></p>
+<p>Create comprehensive failing tests based on design specifications.</p>
+<p><strong><code>async validate_test_red_state(task: TDDTask) -&gt; bool</code></strong></p>
+<p>Verify that tests are properly failing before implementation.</p>
+<p><strong><code>async run_tdd_test_validation(task: TDDTask) -&gt; List[TestResult]</code></strong></p>
+<p>Execute tests and validate results against TDD requirements.</p>
+<h4 id="codeagent-tdd-mode">CodeAgent (TDD Mode)<a class="headerlink" href="#codeagent-tdd-mode" title="Permanent link">¶</a></h4>
+<p>Implementation with TDD constraints and refactoring support.</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-30-1" id="__codelineno-30-1" name="__codelineno-30-1"></a><span class="kn">from</span> <span class="nn">lib.agents.code_agent</span> <span class="kn">import</span> <span class="n">CodeAgent</span>
+<a href="#__codelineno-30-2" id="__codelineno-30-2" name="__codelineno-30-2"></a>
+<a href="#__codelineno-30-3" id="__codelineno-30-3" name="__codelineno-30-3"></a><span class="n">agent</span> <span class="o">=</span> <span class="n">CodeAgent</span><span class="p">()</span>
+<a href="#__codelineno-30-4" id="__codelineno-30-4" name="__codelineno-30-4"></a><span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">agent</span><span class="o">.</span><span class="n">run_tdd_implementation</span><span class="p">(</span>
+<a href="#__codelineno-30-5" id="__codelineno-30-5" name="__codelineno-30-5"></a>    <span class="n">task</span><span class="o">=</span><span class="n">tdd_task</span><span class="p">,</span>
+<a href="#__codelineno-30-6" id="__codelineno-30-6" name="__codelineno-30-6"></a>    <span class="n">minimal_implementation</span><span class="o">=</span><span class="kc">True</span>
+<a href="#__codelineno-30-7" id="__codelineno-30-7" name="__codelineno-30-7"></a><span class="p">)</span>
+</code></pre></div>
+<p><strong>TDD-Specific Methods:</strong></p>
+<p><strong><code>async run_tdd_implementation(task: TDDTask, minimal_implementation: bool = True) -&gt; List[str]</code></strong></p>
+<p>Implement minimal code to make tests pass in CODE_GREEN phase.</p>
+<p><strong><code>async run_tdd_refactor(task: TDDTask, maintain_green: bool = True) -&gt; List[str]</code></strong></p>
+<p>Improve code quality while ensuring all tests remain green.</p>
+<p><strong><code>async validate_green_state(task: TDDTask) -&gt; bool</code></strong></p>
+<p>Verify that all tests are passing after implementation.</p>
+<h3 id="tdd-orchestration-apis">TDD Orchestration APIs<a class="headerlink" href="#tdd-orchestration-apis" title="Permanent link">¶</a></h3>
+<h4 id="tddorchestrator">TDDOrchestrator<a class="headerlink" href="#tddorchestrator" title="Permanent link">¶</a></h4>
+<p>Coordinates TDD cycles with the main Scrum workflow.</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-31-1" id="__codelineno-31-1" name="__codelineno-31-1"></a><span class="kn">from</span> <span class="nn">lib.tdd_orchestrator</span> <span class="kn">import</span> <span class="n">TDDOrchestrator</span>
+<a href="#__codelineno-31-2" id="__codelineno-31-2" name="__codelineno-31-2"></a>
+<a href="#__codelineno-31-3" id="__codelineno-31-3" name="__codelineno-31-3"></a><span class="n">orchestrator</span> <span class="o">=</span> <span class="n">TDDOrchestrator</span><span class="p">()</span>
+</code></pre></div>
+<p><strong>Methods:</strong></p>
+<p><strong><code>async start_tdd_cycle(story_id: str, tasks: List[str]) -&gt; TDDCycle</code></strong></p>
+<p>Start a new TDD cycle for a story with specified tasks.</p>
+<p><strong><code>async progress_tdd_cycle(cycle_id: str, command: str) -&gt; TDDCommandResult</code></strong></p>
+<p>Advance a TDD cycle through the next state based on command.</p>
+<p><strong><code>async get_active_tdd_cycles() -&gt; List[TDDCycle]</code></strong></p>
+<p>Get all currently active TDD cycles across all stories.</p>
+<p><strong><code>async pause_tdd_cycle(cycle_id: str) -&gt; bool</code></strong></p>
+<p>Temporarily pause a TDD cycle.</p>
+<p><strong><code>async resume_tdd_cycle(cycle_id: str) -&gt; bool</code></strong></p>
+<p>Resume a paused TDD cycle.</p>
+<p><strong><code>async get_tdd_metrics(time_period: str = "30d") -&gt; Dict[str, Any]</code></strong></p>
+<p>Get TDD performance metrics and analytics.</p>
+<h3 id="tdd-integration-examples">TDD Integration Examples<a class="headerlink" href="#tdd-integration-examples" title="Permanent link">¶</a></h3>
+<h4 id="complete-tdd-cycle-management">Complete TDD Cycle Management<a class="headerlink" href="#complete-tdd-cycle-management" title="Permanent link">¶</a></h4>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-32-1" id="__codelineno-32-1" name="__codelineno-32-1"></a><span class="kn">import</span> <span class="nn">asyncio</span>
+<a href="#__codelineno-32-2" id="__codelineno-32-2" name="__codelineno-32-2"></a><span class="kn">from</span> <span class="nn">lib.tdd_state_machine</span> <span class="kn">import</span> <span class="n">TDDStateMachine</span>
+<a href="#__codelineno-32-3" id="__codelineno-32-3" name="__codelineno-32-3"></a><span class="kn">from</span> <span class="nn">lib.tdd_models</span> <span class="kn">import</span> <span class="n">TDDCycle</span><span class="p">,</span> <span class="n">TDDTask</span>
+<a href="#__codelineno-32-4" id="__codelineno-32-4" name="__codelineno-32-4"></a><span class="kn">from</span> <span class="nn">lib.agents.design_agent</span> <span class="kn">import</span> <span class="n">DesignAgent</span>
+<a href="#__codelineno-32-5" id="__codelineno-32-5" name="__codelineno-32-5"></a><span class="kn">from</span> <span class="nn">lib.agents.qa_agent</span> <span class="kn">import</span> <span class="n">QAAgent</span>
+<a href="#__codelineno-32-6" id="__codelineno-32-6" name="__codelineno-32-6"></a><span class="kn">from</span> <span class="nn">lib.agents.code_agent</span> <span class="kn">import</span> <span class="n">CodeAgent</span>
+<a href="#__codelineno-32-7" id="__codelineno-32-7" name="__codelineno-32-7"></a>
+<a href="#__codelineno-32-8" id="__codelineno-32-8" name="__codelineno-32-8"></a><span class="k">async</span> <span class="k">def</span> <span class="nf">run_complete_tdd_cycle</span><span class="p">():</span>
+<a href="#__codelineno-32-9" id="__codelineno-32-9" name="__codelineno-32-9"></a>    <span class="c1"># Initialize TDD cycle</span>
+<a href="#__codelineno-32-10" id="__codelineno-32-10" name="__codelineno-32-10"></a>    <span class="n">cycle</span> <span class="o">=</span> <span class="n">TDDCycle</span><span class="p">(</span><span class="n">story_id</span><span class="o">=</span><span class="s2">"AUTH-001"</span><span class="p">)</span>
+<a href="#__codelineno-32-11" id="__codelineno-32-11" name="__codelineno-32-11"></a>    <span class="n">task</span> <span class="o">=</span> <span class="n">TDDTask</span><span class="p">(</span>
+<a href="#__codelineno-32-12" id="__codelineno-32-12" name="__codelineno-32-12"></a>        <span class="n">description</span><span class="o">=</span><span class="s2">"Implement user login API"</span><span class="p">,</span>
+<a href="#__codelineno-32-13" id="__codelineno-32-13" name="__codelineno-32-13"></a>        <span class="n">acceptance_criteria</span><span class="o">=</span><span class="p">[</span><span class="s2">"User can authenticate"</span><span class="p">,</span> <span class="s2">"Invalid credentials rejected"</span><span class="p">]</span>
+<a href="#__codelineno-32-14" id="__codelineno-32-14" name="__codelineno-32-14"></a>    <span class="p">)</span>
+<a href="#__codelineno-32-15" id="__codelineno-32-15" name="__codelineno-32-15"></a>    <span class="n">cycle</span><span class="o">.</span><span class="n">add_task</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
+<a href="#__codelineno-32-16" id="__codelineno-32-16" name="__codelineno-32-16"></a>
+<a href="#__codelineno-32-17" id="__codelineno-32-17" name="__codelineno-32-17"></a>    <span class="c1"># Initialize state machine</span>
+<a href="#__codelineno-32-18" id="__codelineno-32-18" name="__codelineno-32-18"></a>    <span class="n">tdd_sm</span> <span class="o">=</span> <span class="n">TDDStateMachine</span><span class="p">()</span>
+<a href="#__codelineno-32-19" id="__codelineno-32-19" name="__codelineno-32-19"></a>    <span class="n">tdd_sm</span><span class="o">.</span><span class="n">set_active_cycle</span><span class="p">(</span><span class="n">cycle</span><span class="p">)</span>
+<a href="#__codelineno-32-20" id="__codelineno-32-20" name="__codelineno-32-20"></a>
+<a href="#__codelineno-32-21" id="__codelineno-32-21" name="__codelineno-32-21"></a>    <span class="c1"># Phase 1: Design</span>
+<a href="#__codelineno-32-22" id="__codelineno-32-22" name="__codelineno-32-22"></a>    <span class="n">design_agent</span> <span class="o">=</span> <span class="n">DesignAgent</span><span class="p">()</span>
+<a href="#__codelineno-32-23" id="__codelineno-32-23" name="__codelineno-32-23"></a>    <span class="n">design_result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">design_agent</span><span class="o">.</span><span class="n">run_tdd_design</span><span class="p">(</span>
+<a href="#__codelineno-32-24" id="__codelineno-32-24" name="__codelineno-32-24"></a>        <span class="n">story</span><span class="o">=</span><span class="n">task</span><span class="o">.</span><span class="n">description</span><span class="p">,</span>
+<a href="#__codelineno-32-25" id="__codelineno-32-25" name="__codelineno-32-25"></a>        <span class="n">acceptance_criteria</span><span class="o">=</span><span class="n">task</span><span class="o">.</span><span class="n">acceptance_criteria</span>
+<a href="#__codelineno-32-26" id="__codelineno-32-26" name="__codelineno-32-26"></a>    <span class="p">)</span>
+<a href="#__codelineno-32-27" id="__codelineno-32-27" name="__codelineno-32-27"></a>
+<a href="#__codelineno-32-28" id="__codelineno-32-28" name="__codelineno-32-28"></a>    <span class="c1"># Transition to TEST_RED</span>
+<a href="#__codelineno-32-29" id="__codelineno-32-29" name="__codelineno-32-29"></a>    <span class="n">transition_result</span> <span class="o">=</span> <span class="n">tdd_sm</span><span class="o">.</span><span class="n">transition</span><span class="p">(</span><span class="s2">"/tdd test"</span><span class="p">,</span> <span class="n">cycle</span><span class="p">)</span>
+<a href="#__codelineno-32-30" id="__codelineno-32-30" name="__codelineno-32-30"></a>    <span class="k">if</span> <span class="n">transition_result</span><span class="o">.</span><span class="n">success</span><span class="p">:</span>
+<a href="#__codelineno-32-31" id="__codelineno-32-31" name="__codelineno-32-31"></a>        <span class="c1"># Phase 2: Write failing tests</span>
+<a href="#__codelineno-32-32" id="__codelineno-32-32" name="__codelineno-32-32"></a>        <span class="n">qa_agent</span> <span class="o">=</span> <span class="n">QAAgent</span><span class="p">()</span>
+<a href="#__codelineno-32-33" id="__codelineno-32-33" name="__codelineno-32-33"></a>        <span class="n">test_files</span> <span class="o">=</span> <span class="k">await</span> <span class="n">qa_agent</span><span class="o">.</span><span class="n">run_tdd_test_creation</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
+<a href="#__codelineno-32-34" id="__codelineno-32-34" name="__codelineno-32-34"></a>
+<a href="#__codelineno-32-35" id="__codelineno-32-35" name="__codelineno-32-35"></a>        <span class="c1"># Commit tests</span>
+<a href="#__codelineno-32-36" id="__codelineno-32-36" name="__codelineno-32-36"></a>        <span class="n">commit_result</span> <span class="o">=</span> <span class="n">tdd_sm</span><span class="o">.</span><span class="n">transition</span><span class="p">(</span><span class="s2">"/tdd commit-tests"</span><span class="p">,</span> <span class="n">cycle</span><span class="p">)</span>
+<a href="#__codelineno-32-37" id="__codelineno-32-37" name="__codelineno-32-37"></a>        <span class="k">if</span> <span class="n">commit_result</span><span class="o">.</span><span class="n">success</span><span class="p">:</span>
+<a href="#__codelineno-32-38" id="__codelineno-32-38" name="__codelineno-32-38"></a>            <span class="c1"># Phase 3: Implement code</span>
+<a href="#__codelineno-32-39" id="__codelineno-32-39" name="__codelineno-32-39"></a>            <span class="n">code_agent</span> <span class="o">=</span> <span class="n">CodeAgent</span><span class="p">()</span>
+<a href="#__codelineno-32-40" id="__codelineno-32-40" name="__codelineno-32-40"></a>            <span class="n">source_files</span> <span class="o">=</span> <span class="k">await</span> <span class="n">code_agent</span><span class="o">.</span><span class="n">run_tdd_implementation</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
+<a href="#__codelineno-32-41" id="__codelineno-32-41" name="__codelineno-32-41"></a>
+<a href="#__codelineno-32-42" id="__codelineno-32-42" name="__codelineno-32-42"></a>            <span class="c1"># Validate green state</span>
+<a href="#__codelineno-32-43" id="__codelineno-32-43" name="__codelineno-32-43"></a>            <span class="n">is_green</span> <span class="o">=</span> <span class="k">await</span> <span class="n">code_agent</span><span class="o">.</span><span class="n">validate_green_state</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
+<a href="#__codelineno-32-44" id="__codelineno-32-44" name="__codelineno-32-44"></a>            <span class="k">if</span> <span class="n">is_green</span><span class="p">:</span>
+<a href="#__codelineno-32-45" id="__codelineno-32-45" name="__codelineno-32-45"></a>                <span class="c1"># Phase 4: Refactor</span>
+<a href="#__codelineno-32-46" id="__codelineno-32-46" name="__codelineno-32-46"></a>                <span class="n">refactor_result</span> <span class="o">=</span> <span class="n">tdd_sm</span><span class="o">.</span><span class="n">transition</span><span class="p">(</span><span class="s2">"/tdd refactor"</span><span class="p">,</span> <span class="n">cycle</span><span class="p">)</span>
+<a href="#__codelineno-32-47" id="__codelineno-32-47" name="__codelineno-32-47"></a>                <span class="k">if</span> <span class="n">refactor_result</span><span class="o">.</span><span class="n">success</span><span class="p">:</span>
+<a href="#__codelineno-32-48" id="__codelineno-32-48" name="__codelineno-32-48"></a>                    <span class="n">refactored_files</span> <span class="o">=</span> <span class="k">await</span> <span class="n">code_agent</span><span class="o">.</span><span class="n">run_tdd_refactor</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
+<a href="#__codelineno-32-49" id="__codelineno-32-49" name="__codelineno-32-49"></a>
+<a href="#__codelineno-32-50" id="__codelineno-32-50" name="__codelineno-32-50"></a>                    <span class="c1"># Final commit</span>
+<a href="#__codelineno-32-51" id="__codelineno-32-51" name="__codelineno-32-51"></a>                    <span class="n">final_result</span> <span class="o">=</span> <span class="n">tdd_sm</span><span class="o">.</span><span class="n">transition</span><span class="p">(</span><span class="s2">"/tdd commit"</span><span class="p">,</span> <span class="n">cycle</span><span class="p">)</span>
+<a href="#__codelineno-32-52" id="__codelineno-32-52" name="__codelineno-32-52"></a>                    <span class="k">return</span> <span class="n">final_result</span><span class="o">.</span><span class="n">success</span>
+<a href="#__codelineno-32-53" id="__codelineno-32-53" name="__codelineno-32-53"></a>
+<a href="#__codelineno-32-54" id="__codelineno-32-54" name="__codelineno-32-54"></a>    <span class="k">return</span> <span class="kc">False</span>
+<a href="#__codelineno-32-55" id="__codelineno-32-55" name="__codelineno-32-55"></a>
+<a href="#__codelineno-32-56" id="__codelineno-32-56" name="__codelineno-32-56"></a><span class="c1"># Usage</span>
+<a href="#__codelineno-32-57" id="__codelineno-32-57" name="__codelineno-32-57"></a><span class="n">success</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">run_complete_tdd_cycle</span><span class="p">())</span>
+</code></pre></div>
+<h4 id="tdd-metrics-and-monitoring">TDD Metrics and Monitoring<a class="headerlink" href="#tdd-metrics-and-monitoring" title="Permanent link">¶</a></h4>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-33-1" id="__codelineno-33-1" name="__codelineno-33-1"></a><span class="kn">from</span> <span class="nn">lib.tdd_orchestrator</span> <span class="kn">import</span> <span class="n">TDDOrchestrator</span>
+<a href="#__codelineno-33-2" id="__codelineno-33-2" name="__codelineno-33-2"></a>
+<a href="#__codelineno-33-3" id="__codelineno-33-3" name="__codelineno-33-3"></a><span class="k">async</span> <span class="k">def</span> <span class="nf">monitor_tdd_progress</span><span class="p">():</span>
+<a href="#__codelineno-33-4" id="__codelineno-33-4" name="__codelineno-33-4"></a>    <span class="n">orchestrator</span> <span class="o">=</span> <span class="n">TDDOrchestrator</span><span class="p">()</span>
+<a href="#__codelineno-33-5" id="__codelineno-33-5" name="__codelineno-33-5"></a>
+<a href="#__codelineno-33-6" id="__codelineno-33-6" name="__codelineno-33-6"></a>    <span class="c1"># Get all active cycles</span>
+<a href="#__codelineno-33-7" id="__codelineno-33-7" name="__codelineno-33-7"></a>    <span class="n">active_cycles</span> <span class="o">=</span> <span class="k">await</span> <span class="n">orchestrator</span><span class="o">.</span><span class="n">get_active_tdd_cycles</span><span class="p">()</span>
+<a href="#__codelineno-33-8" id="__codelineno-33-8" name="__codelineno-33-8"></a>
+<a href="#__codelineno-33-9" id="__codelineno-33-9" name="__codelineno-33-9"></a>    <span class="k">for</span> <span class="n">cycle</span> <span class="ow">in</span> <span class="n">active_cycles</span><span class="p">:</span>
+<a href="#__codelineno-33-10" id="__codelineno-33-10" name="__codelineno-33-10"></a>        <span class="n">progress</span> <span class="o">=</span> <span class="n">cycle</span><span class="o">.</span><span class="n">get_progress_summary</span><span class="p">()</span>
+<a href="#__codelineno-33-11" id="__codelineno-33-11" name="__codelineno-33-11"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Story </span><span class="si">{</span><span class="n">cycle</span><span class="o">.</span><span class="n">story_id</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">progress</span><span class="p">[</span><span class="s1">'current_state'</span><span class="p">]</span><span class="si">}</span><span class="s2"> "</span>
+<a href="#__codelineno-33-12" id="__codelineno-33-12" name="__codelineno-33-12"></a>              <span class="sa">f</span><span class="s2">"(</span><span class="si">{</span><span class="n">progress</span><span class="p">[</span><span class="s1">'progress'</span><span class="p">]</span><span class="si">}</span><span class="s2"> tasks complete)"</span><span class="p">)</span>
+<a href="#__codelineno-33-13" id="__codelineno-33-13" name="__codelineno-33-13"></a>
+<a href="#__codelineno-33-14" id="__codelineno-33-14" name="__codelineno-33-14"></a>        <span class="n">current_task</span> <span class="o">=</span> <span class="n">cycle</span><span class="o">.</span><span class="n">get_current_task</span><span class="p">()</span>
+<a href="#__codelineno-33-15" id="__codelineno-33-15" name="__codelineno-33-15"></a>        <span class="k">if</span> <span class="n">current_task</span><span class="p">:</span>
+<a href="#__codelineno-33-16" id="__codelineno-33-16" name="__codelineno-33-16"></a>            <span class="k">if</span> <span class="n">current_task</span><span class="o">.</span><span class="n">has_failing_tests</span><span class="p">():</span>
+<a href="#__codelineno-33-17" id="__codelineno-33-17" name="__codelineno-33-17"></a>                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  - RED: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">current_task</span><span class="o">.</span><span class="n">test_results</span><span class="p">)</span><span class="si">}</span><span class="s2"> tests failing"</span><span class="p">)</span>
+<a href="#__codelineno-33-18" id="__codelineno-33-18" name="__codelineno-33-18"></a>            <span class="k">elif</span> <span class="n">current_task</span><span class="o">.</span><span class="n">has_passing_tests</span><span class="p">():</span>
+<a href="#__codelineno-33-19" id="__codelineno-33-19" name="__codelineno-33-19"></a>                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  - GREEN: All tests passing, coverage: </span><span class="si">{</span><span class="n">current_task</span><span class="o">.</span><span class="n">test_coverage</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%"</span><span class="p">)</span>
+<a href="#__codelineno-33-20" id="__codelineno-33-20" name="__codelineno-33-20"></a>
+<a href="#__codelineno-33-21" id="__codelineno-33-21" name="__codelineno-33-21"></a>    <span class="c1"># Get performance metrics</span>
+<a href="#__codelineno-33-22" id="__codelineno-33-22" name="__codelineno-33-22"></a>    <span class="n">metrics</span> <span class="o">=</span> <span class="k">await</span> <span class="n">orchestrator</span><span class="o">.</span><span class="n">get_tdd_metrics</span><span class="p">(</span><span class="s2">"7d"</span><span class="p">)</span>
+<a href="#__codelineno-33-23" id="__codelineno-33-23" name="__codelineno-33-23"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Last 7 days: </span><span class="si">{</span><span class="n">metrics</span><span class="p">[</span><span class="s1">'total_cycles'</span><span class="p">]</span><span class="si">}</span><span class="s2"> cycles, "</span>
+<a href="#__codelineno-33-24" id="__codelineno-33-24" name="__codelineno-33-24"></a>          <span class="sa">f</span><span class="s2">"avg cycle time: </span><span class="si">{</span><span class="n">metrics</span><span class="p">[</span><span class="s1">'avg_cycle_time'</span><span class="p">]</span><span class="si">}</span><span class="s2"> minutes"</span><span class="p">)</span>
+<a href="#__codelineno-33-25" id="__codelineno-33-25" name="__codelineno-33-25"></a>
+<a href="#__codelineno-33-26" id="__codelineno-33-26" name="__codelineno-33-26"></a><span class="c1"># Usage</span>
+<a href="#__codelineno-33-27" id="__codelineno-33-27" name="__codelineno-33-27"></a><span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">monitor_tdd_progress</span><span class="p">())</span>
 </code></pre></div>
 <p>This API reference provides comprehensive coverage of the system's public interfaces and usage patterns.</p>
 </article>

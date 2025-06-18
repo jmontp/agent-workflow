@@ -25,7 +25,7 @@
 <input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
 <label class="md-overlay" for="__drawer"></label>
 <div data-md-component="skip">
-<a class="md-skip" href="#ai-agent-scrum-workflows-research-mode-v3">
+<a class="md-skip" href="#ai-agent-tdd-scrum-workflows-dual-state-machine-v4">
           Skip to content
         </a>
 </div>
@@ -159,6 +159,15 @@
         </a>
 </li>
 <li class="md-tabs__item">
+<a class="md-tabs__link" href="../../architecture/overview/">
+          
+  
+  
+  Architecture
+
+        </a>
+</li>
+<li class="md-tabs__item">
 <a class="md-tabs__link" href="../../development/contributing/">
           
   
@@ -286,6 +295,14 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="../tdd-workflow/">
+<span class="md-ellipsis">
+    TDD Workflow
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="../project-setup/">
 <span class="md-ellipsis">
     Project Setup
@@ -315,9 +332,9 @@
     </label>
 <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="#1-main-workflow-lightweight-scrum-cycle">
+<a class="md-nav__link" href="#1-enhanced-tdd-scrum-workflow">
 <span class="md-ellipsis">
-      1. Main Workflow: Lightweight Scrum Cycle
+      1. Enhanced TDD-Scrum Workflow
     </span>
 </a>
 </li>
@@ -336,9 +353,30 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#4-debug-rework-loop-condensed">
+<a class="md-nav__link" href="#4-tdd-cycle-management">
 <span class="md-ellipsis">
-      4. Debug &amp; Rework Loop (Condensed)
+      4. TDD Cycle Management
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5-parallel-tdd-monitoring">
+<span class="md-ellipsis">
+      5. Parallel TDD Monitoring
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#6-tdd-error-handling-and-recovery">
+<span class="md-ellipsis">
+      6. TDD Error Handling and Recovery
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#7-debug-rework-loop-condensed">
+<span class="md-ellipsis">
+      7. Debug &amp; Rework Loop (Condensed)
     </span>
 </a>
 </li>
@@ -508,13 +546,55 @@
 <input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_6" type="checkbox"/>
 <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
 <span class="md-ellipsis">
-    Development
+    Architecture
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
 <nav aria-expanded="false" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
 <label class="md-nav__title" for="__nav_6">
+<span class="md-nav__icon md-icon"></span>
+            Architecture
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../architecture/overview/">
+<span class="md-ellipsis">
+    System Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../architecture/context-management-system/">
+<span class="md-ellipsis">
+    Context Management
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../architecture/parallel-tdd-architecture/">
+<span class="md-ellipsis">
+    Parallel TDD Design
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_7" type="checkbox"/>
+<label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+<span class="md-ellipsis">
+    Development
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_7_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_7">
 <span class="md-nav__icon md-icon"></span>
             Development
           </label>
@@ -539,16 +619,16 @@
 </nav>
 </li>
 <li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_7" type="checkbox"/>
-<label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_8" type="checkbox"/>
+<label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
 <span class="md-ellipsis">
     Deployment
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="false" aria-labelledby="__nav_7_label" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="__nav_7">
+<nav aria-expanded="false" aria-labelledby="__nav_8_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_8">
 <span class="md-nav__icon md-icon"></span>
             Deployment
           </label>
@@ -595,9 +675,9 @@
     </label>
 <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="#1-main-workflow-lightweight-scrum-cycle">
+<a class="md-nav__link" href="#1-enhanced-tdd-scrum-workflow">
 <span class="md-ellipsis">
-      1. Main Workflow: Lightweight Scrum Cycle
+      1. Enhanced TDD-Scrum Workflow
     </span>
 </a>
 </li>
@@ -616,9 +696,30 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#4-debug-rework-loop-condensed">
+<a class="md-nav__link" href="#4-tdd-cycle-management">
 <span class="md-ellipsis">
-      4. Debug &amp; Rework Loop (Condensed)
+      4. TDD Cycle Management
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5-parallel-tdd-monitoring">
+<span class="md-ellipsis">
+      5. Parallel TDD Monitoring
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#6-tdd-error-handling-and-recovery">
+<span class="md-ellipsis">
+      6. TDD Error Handling and Recovery
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#7-debug-rework-loop-condensed">
+<span class="md-ellipsis">
+      7. Debug &amp; Rework Loop (Condensed)
     </span>
 </a>
 </li>
@@ -629,65 +730,110 @@
 </div>
 <div class="md-content" data-md-component="content">
 <article class="md-content__inner md-typeset">
-<h1 id="ai-agent-scrum-workflows-research-mode-v3">AI Agent Scrum Workflows – Research Mode (v3)<a class="headerlink" href="#ai-agent-scrum-workflows-research-mode-v3" title="Permanent link">¶</a></h1>
-<p>This file documents the core interaction patterns between the Product Owner (single user) and the AI-powered Orchestrator + specialist agents.</p>
+<h1 id="ai-agent-tdd-scrum-workflows-dual-state-machine-v4">AI Agent TDD-Scrum Workflows – Dual State Machine (v4)<a class="headerlink" href="#ai-agent-tdd-scrum-workflows-dual-state-machine-v4" title="Permanent link">¶</a></h1>
+<p>This file documents the core interaction patterns between the Product Owner (single user) and the AI-powered dual state machine system with integrated TDD workflows.</p>
 <hr/>
-<h2 id="1-main-workflow-lightweight-scrum-cycle">1. Main Workflow: Lightweight Scrum Cycle<a class="headerlink" href="#1-main-workflow-lightweight-scrum-cycle" title="Permanent link">¶</a></h2>
+<h2 id="1-enhanced-tdd-scrum-workflow">1. Enhanced TDD-Scrum Workflow<a class="headerlink" href="#1-enhanced-tdd-scrum-workflow" title="Permanent link">¶</a></h2>
 <pre class="mermaid"><code>%%{init: {'theme': 'dark'}}%%
 sequenceDiagram
-    title "AI Agent Research Scrum Workflow"
+    title "Enhanced TDD-Scrum Workflow with Dual State Machines"
 
     participant U as "User (Product Owner)"
-    participant BOT as "Orchestrator (Scrum Master)"
-    box "Specialist Agents"
-        participant QA as "QA Agent"
-        participant DEV as "Code Agent"
-        participant DOC as "Doc Agent"
+    participant WSM as "Workflow State Machine"
+    participant Coord as "Multi-Task Coordinator"
+    box "TDD Cycle AUTH-1"
+        participant TDD1 as "TDD State Machine"
+        participant DESIGN1 as "Design Agent"
+        participant QA1 as "QA Agent"
+        participant DEV1 as "Code Agent"
+    end
+    box "TDD Cycle AUTH-2"
+        participant TDD2 as "TDD State Machine"
+        participant DESIGN2 as "Design Agent"
+        participant QA2 as "QA Agent"
+        participant DEV2 as "Code Agent"
     end
     participant GH as "GitHub Repo"
     participant CI as "CI Runner"
 
     %% == 1. Vision &amp; Backlog ==
-    U-&gt;&gt;BOT: /epic "Build auth system"
-    BOT-&gt;&gt;BOT: Decompose into candidate stories (AUTH-1, AUTH-2)
-    BOT--&gt;&gt;U: "Proposed stories ready: [AUTH-1, AUTH-2]"
+    U-&gt;&gt;WSM: /epic "Build auth system"
+    WSM-&gt;&gt;WSM: Decompose into candidate stories (AUTH-1, AUTH-2)
+    WSM--&gt;&gt;U: "Proposed stories ready: [AUTH-1, AUTH-2]"
 
-    U-&gt;&gt;BOT: /approve AUTH-1 AUTH-2
-    BOT-&gt;&gt;BOT: Add stories to product backlog
+    U-&gt;&gt;WSM: /approve AUTH-1 AUTH-2
+    WSM-&gt;&gt;WSM: Add stories to product backlog (BACKLOG_READY)
 
     %% == 2. Sprint Planning ==
-    U-&gt;&gt;BOT: /sprint plan AUTH-1 AUTH-2
-    BOT--&gt;&gt;U: "Sprint drafted: Auth ‑ Basic"
-    U-&gt;&gt;BOT: /sprint start
+    U-&gt;&gt;WSM: /sprint plan AUTH-1 AUTH-2
+    WSM--&gt;&gt;U: "Sprint drafted: Auth System"
+    U-&gt;&gt;WSM: /sprint start
+    WSM-&gt;&gt;WSM: SPRINT_PLANNED → SPRINT_ACTIVE
 
-    %% == 3. Sprint Execution ==
-    loop each task in Sprint
-        BOT-&gt;&gt;QA: "Write failing tests for TASK"
-        QA--&gt;&gt;BOT: test_task.py
+    %% == 3. Parallel TDD Execution ==
+    WSM-&gt;&gt;Coord: Create TDD cycles for AUTH-1, AUTH-2
+    Coord-&gt;&gt;TDD1: Initialize TDD cycle for AUTH-1
+    Coord-&gt;&gt;TDD2: Initialize TDD cycle for AUTH-2
 
-        BOT-&gt;&gt;DEV: "Implement code to pass tests" + test_task.py
-        DEV--&gt;&gt;BOT: patch.diff
+    par AUTH-1 TDD Cycle
+        TDD1-&gt;&gt;TDD1: DESIGN phase
+        TDD1-&gt;&gt;DESIGN1: Create auth API specs
+        DESIGN1--&gt;&gt;TDD1: Technical specifications
 
-        BOT-&gt;&gt;GH: Push branch feat/TASK
-        GH-&gt;&gt;CI: run pytest &amp; lint
-        CI--&gt;&gt;BOT: report ✔ / ✖
+        TDD1-&gt;&gt;TDD1: TEST_RED phase
+        TDD1-&gt;&gt;QA1: Write failing tests
+        QA1--&gt;&gt;TDD1: test_auth_api.py (failing)
 
-        alt Tests pass
-            BOT-&gt;&gt;DOC: "Add docs for TASK"
-            DOC--&gt;&gt;BOT: docs_update.md
-            BOT-&gt;&gt;GH: Commit docs_update.md
-        else Tests fail &amp; attempt &lt; 3
-            BOT-&gt;&gt;DEV: "CI failed – please fix"
-        else Tests fail after 3 attempts
-            BOT--&gt;&gt;U: "TASK blocked"  \nOptions: /suggest_fix, /skip_task
-        end
+        TDD1-&gt;&gt;TDD1: CODE_GREEN phase
+        TDD1-&gt;&gt;DEV1: Implement to pass tests
+        DEV1--&gt;&gt;TDD1: auth_api.py
+        DEV1-&gt;&gt;GH: Push AUTH-1 implementation
+        GH-&gt;&gt;CI: Run tests for AUTH-1
+        CI--&gt;&gt;TDD1: ✔ All tests pass
+
+        TDD1-&gt;&gt;TDD1: REFACTOR phase
+        TDD1-&gt;&gt;DEV1: Improve code quality
+        DEV1--&gt;&gt;TDD1: Refactored auth_api.py
+
+        TDD1-&gt;&gt;TDD1: COMMIT phase
+        TDD1-&gt;&gt;DEV1: Final commit for AUTH-1
+        DEV1-&gt;&gt;GH: Commit AUTH-1 complete
+        TDD1--&gt;&gt;Coord: AUTH-1 complete
+
+    and AUTH-2 TDD Cycle
+        TDD2-&gt;&gt;TDD2: DESIGN phase
+        TDD2-&gt;&gt;DESIGN2: Create user model specs
+        DESIGN2--&gt;&gt;TDD2: User model specifications
+
+        TDD2-&gt;&gt;TDD2: TEST_RED phase
+        TDD2-&gt;&gt;QA2: Write failing tests
+        QA2--&gt;&gt;TDD2: test_user_model.py (failing)
+
+        TDD2-&gt;&gt;TDD2: CODE_GREEN phase
+        TDD2-&gt;&gt;DEV2: Implement user model
+        DEV2--&gt;&gt;TDD2: user_model.py
+        DEV2-&gt;&gt;GH: Push AUTH-2 implementation
+        GH-&gt;&gt;CI: Run tests for AUTH-2
+        CI--&gt;&gt;TDD2: ✔ All tests pass
+
+        TDD2-&gt;&gt;TDD2: REFACTOR phase
+        TDD2-&gt;&gt;DEV2: Optimize user model
+        DEV2--&gt;&gt;TDD2: Optimized user_model.py
+
+        TDD2-&gt;&gt;TDD2: COMMIT phase
+        TDD2-&gt;&gt;DEV2: Final commit for AUTH-2
+        DEV2-&gt;&gt;GH: Commit AUTH-2 complete
+        TDD2--&gt;&gt;Coord: AUTH-2 complete
     end
 
-    %% == 4. Sprint Review ==
-    BOT-&gt;&gt;GH: Open PR "auth-sprint"
-    BOT--&gt;&gt;U: "Sprint ready – please review PR #123"
-    U-&gt;&gt;BOT: /request_changes "Guard against duplicate emails"
-    note over BOT: Changes become new backlog item.</code></pre>
+    %% == 4. Sprint Completion ==
+    Coord--&gt;&gt;WSM: All TDD cycles complete
+    WSM-&gt;&gt;WSM: SPRINT_ACTIVE → SPRINT_REVIEW
+    WSM-&gt;&gt;GH: Create Sprint PR
+    WSM--&gt;&gt;U: "Sprint complete - Review PR #123"
+
+    U-&gt;&gt;WSM: /feedback "Great TDD implementation!"
+    WSM-&gt;&gt;WSM: SPRINT_REVIEW → IDLE</code></pre>
 <hr/>
 <h2 id="2-backlog-management-flow">2. Backlog Management Flow<a class="headerlink" href="#2-backlog-management-flow" title="Permanent link">¶</a></h2>
 <pre class="mermaid"><code>%%{init: {'theme': 'dark'}}%%
@@ -730,7 +876,117 @@ sequenceDiagram
     BOT-&gt;&gt;BOT: Resume tasks
     BOT--&gt;&gt;U: "Sprint resumed"</code></pre>
 <hr/>
-<h2 id="4-debug-rework-loop-condensed">4. Debug &amp; Rework Loop (Condensed)<a class="headerlink" href="#4-debug-rework-loop-condensed" title="Permanent link">¶</a></h2>
+<h2 id="4-tdd-cycle-management">4. TDD Cycle Management<a class="headerlink" href="#4-tdd-cycle-management" title="Permanent link">¶</a></h2>
+<pre class="mermaid"><code>%%{init: {'theme': 'dark'}}%%
+sequenceDiagram
+    title "Individual TDD Cycle Control"
+
+    participant U as "User"
+    participant TDD as "TDD State Machine"
+    participant DESIGN as "Design Agent"
+    participant QA as "QA Agent"
+    participant CODE as "Code Agent"
+
+    U-&gt;&gt;TDD: /tdd status AUTH-1
+    TDD--&gt;&gt;U: "AUTH-1 in DESIGN phase"
+
+    TDD-&gt;&gt;DESIGN: Create specifications
+    DESIGN--&gt;&gt;TDD: Technical specs complete
+    TDD-&gt;&gt;TDD: DESIGN → TEST_RED
+
+    TDD-&gt;&gt;QA: Write failing tests
+    QA--&gt;&gt;TDD: 12 failing tests written
+
+    U-&gt;&gt;TDD: /tdd review_cycle AUTH-1
+    TDD--&gt;&gt;U: "Review request: 12 tests ready for implementation"
+    U-&gt;&gt;TDD: /approve
+
+    TDD-&gt;&gt;TDD: TEST_RED → CODE_GREEN
+    TDD-&gt;&gt;CODE: Implement to pass tests
+    CODE--&gt;&gt;TDD: Implementation complete
+
+    U-&gt;&gt;TDD: /tdd status AUTH-1
+    TDD--&gt;&gt;U: "AUTH-1 in REFACTOR phase - quality gates met"
+
+    TDD-&gt;&gt;TDD: REFACTOR → COMMIT
+    TDD-&gt;&gt;CODE: Final commit
+    CODE--&gt;&gt;TDD: Story complete</code></pre>
+<hr/>
+<h2 id="5-parallel-tdd-monitoring">5. Parallel TDD Monitoring<a class="headerlink" href="#5-parallel-tdd-monitoring" title="Permanent link">¶</a></h2>
+<pre class="mermaid"><code>%%{init: {'theme': 'dark'}}%%
+sequenceDiagram
+    title "Multi-Story TDD Coordination"
+
+    participant U as "User"
+    participant Coord as "Coordinator"
+    participant TDD_A as "TDD AUTH-1"
+    participant TDD_B as "TDD AUTH-2"
+    participant TDD_C as "TDD AUTH-3"
+
+    U-&gt;&gt;Coord: /tdd overview
+    Coord-&gt;&gt;TDD_A: Get status
+    Coord-&gt;&gt;TDD_B: Get status
+    Coord-&gt;&gt;TDD_C: Get status
+
+    TDD_A--&gt;&gt;Coord: "CODE_GREEN - 14/15 tests"
+    TDD_B--&gt;&gt;Coord: "REFACTOR - applying patterns"
+    TDD_C--&gt;&gt;Coord: "DESIGN - creating specs"
+
+    Coord--&gt;&gt;U: Display parallel progress table
+
+    Note over U,Coord: User sees all TDD cycles at once
+
+    U-&gt;&gt;Coord: /tdd pause AUTH-2
+    Coord-&gt;&gt;TDD_B: Pause cycle
+    TDD_B--&gt;&gt;Coord: "AUTH-2 paused in REFACTOR"
+
+    U-&gt;&gt;Coord: /suggest_fix "AUTH-2 needs error handling for async flows"
+    Coord-&gt;&gt;TDD_B: Apply suggestion
+
+    U-&gt;&gt;Coord: /tdd resume AUTH-2
+    Coord-&gt;&gt;TDD_B: Resume with guidance
+    TDD_B--&gt;&gt;Coord: "AUTH-2 resumed in REFACTOR"</code></pre>
+<hr/>
+<h2 id="6-tdd-error-handling-and-recovery">6. TDD Error Handling and Recovery<a class="headerlink" href="#6-tdd-error-handling-and-recovery" title="Permanent link">¶</a></h2>
+<pre class="mermaid"><code>%%{init: {'theme': 'dark'}}%%
+sequenceDiagram
+    title "TDD Cycle Error Recovery"
+
+    participant U as "User"
+    participant TDD as "TDD State Machine"
+    participant CODE as "Code Agent"
+    participant CI as "CI System"
+
+    TDD-&gt;&gt;CODE: Implement feature (attempt 1)
+    CODE-&gt;&gt;CI: Push implementation
+    CI--&gt;&gt;TDD: ❌ Tests fail
+
+    TDD-&gt;&gt;CODE: Fix tests (attempt 2)
+    CODE-&gt;&gt;CI: Push fix
+    CI--&gt;&gt;TDD: ❌ Tests fail
+
+    TDD-&gt;&gt;CODE: Fix tests (attempt 3)
+    CODE-&gt;&gt;CI: Push fix
+    CI--&gt;&gt;TDD: ❌ Tests fail
+
+    TDD--&gt;&gt;U: "AUTH-1 blocked in CODE_GREEN after 3 attempts"
+
+    alt User provides guidance
+        U-&gt;&gt;TDD: /suggest_fix "Database connection timeout in tests"
+        TDD-&gt;&gt;CODE: Apply suggestion
+        CODE-&gt;&gt;CI: Push with fix
+        CI--&gt;&gt;TDD: ✅ Tests pass
+        TDD-&gt;&gt;TDD: CODE_GREEN → REFACTOR
+    else User skips phase
+        U-&gt;&gt;TDD: /tdd skip_phase AUTH-1
+        TDD-&gt;&gt;TDD: CODE_GREEN → REFACTOR (manual override)
+    else User requests review
+        U-&gt;&gt;TDD: /tdd review_cycle AUTH-1
+        TDD--&gt;&gt;U: "Manual review requested for AUTH-1"
+        Note over U,TDD: Human review and intervention
+    end</code></pre>
+<hr/>
+<h2 id="7-debug-rework-loop-condensed">7. Debug &amp; Rework Loop (Condensed)<a class="headerlink" href="#7-debug-rework-loop-condensed" title="Permanent link">¶</a></h2>
 <pre class="mermaid"><code>%%{init: {'theme': 'dark'}}%%
 sequenceDiagram
     title "Debug Loop"

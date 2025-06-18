@@ -159,6 +159,15 @@
         </a>
 </li>
 <li class="md-tabs__item">
+<a class="md-tabs__link" href="../../architecture/overview/">
+          
+  
+  
+  Architecture
+
+        </a>
+</li>
+<li class="md-tabs__item">
 <a class="md-tabs__link" href="../../development/contributing/">
           
   
@@ -281,6 +290,14 @@
 <a class="md-nav__link" href="../state-machine/">
 <span class="md-ellipsis">
     State Machine
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../tdd-workflow/">
+<span class="md-ellipsis">
+    TDD Workflow
     
   </span>
 </a>
@@ -481,6 +498,94 @@
 </nav>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-workflow-issues">
+<span class="md-ellipsis">
+      TDD Workflow Issues
+    </span>
+</a>
+<nav aria-label="TDD Workflow Issues" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-state-machine-problems">
+<span class="md-ellipsis">
+      TDD State Machine Problems
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-cycle-failures">
+<span class="md-ellipsis">
+      TDD Cycle Failures
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#test-preservation-problems">
+<span class="md-ellipsis">
+      Test Preservation Problems
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#agent-coordination-issues-in-tdd">
+<span class="md-ellipsis">
+      Agent Coordination Issues in TDD
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-recovery-procedures">
+<span class="md-ellipsis">
+      TDD Recovery Procedures
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#cicd-integration-issues">
+<span class="md-ellipsis">
+      CI/CD Integration Issues
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#test-coverage-issues">
+<span class="md-ellipsis">
+      Test Coverage Issues
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#performance-issues-in-tdd">
+<span class="md-ellipsis">
+      Performance Issues in TDD
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-configuration-issues">
+<span class="md-ellipsis">
+      TDD Configuration Issues
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#common-error-messages">
+<span class="md-ellipsis">
+      Common Error Messages
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-debugging-commands">
+<span class="md-ellipsis">
+      TDD Debugging Commands
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="#getting-additional-help">
 <span class="md-ellipsis">
       Getting Additional Help
@@ -637,13 +742,55 @@
 <input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_6" type="checkbox"/>
 <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
 <span class="md-ellipsis">
-    Development
+    Architecture
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
 <nav aria-expanded="false" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
 <label class="md-nav__title" for="__nav_6">
+<span class="md-nav__icon md-icon"></span>
+            Architecture
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../architecture/overview/">
+<span class="md-ellipsis">
+    System Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../architecture/context-management-system/">
+<span class="md-ellipsis">
+    Context Management
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../architecture/parallel-tdd-architecture/">
+<span class="md-ellipsis">
+    Parallel TDD Design
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_7" type="checkbox"/>
+<label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+<span class="md-ellipsis">
+    Development
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_7_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_7">
 <span class="md-nav__icon md-icon"></span>
             Development
           </label>
@@ -668,16 +815,16 @@
 </nav>
 </li>
 <li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_7" type="checkbox"/>
-<label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_8" type="checkbox"/>
+<label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
 <span class="md-ellipsis">
     Deployment
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="false" aria-labelledby="__nav_7_label" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="__nav_7">
+<nav aria-expanded="false" aria-labelledby="__nav_8_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_8">
 <span class="md-nav__icon md-icon"></span>
             Deployment
           </label>
@@ -874,6 +1021,94 @@
 </nav>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-workflow-issues">
+<span class="md-ellipsis">
+      TDD Workflow Issues
+    </span>
+</a>
+<nav aria-label="TDD Workflow Issues" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-state-machine-problems">
+<span class="md-ellipsis">
+      TDD State Machine Problems
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-cycle-failures">
+<span class="md-ellipsis">
+      TDD Cycle Failures
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#test-preservation-problems">
+<span class="md-ellipsis">
+      Test Preservation Problems
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#agent-coordination-issues-in-tdd">
+<span class="md-ellipsis">
+      Agent Coordination Issues in TDD
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-recovery-procedures">
+<span class="md-ellipsis">
+      TDD Recovery Procedures
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#cicd-integration-issues">
+<span class="md-ellipsis">
+      CI/CD Integration Issues
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#test-coverage-issues">
+<span class="md-ellipsis">
+      Test Coverage Issues
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#performance-issues-in-tdd">
+<span class="md-ellipsis">
+      Performance Issues in TDD
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-configuration-issues">
+<span class="md-ellipsis">
+      TDD Configuration Issues
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#common-error-messages">
+<span class="md-ellipsis">
+      Common Error Messages
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-debugging-commands">
+<span class="md-ellipsis">
+      TDD Debugging Commands
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="#getting-additional-help">
 <span class="md-ellipsis">
       Getting Additional Help
@@ -1009,18 +1244,220 @@
 2. Monitor for memory leaks in agent processes
 3. Reduce the frequency of state saves
 4. Clear old log files and temporary data</p>
+<h2 id="tdd-workflow-issues">TDD Workflow Issues<a class="headerlink" href="#tdd-workflow-issues" title="Permanent link">¶</a></h2>
+<h3 id="tdd-state-machine-problems">TDD State Machine Problems<a class="headerlink" href="#tdd-state-machine-problems" title="Permanent link">¶</a></h3>
+<p><strong>Symptoms:</strong> TDD commands return "not allowed in current state" errors.</p>
+<p><strong>Solutions:</strong>
+1. Check current TDD state for the story:
+   <div class="highlight"><pre><span></span><code><a href="#__codelineno-12-1" id="__codelineno-12-1" name="__codelineno-12-1"></a>/tdd<span class="w"> </span>status<span class="w"> </span>&lt;STORY_ID&gt;
+</code></pre></div>
+2. Follow the proper TDD sequence:
+   - <code>DESIGN</code> → <code>/tdd test</code> → <code>TEST_RED</code>
+   - <code>TEST_RED</code> → <code>/tdd commit-tests</code> → <code>CODE_GREEN</code>
+   - <code>CODE_GREEN</code> → <code>/tdd commit-code</code> → <code>REFACTOR</code>
+   - <code>REFACTOR</code> → <code>/tdd commit-refactor</code> → <code>COMMIT</code>
+3. Use <code>/tdd next</code> to auto-advance to the logical next state
+4. Check transition conditions with <code>/tdd status --verbose</code></p>
+<h3 id="tdd-cycle-failures">TDD Cycle Failures<a class="headerlink" href="#tdd-cycle-failures" title="Permanent link">¶</a></h3>
+<p><strong>Symptoms:</strong> TDD cycles get stuck in specific phases without progressing.</p>
+<p><strong>Common Scenarios:</strong></p>
+<p><strong>Stuck in TEST_RED:</strong>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-13-1" id="__codelineno-13-1" name="__codelineno-13-1"></a><span class="c1"># Check if tests are actually failing</span>
+<a href="#__codelineno-13-2" id="__codelineno-13-2" name="__codelineno-13-2"></a>/tdd<span class="w"> </span>run_tests<span class="w"> </span>&lt;STORY_ID&gt;
+<a href="#__codelineno-13-3" id="__codelineno-13-3" name="__codelineno-13-3"></a>
+<a href="#__codelineno-13-4" id="__codelineno-13-4" name="__codelineno-13-4"></a><span class="c1"># Provide guidance to QA agent</span>
+<a href="#__codelineno-13-5" id="__codelineno-13-5" name="__codelineno-13-5"></a>/suggest_fix<span class="w"> </span><span class="s2">"Tests need to cover edge case for null input"</span>
+<a href="#__codelineno-13-6" id="__codelineno-13-6" name="__codelineno-13-6"></a>
+<a href="#__codelineno-13-7" id="__codelineno-13-7" name="__codelineno-13-7"></a><span class="c1"># Manual transition if tests are ready</span>
+<a href="#__codelineno-13-8" id="__codelineno-13-8" name="__codelineno-13-8"></a>/tdd<span class="w"> </span>commit-tests<span class="w"> </span>&lt;STORY_ID&gt;
+</code></pre></div></p>
+<p><strong>Stuck in CODE_GREEN:</strong>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-14-1" id="__codelineno-14-1" name="__codelineno-14-1"></a><span class="c1"># Check test status</span>
+<a href="#__codelineno-14-2" id="__codelineno-14-2" name="__codelineno-14-2"></a>/tdd<span class="w"> </span>run_tests<span class="w"> </span>&lt;STORY_ID&gt;
+<a href="#__codelineno-14-3" id="__codelineno-14-3" name="__codelineno-14-3"></a>
+<a href="#__codelineno-14-4" id="__codelineno-14-4" name="__codelineno-14-4"></a><span class="c1"># Review failing tests</span>
+<a href="#__codelineno-14-5" id="__codelineno-14-5" name="__codelineno-14-5"></a>/tdd<span class="w"> </span>status<span class="w"> </span>&lt;STORY_ID&gt;<span class="w"> </span>--show-failures
+<a href="#__codelineno-14-6" id="__codelineno-14-6" name="__codelineno-14-6"></a>
+<a href="#__codelineno-14-7" id="__codelineno-14-7" name="__codelineno-14-7"></a><span class="c1"># Provide implementation guidance</span>
+<a href="#__codelineno-14-8" id="__codelineno-14-8" name="__codelineno-14-8"></a>/suggest_fix<span class="w"> </span><span class="s2">"Use bcrypt for password hashing in auth.py"</span>
+<a href="#__codelineno-14-9" id="__codelineno-14-9" name="__codelineno-14-9"></a>
+<a href="#__codelineno-14-10" id="__codelineno-14-10" name="__codelineno-14-10"></a><span class="c1"># Manual advance if tests are passing</span>
+<a href="#__codelineno-14-11" id="__codelineno-14-11" name="__codelineno-14-11"></a>/tdd<span class="w"> </span>commit-code<span class="w"> </span>&lt;STORY_ID&gt;
+</code></pre></div></p>
+<p><strong>Stuck in REFACTOR:</strong>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-15-1" id="__codelineno-15-1" name="__codelineno-15-1"></a><span class="c1"># Check if refactoring broke tests</span>
+<a href="#__codelineno-15-2" id="__codelineno-15-2" name="__codelineno-15-2"></a>/tdd<span class="w"> </span>run_tests<span class="w"> </span>&lt;STORY_ID&gt;
+<a href="#__codelineno-15-3" id="__codelineno-15-3" name="__codelineno-15-3"></a>
+<a href="#__codelineno-15-4" id="__codelineno-15-4" name="__codelineno-15-4"></a><span class="c1"># If tests are broken, automatic rollback occurs</span>
+<a href="#__codelineno-15-5" id="__codelineno-15-5" name="__codelineno-15-5"></a><span class="c1"># Otherwise provide refactoring guidance</span>
+<a href="#__codelineno-15-6" id="__codelineno-15-6" name="__codelineno-15-6"></a>/suggest_fix<span class="w"> </span><span class="s2">"Extract user validation into separate function"</span>
+<a href="#__codelineno-15-7" id="__codelineno-15-7" name="__codelineno-15-7"></a>
+<a href="#__codelineno-15-8" id="__codelineno-15-8" name="__codelineno-15-8"></a><span class="c1"># Complete refactoring</span>
+<a href="#__codelineno-15-9" id="__codelineno-15-9" name="__codelineno-15-9"></a>/tdd<span class="w"> </span>commit-refactor<span class="w"> </span>&lt;STORY_ID&gt;
+</code></pre></div></p>
+<h3 id="test-preservation-problems">Test Preservation Problems<a class="headerlink" href="#test-preservation-problems" title="Permanent link">¶</a></h3>
+<p><strong>Symptoms:</strong> Test files not being preserved or committed properly.</p>
+<p><strong>Solutions:</strong>
+1. Check test file status:
+   <div class="highlight"><pre><span></span><code><a href="#__codelineno-16-1" id="__codelineno-16-1" name="__codelineno-16-1"></a>/tdd<span class="w"> </span>status<span class="w"> </span>&lt;STORY_ID&gt;<span class="w"> </span>--show-files
+</code></pre></div>
+2. Verify test directory structure:
+   <div class="highlight"><pre><span></span><code><a href="#__codelineno-17-1" id="__codelineno-17-1" name="__codelineno-17-1"></a><span class="c1"># Should exist: tests/tdd/&lt;story-id&gt;/</span>
+<a href="#__codelineno-17-2" id="__codelineno-17-2" name="__codelineno-17-2"></a><span class="c1"># Check with: ls -la tests/tdd/</span>
+</code></pre></div>
+3. Manual test file commit:
+   <div class="highlight"><pre><span></span><code><a href="#__codelineno-18-1" id="__codelineno-18-1" name="__codelineno-18-1"></a>/tdd<span class="w"> </span>commit-tests<span class="w"> </span>&lt;STORY_ID&gt;<span class="w"> </span>--force
+</code></pre></div>
+4. Check test file permissions and git status
+5. Verify CI pipeline has access to test files</p>
+<h3 id="agent-coordination-issues-in-tdd">Agent Coordination Issues in TDD<a class="headerlink" href="#agent-coordination-issues-in-tdd" title="Permanent link">¶</a></h3>
+<p><strong>Symptoms:</strong> Multiple agents interfering with each other during TDD cycles.</p>
+<p><strong>Solutions:</strong>
+1. Check agent assignments:
+   <div class="highlight"><pre><span></span><code><a href="#__codelineno-19-1" id="__codelineno-19-1" name="__codelineno-19-1"></a>/tdd<span class="w"> </span>status<span class="w"> </span>--show-agents
+</code></pre></div>
+2. Pause conflicting cycles:
+   <div class="highlight"><pre><span></span><code><a href="#__codelineno-20-1" id="__codelineno-20-1" name="__codelineno-20-1"></a>/tdd<span class="w"> </span>pause<span class="w"> </span>&lt;STORY_ID&gt;
+</code></pre></div>
+3. Review agent permissions and tool access:
+   <div class="highlight"><pre><span></span><code><a href="#__codelineno-21-1" id="__codelineno-21-1" name="__codelineno-21-1"></a><span class="c1"># QA Agent should only create tests in TEST_RED</span>
+<a href="#__codelineno-21-2" id="__codelineno-21-2" name="__codelineno-21-2"></a><span class="c1"># Code Agent should only modify implementation in CODE_GREEN/REFACTOR</span>
+</code></pre></div>
+4. Use agent-specific guidance:
+   <div class="highlight"><pre><span></span><code><a href="#__codelineno-22-1" id="__codelineno-22-1" name="__codelineno-22-1"></a>/suggest_fix<span class="w"> </span>&lt;STORY_ID&gt;<span class="w"> </span>--agent<span class="w"> </span>QAAgent<span class="w"> </span><span class="s2">"Focus on integration tests"</span>
+<a href="#__codelineno-22-2" id="__codelineno-22-2" name="__codelineno-22-2"></a>/suggest_fix<span class="w"> </span>&lt;STORY_ID&gt;<span class="w"> </span>--agent<span class="w"> </span>CodeAgent<span class="w"> </span><span class="s2">"Implement authentication logic"</span>
+</code></pre></div></p>
+<h3 id="tdd-recovery-procedures">TDD Recovery Procedures<a class="headerlink" href="#tdd-recovery-procedures" title="Permanent link">¶</a></h3>
+<p><strong>Emergency Recovery:</strong>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-23-1" id="__codelineno-23-1" name="__codelineno-23-1"></a><span class="c1"># Stop all TDD cycles</span>
+<a href="#__codelineno-23-2" id="__codelineno-23-2" name="__codelineno-23-2"></a>/tdd<span class="w"> </span>halt_all<span class="w"> </span>--confirm
+<a href="#__codelineno-23-3" id="__codelineno-23-3" name="__codelineno-23-3"></a>
+<a href="#__codelineno-23-4" id="__codelineno-23-4" name="__codelineno-23-4"></a><span class="c1"># Reset specific TDD cycle</span>
+<a href="#__codelineno-23-5" id="__codelineno-23-5" name="__codelineno-23-5"></a>/tdd<span class="w"> </span>reset<span class="w"> </span>&lt;STORY_ID&gt;<span class="w"> </span>--to-state<span class="w"> </span>DESIGN
+<a href="#__codelineno-23-6" id="__codelineno-23-6" name="__codelineno-23-6"></a>
+<a href="#__codelineno-23-7" id="__codelineno-23-7" name="__codelineno-23-7"></a><span class="c1"># Restart with preserved data</span>
+<a href="#__codelineno-23-8" id="__codelineno-23-8" name="__codelineno-23-8"></a>/tdd<span class="w"> </span>start<span class="w"> </span>&lt;STORY_ID&gt;<span class="w"> </span>--resume-from-backup
+</code></pre></div></p>
+<p><strong>Data Recovery:</strong>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-24-1" id="__codelineno-24-1" name="__codelineno-24-1"></a><span class="c1"># Check TDD data integrity</span>
+<a href="#__codelineno-24-2" id="__codelineno-24-2" name="__codelineno-24-2"></a>/tdd<span class="w"> </span>validate<span class="w"> </span>&lt;STORY_ID&gt;
+<a href="#__codelineno-24-3" id="__codelineno-24-3" name="__codelineno-24-3"></a>
+<a href="#__codelineno-24-4" id="__codelineno-24-4" name="__codelineno-24-4"></a><span class="c1"># Restore from backup</span>
+<a href="#__codelineno-24-5" id="__codelineno-24-5" name="__codelineno-24-5"></a>/tdd<span class="w"> </span>restore<span class="w"> </span>&lt;STORY_ID&gt;<span class="w"> </span>--from-timestamp<span class="w"> </span><span class="m">2024</span>-01-15T10:30:00
+<a href="#__codelineno-24-6" id="__codelineno-24-6" name="__codelineno-24-6"></a>
+<a href="#__codelineno-24-7" id="__codelineno-24-7" name="__codelineno-24-7"></a><span class="c1"># Manual state reconstruction</span>
+<a href="#__codelineno-24-8" id="__codelineno-24-8" name="__codelineno-24-8"></a>/tdd<span class="w"> </span>reconstruct<span class="w"> </span>&lt;STORY_ID&gt;<span class="w"> </span>--from-git-history
+</code></pre></div></p>
+<p><strong>Conflict Resolution:</strong>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-25-1" id="__codelineno-25-1" name="__codelineno-25-1"></a><span class="c1"># When multiple agents modify same files</span>
+<a href="#__codelineno-25-2" id="__codelineno-25-2" name="__codelineno-25-2"></a>/tdd<span class="w"> </span>resolve_conflict<span class="w"> </span>&lt;STORY_ID&gt;<span class="w"> </span>--strategy<span class="w"> </span>merge
+<a href="#__codelineno-25-3" id="__codelineno-25-3" name="__codelineno-25-3"></a>/tdd<span class="w"> </span>resolve_conflict<span class="w"> </span>&lt;STORY_ID&gt;<span class="w"> </span>--strategy<span class="w"> </span>agent-priority
+<a href="#__codelineno-25-4" id="__codelineno-25-4" name="__codelineno-25-4"></a>/tdd<span class="w"> </span>resolve_conflict<span class="w"> </span>&lt;STORY_ID&gt;<span class="w"> </span>--strategy<span class="w"> </span>manual-review
+</code></pre></div></p>
+<h3 id="cicd-integration-issues">CI/CD Integration Issues<a class="headerlink" href="#cicd-integration-issues" title="Permanent link">¶</a></h3>
+<p><strong>Symptoms:</strong> TDD cycles not triggering CI or CI failures blocking progress.</p>
+<p><strong>Solutions:</strong>
+1. Check CI status for TDD workflow:
+   <div class="highlight"><pre><span></span><code><a href="#__codelineno-26-1" id="__codelineno-26-1" name="__codelineno-26-1"></a>/tdd<span class="w"> </span>ci_status<span class="w"> </span>&lt;STORY_ID&gt;
+</code></pre></div>
+2. Retry failed CI runs:
+   <div class="highlight"><pre><span></span><code><a href="#__codelineno-27-1" id="__codelineno-27-1" name="__codelineno-27-1"></a>/tdd<span class="w"> </span>retry_ci<span class="w"> </span>&lt;STORY_ID&gt;
+</code></pre></div>
+3. Override CI failures (with justification):
+   <div class="highlight"><pre><span></span><code><a href="#__codelineno-28-1" id="__codelineno-28-1" name="__codelineno-28-1"></a>/tdd<span class="w"> </span>override_ci<span class="w"> </span>&lt;STORY_ID&gt;<span class="w"> </span>--reason<span class="w"> </span><span class="s2">"Flaky test infrastructure"</span>
+</code></pre></div>
+4. Manual CI trigger:
+   <div class="highlight"><pre><span></span><code><a href="#__codelineno-29-1" id="__codelineno-29-1" name="__codelineno-29-1"></a>/tdd<span class="w"> </span>trigger_ci<span class="w"> </span>&lt;STORY_ID&gt;<span class="w"> </span>--tests-only
+</code></pre></div></p>
+<h3 id="test-coverage-issues">Test Coverage Issues<a class="headerlink" href="#test-coverage-issues" title="Permanent link">¶</a></h3>
+<p><strong>Symptoms:</strong> TDD cycles failing due to insufficient test coverage.</p>
+<p><strong>Solutions:</strong>
+1. Check coverage metrics:
+   <div class="highlight"><pre><span></span><code><a href="#__codelineno-30-1" id="__codelineno-30-1" name="__codelineno-30-1"></a>/tdd<span class="w"> </span>coverage<span class="w"> </span>&lt;STORY_ID&gt;
+</code></pre></div>
+2. Adjust coverage thresholds:
+   <div class="highlight"><pre><span></span><code><a href="#__codelineno-31-1" id="__codelineno-31-1" name="__codelineno-31-1"></a>/tdd<span class="w"> </span>configure<span class="w"> </span>&lt;STORY_ID&gt;<span class="w"> </span>--coverage-threshold<span class="w"> </span><span class="m">85</span>
+</code></pre></div>
+3. Generate coverage reports:
+   <div class="highlight"><pre><span></span><code><a href="#__codelineno-32-1" id="__codelineno-32-1" name="__codelineno-32-1"></a>/tdd<span class="w"> </span>coverage_report<span class="w"> </span>&lt;STORY_ID&gt;<span class="w"> </span>--detailed
+</code></pre></div>
+4. Guidance for improving coverage:
+   <div class="highlight"><pre><span></span><code><a href="#__codelineno-33-1" id="__codelineno-33-1" name="__codelineno-33-1"></a>/suggest_fix<span class="w"> </span>&lt;STORY_ID&gt;<span class="w"> </span><span class="s2">"Add tests for error handling paths"</span>
+</code></pre></div></p>
+<h3 id="performance-issues-in-tdd">Performance Issues in TDD<a class="headerlink" href="#performance-issues-in-tdd" title="Permanent link">¶</a></h3>
+<p><strong>Symptoms:</strong> TDD cycles taking too long or consuming excessive resources.</p>
+<p><strong>Solutions:</strong>
+1. Check TDD cycle timing:
+   <div class="highlight"><pre><span></span><code><a href="#__codelineno-34-1" id="__codelineno-34-1" name="__codelineno-34-1"></a>/tdd<span class="w"> </span>metrics<span class="w"> </span>&lt;STORY_ID&gt;<span class="w"> </span>--timing
+</code></pre></div>
+2. Optimize test execution:
+   <div class="highlight"><pre><span></span><code><a href="#__codelineno-35-1" id="__codelineno-35-1" name="__codelineno-35-1"></a>/tdd<span class="w"> </span>configure<span class="w"> </span>&lt;STORY_ID&gt;<span class="w"> </span>--parallel-tests<span class="w"> </span>--test-timeout<span class="w"> </span>30s
+</code></pre></div>
+3. Reduce scope of TDD cycles:
+   <div class="highlight"><pre><span></span><code><a href="#__codelineno-36-1" id="__codelineno-36-1" name="__codelineno-36-1"></a>/tdd<span class="w"> </span>split<span class="w"> </span>&lt;STORY_ID&gt;<span class="w"> </span>--max-tasks<span class="w"> </span><span class="m">3</span>
+</code></pre></div>
+4. Monitor resource usage:
+   <div class="highlight"><pre><span></span><code><a href="#__codelineno-37-1" id="__codelineno-37-1" name="__codelineno-37-1"></a>/tdd<span class="w"> </span>resources<span class="w"> </span>--show-memory<span class="w"> </span>--show-cpu
+</code></pre></div></p>
+<h3 id="tdd-configuration-issues">TDD Configuration Issues<a class="headerlink" href="#tdd-configuration-issues" title="Permanent link">¶</a></h3>
+<p><strong>Symptoms:</strong> TDD workflows behaving unexpectedly due to configuration problems.</p>
+<p><strong>Solutions:</strong>
+1. Validate TDD configuration:
+   <div class="highlight"><pre><span></span><code><a href="#__codelineno-38-1" id="__codelineno-38-1" name="__codelineno-38-1"></a>/tdd<span class="w"> </span>config<span class="w"> </span>validate
+</code></pre></div>
+2. Reset to defaults:
+   <div class="highlight"><pre><span></span><code><a href="#__codelineno-39-1" id="__codelineno-39-1" name="__codelineno-39-1"></a>/tdd<span class="w"> </span>config<span class="w"> </span>reset<span class="w"> </span>--confirm
+</code></pre></div>
+3. Export current configuration:
+   <div class="highlight"><pre><span></span><code><a href="#__codelineno-40-1" id="__codelineno-40-1" name="__codelineno-40-1"></a>/tdd<span class="w"> </span>config<span class="w"> </span><span class="nb">export</span><span class="w"> </span>&gt;<span class="w"> </span>tdd_config_backup.yml
+</code></pre></div>
+4. Check story-specific overrides:
+   <div class="highlight"><pre><span></span><code><a href="#__codelineno-41-1" id="__codelineno-41-1" name="__codelineno-41-1"></a>/tdd<span class="w"> </span>config<span class="w"> </span>show<span class="w"> </span>&lt;STORY_ID&gt;
+</code></pre></div></p>
+<h3 id="common-error-messages">Common Error Messages<a class="headerlink" href="#common-error-messages" title="Permanent link">¶</a></h3>
+<p><strong>"TDD cycle not found for story"</strong>
+- Story may not be in active sprint
+- Use <code>/sprint status</code> to verify story inclusion
+- Manually start TDD cycle: <code>/tdd start &lt;STORY_ID&gt;</code></p>
+<p><strong>"Tests already committed for this task"</strong>
+- TDD cycle has already progressed past TEST_RED
+- Check current state: <code>/tdd status &lt;STORY_ID&gt;</code>
+- Use <code>/tdd next</code> to advance to next logical state</p>
+<p><strong>"No test files found in TDD directory"</strong>
+- QA Agent may not have created tests yet
+- Check agent status and logs
+- Manual test file creation may be needed</p>
+<p><strong>"Test preservation directory not accessible"</strong>
+- File system permissions issue
+- Check directory ownership and permissions
+- Verify tests/tdd/ directory exists and is writable</p>
+<h3 id="tdd-debugging-commands">TDD Debugging Commands<a class="headerlink" href="#tdd-debugging-commands" title="Permanent link">¶</a></h3>
+<p><strong>Detailed Status:</strong>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-42-1" id="__codelineno-42-1" name="__codelineno-42-1"></a>/tdd<span class="w"> </span>debug<span class="w"> </span>&lt;STORY_ID&gt;
+<a href="#__codelineno-42-2" id="__codelineno-42-2" name="__codelineno-42-2"></a><span class="c1"># Shows complete state machine status, agent assignments, file locations</span>
+</code></pre></div></p>
+<p><strong>Trace TDD History:</strong>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-43-1" id="__codelineno-43-1" name="__codelineno-43-1"></a>/tdd<span class="w"> </span>trace<span class="w"> </span>&lt;STORY_ID&gt;
+<a href="#__codelineno-43-2" id="__codelineno-43-2" name="__codelineno-43-2"></a><span class="c1"># Shows complete history of state transitions and commands</span>
+</code></pre></div></p>
+<p><strong>Validate TDD Integrity:</strong>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-44-1" id="__codelineno-44-1" name="__codelineno-44-1"></a>/tdd<span class="w"> </span>integrity_check<span class="w"> </span>&lt;STORY_ID&gt;
+<a href="#__codelineno-44-2" id="__codelineno-44-2" name="__codelineno-44-2"></a><span class="c1"># Validates data consistency and file integrity</span>
+</code></pre></div></p>
 <h2 id="getting-additional-help">Getting Additional Help<a class="headerlink" href="#getting-additional-help" title="Permanent link">¶</a></h2>
 <p>If these solutions don't resolve your issue:</p>
 <ol>
 <li><strong>Check the logs:</strong> Look for error messages in the console output</li>
 <li><strong>Use debug mode:</strong> Run with increased verbosity for more details</li>
 <li><strong>Review state:</strong> Use <code>/state</code> command to understand system status</li>
-<li><strong>Search documentation:</strong> Check the <a href="../hitl-commands/">User Guide</a> for command details</li>
+<li><strong>Check TDD state:</strong> Use <code>/tdd status &lt;STORY_ID&gt;</code> for TDD-specific issues</li>
+<li><strong>Search documentation:</strong> Check the <a href="../hitl-commands/">User Guide</a> and <a href="../tdd-workflow/">TDD Workflow</a> for command details</li>
 <li><strong>Report issues:</strong> Create an issue on the project repository with:</li>
 <li>System information (OS, Python version)</li>
 <li>Complete error messages</li>
 <li>Steps to reproduce the problem</li>
 <li>Expected vs actual behavior</li>
+<li>TDD state and story information (for TDD issues)</li>
 </ol>
 </article>
 </div>

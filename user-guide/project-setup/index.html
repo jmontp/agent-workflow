@@ -8,7 +8,7 @@
 <meta content="Human-In-The-Loop orchestration framework for AI-assisted software development" name="description"/>
 <meta content="AI Agent Workflow Team" name="author"/>
 <link href="https://jmontp.github.io/agent-workflow/user-guide/project-setup/" rel="canonical"/>
-<link href="../state-machine/" rel="prev"/>
+<link href="../tdd-workflow/" rel="prev"/>
 <link href="../workflow-sequences/" rel="next"/>
 <link href="../../assets/images/favicon.png" rel="icon"/>
 <meta content="mkdocs-1.6.1, mkdocs-material-9.6.14" name="generator"/>
@@ -159,6 +159,15 @@
         </a>
 </li>
 <li class="md-tabs__item">
+<a class="md-tabs__link" href="../../architecture/overview/">
+          
+  
+  
+  Architecture
+
+        </a>
+</li>
+<li class="md-tabs__item">
 <a class="md-tabs__link" href="../../development/contributing/">
           
   
@@ -281,6 +290,14 @@
 <a class="md-nav__link" href="../state-machine/">
 <span class="md-ellipsis">
     State Machine
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../tdd-workflow/">
+<span class="md-ellipsis">
+    TDD Workflow
     
   </span>
 </a>
@@ -555,6 +572,202 @@
 </ul>
 </nav>
 </li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-workflow-setup">
+<span class="md-ellipsis">
+      TDD Workflow Setup
+    </span>
+</a>
+<nav aria-label="TDD Workflow Setup" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#prerequisites-for-tdd-integration">
+<span class="md-ellipsis">
+      Prerequisites for TDD Integration
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#enabling-tdd-mode">
+<span class="md-ellipsis">
+      Enabling TDD Mode
+    </span>
+</a>
+<nav aria-label="Enabling TDD Mode" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#step-1-configure-tdd-settings">
+<span class="md-ellipsis">
+      Step 1: Configure TDD Settings
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#step-2-test-framework-setup">
+<span class="md-ellipsis">
+      Step 2: Test Framework Setup
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#step-3-directory-structure-setup">
+<span class="md-ellipsis">
+      Step 3: Directory Structure Setup
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#step-4-cicd-integration">
+<span class="md-ellipsis">
+      Step 4: CI/CD Integration
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-workflow-configuration-options">
+<span class="md-ellipsis">
+      TDD Workflow Configuration Options
+    </span>
+</a>
+<nav aria-label="TDD Workflow Configuration Options" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#coverage-requirements">
+<span class="md-ellipsis">
+      Coverage Requirements
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#quality-gates">
+<span class="md-ellipsis">
+      Quality Gates
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#agent-behavior-configuration">
+<span class="md-ellipsis">
+      Agent Behavior Configuration
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-specific-project-templates">
+<span class="md-ellipsis">
+      TDD-Specific Project Templates
+    </span>
+</a>
+<nav aria-label="TDD-Specific Project Templates" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#api-development-template">
+<span class="md-ellipsis">
+      API Development Template
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#frontend-component-template">
+<span class="md-ellipsis">
+      Frontend Component Template
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-project-initialization">
+<span class="md-ellipsis">
+      TDD Project Initialization
+    </span>
+</a>
+<nav aria-label="TDD Project Initialization" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#new-project-with-tdd">
+<span class="md-ellipsis">
+      New Project with TDD
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#existing-project-tdd-migration">
+<span class="md-ellipsis">
+      Existing Project TDD Migration
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-troubleshooting-setup">
+<span class="md-ellipsis">
+      TDD Troubleshooting Setup
+    </span>
+</a>
+<nav aria-label="TDD Troubleshooting Setup" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#common-setup-issues">
+<span class="md-ellipsis">
+      Common Setup Issues
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#validation-commands">
+<span class="md-ellipsis">
+      Validation Commands
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-best-practices-for-setup">
+<span class="md-ellipsis">
+      TDD Best Practices for Setup
+    </span>
+</a>
+<nav aria-label="TDD Best Practices for Setup" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#project-organization_1">
+<span class="md-ellipsis">
+      Project Organization
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#cicd-configuration">
+<span class="md-ellipsis">
+      CI/CD Configuration
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#team-coordination_1">
+<span class="md-ellipsis">
+      Team Coordination
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
 </ul>
 </nav>
 </li>
@@ -729,13 +942,55 @@
 <input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_6" type="checkbox"/>
 <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
 <span class="md-ellipsis">
-    Development
+    Architecture
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
 <nav aria-expanded="false" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
 <label class="md-nav__title" for="__nav_6">
+<span class="md-nav__icon md-icon"></span>
+            Architecture
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../architecture/overview/">
+<span class="md-ellipsis">
+    System Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../architecture/context-management-system/">
+<span class="md-ellipsis">
+    Context Management
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../architecture/parallel-tdd-architecture/">
+<span class="md-ellipsis">
+    Parallel TDD Design
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_7" type="checkbox"/>
+<label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+<span class="md-ellipsis">
+    Development
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_7_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_7">
 <span class="md-nav__icon md-icon"></span>
             Development
           </label>
@@ -760,16 +1015,16 @@
 </nav>
 </li>
 <li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_7" type="checkbox"/>
-<label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_8" type="checkbox"/>
+<label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
 <span class="md-ellipsis">
     Deployment
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="false" aria-labelledby="__nav_7_label" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="__nav_7">
+<nav aria-expanded="false" aria-labelledby="__nav_8_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_8">
 <span class="md-nav__icon md-icon"></span>
             Deployment
           </label>
@@ -1064,6 +1319,202 @@
 </ul>
 </nav>
 </li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-workflow-setup">
+<span class="md-ellipsis">
+      TDD Workflow Setup
+    </span>
+</a>
+<nav aria-label="TDD Workflow Setup" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#prerequisites-for-tdd-integration">
+<span class="md-ellipsis">
+      Prerequisites for TDD Integration
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#enabling-tdd-mode">
+<span class="md-ellipsis">
+      Enabling TDD Mode
+    </span>
+</a>
+<nav aria-label="Enabling TDD Mode" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#step-1-configure-tdd-settings">
+<span class="md-ellipsis">
+      Step 1: Configure TDD Settings
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#step-2-test-framework-setup">
+<span class="md-ellipsis">
+      Step 2: Test Framework Setup
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#step-3-directory-structure-setup">
+<span class="md-ellipsis">
+      Step 3: Directory Structure Setup
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#step-4-cicd-integration">
+<span class="md-ellipsis">
+      Step 4: CI/CD Integration
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-workflow-configuration-options">
+<span class="md-ellipsis">
+      TDD Workflow Configuration Options
+    </span>
+</a>
+<nav aria-label="TDD Workflow Configuration Options" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#coverage-requirements">
+<span class="md-ellipsis">
+      Coverage Requirements
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#quality-gates">
+<span class="md-ellipsis">
+      Quality Gates
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#agent-behavior-configuration">
+<span class="md-ellipsis">
+      Agent Behavior Configuration
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-specific-project-templates">
+<span class="md-ellipsis">
+      TDD-Specific Project Templates
+    </span>
+</a>
+<nav aria-label="TDD-Specific Project Templates" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#api-development-template">
+<span class="md-ellipsis">
+      API Development Template
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#frontend-component-template">
+<span class="md-ellipsis">
+      Frontend Component Template
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-project-initialization">
+<span class="md-ellipsis">
+      TDD Project Initialization
+    </span>
+</a>
+<nav aria-label="TDD Project Initialization" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#new-project-with-tdd">
+<span class="md-ellipsis">
+      New Project with TDD
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#existing-project-tdd-migration">
+<span class="md-ellipsis">
+      Existing Project TDD Migration
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-troubleshooting-setup">
+<span class="md-ellipsis">
+      TDD Troubleshooting Setup
+    </span>
+</a>
+<nav aria-label="TDD Troubleshooting Setup" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#common-setup-issues">
+<span class="md-ellipsis">
+      Common Setup Issues
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#validation-commands">
+<span class="md-ellipsis">
+      Validation Commands
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-best-practices-for-setup">
+<span class="md-ellipsis">
+      TDD Best Practices for Setup
+    </span>
+</a>
+<nav aria-label="TDD Best Practices for Setup" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#project-organization_1">
+<span class="md-ellipsis">
+      Project Organization
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#cicd-configuration">
+<span class="md-ellipsis">
+      CI/CD Configuration
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#team-coordination_1">
+<span class="md-ellipsis">
+      Team Coordination
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
 </ul>
 </nav>
 </div>
@@ -1331,6 +1782,363 @@
 <li>Bot permissions scoped to workflow operations</li>
 <li>Team members need appropriate Discord roles</li>
 </ul>
+<h2 id="tdd-workflow-setup">TDD Workflow Setup<a class="headerlink" href="#tdd-workflow-setup" title="Permanent link">¶</a></h2>
+<h3 id="prerequisites-for-tdd-integration">Prerequisites for TDD Integration<a class="headerlink" href="#prerequisites-for-tdd-integration" title="Permanent link">¶</a></h3>
+<p>Before enabling TDD workflows, ensure your project meets these requirements:</p>
+<ol>
+<li><strong>Testing Framework</strong>: Your project must have a test framework configured (pytest, unittest, jest, etc.)</li>
+<li><strong>CI/CD Pipeline</strong>: Basic CI integration for automated test execution</li>
+<li><strong>Project Structure</strong>: Clear separation between source and test directories</li>
+<li><strong>Coverage Tools</strong>: Code coverage measurement tools installed</li>
+</ol>
+<h3 id="enabling-tdd-mode">Enabling TDD Mode<a class="headerlink" href="#enabling-tdd-mode" title="Permanent link">¶</a></h3>
+<h4 id="step-1-configure-tdd-settings">Step 1: Configure TDD Settings<a class="headerlink" href="#step-1-configure-tdd-settings" title="Permanent link">¶</a></h4>
+<p>Create or update <code>.orch-state/tdd-config.json</code>:</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-18-1" id="__codelineno-18-1" name="__codelineno-18-1"></a><span class="p">{</span>
+<a href="#__codelineno-18-2" id="__codelineno-18-2" name="__codelineno-18-2"></a><span class="w">  </span><span class="nt">"tdd_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a href="#__codelineno-18-3" id="__codelineno-18-3" name="__codelineno-18-3"></a><span class="w">  </span><span class="nt">"test_framework"</span><span class="p">:</span><span class="w"> </span><span class="s2">"pytest"</span><span class="p">,</span>
+<a href="#__codelineno-18-4" id="__codelineno-18-4" name="__codelineno-18-4"></a><span class="w">  </span><span class="nt">"test_directory"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tests"</span><span class="p">,</span>
+<a href="#__codelineno-18-5" id="__codelineno-18-5" name="__codelineno-18-5"></a><span class="w">  </span><span class="nt">"tdd_test_directory"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tests/tdd"</span><span class="p">,</span>
+<a href="#__codelineno-18-6" id="__codelineno-18-6" name="__codelineno-18-6"></a><span class="w">  </span><span class="nt">"coverage_threshold"</span><span class="p">:</span><span class="w"> </span><span class="mf">90.0</span><span class="p">,</span>
+<a href="#__codelineno-18-7" id="__codelineno-18-7" name="__codelineno-18-7"></a><span class="w">  </span><span class="nt">"quality_gates"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a href="#__codelineno-18-8" id="__codelineno-18-8" name="__codelineno-18-8"></a><span class="w">    </span><span class="nt">"complexity_limit"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span>
+<a href="#__codelineno-18-9" id="__codelineno-18-9" name="__codelineno-18-9"></a><span class="w">    </span><span class="nt">"duplication_threshold"</span><span class="p">:</span><span class="w"> </span><span class="mf">5.0</span><span class="p">,</span>
+<a href="#__codelineno-18-10" id="__codelineno-18-10" name="__codelineno-18-10"></a><span class="w">    </span><span class="nt">"security_scan"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<a href="#__codelineno-18-11" id="__codelineno-18-11" name="__codelineno-18-11"></a><span class="w">  </span><span class="p">},</span>
+<a href="#__codelineno-18-12" id="__codelineno-18-12" name="__codelineno-18-12"></a><span class="w">  </span><span class="nt">"ci_integration"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a href="#__codelineno-18-13" id="__codelineno-18-13" name="__codelineno-18-13"></a><span class="w">    </span><span class="nt">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a href="#__codelineno-18-14" id="__codelineno-18-14" name="__codelineno-18-14"></a><span class="w">    </span><span class="nt">"provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"github_actions"</span><span class="p">,</span>
+<a href="#__codelineno-18-15" id="__codelineno-18-15" name="__codelineno-18-15"></a><span class="w">    </span><span class="nt">"trigger_on_commit"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<a href="#__codelineno-18-16" id="__codelineno-18-16" name="__codelineno-18-16"></a><span class="w">  </span><span class="p">},</span>
+<a href="#__codelineno-18-17" id="__codelineno-18-17" name="__codelineno-18-17"></a><span class="w">  </span><span class="nt">"auto_progression"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a href="#__codelineno-18-18" id="__codelineno-18-18" name="__codelineno-18-18"></a><span class="w">    </span><span class="nt">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<a href="#__codelineno-18-19" id="__codelineno-18-19" name="__codelineno-18-19"></a><span class="w">    </span><span class="nt">"require_human_approval"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a href="#__codelineno-18-20" id="__codelineno-18-20" name="__codelineno-18-20"></a><span class="w">    </span><span class="nt">"stuck_cycle_timeout"</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span>
+<a href="#__codelineno-18-21" id="__codelineno-18-21" name="__codelineno-18-21"></a><span class="w">  </span><span class="p">}</span>
+<a href="#__codelineno-18-22" id="__codelineno-18-22" name="__codelineno-18-22"></a><span class="p">}</span>
+</code></pre></div>
+<h4 id="step-2-test-framework-setup">Step 2: Test Framework Setup<a class="headerlink" href="#step-2-test-framework-setup" title="Permanent link">¶</a></h4>
+<p><strong>For Python projects (pytest):</strong></p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-19-1" id="__codelineno-19-1" name="__codelineno-19-1"></a><span class="c1"># Install dependencies</span>
+<a href="#__codelineno-19-2" id="__codelineno-19-2" name="__codelineno-19-2"></a>pip<span class="w"> </span>install<span class="w"> </span>pytest<span class="w"> </span>pytest-cov<span class="w"> </span>pytest-xdist
+<a href="#__codelineno-19-3" id="__codelineno-19-3" name="__codelineno-19-3"></a>
+<a href="#__codelineno-19-4" id="__codelineno-19-4" name="__codelineno-19-4"></a><span class="c1"># Create pytest.ini</span>
+<a href="#__codelineno-19-5" id="__codelineno-19-5" name="__codelineno-19-5"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>pytest.ini<span class="w"> </span><span class="s">&lt;&lt; EOF</span>
+<a href="#__codelineno-19-6" id="__codelineno-19-6" name="__codelineno-19-6"></a><span class="s">[tool:pytest]</span>
+<a href="#__codelineno-19-7" id="__codelineno-19-7" name="__codelineno-19-7"></a><span class="s">testpaths = tests</span>
+<a href="#__codelineno-19-8" id="__codelineno-19-8" name="__codelineno-19-8"></a><span class="s">python_files = test_*.py</span>
+<a href="#__codelineno-19-9" id="__codelineno-19-9" name="__codelineno-19-9"></a><span class="s">python_classes = Test*</span>
+<a href="#__codelineno-19-10" id="__codelineno-19-10" name="__codelineno-19-10"></a><span class="s">python_functions = test_*</span>
+<a href="#__codelineno-19-11" id="__codelineno-19-11" name="__codelineno-19-11"></a><span class="s">addopts = --cov=src --cov-report=html --cov-report=term-missing</span>
+<a href="#__codelineno-19-12" id="__codelineno-19-12" name="__codelineno-19-12"></a><span class="s">EOF</span>
+</code></pre></div>
+<p><strong>For JavaScript projects (jest):</strong></p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-20-1" id="__codelineno-20-1" name="__codelineno-20-1"></a><span class="c1"># Install dependencies</span>
+<a href="#__codelineno-20-2" id="__codelineno-20-2" name="__codelineno-20-2"></a>npm<span class="w"> </span>install<span class="w"> </span>--save-dev<span class="w"> </span>jest<span class="w"> </span>@jest/globals
+<a href="#__codelineno-20-3" id="__codelineno-20-3" name="__codelineno-20-3"></a>
+<a href="#__codelineno-20-4" id="__codelineno-20-4" name="__codelineno-20-4"></a><span class="c1"># Create jest.config.js</span>
+<a href="#__codelineno-20-5" id="__codelineno-20-5" name="__codelineno-20-5"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>jest.config.js<span class="w"> </span><span class="s">&lt;&lt; EOF</span>
+<a href="#__codelineno-20-6" id="__codelineno-20-6" name="__codelineno-20-6"></a><span class="s">module.exports = {</span>
+<a href="#__codelineno-20-7" id="__codelineno-20-7" name="__codelineno-20-7"></a><span class="s">  testEnvironment: 'node',</span>
+<a href="#__codelineno-20-8" id="__codelineno-20-8" name="__codelineno-20-8"></a><span class="s">  coverageDirectory: 'coverage',</span>
+<a href="#__codelineno-20-9" id="__codelineno-20-9" name="__codelineno-20-9"></a><span class="s">  collectCoverageFrom: [</span>
+<a href="#__codelineno-20-10" id="__codelineno-20-10" name="__codelineno-20-10"></a><span class="s">    'src/**/*.js',</span>
+<a href="#__codelineno-20-11" id="__codelineno-20-11" name="__codelineno-20-11"></a><span class="s">    '!src/**/*.test.js'</span>
+<a href="#__codelineno-20-12" id="__codelineno-20-12" name="__codelineno-20-12"></a><span class="s">  ],</span>
+<a href="#__codelineno-20-13" id="__codelineno-20-13" name="__codelineno-20-13"></a><span class="s">  testMatch: ['**/tests/**/*.test.js']</span>
+<a href="#__codelineno-20-14" id="__codelineno-20-14" name="__codelineno-20-14"></a><span class="s">};</span>
+<a href="#__codelineno-20-15" id="__codelineno-20-15" name="__codelineno-20-15"></a><span class="s">EOF</span>
+</code></pre></div>
+<h4 id="step-3-directory-structure-setup">Step 3: Directory Structure Setup<a class="headerlink" href="#step-3-directory-structure-setup" title="Permanent link">¶</a></h4>
+<p>The TDD workflow requires specific directory organization:</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-21-1" id="__codelineno-21-1" name="__codelineno-21-1"></a>your-project/
+<a href="#__codelineno-21-2" id="__codelineno-21-2" name="__codelineno-21-2"></a>├── src/                      # Source code
+<a href="#__codelineno-21-3" id="__codelineno-21-3" name="__codelineno-21-3"></a>├── tests/
+<a href="#__codelineno-21-4" id="__codelineno-21-4" name="__codelineno-21-4"></a>│   ├── unit/                # Permanent unit tests
+<a href="#__codelineno-21-5" id="__codelineno-21-5" name="__codelineno-21-5"></a>│   ├── integration/         # Permanent integration tests
+<a href="#__codelineno-21-6" id="__codelineno-21-6" name="__codelineno-21-6"></a>│   └── tdd/                 # TDD workspace (managed by system)
+<a href="#__codelineno-21-7" id="__codelineno-21-7" name="__codelineno-21-7"></a>│       ├── AUTH-001/        # Story-specific tests
+<a href="#__codelineno-21-8" id="__codelineno-21-8" name="__codelineno-21-8"></a>│       │   ├── test_login.py
+<a href="#__codelineno-21-9" id="__codelineno-21-9" name="__codelineno-21-9"></a>│       │   └── test_auth.py
+<a href="#__codelineno-21-10" id="__codelineno-21-10" name="__codelineno-21-10"></a>│       └── USER-002/
+<a href="#__codelineno-21-11" id="__codelineno-21-11" name="__codelineno-21-11"></a>│           └── test_profile.py
+<a href="#__codelineno-21-12" id="__codelineno-21-12" name="__codelineno-21-12"></a>├── .orch-state/
+<a href="#__codelineno-21-13" id="__codelineno-21-13" name="__codelineno-21-13"></a>│   ├── tdd-config.json      # TDD configuration
+<a href="#__codelineno-21-14" id="__codelineno-21-14" name="__codelineno-21-14"></a>│   ├── tdd-cycles/          # Active TDD cycle data
+<a href="#__codelineno-21-15" id="__codelineno-21-15" name="__codelineno-21-15"></a>│   │   ├── AUTH-001.json    # TDD cycle state
+<a href="#__codelineno-21-16" id="__codelineno-21-16" name="__codelineno-21-16"></a>│   │   └── USER-002.json
+<a href="#__codelineno-21-17" id="__codelineno-21-17" name="__codelineno-21-17"></a>│   └── tdd-metrics.json     # Performance metrics
+<a href="#__codelineno-21-18" id="__codelineno-21-18" name="__codelineno-21-18"></a>└── [existing project files]
+</code></pre></div>
+<h4 id="step-4-cicd-integration">Step 4: CI/CD Integration<a class="headerlink" href="#step-4-cicd-integration" title="Permanent link">¶</a></h4>
+<p><strong>GitHub Actions (<code>.github/workflows/tdd.yml</code>):</strong></p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-22-1" id="__codelineno-22-1" name="__codelineno-22-1"></a><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TDD Workflow</span>
+<a href="#__codelineno-22-2" id="__codelineno-22-2" name="__codelineno-22-2"></a>
+<a href="#__codelineno-22-3" id="__codelineno-22-3" name="__codelineno-22-3"></a><span class="nt">on</span><span class="p">:</span>
+<a href="#__codelineno-22-4" id="__codelineno-22-4" name="__codelineno-22-4"></a><span class="w">  </span><span class="nt">push</span><span class="p">:</span>
+<a href="#__codelineno-22-5" id="__codelineno-22-5" name="__codelineno-22-5"></a><span class="w">    </span><span class="nt">paths</span><span class="p">:</span>
+<a href="#__codelineno-22-6" id="__codelineno-22-6" name="__codelineno-22-6"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">'tests/tdd/**'</span>
+<a href="#__codelineno-22-7" id="__codelineno-22-7" name="__codelineno-22-7"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">'src/**'</span>
+<a href="#__codelineno-22-8" id="__codelineno-22-8" name="__codelineno-22-8"></a><span class="w">  </span><span class="nt">pull_request</span><span class="p">:</span>
+<a href="#__codelineno-22-9" id="__codelineno-22-9" name="__codelineno-22-9"></a><span class="w">    </span><span class="nt">paths</span><span class="p">:</span>
+<a href="#__codelineno-22-10" id="__codelineno-22-10" name="__codelineno-22-10"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">'tests/tdd/**'</span>
+<a href="#__codelineno-22-11" id="__codelineno-22-11" name="__codelineno-22-11"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">'src/**'</span>
+<a href="#__codelineno-22-12" id="__codelineno-22-12" name="__codelineno-22-12"></a>
+<a href="#__codelineno-22-13" id="__codelineno-22-13" name="__codelineno-22-13"></a><span class="nt">jobs</span><span class="p">:</span>
+<a href="#__codelineno-22-14" id="__codelineno-22-14" name="__codelineno-22-14"></a><span class="w">  </span><span class="nt">tdd-validation</span><span class="p">:</span>
+<a href="#__codelineno-22-15" id="__codelineno-22-15" name="__codelineno-22-15"></a><span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+<a href="#__codelineno-22-16" id="__codelineno-22-16" name="__codelineno-22-16"></a><span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<a href="#__codelineno-22-17" id="__codelineno-22-17" name="__codelineno-22-17"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v3</span>
+<a href="#__codelineno-22-18" id="__codelineno-22-18" name="__codelineno-22-18"></a>
+<a href="#__codelineno-22-19" id="__codelineno-22-19" name="__codelineno-22-19"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Setup Python</span>
+<a href="#__codelineno-22-20" id="__codelineno-22-20" name="__codelineno-22-20"></a><span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-python@v4</span>
+<a href="#__codelineno-22-21" id="__codelineno-22-21" name="__codelineno-22-21"></a><span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<a href="#__codelineno-22-22" id="__codelineno-22-22" name="__codelineno-22-22"></a><span class="w">          </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="s">'3.9'</span>
+<a href="#__codelineno-22-23" id="__codelineno-22-23" name="__codelineno-22-23"></a>
+<a href="#__codelineno-22-24" id="__codelineno-22-24" name="__codelineno-22-24"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install dependencies</span>
+<a href="#__codelineno-22-25" id="__codelineno-22-25" name="__codelineno-22-25"></a><span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<a href="#__codelineno-22-26" id="__codelineno-22-26" name="__codelineno-22-26"></a><span class="w">          </span><span class="no">pip install -r requirements.txt</span>
+<a href="#__codelineno-22-27" id="__codelineno-22-27" name="__codelineno-22-27"></a><span class="w">          </span><span class="no">pip install pytest pytest-cov</span>
+<a href="#__codelineno-22-28" id="__codelineno-22-28" name="__codelineno-22-28"></a>
+<a href="#__codelineno-22-29" id="__codelineno-22-29" name="__codelineno-22-29"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run TDD tests</span>
+<a href="#__codelineno-22-30" id="__codelineno-22-30" name="__codelineno-22-30"></a><span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<a href="#__codelineno-22-31" id="__codelineno-22-31" name="__codelineno-22-31"></a><span class="w">          </span><span class="no">pytest tests/tdd/ --cov=src --cov-fail-under=90</span>
+<a href="#__codelineno-22-32" id="__codelineno-22-32" name="__codelineno-22-32"></a>
+<a href="#__codelineno-22-33" id="__codelineno-22-33" name="__codelineno-22-33"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Validate RED state</span>
+<a href="#__codelineno-22-34" id="__codelineno-22-34" name="__codelineno-22-34"></a><span class="w">        </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">contains(github.ref, 'tdd-red')</span>
+<a href="#__codelineno-22-35" id="__codelineno-22-35" name="__codelineno-22-35"></a><span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<a href="#__codelineno-22-36" id="__codelineno-22-36" name="__codelineno-22-36"></a><span class="w">          </span><span class="no"># Expect tests to fail in RED state</span>
+<a href="#__codelineno-22-37" id="__codelineno-22-37" name="__codelineno-22-37"></a><span class="w">          </span><span class="no">pytest tests/tdd/ || true</span>
+<a href="#__codelineno-22-38" id="__codelineno-22-38" name="__codelineno-22-38"></a>
+<a href="#__codelineno-22-39" id="__codelineno-22-39" name="__codelineno-22-39"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Validate GREEN state</span>
+<a href="#__codelineno-22-40" id="__codelineno-22-40" name="__codelineno-22-40"></a><span class="w">        </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">contains(github.ref, 'tdd-green')</span>
+<a href="#__codelineno-22-41" id="__codelineno-22-41" name="__codelineno-22-41"></a><span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<a href="#__codelineno-22-42" id="__codelineno-22-42" name="__codelineno-22-42"></a><span class="w">          </span><span class="no"># Expect all tests to pass in GREEN state</span>
+<a href="#__codelineno-22-43" id="__codelineno-22-43" name="__codelineno-22-43"></a><span class="w">          </span><span class="no">pytest tests/tdd/ --cov=src --cov-fail-under=90</span>
+<a href="#__codelineno-22-44" id="__codelineno-22-44" name="__codelineno-22-44"></a>
+<a href="#__codelineno-22-45" id="__codelineno-22-45" name="__codelineno-22-45"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Upload coverage</span>
+<a href="#__codelineno-22-46" id="__codelineno-22-46" name="__codelineno-22-46"></a><span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">codecov/codecov-action@v3</span>
+</code></pre></div>
+<h3 id="tdd-workflow-configuration-options">TDD Workflow Configuration Options<a class="headerlink" href="#tdd-workflow-configuration-options" title="Permanent link">¶</a></h3>
+<h4 id="coverage-requirements">Coverage Requirements<a class="headerlink" href="#coverage-requirements" title="Permanent link">¶</a></h4>
+<p>Configure different coverage thresholds for different story types:</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-23-1" id="__codelineno-23-1" name="__codelineno-23-1"></a><span class="p">{</span>
+<a href="#__codelineno-23-2" id="__codelineno-23-2" name="__codelineno-23-2"></a><span class="w">  </span><span class="nt">"coverage_profiles"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a href="#__codelineno-23-3" id="__codelineno-23-3" name="__codelineno-23-3"></a><span class="w">    </span><span class="nt">"critical"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a href="#__codelineno-23-4" id="__codelineno-23-4" name="__codelineno-23-4"></a><span class="w">      </span><span class="nt">"threshold"</span><span class="p">:</span><span class="w"> </span><span class="mf">95.0</span><span class="p">,</span>
+<a href="#__codelineno-23-5" id="__codelineno-23-5" name="__codelineno-23-5"></a><span class="w">      </span><span class="nt">"branch_coverage"</span><span class="p">:</span><span class="w"> </span><span class="mf">90.0</span><span class="p">,</span>
+<a href="#__codelineno-23-6" id="__codelineno-23-6" name="__codelineno-23-6"></a><span class="w">      </span><span class="nt">"exclude_patterns"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span>
+<a href="#__codelineno-23-7" id="__codelineno-23-7" name="__codelineno-23-7"></a><span class="w">    </span><span class="p">},</span>
+<a href="#__codelineno-23-8" id="__codelineno-23-8" name="__codelineno-23-8"></a><span class="w">    </span><span class="nt">"standard"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a href="#__codelineno-23-9" id="__codelineno-23-9" name="__codelineno-23-9"></a><span class="w">      </span><span class="nt">"threshold"</span><span class="p">:</span><span class="w"> </span><span class="mf">90.0</span><span class="p">,</span>
+<a href="#__codelineno-23-10" id="__codelineno-23-10" name="__codelineno-23-10"></a><span class="w">      </span><span class="nt">"branch_coverage"</span><span class="p">:</span><span class="w"> </span><span class="mf">80.0</span><span class="p">,</span>
+<a href="#__codelineno-23-11" id="__codelineno-23-11" name="__codelineno-23-11"></a><span class="w">      </span><span class="nt">"exclude_patterns"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"**/migrations/**"</span><span class="p">]</span>
+<a href="#__codelineno-23-12" id="__codelineno-23-12" name="__codelineno-23-12"></a><span class="w">    </span><span class="p">},</span>
+<a href="#__codelineno-23-13" id="__codelineno-23-13" name="__codelineno-23-13"></a><span class="w">    </span><span class="nt">"experimental"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a href="#__codelineno-23-14" id="__codelineno-23-14" name="__codelineno-23-14"></a><span class="w">      </span><span class="nt">"threshold"</span><span class="p">:</span><span class="w"> </span><span class="mf">75.0</span><span class="p">,</span>
+<a href="#__codelineno-23-15" id="__codelineno-23-15" name="__codelineno-23-15"></a><span class="w">      </span><span class="nt">"branch_coverage"</span><span class="p">:</span><span class="w"> </span><span class="mf">70.0</span><span class="p">,</span>
+<a href="#__codelineno-23-16" id="__codelineno-23-16" name="__codelineno-23-16"></a><span class="w">      </span><span class="nt">"exclude_patterns"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"**/prototypes/**"</span><span class="p">]</span>
+<a href="#__codelineno-23-17" id="__codelineno-23-17" name="__codelineno-23-17"></a><span class="w">    </span><span class="p">}</span>
+<a href="#__codelineno-23-18" id="__codelineno-23-18" name="__codelineno-23-18"></a><span class="w">  </span><span class="p">}</span>
+<a href="#__codelineno-23-19" id="__codelineno-23-19" name="__codelineno-23-19"></a><span class="p">}</span>
+</code></pre></div>
+<h4 id="quality-gates">Quality Gates<a class="headerlink" href="#quality-gates" title="Permanent link">¶</a></h4>
+<p>Define automated quality checks:</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-24-1" id="__codelineno-24-1" name="__codelineno-24-1"></a><span class="p">{</span>
+<a href="#__codelineno-24-2" id="__codelineno-24-2" name="__codelineno-24-2"></a><span class="w">  </span><span class="nt">"quality_gates"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a href="#__codelineno-24-3" id="__codelineno-24-3" name="__codelineno-24-3"></a><span class="w">    </span><span class="nt">"static_analysis"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a href="#__codelineno-24-4" id="__codelineno-24-4" name="__codelineno-24-4"></a><span class="w">      </span><span class="nt">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a href="#__codelineno-24-5" id="__codelineno-24-5" name="__codelineno-24-5"></a><span class="w">      </span><span class="nt">"tools"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"pylint"</span><span class="p">,</span><span class="w"> </span><span class="s2">"mypy"</span><span class="p">,</span><span class="w"> </span><span class="s2">"black"</span><span class="p">],</span>
+<a href="#__codelineno-24-6" id="__codelineno-24-6" name="__codelineno-24-6"></a><span class="w">      </span><span class="nt">"fail_threshold"</span><span class="p">:</span><span class="w"> </span><span class="s2">"error"</span>
+<a href="#__codelineno-24-7" id="__codelineno-24-7" name="__codelineno-24-7"></a><span class="w">    </span><span class="p">},</span>
+<a href="#__codelineno-24-8" id="__codelineno-24-8" name="__codelineno-24-8"></a><span class="w">    </span><span class="nt">"security_scan"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a href="#__codelineno-24-9" id="__codelineno-24-9" name="__codelineno-24-9"></a><span class="w">      </span><span class="nt">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a href="#__codelineno-24-10" id="__codelineno-24-10" name="__codelineno-24-10"></a><span class="w">      </span><span class="nt">"tools"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"bandit"</span><span class="p">,</span><span class="w"> </span><span class="s2">"safety"</span><span class="p">],</span>
+<a href="#__codelineno-24-11" id="__codelineno-24-11" name="__codelineno-24-11"></a><span class="w">      </span><span class="nt">"fail_on_high"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<a href="#__codelineno-24-12" id="__codelineno-24-12" name="__codelineno-24-12"></a><span class="w">    </span><span class="p">},</span>
+<a href="#__codelineno-24-13" id="__codelineno-24-13" name="__codelineno-24-13"></a><span class="w">    </span><span class="nt">"performance"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a href="#__codelineno-24-14" id="__codelineno-24-14" name="__codelineno-24-14"></a><span class="w">      </span><span class="nt">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a href="#__codelineno-24-15" id="__codelineno-24-15" name="__codelineno-24-15"></a><span class="w">      </span><span class="nt">"max_execution_time"</span><span class="p">:</span><span class="w"> </span><span class="mf">5.0</span><span class="p">,</span>
+<a href="#__codelineno-24-16" id="__codelineno-24-16" name="__codelineno-24-16"></a><span class="w">      </span><span class="nt">"memory_threshold"</span><span class="p">:</span><span class="w"> </span><span class="s2">"100MB"</span>
+<a href="#__codelineno-24-17" id="__codelineno-24-17" name="__codelineno-24-17"></a><span class="w">    </span><span class="p">},</span>
+<a href="#__codelineno-24-18" id="__codelineno-24-18" name="__codelineno-24-18"></a><span class="w">    </span><span class="nt">"complexity"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a href="#__codelineno-24-19" id="__codelineno-24-19" name="__codelineno-24-19"></a><span class="w">      </span><span class="nt">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a href="#__codelineno-24-20" id="__codelineno-24-20" name="__codelineno-24-20"></a><span class="w">      </span><span class="nt">"cyclomatic_complexity"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span>
+<a href="#__codelineno-24-21" id="__codelineno-24-21" name="__codelineno-24-21"></a><span class="w">      </span><span class="nt">"cognitive_complexity"</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span>
+<a href="#__codelineno-24-22" id="__codelineno-24-22" name="__codelineno-24-22"></a><span class="w">    </span><span class="p">}</span>
+<a href="#__codelineno-24-23" id="__codelineno-24-23" name="__codelineno-24-23"></a><span class="w">  </span><span class="p">}</span>
+<a href="#__codelineno-24-24" id="__codelineno-24-24" name="__codelineno-24-24"></a><span class="p">}</span>
+</code></pre></div>
+<h4 id="agent-behavior-configuration">Agent Behavior Configuration<a class="headerlink" href="#agent-behavior-configuration" title="Permanent link">¶</a></h4>
+<p>Customize how TDD agents operate:</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-25-1" id="__codelineno-25-1" name="__codelineno-25-1"></a><span class="p">{</span>
+<a href="#__codelineno-25-2" id="__codelineno-25-2" name="__codelineno-25-2"></a><span class="w">  </span><span class="nt">"agent_config"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a href="#__codelineno-25-3" id="__codelineno-25-3" name="__codelineno-25-3"></a><span class="w">    </span><span class="nt">"design_agent"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a href="#__codelineno-25-4" id="__codelineno-25-4" name="__codelineno-25-4"></a><span class="w">      </span><span class="nt">"design_template"</span><span class="p">:</span><span class="w"> </span><span class="s2">"api_specification"</span><span class="p">,</span>
+<a href="#__codelineno-25-5" id="__codelineno-25-5" name="__codelineno-25-5"></a><span class="w">      </span><span class="nt">"include_acceptance_criteria"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a href="#__codelineno-25-6" id="__codelineno-25-6" name="__codelineno-25-6"></a><span class="w">      </span><span class="nt">"generate_test_scenarios"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<a href="#__codelineno-25-7" id="__codelineno-25-7" name="__codelineno-25-7"></a><span class="w">    </span><span class="p">},</span>
+<a href="#__codelineno-25-8" id="__codelineno-25-8" name="__codelineno-25-8"></a><span class="w">    </span><span class="nt">"qa_agent"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a href="#__codelineno-25-9" id="__codelineno-25-9" name="__codelineno-25-9"></a><span class="w">      </span><span class="nt">"test_types"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"unit"</span><span class="p">,</span><span class="w"> </span><span class="s2">"integration"</span><span class="p">,</span><span class="w"> </span><span class="s2">"edge_cases"</span><span class="p">],</span>
+<a href="#__codelineno-25-10" id="__codelineno-25-10" name="__codelineno-25-10"></a><span class="w">      </span><span class="nt">"mock_external_dependencies"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a href="#__codelineno-25-11" id="__codelineno-25-11" name="__codelineno-25-11"></a><span class="w">      </span><span class="nt">"generate_test_data"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a href="#__codelineno-25-12" id="__codelineno-25-12" name="__codelineno-25-12"></a><span class="w">      </span><span class="nt">"ensure_red_state"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<a href="#__codelineno-25-13" id="__codelineno-25-13" name="__codelineno-25-13"></a><span class="w">    </span><span class="p">},</span>
+<a href="#__codelineno-25-14" id="__codelineno-25-14" name="__codelineno-25-14"></a><span class="w">    </span><span class="nt">"code_agent"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a href="#__codelineno-25-15" id="__codelineno-25-15" name="__codelineno-25-15"></a><span class="w">      </span><span class="nt">"minimal_implementation"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a href="#__codelineno-25-16" id="__codelineno-25-16" name="__codelineno-25-16"></a><span class="w">      </span><span class="nt">"avoid_premature_optimization"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a href="#__codelineno-25-17" id="__codelineno-25-17" name="__codelineno-25-17"></a><span class="w">      </span><span class="nt">"follow_design_patterns"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"SOLID"</span><span class="p">,</span><span class="w"> </span><span class="s2">"DRY"</span><span class="p">]</span>
+<a href="#__codelineno-25-18" id="__codelineno-25-18" name="__codelineno-25-18"></a><span class="w">    </span><span class="p">}</span>
+<a href="#__codelineno-25-19" id="__codelineno-25-19" name="__codelineno-25-19"></a><span class="w">  </span><span class="p">}</span>
+<a href="#__codelineno-25-20" id="__codelineno-25-20" name="__codelineno-25-20"></a><span class="p">}</span>
+</code></pre></div>
+<h3 id="tdd-specific-project-templates">TDD-Specific Project Templates<a class="headerlink" href="#tdd-specific-project-templates" title="Permanent link">¶</a></h3>
+<h4 id="api-development-template">API Development Template<a class="headerlink" href="#api-development-template" title="Permanent link">¶</a></h4>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-26-1" id="__codelineno-26-1" name="__codelineno-26-1"></a><span class="p">{</span>
+<a href="#__codelineno-26-2" id="__codelineno-26-2" name="__codelineno-26-2"></a><span class="w">  </span><span class="nt">"project_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"api"</span><span class="p">,</span>
+<a href="#__codelineno-26-3" id="__codelineno-26-3" name="__codelineno-26-3"></a><span class="w">  </span><span class="nt">"tdd_config"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a href="#__codelineno-26-4" id="__codelineno-26-4" name="__codelineno-26-4"></a><span class="w">    </span><span class="nt">"test_patterns"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a href="#__codelineno-26-5" id="__codelineno-26-5" name="__codelineno-26-5"></a><span class="w">      </span><span class="nt">"unit"</span><span class="p">:</span><span class="w"> </span><span class="s2">"test_unit_*.py"</span><span class="p">,</span>
+<a href="#__codelineno-26-6" id="__codelineno-26-6" name="__codelineno-26-6"></a><span class="w">      </span><span class="nt">"integration"</span><span class="p">:</span><span class="w"> </span><span class="s2">"test_api_*.py"</span><span class="p">,</span>
+<a href="#__codelineno-26-7" id="__codelineno-26-7" name="__codelineno-26-7"></a><span class="w">      </span><span class="nt">"contract"</span><span class="p">:</span><span class="w"> </span><span class="s2">"test_contract_*.py"</span>
+<a href="#__codelineno-26-8" id="__codelineno-26-8" name="__codelineno-26-8"></a><span class="w">    </span><span class="p">},</span>
+<a href="#__codelineno-26-9" id="__codelineno-26-9" name="__codelineno-26-9"></a><span class="w">    </span><span class="nt">"phases"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a href="#__codelineno-26-10" id="__codelineno-26-10" name="__codelineno-26-10"></a><span class="w">      </span><span class="nt">"design"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a href="#__codelineno-26-11" id="__codelineno-26-11" name="__codelineno-26-11"></a><span class="w">        </span><span class="nt">"artifacts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"openapi_spec"</span><span class="p">,</span><span class="w"> </span><span class="s2">"data_models"</span><span class="p">,</span><span class="w"> </span><span class="s2">"error_schemas"</span><span class="p">],</span>
+<a href="#__codelineno-26-12" id="__codelineno-26-12" name="__codelineno-26-12"></a><span class="w">        </span><span class="nt">"validation"</span><span class="p">:</span><span class="w"> </span><span class="s2">"schema_validation"</span>
+<a href="#__codelineno-26-13" id="__codelineno-26-13" name="__codelineno-26-13"></a><span class="w">      </span><span class="p">},</span>
+<a href="#__codelineno-26-14" id="__codelineno-26-14" name="__codelineno-26-14"></a><span class="w">      </span><span class="nt">"test_red"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a href="#__codelineno-26-15" id="__codelineno-26-15" name="__codelineno-26-15"></a><span class="w">        </span><span class="nt">"test_types"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"unit"</span><span class="p">,</span><span class="w"> </span><span class="s2">"integration"</span><span class="p">,</span><span class="w"> </span><span class="s2">"contract"</span><span class="p">],</span>
+<a href="#__codelineno-26-16" id="__codelineno-26-16" name="__codelineno-26-16"></a><span class="w">        </span><span class="nt">"mock_strategy"</span><span class="p">:</span><span class="w"> </span><span class="s2">"external_services"</span>
+<a href="#__codelineno-26-17" id="__codelineno-26-17" name="__codelineno-26-17"></a><span class="w">      </span><span class="p">},</span>
+<a href="#__codelineno-26-18" id="__codelineno-26-18" name="__codelineno-26-18"></a><span class="w">      </span><span class="nt">"code_green"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a href="#__codelineno-26-19" id="__codelineno-26-19" name="__codelineno-26-19"></a><span class="w">        </span><span class="nt">"implementation_style"</span><span class="p">:</span><span class="w"> </span><span class="s2">"minimal_viable"</span><span class="p">,</span>
+<a href="#__codelineno-26-20" id="__codelineno-26-20" name="__codelineno-26-20"></a><span class="w">        </span><span class="nt">"database_strategy"</span><span class="p">:</span><span class="w"> </span><span class="s2">"in_memory"</span>
+<a href="#__codelineno-26-21" id="__codelineno-26-21" name="__codelineno-26-21"></a><span class="w">      </span><span class="p">},</span>
+<a href="#__codelineno-26-22" id="__codelineno-26-22" name="__codelineno-26-22"></a><span class="w">      </span><span class="nt">"refactor"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a href="#__codelineno-26-23" id="__codelineno-26-23" name="__codelineno-26-23"></a><span class="w">        </span><span class="nt">"focus_areas"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"performance"</span><span class="p">,</span><span class="w"> </span><span class="s2">"security"</span><span class="p">,</span><span class="w"> </span><span class="s2">"maintainability"</span><span class="p">]</span>
+<a href="#__codelineno-26-24" id="__codelineno-26-24" name="__codelineno-26-24"></a><span class="w">      </span><span class="p">}</span>
+<a href="#__codelineno-26-25" id="__codelineno-26-25" name="__codelineno-26-25"></a><span class="w">    </span><span class="p">}</span>
+<a href="#__codelineno-26-26" id="__codelineno-26-26" name="__codelineno-26-26"></a><span class="w">  </span><span class="p">}</span>
+<a href="#__codelineno-26-27" id="__codelineno-26-27" name="__codelineno-26-27"></a><span class="p">}</span>
+</code></pre></div>
+<h4 id="frontend-component-template">Frontend Component Template<a class="headerlink" href="#frontend-component-template" title="Permanent link">¶</a></h4>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-27-1" id="__codelineno-27-1" name="__codelineno-27-1"></a><span class="p">{</span>
+<a href="#__codelineno-27-2" id="__codelineno-27-2" name="__codelineno-27-2"></a><span class="w">  </span><span class="nt">"project_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"frontend"</span><span class="p">,</span>
+<a href="#__codelineno-27-3" id="__codelineno-27-3" name="__codelineno-27-3"></a><span class="w">  </span><span class="nt">"tdd_config"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a href="#__codelineno-27-4" id="__codelineno-27-4" name="__codelineno-27-4"></a><span class="w">    </span><span class="nt">"test_patterns"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a href="#__codelineno-27-5" id="__codelineno-27-5" name="__codelineno-27-5"></a><span class="w">      </span><span class="nt">"unit"</span><span class="p">:</span><span class="w"> </span><span class="s2">"*.test.js"</span><span class="p">,</span>
+<a href="#__codelineno-27-6" id="__codelineno-27-6" name="__codelineno-27-6"></a><span class="w">      </span><span class="nt">"integration"</span><span class="p">:</span><span class="w"> </span><span class="s2">"*.integration.test.js"</span><span class="p">,</span>
+<a href="#__codelineno-27-7" id="__codelineno-27-7" name="__codelineno-27-7"></a><span class="w">      </span><span class="nt">"e2e"</span><span class="p">:</span><span class="w"> </span><span class="s2">"*.e2e.test.js"</span>
+<a href="#__codelineno-27-8" id="__codelineno-27-8" name="__codelineno-27-8"></a><span class="w">    </span><span class="p">},</span>
+<a href="#__codelineno-27-9" id="__codelineno-27-9" name="__codelineno-27-9"></a><span class="w">    </span><span class="nt">"testing_library"</span><span class="p">:</span><span class="w"> </span><span class="s2">"react-testing-library"</span><span class="p">,</span>
+<a href="#__codelineno-27-10" id="__codelineno-27-10" name="__codelineno-27-10"></a><span class="w">    </span><span class="nt">"phases"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a href="#__codelineno-27-11" id="__codelineno-27-11" name="__codelineno-27-11"></a><span class="w">      </span><span class="nt">"design"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a href="#__codelineno-27-12" id="__codelineno-27-12" name="__codelineno-27-12"></a><span class="w">        </span><span class="nt">"artifacts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"component_interface"</span><span class="p">,</span><span class="w"> </span><span class="s2">"props_schema"</span><span class="p">,</span><span class="w"> </span><span class="s2">"state_diagram"</span><span class="p">],</span>
+<a href="#__codelineno-27-13" id="__codelineno-27-13" name="__codelineno-27-13"></a><span class="w">        </span><span class="nt">"validation"</span><span class="p">:</span><span class="w"> </span><span class="s2">"typescript_compilation"</span>
+<a href="#__codelineno-27-14" id="__codelineno-27-14" name="__codelineno-27-14"></a><span class="w">      </span><span class="p">},</span>
+<a href="#__codelineno-27-15" id="__codelineno-27-15" name="__codelineno-27-15"></a><span class="w">      </span><span class="nt">"test_red"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a href="#__codelineno-27-16" id="__codelineno-27-16" name="__codelineno-27-16"></a><span class="w">        </span><span class="nt">"test_types"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"unit"</span><span class="p">,</span><span class="w"> </span><span class="s2">"integration"</span><span class="p">],</span>
+<a href="#__codelineno-27-17" id="__codelineno-27-17" name="__codelineno-27-17"></a><span class="w">        </span><span class="nt">"mock_strategy"</span><span class="p">:</span><span class="w"> </span><span class="s2">"api_calls"</span>
+<a href="#__codelineno-27-18" id="__codelineno-27-18" name="__codelineno-27-18"></a><span class="w">      </span><span class="p">},</span>
+<a href="#__codelineno-27-19" id="__codelineno-27-19" name="__codelineno-27-19"></a><span class="w">      </span><span class="nt">"code_green"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a href="#__codelineno-27-20" id="__codelineno-27-20" name="__codelineno-27-20"></a><span class="w">        </span><span class="nt">"implementation_style"</span><span class="p">:</span><span class="w"> </span><span class="s2">"component_first"</span><span class="p">,</span>
+<a href="#__codelineno-27-21" id="__codelineno-27-21" name="__codelineno-27-21"></a><span class="w">        </span><span class="nt">"styling_approach"</span><span class="p">:</span><span class="w"> </span><span class="s2">"css_modules"</span>
+<a href="#__codelineno-27-22" id="__codelineno-27-22" name="__codelineno-27-22"></a><span class="w">      </span><span class="p">}</span>
+<a href="#__codelineno-27-23" id="__codelineno-27-23" name="__codelineno-27-23"></a><span class="w">    </span><span class="p">}</span>
+<a href="#__codelineno-27-24" id="__codelineno-27-24" name="__codelineno-27-24"></a><span class="w">  </span><span class="p">}</span>
+<a href="#__codelineno-27-25" id="__codelineno-27-25" name="__codelineno-27-25"></a><span class="p">}</span>
+</code></pre></div>
+<h3 id="tdd-project-initialization">TDD Project Initialization<a class="headerlink" href="#tdd-project-initialization" title="Permanent link">¶</a></h3>
+<h4 id="new-project-with-tdd">New Project with TDD<a class="headerlink" href="#new-project-with-tdd" title="Permanent link">¶</a></h4>
+<p>For new projects starting with TDD:</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-28-1" id="__codelineno-28-1" name="__codelineno-28-1"></a><span class="c1"># Create project structure</span>
+<a href="#__codelineno-28-2" id="__codelineno-28-2" name="__codelineno-28-2"></a>mkdir<span class="w"> </span>my-tdd-project
+<a href="#__codelineno-28-3" id="__codelineno-28-3" name="__codelineno-28-3"></a><span class="nb">cd</span><span class="w"> </span>my-tdd-project
+<a href="#__codelineno-28-4" id="__codelineno-28-4" name="__codelineno-28-4"></a>git<span class="w"> </span>init
+<a href="#__codelineno-28-5" id="__codelineno-28-5" name="__codelineno-28-5"></a>
+<a href="#__codelineno-28-6" id="__codelineno-28-6" name="__codelineno-28-6"></a><span class="c1"># Initialize TDD-ready structure</span>
+<a href="#__codelineno-28-7" id="__codelineno-28-7" name="__codelineno-28-7"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>src<span class="w"> </span>tests/<span class="o">{</span>unit,integration,tdd<span class="o">}</span><span class="w"> </span>.orch-state
+<a href="#__codelineno-28-8" id="__codelineno-28-8" name="__codelineno-28-8"></a>
+<a href="#__codelineno-28-9" id="__codelineno-28-9" name="__codelineno-28-9"></a><span class="c1"># Register with TDD enabled</span>
+<a href="#__codelineno-28-10" id="__codelineno-28-10" name="__codelineno-28-10"></a>/project<span class="w"> </span>register<span class="w"> </span>path:/path/to/my-tdd-project
+<a href="#__codelineno-28-11" id="__codelineno-28-11" name="__codelineno-28-11"></a><span class="c1"># System detects TDD configuration and enables TDD mode</span>
+<a href="#__codelineno-28-12" id="__codelineno-28-12" name="__codelineno-28-12"></a>
+<a href="#__codelineno-28-13" id="__codelineno-28-13" name="__codelineno-28-13"></a><span class="c1"># Create first epic with TDD</span>
+<a href="#__codelineno-28-14" id="__codelineno-28-14" name="__codelineno-28-14"></a>/epic<span class="w"> </span><span class="s2">"Build user authentication system with TDD"</span>
+<a href="#__codelineno-28-15" id="__codelineno-28-15" name="__codelineno-28-15"></a>/tdd<span class="w"> </span>configure<span class="w"> </span>AUTH<span class="w"> </span>coverage_profile:critical
+</code></pre></div>
+<h4 id="existing-project-tdd-migration">Existing Project TDD Migration<a class="headerlink" href="#existing-project-tdd-migration" title="Permanent link">¶</a></h4>
+<p>For existing projects adopting TDD:</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-29-1" id="__codelineno-29-1" name="__codelineno-29-1"></a><span class="c1"># Backup existing tests</span>
+<a href="#__codelineno-29-2" id="__codelineno-29-2" name="__codelineno-29-2"></a>cp<span class="w"> </span>-r<span class="w"> </span>tests<span class="w"> </span>tests_backup
+<a href="#__codelineno-29-3" id="__codelineno-29-3" name="__codelineno-29-3"></a>
+<a href="#__codelineno-29-4" id="__codelineno-29-4" name="__codelineno-29-4"></a><span class="c1"># Create TDD structure</span>
+<a href="#__codelineno-29-5" id="__codelineno-29-5" name="__codelineno-29-5"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>tests/tdd<span class="w"> </span>.orch-state/tdd-cycles
+<a href="#__codelineno-29-6" id="__codelineno-29-6" name="__codelineno-29-6"></a>
+<a href="#__codelineno-29-7" id="__codelineno-29-7" name="__codelineno-29-7"></a><span class="c1"># Move existing tests to permanent locations</span>
+<a href="#__codelineno-29-8" id="__codelineno-29-8" name="__codelineno-29-8"></a>mv<span class="w"> </span>tests/test_*.py<span class="w"> </span>tests/unit/
+<a href="#__codelineno-29-9" id="__codelineno-29-9" name="__codelineno-29-9"></a>mv<span class="w"> </span>tests/integration_*.py<span class="w"> </span>tests/integration/
+<a href="#__codelineno-29-10" id="__codelineno-29-10" name="__codelineno-29-10"></a>
+<a href="#__codelineno-29-11" id="__codelineno-29-11" name="__codelineno-29-11"></a><span class="c1"># Enable TDD mode</span>
+<a href="#__codelineno-29-12" id="__codelineno-29-12" name="__codelineno-29-12"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">'{"tdd_enabled": true}'</span><span class="w"> </span>&gt;<span class="w"> </span>.orch-state/tdd-config.json
+<a href="#__codelineno-29-13" id="__codelineno-29-13" name="__codelineno-29-13"></a>
+<a href="#__codelineno-29-14" id="__codelineno-29-14" name="__codelineno-29-14"></a><span class="c1"># Re-register project to detect TDD</span>
+<a href="#__codelineno-29-15" id="__codelineno-29-15" name="__codelineno-29-15"></a>/project<span class="w"> </span>register<span class="w"> </span>path:/path/to/existing/project
+</code></pre></div>
+<h3 id="tdd-troubleshooting-setup">TDD Troubleshooting Setup<a class="headerlink" href="#tdd-troubleshooting-setup" title="Permanent link">¶</a></h3>
+<h4 id="common-setup-issues">Common Setup Issues<a class="headerlink" href="#common-setup-issues" title="Permanent link">¶</a></h4>
+<p><strong>TDD directory not created:</strong>
+- Verify <code>.orch-state/tdd-config.json</code> exists
+- Check project registration detected TDD configuration
+- Ensure bot has write permissions to project directory</p>
+<p><strong>Tests not running in CI:</strong>
+- Verify test framework is properly configured
+- Check CI workflow includes TDD test paths
+- Ensure coverage tools are installed in CI environment</p>
+<p><strong>Agent access errors:</strong>
+- Verify agent security profiles allow TDD operations
+- Check file permissions in tests/tdd/ directory
+- Ensure git repository allows automated commits</p>
+<h4 id="validation-commands">Validation Commands<a class="headerlink" href="#validation-commands" title="Permanent link">¶</a></h4>
+<p>Verify TDD setup is working:</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-30-1" id="__codelineno-30-1" name="__codelineno-30-1"></a><span class="c1"># Check TDD configuration</span>
+<a href="#__codelineno-30-2" id="__codelineno-30-2" name="__codelineno-30-2"></a>/tdd<span class="w"> </span>status
+<a href="#__codelineno-30-3" id="__codelineno-30-3" name="__codelineno-30-3"></a>
+<a href="#__codelineno-30-4" id="__codelineno-30-4" name="__codelineno-30-4"></a><span class="c1"># Validate test framework</span>
+<a href="#__codelineno-30-5" id="__codelineno-30-5" name="__codelineno-30-5"></a>pytest<span class="w"> </span>tests/tdd/<span class="w"> </span>--collect-only
+<a href="#__codelineno-30-6" id="__codelineno-30-6" name="__codelineno-30-6"></a>
+<a href="#__codelineno-30-7" id="__codelineno-30-7" name="__codelineno-30-7"></a><span class="c1"># Verify CI integration</span>
+<a href="#__codelineno-30-8" id="__codelineno-30-8" name="__codelineno-30-8"></a>git<span class="w"> </span>add<span class="w"> </span>.orch-state/tdd-config.json
+<a href="#__codelineno-30-9" id="__codelineno-30-9" name="__codelineno-30-9"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"Enable TDD workflow"</span>
+<a href="#__codelineno-30-10" id="__codelineno-30-10" name="__codelineno-30-10"></a>git<span class="w"> </span>push<span class="w">  </span><span class="c1"># Should trigger CI validation</span>
+<a href="#__codelineno-30-11" id="__codelineno-30-11" name="__codelineno-30-11"></a>
+<a href="#__codelineno-30-12" id="__codelineno-30-12" name="__codelineno-30-12"></a><span class="c1"># Test agent permissions</span>
+<a href="#__codelineno-30-13" id="__codelineno-30-13" name="__codelineno-30-13"></a>/tdd<span class="w"> </span>start<span class="w"> </span>TEST-001<span class="w">  </span><span class="c1"># Should create TDD cycle</span>
+</code></pre></div>
+<h3 id="tdd-best-practices-for-setup">TDD Best Practices for Setup<a class="headerlink" href="#tdd-best-practices-for-setup" title="Permanent link">¶</a></h3>
+<h4 id="project-organization_1">Project Organization<a class="headerlink" href="#project-organization_1" title="Permanent link">¶</a></h4>
+<ol>
+<li><strong>Separate TDD Workspace</strong>: Keep TDD tests separate from permanent test suite</li>
+<li><strong>Story-Based Organization</strong>: Organize TDD tests by story ID for clarity</li>
+<li><strong>Clear Naming Conventions</strong>: Use consistent naming for TDD test files</li>
+<li><strong>Version Control Integration</strong>: Ensure TDD artifacts are properly tracked</li>
+</ol>
+<h4 id="cicd-configuration">CI/CD Configuration<a class="headerlink" href="#cicd-configuration" title="Permanent link">¶</a></h4>
+<ol>
+<li><strong>Separate TDD Pipelines</strong>: Different CI behavior for RED vs GREEN states</li>
+<li><strong>Quality Gate Integration</strong>: Automated quality checks at each TDD phase</li>
+<li><strong>Artifact Preservation</strong>: Maintain TDD test history for audit trails</li>
+<li><strong>Performance Monitoring</strong>: Track TDD cycle times and success rates</li>
+</ol>
+<h4 id="team-coordination_1">Team Coordination<a class="headerlink" href="#team-coordination_1" title="Permanent link">¶</a></h4>
+<ol>
+<li><strong>Shared TDD Standards</strong>: Document TDD practices for the team</li>
+<li><strong>Review Processes</strong>: Define review requirements for TDD phases</li>
+<li><strong>Escalation Procedures</strong>: Clear processes when TDD cycles get stuck</li>
+<li><strong>Metrics Tracking</strong>: Regular review of TDD performance metrics</li>
+</ol>
+<p>With this setup, your project will be fully configured for TDD workflows with proper tooling, CI integration, and team processes.</p>
 </article>
 </div>
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>

@@ -159,6 +159,15 @@
         </a>
 </li>
 <li class="md-tabs__item">
+<a class="md-tabs__link" href="../../architecture/overview/">
+          
+  
+  
+  Architecture
+
+        </a>
+</li>
+<li class="md-tabs__item">
 <a class="md-tabs__link" href="../../development/contributing/">
           
   
@@ -309,6 +318,13 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="#example-tdd-workflow">
+<span class="md-ellipsis">
+      Example TDD Workflow
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="#next-steps">
 <span class="md-ellipsis">
       Next Steps
@@ -389,6 +405,14 @@
 <a class="md-nav__link" href="../../user-guide/state-machine/">
 <span class="md-ellipsis">
     State Machine
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../user-guide/tdd-workflow/">
+<span class="md-ellipsis">
+    TDD Workflow
     
   </span>
 </a>
@@ -572,13 +596,55 @@
 <input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_6" type="checkbox"/>
 <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
 <span class="md-ellipsis">
-    Development
+    Architecture
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
 <nav aria-expanded="false" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
 <label class="md-nav__title" for="__nav_6">
+<span class="md-nav__icon md-icon"></span>
+            Architecture
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../architecture/overview/">
+<span class="md-ellipsis">
+    System Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../architecture/context-management-system/">
+<span class="md-ellipsis">
+    Context Management
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../architecture/parallel-tdd-architecture/">
+<span class="md-ellipsis">
+    Parallel TDD Design
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_7" type="checkbox"/>
+<label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+<span class="md-ellipsis">
+    Development
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_7_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_7">
 <span class="md-nav__icon md-icon"></span>
             Development
           </label>
@@ -603,16 +669,16 @@
 </nav>
 </li>
 <li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_7" type="checkbox"/>
-<label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_8" type="checkbox"/>
+<label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
 <span class="md-ellipsis">
     Deployment
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="false" aria-labelledby="__nav_7_label" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="__nav_7">
+<nav aria-expanded="false" aria-labelledby="__nav_8_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_8">
 <span class="md-nav__icon md-icon"></span>
             Deployment
           </label>
@@ -719,6 +785,13 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="#example-tdd-workflow">
+<span class="md-ellipsis">
+      Example TDD Workflow
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="#next-steps">
 <span class="md-ellipsis">
       Next Steps
@@ -793,20 +866,55 @@
 <h2 id="4-test-in-discord">4. Test in Discord<a class="headerlink" href="#4-test-in-discord" title="Permanent link">¶</a></h2>
 <ol>
 <li><strong>Invite your bot</strong> to a Discord server</li>
-<li><strong>Try basic commands</strong>:
+<li>
+<p><strong>Try basic commands</strong>:
    <div class="highlight"><pre><span></span><code><a href="#__codelineno-5-1" id="__codelineno-5-1" name="__codelineno-5-1"></a>/state
 <a href="#__codelineno-5-2" id="__codelineno-5-2" name="__codelineno-5-2"></a>/epic "Build a todo app"
 <a href="#__codelineno-5-3" id="__codelineno-5-3" name="__codelineno-5-3"></a>/approve
 <a href="#__codelineno-5-4" id="__codelineno-5-4" name="__codelineno-5-4"></a>/sprint plan
 <a href="#__codelineno-5-5" id="__codelineno-5-5" name="__codelineno-5-5"></a>/sprint start
-</code></pre></div></li>
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Monitor TDD workflow</strong>:
+   <div class="highlight"><pre><span></span><code><a href="#__codelineno-6-1" id="__codelineno-6-1" name="__codelineno-6-1"></a>/tdd overview
+<a href="#__codelineno-6-2" id="__codelineno-6-2" name="__codelineno-6-2"></a>/tdd status TODO-1
+<a href="#__codelineno-6-3" id="__codelineno-6-3" name="__codelineno-6-3"></a>/sprint status
+</code></pre></div></p>
+</li>
 </ol>
 <h2 id="5-verify-installation">5. Verify Installation<a class="headerlink" href="#5-verify-installation" title="Permanent link">¶</a></h2>
 <p>Run the test suite to ensure everything works:</p>
-<div class="highlight"><pre><span></span><code><a href="#__codelineno-6-1" id="__codelineno-6-1" name="__codelineno-6-1"></a>make<span class="w"> </span><span class="nb">test</span>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-7-1" id="__codelineno-7-1" name="__codelineno-7-1"></a>make<span class="w"> </span><span class="nb">test</span>
+</code></pre></div>
+<h2 id="example-tdd-workflow">Example TDD Workflow<a class="headerlink" href="#example-tdd-workflow" title="Permanent link">¶</a></h2>
+<p>Once your system is running, try this complete TDD workflow:</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-8-1" id="__codelineno-8-1" name="__codelineno-8-1"></a><span class="c1"># 1. Create epic and stories</span>
+<a href="#__codelineno-8-2" id="__codelineno-8-2" name="__codelineno-8-2"></a>/epic<span class="w"> </span><span class="s2">"Build user authentication system"</span>
+<a href="#__codelineno-8-3" id="__codelineno-8-3" name="__codelineno-8-3"></a>/approve<span class="w"> </span>AUTH-1<span class="w"> </span>AUTH-2
+<a href="#__codelineno-8-4" id="__codelineno-8-4" name="__codelineno-8-4"></a>
+<a href="#__codelineno-8-5" id="__codelineno-8-5" name="__codelineno-8-5"></a><span class="c1"># 2. Plan and start sprint</span>
+<a href="#__codelineno-8-6" id="__codelineno-8-6" name="__codelineno-8-6"></a>/sprint<span class="w"> </span>plan<span class="w"> </span>AUTH-1<span class="w"> </span>AUTH-2
+<a href="#__codelineno-8-7" id="__codelineno-8-7" name="__codelineno-8-7"></a>/sprint<span class="w"> </span>start
+<a href="#__codelineno-8-8" id="__codelineno-8-8" name="__codelineno-8-8"></a>
+<a href="#__codelineno-8-9" id="__codelineno-8-9" name="__codelineno-8-9"></a><span class="c1"># 3. Monitor TDD progress</span>
+<a href="#__codelineno-8-10" id="__codelineno-8-10" name="__codelineno-8-10"></a>/tdd<span class="w"> </span>overview
+<a href="#__codelineno-8-11" id="__codelineno-8-11" name="__codelineno-8-11"></a><span class="c1"># Shows: AUTH-1 in DESIGN phase, AUTH-2 in DESIGN phase</span>
+<a href="#__codelineno-8-12" id="__codelineno-8-12" name="__codelineno-8-12"></a>
+<a href="#__codelineno-8-13" id="__codelineno-8-13" name="__codelineno-8-13"></a><span class="c1"># 4. Check specific story progress</span>
+<a href="#__codelineno-8-14" id="__codelineno-8-14" name="__codelineno-8-14"></a>/tdd<span class="w"> </span>status<span class="w"> </span>AUTH-1
+<a href="#__codelineno-8-15" id="__codelineno-8-15" name="__codelineno-8-15"></a><span class="c1"># Shows: "AUTH-1 in TEST_RED phase - 12 failing tests written"</span>
+<a href="#__codelineno-8-16" id="__codelineno-8-16" name="__codelineno-8-16"></a>
+<a href="#__codelineno-8-17" id="__codelineno-8-17" name="__codelineno-8-17"></a><span class="c1"># 5. Review TDD cycle if needed</span>
+<a href="#__codelineno-8-18" id="__codelineno-8-18" name="__codelineno-8-18"></a>/tdd<span class="w"> </span>review_cycle<span class="w"> </span>AUTH-1
+<a href="#__codelineno-8-19" id="__codelineno-8-19" name="__codelineno-8-19"></a>
+<a href="#__codelineno-8-20" id="__codelineno-8-20" name="__codelineno-8-20"></a><span class="c1"># 6. Monitor sprint completion</span>
+<a href="#__codelineno-8-21" id="__codelineno-8-21" name="__codelineno-8-21"></a>/sprint<span class="w"> </span>status
+<a href="#__codelineno-8-22" id="__codelineno-8-22" name="__codelineno-8-22"></a><span class="c1"># Shows overall sprint progress with TDD cycle status</span>
 </code></pre></div>
 <h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">¶</a></h2>
 <ul>
+<li><a href="../../user-guide/tdd-workflow/"><strong>Read the TDD Workflow Guide</strong></a> for complete TDD implementation</li>
 <li><a href="../../user-guide/hitl-commands/"><strong>Read the User Guide</strong></a> for complete command reference</li>
 <li><a href="../configuration/"><strong>Configure Projects</strong></a> for multi-project setups</li>
 <li><a href="../../user-guide/workflow-sequences/"><strong>Explore Workflows</strong></a> for common usage patterns</li>

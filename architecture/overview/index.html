@@ -1,0 +1,1361 @@
+
+<!DOCTYPE html>
+
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta content="Human-In-The-Loop orchestration framework for AI-assisted software development" name="description"/>
+<meta content="AI Agent Workflow Team" name="author"/>
+<link href="https://jmontp.github.io/agent-workflow/architecture/overview/" rel="canonical"/>
+<link href="../../advanced/code/" rel="prev"/>
+<link href="../context-management-system/" rel="next"/>
+<link href="../../assets/images/favicon.png" rel="icon"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.6.14" name="generator"/>
+<title>System Overview - AI Agent TDD-Scrum Workflow</title>
+<link href="../../assets/stylesheets/main.342714a4.min.css" rel="stylesheet"/>
+<link href="../../assets/stylesheets/palette.06af60db.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+</head>
+<body data-md-color-accent="blue" data-md-color-primary="blue" data-md-color-scheme="default" dir="ltr">
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#architecture-overview">
+          Skip to content
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+<nav aria-label="Header" class="md-header__inner md-grid">
+<a aria-label="AI Agent TDD-Scrum Workflow" class="md-header__button md-logo" data-md-component="logo" href="../.." title="AI Agent TDD-Scrum Workflow">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+            AI Agent TDD-Scrum Workflow
+          </span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+            
+              System Overview
+            
+          </span>
+</div>
+</div>
+</div>
+<form class="md-header__option" data-md-component="palette">
+<input aria-label="Switch to dark mode" class="md-option" data-md-color-accent="blue" data-md-color-media="" data-md-color-primary="blue" data-md-color-scheme="default" id="__palette_0" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_1" hidden="" title="Switch to dark mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+<input aria-label="Switch to light mode" class="md-option" data-md-color-accent="blue" data-md-color-media="" data-md-color-primary="blue" data-md-color-scheme="slate" id="__palette_1" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_0" hidden="" title="Switch to light mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+</form>
+<script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Search" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+</label>
+<nav aria-label="Search" class="md-search__options">
+<button aria-label="Clear" class="md-search__icon md-icon" tabindex="-1" title="Clear" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+</button>
+</nav>
+<div class="md-search__suggest" data-md-component="search-suggest"></div>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="" tabindex="0">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            Initializing search
+          </div>
+<ol class="md-search-result__list" role="presentation"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="md-header__source">
+<a class="md-source" data-md-component="source" href="https://github.com/jmontp/agent-workflow" title="Go to repository">
+<div class="md-source__icon md-icon">
+<svg viewbox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"></path></svg>
+</div>
+<div class="md-source__repository">
+    jmontp/agent-workflow
+  </div>
+</a>
+</div>
+</nav>
+<nav aria-label="Tabs" class="md-tabs" data-md-component="tabs">
+<div class="md-grid">
+<ul class="md-tabs__list">
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../..">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../getting-started/quick-start/">
+          
+  
+  
+  Getting Started
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../user-guide/hitl-commands/">
+          
+  
+  
+  User Guide
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../concepts/overview/">
+          
+  
+  
+  Concepts
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../advanced/context/">
+          
+  
+  
+  Advanced
+
+        </a>
+</li>
+<li class="md-tabs__item md-tabs__item--active">
+<a class="md-tabs__link" href="./">
+          
+  
+  
+  Architecture
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../development/contributing/">
+          
+  
+  
+  Development
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../deployment/discord-setup/">
+          
+  
+  
+  Deployment
+
+        </a>
+</li>
+</ul>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navigation" class="md-nav md-nav--primary md-nav--lifted" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="AI Agent TDD-Scrum Workflow" class="md-nav__button md-logo" data-md-component="logo" href="../.." title="AI Agent TDD-Scrum Workflow">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+    AI Agent TDD-Scrum Workflow
+  </label>
+<div class="md-nav__source">
+<a class="md-source" data-md-component="source" href="https://github.com/jmontp/agent-workflow" title="Go to repository">
+<div class="md-source__icon md-icon">
+<svg viewbox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"></path></svg>
+</div>
+<div class="md-source__repository">
+    jmontp/agent-workflow
+  </div>
+</a>
+</div>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../..">
+<span class="md-ellipsis">
+    Home
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+<span class="md-ellipsis">
+    Getting Started
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_2">
+<span class="md-nav__icon md-icon"></span>
+            Getting Started
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../getting-started/quick-start/">
+<span class="md-ellipsis">
+    Quick Start
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../getting-started/installation/">
+<span class="md-ellipsis">
+    Installation
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../getting-started/configuration/">
+<span class="md-ellipsis">
+    Configuration
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+<span class="md-ellipsis">
+    User Guide
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_3_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_3">
+<span class="md-nav__icon md-icon"></span>
+            User Guide
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../user-guide/hitl-commands/">
+<span class="md-ellipsis">
+    HITL Commands
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../user-guide/state-machine/">
+<span class="md-ellipsis">
+    State Machine
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../user-guide/tdd-workflow/">
+<span class="md-ellipsis">
+    TDD Workflow
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../user-guide/project-setup/">
+<span class="md-ellipsis">
+    Project Setup
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../user-guide/workflow-sequences/">
+<span class="md-ellipsis">
+    Workflow Sequences
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../user-guide/user-profile/">
+<span class="md-ellipsis">
+    User Profile
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../user-guide/troubleshooting/">
+<span class="md-ellipsis">
+    Troubleshooting
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../user-guide/faq/">
+<span class="md-ellipsis">
+    FAQ
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+<span class="md-ellipsis">
+    Concepts
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_4_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_4">
+<span class="md-nav__icon md-icon"></span>
+            Concepts
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../concepts/overview/">
+<span class="md-ellipsis">
+    System Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../concepts/security/">
+<span class="md-ellipsis">
+    Security Model
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+<span class="md-ellipsis">
+    Advanced
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_5">
+<span class="md-nav__icon md-icon"></span>
+            Advanced
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../advanced/context/">
+<span class="md-ellipsis">
+    Context Diagram
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../advanced/architecture-detailed/">
+<span class="md-ellipsis">
+    Detailed Architecture
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../advanced/container/">
+<span class="md-ellipsis">
+    Container Architecture
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../advanced/component/">
+<span class="md-ellipsis">
+    System Components
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../advanced/data-flow/">
+<span class="md-ellipsis">
+    Data Flow
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../advanced/orchestration-repo/">
+<span class="md-ellipsis">
+    Orchestration Repository
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../advanced/project-repo/">
+<span class="md-ellipsis">
+    Project Repository
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../advanced/security-implementation/">
+<span class="md-ellipsis">
+    Security Implementation
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../advanced/testing/">
+<span class="md-ellipsis">
+    Testing Strategy
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../advanced/code/">
+<span class="md-ellipsis">
+    Code Structure
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_6" type="checkbox"/>
+<label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+<span class="md-ellipsis">
+    Architecture
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_6">
+<span class="md-nav__icon md-icon"></span>
+            Architecture
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
+    System Overview
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
+<span class="md-ellipsis">
+    System Overview
+    
+  </span>
+</a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#dual-state-machine-architecture">
+<span class="md-ellipsis">
+      Dual State Machine Architecture
+    </span>
+</a>
+<nav aria-label="Dual State Machine Architecture" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-workflow-state-machine-primary">
+<span class="md-ellipsis">
+      1. Workflow State Machine (Primary)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-tdd-state-machine-secondary">
+<span class="md-ellipsis">
+      2. TDD State Machine (Secondary)
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#architecture-diagram">
+<span class="md-ellipsis">
+      Architecture Diagram
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#ephemeral-agent-pattern">
+<span class="md-ellipsis">
+      Ephemeral Agent Pattern
+    </span>
+</a>
+<nav aria-label="Ephemeral Agent Pattern" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#on-demand-orchestration">
+<span class="md-ellipsis">
+      On-Demand Orchestration
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#agent-lifecycle">
+<span class="md-ellipsis">
+      Agent Lifecycle
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-state-machine-lifecycle">
+<span class="md-ellipsis">
+      TDD State Machine Lifecycle
+    </span>
+</a>
+<nav aria-label="TDD State Machine Lifecycle" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-design-phase">
+<span class="md-ellipsis">
+      1. DESIGN Phase
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-test_red-phase">
+<span class="md-ellipsis">
+      2. TEST_RED Phase
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-code_green-phase">
+<span class="md-ellipsis">
+      3. CODE_GREEN Phase
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-refactor-phase">
+<span class="md-ellipsis">
+      4. REFACTOR Phase
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5-commit-phase">
+<span class="md-ellipsis">
+      5. COMMIT Phase
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#state-machine-interactions">
+<span class="md-ellipsis">
+      State Machine Interactions
+    </span>
+</a>
+<nav aria-label="State Machine Interactions" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#primary-secondary-activation">
+<span class="md-ellipsis">
+      Primary → Secondary Activation
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#parallel-story-execution">
+<span class="md-ellipsis">
+      Parallel Story Execution
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#key-architectural-principles">
+<span class="md-ellipsis">
+      Key Architectural Principles
+    </span>
+</a>
+<nav aria-label="Key Architectural Principles" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-separation-of-concerns">
+<span class="md-ellipsis">
+      1. Separation of Concerns
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-human-in-the-loop-integration">
+<span class="md-ellipsis">
+      2. Human-In-The-Loop Integration
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-parallel-processing">
+<span class="md-ellipsis">
+      3. Parallel Processing
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-state-isolation-and-recovery">
+<span class="md-ellipsis">
+      4. State Isolation and Recovery
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#security-and-tool-access">
+<span class="md-ellipsis">
+      Security and Tool Access
+    </span>
+</a>
+<nav aria-label="Security and Tool Access" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#agent-security-profiles">
+<span class="md-ellipsis">
+      Agent Security Profiles
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#security-boundaries">
+<span class="md-ellipsis">
+      Security Boundaries
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#data-flow-and-persistence">
+<span class="md-ellipsis">
+      Data Flow and Persistence
+    </span>
+</a>
+<nav aria-label="Data Flow and Persistence" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#persistent-data-orch-state">
+<span class="md-ellipsis">
+      Persistent Data (.orch-state/)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#runtime-state">
+<span class="md-ellipsis">
+      Runtime State
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../context-management-system/">
+<span class="md-ellipsis">
+    Context Management
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../parallel-tdd-architecture/">
+<span class="md-ellipsis">
+    Parallel TDD Design
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_7" type="checkbox"/>
+<label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+<span class="md-ellipsis">
+    Development
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_7_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_7">
+<span class="md-nav__icon md-icon"></span>
+            Development
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../development/contributing/">
+<span class="md-ellipsis">
+    Contributing
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../development/api-reference/">
+<span class="md-ellipsis">
+    API Reference
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_8" type="checkbox"/>
+<label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+<span class="md-ellipsis">
+    Deployment
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_8_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_8">
+<span class="md-nav__icon md-icon"></span>
+            Deployment
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../deployment/discord-setup/">
+<span class="md-ellipsis">
+    Discord Setup
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../deployment/production/">
+<span class="md-ellipsis">
+    Production Deployment
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../deployment/github-pages/">
+<span class="md-ellipsis">
+    GitHub Pages
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#dual-state-machine-architecture">
+<span class="md-ellipsis">
+      Dual State Machine Architecture
+    </span>
+</a>
+<nav aria-label="Dual State Machine Architecture" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-workflow-state-machine-primary">
+<span class="md-ellipsis">
+      1. Workflow State Machine (Primary)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-tdd-state-machine-secondary">
+<span class="md-ellipsis">
+      2. TDD State Machine (Secondary)
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#architecture-diagram">
+<span class="md-ellipsis">
+      Architecture Diagram
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#ephemeral-agent-pattern">
+<span class="md-ellipsis">
+      Ephemeral Agent Pattern
+    </span>
+</a>
+<nav aria-label="Ephemeral Agent Pattern" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#on-demand-orchestration">
+<span class="md-ellipsis">
+      On-Demand Orchestration
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#agent-lifecycle">
+<span class="md-ellipsis">
+      Agent Lifecycle
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-state-machine-lifecycle">
+<span class="md-ellipsis">
+      TDD State Machine Lifecycle
+    </span>
+</a>
+<nav aria-label="TDD State Machine Lifecycle" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-design-phase">
+<span class="md-ellipsis">
+      1. DESIGN Phase
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-test_red-phase">
+<span class="md-ellipsis">
+      2. TEST_RED Phase
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-code_green-phase">
+<span class="md-ellipsis">
+      3. CODE_GREEN Phase
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-refactor-phase">
+<span class="md-ellipsis">
+      4. REFACTOR Phase
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5-commit-phase">
+<span class="md-ellipsis">
+      5. COMMIT Phase
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#state-machine-interactions">
+<span class="md-ellipsis">
+      State Machine Interactions
+    </span>
+</a>
+<nav aria-label="State Machine Interactions" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#primary-secondary-activation">
+<span class="md-ellipsis">
+      Primary → Secondary Activation
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#parallel-story-execution">
+<span class="md-ellipsis">
+      Parallel Story Execution
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#key-architectural-principles">
+<span class="md-ellipsis">
+      Key Architectural Principles
+    </span>
+</a>
+<nav aria-label="Key Architectural Principles" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-separation-of-concerns">
+<span class="md-ellipsis">
+      1. Separation of Concerns
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-human-in-the-loop-integration">
+<span class="md-ellipsis">
+      2. Human-In-The-Loop Integration
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-parallel-processing">
+<span class="md-ellipsis">
+      3. Parallel Processing
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-state-isolation-and-recovery">
+<span class="md-ellipsis">
+      4. State Isolation and Recovery
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#security-and-tool-access">
+<span class="md-ellipsis">
+      Security and Tool Access
+    </span>
+</a>
+<nav aria-label="Security and Tool Access" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#agent-security-profiles">
+<span class="md-ellipsis">
+      Agent Security Profiles
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#security-boundaries">
+<span class="md-ellipsis">
+      Security Boundaries
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#data-flow-and-persistence">
+<span class="md-ellipsis">
+      Data Flow and Persistence
+    </span>
+</a>
+<nav aria-label="Data Flow and Persistence" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#persistent-data-orch-state">
+<span class="md-ellipsis">
+      Persistent Data (.orch-state/)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#runtime-state">
+<span class="md-ellipsis">
+      Runtime State
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset">
+<h1 id="architecture-overview">Architecture Overview<a class="headerlink" href="#architecture-overview" title="Permanent link">¶</a></h1>
+<p>The AI Agent TDD-Scrum Workflow system implements a sophisticated dual state machine architecture that coordinates Test-Driven Development (TDD) cycles within a broader Scrum workflow management framework.</p>
+<h2 id="dual-state-machine-architecture">Dual State Machine Architecture<a class="headerlink" href="#dual-state-machine-architecture" title="Permanent link">¶</a></h2>
+<p>The system operates two parallel state machines that work in coordination:</p>
+<h3 id="1-workflow-state-machine-primary">1. Workflow State Machine (Primary)<a class="headerlink" href="#1-workflow-state-machine-primary" title="Permanent link">¶</a></h3>
+<p>Manages the high-level Scrum development lifecycle:
+- <strong>IDLE</strong> → <strong>BACKLOG_READY</strong> → <strong>SPRINT_PLANNED</strong> → <strong>SPRINT_ACTIVE</strong> → <strong>SPRINT_REVIEW</strong>
+- Handles epic creation, sprint planning, and project coordination
+- Enforces proper development sequences and human approval gates
+- Persists project management data across sprint cycles</p>
+<h3 id="2-tdd-state-machine-secondary">2. TDD State Machine (Secondary)<a class="headerlink" href="#2-tdd-state-machine-secondary" title="Permanent link">¶</a></h3>
+<p>Manages individual story implementation through proper TDD cycles:
+- <strong>DESIGN</strong> → <strong>TEST_RED</strong> → <strong>CODE_GREEN</strong> → <strong>REFACTOR</strong> → <strong>COMMIT</strong>
+- Activated when the primary state machine enters SPRINT_ACTIVE
+- Runs in parallel for each story in the active sprint
+- Ensures proper RED-GREEN-REFACTOR TDD methodology</p>
+<h2 id="architecture-diagram">Architecture Diagram<a class="headerlink" href="#architecture-diagram" title="Permanent link">¶</a></h2>
+<pre class="mermaid"><code>graph TB
+    subgraph "👤 Solo Engineer"
+        User[User]
+    end
+
+    subgraph DISCORD ["🎮 Discord Interface"]
+        Discord["/epic /sprint /tdd&lt;br/&gt;Slash Commands"]
+        State[Interactive State&lt;br/&gt;Visualization]
+    end
+
+    subgraph WORKFLOW ["🤖 Dual State Machine System"]
+        subgraph "🎛️ Primary Control Layer"
+            WSM[Workflow State Machine&lt;br/&gt;IDLE - BACKLOG - SPRINT]
+            HITL[Approval Gates&lt;br/&gt;Strategic Decisions]
+            PM[Persistent Storage&lt;br/&gt;Epics - Stories - Tasks]
+        end
+
+        subgraph "🎭 Ephemeral Orchestration"
+            Orch[🎭 Orchestrator Agent&lt;br/&gt;Scrum Master&lt;br/&gt;spun up on demand]
+            Coord[🎯 Multi-Task Coordinator&lt;br/&gt;Parallel Story Execution]
+        end
+
+        subgraph "🔄 TDD Execution Layer"
+            subgraph "Story A TDD Cycle"
+                TDD_A[TDD State Machine A&lt;br/&gt;DESIGN - TEST - CODE - REFACTOR]
+                Design_A[🎨 Design Agent A]
+                QA_A[🧪 Test Agent A]
+                Code_A[💻 Code Agent A]
+            end
+
+            subgraph "Story B TDD Cycle"
+                TDD_B[TDD State Machine B&lt;br/&gt;DESIGN - TEST - CODE - REFACTOR]
+                Design_B[🎨 Design Agent B]
+                QA_B[🧪 Test Agent B]
+                Code_B[💻 Code Agent B]
+            end
+
+            Data[📊 Analytics Agent&lt;br/&gt;Cross-Story Metrics]
+        end
+    end
+
+    subgraph PROJECT ["💾 Your Project"]
+        Tests[🧪 Test Suite&lt;br/&gt;RED - GREEN - REFACTOR]
+        Repo[📁 Git Repository&lt;br/&gt;Code &amp; Documentation]
+        State_Dir[📂 .orch-state/&lt;br/&gt;Sprint &amp; TDD State]
+    end
+
+    User --&gt;|"Commands"| Discord
+    Discord &lt;--&gt;|"Validates"| WSM
+    Discord --&gt;|"Updates"| State
+    State --&gt;|"Progress"| User
+
+    WSM --&gt;|"Spins up"| Orch
+    Orch --&gt;|"Coordinates"| Coord
+    WSM &lt;--&gt;|"Enforces"| HITL
+    WSM &lt;--&gt;|"Reads/Writes"| PM
+
+    Coord --&gt;|"Assigns Stories"| TDD_A
+    Coord --&gt;|"Assigns Stories"| TDD_B
+
+    TDD_A --&gt;|"1 Design"| Design_A
+    TDD_A --&gt;|"2 Test"| QA_A
+    TDD_A --&gt;|"3 Code"| Code_A
+
+    TDD_B --&gt;|"1 Design"| Design_B
+    TDD_B --&gt;|"2 Test"| QA_B
+    TDD_B --&gt;|"3 Code"| Code_B
+
+    Design_A --&gt;|"Specs"| Tests
+    QA_A --&gt;|"Tests"| Tests
+    Code_A --&gt;|"Implementation"| Tests
+
+    Design_B --&gt;|"Specs"| Tests
+    QA_B --&gt;|"Tests"| Tests
+    Code_B --&gt;|"Implementation"| Tests
+
+    Data --&gt;|"Metrics"| State_Dir
+    TDD_A --&gt;|"Story State"| State_Dir
+    TDD_B --&gt;|"Story State"| State_Dir
+
+    Tests --&gt;|"Validates"| Repo
+    Code_A --&gt;|"Commits"| Repo
+    Code_B --&gt;|"Commits"| Repo
+
+    HITL &lt;--&gt;|"Approvals"| Discord
+
+    style User fill:#e1f5fe,stroke:#0277bd,stroke-width:3px
+    style DISCORD fill:#f8f4ff,stroke:#7b1fa2,stroke-width:3px
+    style WORKFLOW fill:#f0f8f0,stroke:#388e3c,stroke-width:3px
+    style PROJECT fill:#fff8e1,stroke:#f57c00,stroke-width:3px
+    style WSM fill:#ff6b6b,stroke:#c92a2a,stroke-width:3px
+    style TDD_A fill:#4dabf7,stroke:#1971c2,stroke-width:3px
+    style TDD_B fill:#4dabf7,stroke:#1971c2,stroke-width:3px
+    style Coord fill:#ffd43b,stroke:#fab005,stroke-width:3px</code></pre>
+<h2 id="ephemeral-agent-pattern">Ephemeral Agent Pattern<a class="headerlink" href="#ephemeral-agent-pattern" title="Permanent link">¶</a></h2>
+<h3 id="on-demand-orchestration">On-Demand Orchestration<a class="headerlink" href="#on-demand-orchestration" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Orchestrator Agent</strong>: Spun up when entering SPRINT_ACTIVE state</li>
+<li><strong>Multi-Task Coordination</strong>: Manages parallel TDD cycles for multiple stories</li>
+<li><strong>Resource Optimization</strong>: Agents created and destroyed based on workload</li>
+<li><strong>State Isolation</strong>: Each TDD cycle operates independently with shared coordination</li>
+</ul>
+<h3 id="agent-lifecycle">Agent Lifecycle<a class="headerlink" href="#agent-lifecycle" title="Permanent link">¶</a></h3>
+<ol>
+<li><strong>Workflow State Transition</strong>: Primary state machine triggers agent creation</li>
+<li><strong>Story Assignment</strong>: Coordinator assigns stories to TDD state machines</li>
+<li><strong>Parallel Execution</strong>: Multiple TDD cycles run simultaneously</li>
+<li><strong>Coordination</strong>: Shared analytics and progress reporting</li>
+<li><strong>Cleanup</strong>: Agents destroyed when stories complete or sprint ends</li>
+</ol>
+<h2 id="tdd-state-machine-lifecycle">TDD State Machine Lifecycle<a class="headerlink" href="#tdd-state-machine-lifecycle" title="Permanent link">¶</a></h2>
+<p>Each story follows a strict TDD methodology enforced by the secondary state machine:</p>
+<h3 id="1-design-phase">1. DESIGN Phase<a class="headerlink" href="#1-design-phase" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Design Agent</strong> creates technical specifications</li>
+<li>Defines interfaces, data structures, and architecture</li>
+<li>Outputs design documents and acceptance criteria</li>
+<li><strong>Transition</strong>: Automatic to TEST_RED when design approved</li>
+</ul>
+<h3 id="2-test_red-phase">2. TEST_RED Phase<a class="headerlink" href="#2-test_red-phase" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>QA Agent</strong> writes failing tests based on design specs</li>
+<li>Implements unit tests, integration tests, and acceptance tests</li>
+<li>Ensures tests fail appropriately (RED state)</li>
+<li><strong>Transition</strong>: Automatic to CODE_GREEN when tests written and failing</li>
+</ul>
+<h3 id="3-code_green-phase">3. CODE_GREEN Phase<a class="headerlink" href="#3-code_green-phase" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Code Agent</strong> implements minimal code to make tests pass</li>
+<li>Focuses on making tests green without over-engineering</li>
+<li>Validates implementation against test suite</li>
+<li><strong>Transition</strong>: Automatic to REFACTOR when all tests pass</li>
+</ul>
+<h3 id="4-refactor-phase">4. REFACTOR Phase<a class="headerlink" href="#4-refactor-phase" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Code Agent</strong> improves code quality while maintaining green tests</li>
+<li>Applies design patterns, removes duplication, improves readability</li>
+<li>Ensures tests remain green throughout refactoring</li>
+<li><strong>Transition</strong>: Manual approval or automatic after quality gates</li>
+</ul>
+<h3 id="5-commit-phase">5. COMMIT Phase<a class="headerlink" href="#5-commit-phase" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Code Agent</strong> commits changes to version control</li>
+<li>Updates documentation and changelog</li>
+<li>Triggers CI/CD pipeline for validation</li>
+<li><strong>Transition</strong>: Story marked complete, returns to coordinator</li>
+</ul>
+<h2 id="state-machine-interactions">State Machine Interactions<a class="headerlink" href="#state-machine-interactions" title="Permanent link">¶</a></h2>
+<h3 id="primary-secondary-activation">Primary → Secondary Activation<a class="headerlink" href="#primary-secondary-activation" title="Permanent link">¶</a></h3>
+<pre class="mermaid"><code>sequenceDiagram
+    participant WSM as Workflow State Machine
+    participant Coord as Multi-Task Coordinator
+    participant TDD as TDD State Machine
+    participant Agents as TDD Agents
+
+    WSM-&gt;&gt;Coord: SPRINT_ACTIVE triggered
+    Coord-&gt;&gt;TDD: Create TDD instance for Story A
+    Coord-&gt;&gt;TDD: Create TDD instance for Story B
+    TDD-&gt;&gt;Agents: Spawn Design/QA/Code agents
+    Agents-&gt;&gt;TDD: Report progress
+    TDD-&gt;&gt;Coord: Story completion status
+    Coord-&gt;&gt;WSM: Sprint progress update</code></pre>
+<h3 id="parallel-story-execution">Parallel Story Execution<a class="headerlink" href="#parallel-story-execution" title="Permanent link">¶</a></h3>
+<pre class="mermaid"><code>gantt
+    title Parallel TDD Cycles in Active Sprint
+    dateFormat X
+    axisFormat %d
+
+    section Story A TDD
+    Design A     :done, design_a, 0, 1
+    Test RED A   :done, red_a, after design_a, 2
+    Code GREEN A :active, green_a, after red_a, 3
+    Refactor A   :refactor_a, after green_a, 1
+    Commit A     :commit_a, after refactor_a, 1
+
+    section Story B TDD
+    Design B     :done, design_b, 0, 1
+    Test RED B   :done, red_b, after design_b, 2
+    Code GREEN B :done, green_b, after red_b, 3
+    Refactor B   :active, refactor_b, after green_b, 1
+    Commit B     :commit_b, after refactor_b, 1
+
+    section Coordination
+    Analytics    :analytics, 2, 6
+    Progress     :progress, 1, 7</code></pre>
+<h2 id="key-architectural-principles">Key Architectural Principles<a class="headerlink" href="#key-architectural-principles" title="Permanent link">¶</a></h2>
+<h3 id="1-separation-of-concerns">1. Separation of Concerns<a class="headerlink" href="#1-separation-of-concerns" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Workflow Management</strong>: High-level project coordination and human interaction</li>
+<li><strong>TDD Implementation</strong>: Technical development methodology enforcement</li>
+<li><strong>State Persistence</strong>: Project data versioned with code, runtime state isolated</li>
+</ul>
+<h3 id="2-human-in-the-loop-integration">2. Human-In-The-Loop Integration<a class="headerlink" href="#2-human-in-the-loop-integration" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Strategic Approval</strong>: Workflow state machine requires human approval for major decisions</li>
+<li><strong>TDD Oversight</strong>: Optional human intervention at any TDD phase</li>
+<li><strong>Error Escalation</strong>: Automatic escalation to humans after failed automation attempts</li>
+</ul>
+<h3 id="3-parallel-processing">3. Parallel Processing<a class="headerlink" href="#3-parallel-processing" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Multi-Story Execution</strong>: Independent TDD cycles for parallel development</li>
+<li><strong>Resource Optimization</strong>: Agents created/destroyed based on workload</li>
+<li><strong>Shared Analytics</strong>: Cross-story metrics and progress reporting</li>
+</ul>
+<h3 id="4-state-isolation-and-recovery">4. State Isolation and Recovery<a class="headerlink" href="#4-state-isolation-and-recovery" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Independent Cycles</strong>: TDD state machines operate independently</li>
+<li><strong>Failure Isolation</strong>: Failed story doesn't impact other parallel stories</li>
+<li><strong>State Recovery</strong>: System can resume from any state after interruption</li>
+</ul>
+<h2 id="security-and-tool-access">Security and Tool Access<a class="headerlink" href="#security-and-tool-access" title="Permanent link">¶</a></h2>
+<h3 id="agent-security-profiles">Agent Security Profiles<a class="headerlink" href="#agent-security-profiles" title="Permanent link">¶</a></h3>
+<p>Each agent type has restricted tool access based on their role in the TDD cycle:</p>
+<ul>
+<li><strong>Orchestrator Agent</strong>: Full system access for coordination</li>
+<li><strong>Design Agent</strong>: Read-only access for architecture and documentation</li>
+<li><strong>QA Agent</strong>: Test execution and quality analysis tools only</li>
+<li><strong>Code Agent</strong>: Code editing, compilation, and version control</li>
+<li><strong>Analytics Agent</strong>: Data analysis and reporting tools only</li>
+</ul>
+<h3 id="security-boundaries">Security Boundaries<a class="headerlink" href="#security-boundaries" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Process Isolation</strong>: Each TDD cycle runs in isolated environment</li>
+<li><strong>Tool Restrictions</strong>: Agents cannot access tools outside their domain</li>
+<li><strong>Audit Trail</strong>: All agent actions logged for security and debugging</li>
+<li><strong>Human Oversight</strong>: Security-critical operations require human approval</li>
+</ul>
+<h2 id="data-flow-and-persistence">Data Flow and Persistence<a class="headerlink" href="#data-flow-and-persistence" title="Permanent link">¶</a></h2>
+<h3 id="persistent-data-orch-state">Persistent Data (.orch-state/)<a class="headerlink" href="#persistent-data-orch-state" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Sprint Plans</strong>: Active and historical sprint configurations</li>
+<li><strong>Story Status</strong>: Current state of each TDD cycle</li>
+<li><strong>Analytics Data</strong>: Metrics, coverage, and performance data</li>
+<li><strong>Error Logs</strong>: Failed attempts and recovery information</li>
+</ul>
+<h3 id="runtime-state">Runtime State<a class="headerlink" href="#runtime-state" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>State Machine Status</strong>: Current states of both state machines</li>
+<li><strong>Agent Registry</strong>: Active agents and their assignments</li>
+<li><strong>Coordination Data</strong>: Inter-story dependencies and shared resources</li>
+<li><strong>Progress Tracking</strong>: Real-time status for Discord interface</li>
+</ul>
+<p>This dual state machine architecture provides a robust foundation for AI-assisted development that maintains proper TDD methodology while enabling parallel processing and human oversight of the overall development workflow.</p>
+</article>
+</div>
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+</div>
+<button class="md-top md-icon" data-md-component="top" hidden="" type="button">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+      Material for MkDocs
+    </a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.path", "navigation.top", "search.highlight", "search.suggest", "content.code.copy", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+<script src="../../assets/javascripts/bundle.13a4f30d.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/svg-pan-zoom@3.6.1/dist/svg-pan-zoom.min.js"></script>
+<script src="../../js/mermaid-zoom.js"></script>
+</body>
+</html>

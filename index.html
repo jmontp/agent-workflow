@@ -158,6 +158,15 @@
         </a>
 </li>
 <li class="md-tabs__item">
+<a class="md-tabs__link" href="architecture/overview/">
+          
+  
+  
+  Architecture
+
+        </a>
+</li>
+<li class="md-tabs__item">
 <a class="md-tabs__link" href="development/contributing/">
           
   
@@ -264,45 +273,63 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#core-workflow">
+<a class="md-nav__link" href="#dual-state-machine-workflow">
 <span class="md-ellipsis">
-      Core Workflow
+      Dual State Machine Workflow
     </span>
 </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#ai-agents">
-<span class="md-ellipsis">
-      AI Agents
-    </span>
-</a>
-<nav aria-label="AI Agents" class="md-nav">
+<nav aria-label="Dual State Machine Workflow" class="md-nav">
 <ul class="md-nav__list">
 <li class="md-nav__item">
-<a class="md-nav__link" href="#designagent">
+<a class="md-nav__link" href="#tdd-state-machine-per-story">
 <span class="md-ellipsis">
-      DesignAgent
+      TDD State Machine (Per Story)
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#ephemeral-ai-agent-system">
+<span class="md-ellipsis">
+      Ephemeral AI Agent System
+    </span>
+</a>
+<nav aria-label="Ephemeral AI Agent System" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#orchestrator-agent-temporary">
+<span class="md-ellipsis">
+      Orchestrator Agent (Temporary)
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#codeagent">
+<a class="md-nav__link" href="#design-agents-per-story">
 <span class="md-ellipsis">
-      CodeAgent
+      Design Agents (Per Story)
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#qaagent">
+<a class="md-nav__link" href="#qa-agents-per-tdd-cycle">
 <span class="md-ellipsis">
-      QAAgent
+      QA Agents (Per TDD Cycle)
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#dataagent">
+<a class="md-nav__link" href="#code-agents-per-tdd-cycle">
 <span class="md-ellipsis">
-      DataAgent
+      Code Agents (Per TDD Cycle)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#analytics-agent-persistent">
+<span class="md-ellipsis">
+      Analytics Agent (Persistent)
     </span>
 </a>
 </li>
@@ -315,6 +342,24 @@
       Essential Commands
     </span>
 </a>
+<nav aria-label="Essential Commands" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#workflow-commands">
+<span class="md-ellipsis">
+      Workflow Commands
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-commands">
+<span class="md-ellipsis">
+      TDD Commands
+    </span>
+</a>
+</li>
+</ul>
+</nav>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="#architecture">
@@ -416,6 +461,14 @@
 <a class="md-nav__link" href="user-guide/state-machine/">
 <span class="md-ellipsis">
     State Machine
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="user-guide/tdd-workflow/">
+<span class="md-ellipsis">
+    TDD Workflow
     
   </span>
 </a>
@@ -599,13 +652,55 @@
 <input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_6" type="checkbox"/>
 <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
 <span class="md-ellipsis">
-    Development
+    Architecture
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
 <nav aria-expanded="false" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
 <label class="md-nav__title" for="__nav_6">
+<span class="md-nav__icon md-icon"></span>
+            Architecture
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="architecture/overview/">
+<span class="md-ellipsis">
+    System Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="architecture/context-management-system/">
+<span class="md-ellipsis">
+    Context Management
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="architecture/parallel-tdd-architecture/">
+<span class="md-ellipsis">
+    Parallel TDD Design
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_7" type="checkbox"/>
+<label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+<span class="md-ellipsis">
+    Development
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_7_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_7">
 <span class="md-nav__icon md-icon"></span>
             Development
           </label>
@@ -630,16 +725,16 @@
 </nav>
 </li>
 <li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_7" type="checkbox"/>
-<label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_8" type="checkbox"/>
+<label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
 <span class="md-ellipsis">
     Deployment
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="false" aria-labelledby="__nav_7_label" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="__nav_7">
+<nav aria-expanded="false" aria-labelledby="__nav_8_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_8">
 <span class="md-nav__icon md-icon"></span>
             Deployment
           </label>
@@ -725,45 +820,63 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#core-workflow">
+<a class="md-nav__link" href="#dual-state-machine-workflow">
 <span class="md-ellipsis">
-      Core Workflow
+      Dual State Machine Workflow
     </span>
 </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#ai-agents">
-<span class="md-ellipsis">
-      AI Agents
-    </span>
-</a>
-<nav aria-label="AI Agents" class="md-nav">
+<nav aria-label="Dual State Machine Workflow" class="md-nav">
 <ul class="md-nav__list">
 <li class="md-nav__item">
-<a class="md-nav__link" href="#designagent">
+<a class="md-nav__link" href="#tdd-state-machine-per-story">
 <span class="md-ellipsis">
-      DesignAgent
+      TDD State Machine (Per Story)
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#ephemeral-ai-agent-system">
+<span class="md-ellipsis">
+      Ephemeral AI Agent System
+    </span>
+</a>
+<nav aria-label="Ephemeral AI Agent System" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#orchestrator-agent-temporary">
+<span class="md-ellipsis">
+      Orchestrator Agent (Temporary)
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#codeagent">
+<a class="md-nav__link" href="#design-agents-per-story">
 <span class="md-ellipsis">
-      CodeAgent
+      Design Agents (Per Story)
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#qaagent">
+<a class="md-nav__link" href="#qa-agents-per-tdd-cycle">
 <span class="md-ellipsis">
-      QAAgent
+      QA Agents (Per TDD Cycle)
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#dataagent">
+<a class="md-nav__link" href="#code-agents-per-tdd-cycle">
 <span class="md-ellipsis">
-      DataAgent
+      Code Agents (Per TDD Cycle)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#analytics-agent-persistent">
+<span class="md-ellipsis">
+      Analytics Agent (Persistent)
     </span>
 </a>
 </li>
@@ -776,6 +889,24 @@
       Essential Commands
     </span>
 </a>
+<nav aria-label="Essential Commands" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#workflow-commands">
+<span class="md-ellipsis">
+      Workflow Commands
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-commands">
+<span class="md-ellipsis">
+      TDD Commands
+    </span>
+</a>
+</li>
+</ul>
+</nav>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="#architecture">
@@ -815,7 +946,7 @@
 <h1 id="ai-agent-tdd-scrum-workflow">AI Agent TDD-Scrum Workflow<a class="headerlink" href="#ai-agent-tdd-scrum-workflow" title="Permanent link">¶</a></h1>
 <p>A sophisticated <strong>Human-In-The-Loop (HITL)</strong> orchestration framework that coordinates multiple specialized AI agents through a Discord interface, following a research-mode Scrum methodology optimized for solo engineers working with AI assistance.</p>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">¶</a></h2>
-<p>This system implements a complete workflow for AI-assisted software development with proper human oversight and control. It combines the best practices of Test-Driven Development (TDD) and Scrum methodology, adapted for modern AI-assisted development scenarios.</p>
+<p>This system implements a sophisticated dual state machine architecture for AI-assisted software development with integrated Test-Driven Development and human oversight. It coordinates multiple TDD cycles in parallel while maintaining proper Scrum methodology, optimized for solo engineers working with AI assistance.</p>
 <h2 id="how-it-works">How It Works<a class="headerlink" href="#how-it-works" title="Permanent link">¶</a></h2>
 <pre class="mermaid"><code>flowchart LR
     You["👨‍💻&lt;br/&gt;YOU"] 
@@ -916,13 +1047,14 @@
     style Repo fill:#e3f2fd,stroke:#1976d2,stroke-width:2px</code></pre>
 <h2 id="key-features">Key Features<a class="headerlink" href="#key-features" title="Permanent link">¶</a></h2>
 <ul>
-<li><strong>Multi-Agent Coordination</strong>: Specialized AI agents for design, coding, testing, and data analysis</li>
-<li><strong>Discord Integration</strong>: Complete HITL interface with slash commands and interactive UI</li>
-<li><strong>State Machine</strong>: Enforced workflow states preventing invalid operations</li>
-<li><strong>Multi-Project Support</strong>: Simultaneous orchestration across multiple projects</li>
-<li><strong>Human Oversight</strong>: Approval gates for strategic decisions with escalation workflows</li>
-<li><strong>Interactive Visualization</strong>: Real-time state inspection and command discovery</li>
-<li><strong>Comprehensive Testing</strong>: Unit, integration, and E2E test coverage</li>
+<li><strong>Dual State Machine Architecture</strong>: Primary workflow coordination with secondary TDD state machines</li>
+<li><strong>Parallel TDD Processing</strong>: Multiple stories developed simultaneously with proper RED-GREEN-REFACTOR cycles</li>
+<li><strong>Ephemeral Agent System</strong>: On-demand agent creation and coordination for optimal resource utilization</li>
+<li><strong>Discord Integration</strong>: Complete HITL interface with TDD-aware slash commands and interactive UI</li>
+<li><strong>Multi-Project Support</strong>: Simultaneous orchestration across multiple projects with independent TDD cycles</li>
+<li><strong>Human Oversight</strong>: Strategic approval gates with automated TDD execution and error escalation</li>
+<li><strong>Real-time TDD Monitoring</strong>: Live visibility into all TDD cycles with interactive progress tracking</li>
+<li><strong>Comprehensive Testing</strong>: Unit, integration, and E2E test coverage with TDD methodology enforcement</li>
 </ul>
 <h2 id="quick-start">Quick Start<a class="headerlink" href="#quick-start" title="Permanent link">¶</a></h2>
 <p>Get up and running in minutes:</p>
@@ -938,8 +1070,8 @@
 <a href="#__codelineno-0-10" id="__codelineno-0-10" name="__codelineno-0-10"></a>make<span class="w"> </span>run
 </code></pre></div>
 <p><a href="getting-started/installation/"><strong>→ Detailed Installation Guide</strong></a></p>
-<h2 id="core-workflow">Core Workflow<a class="headerlink" href="#core-workflow" title="Permanent link">¶</a></h2>
-<p>The system follows a finite state machine with clear transitions:</p>
+<h2 id="dual-state-machine-workflow">Dual State Machine Workflow<a class="headerlink" href="#dual-state-machine-workflow" title="Permanent link">¶</a></h2>
+<p>The system operates two coordinated state machines for complete TDD-Scrum integration:</p>
 <pre class="mermaid"><code>stateDiagram-v2
     [*] --&gt; IDLE
     IDLE --&gt; BACKLOG_READY : /epic
@@ -951,40 +1083,65 @@
     SPRINT_PAUSED --&gt; SPRINT_ACTIVE : /sprint resume
     SPRINT_ACTIVE --&gt; BLOCKED : CI fails 3×
     BLOCKED --&gt; SPRINT_ACTIVE : /suggest_fix</code></pre>
-<p><a href="user-guide/state-machine/"><strong>→ Complete State Machine Reference</strong></a></p>
-<h2 id="ai-agents">AI Agents<a class="headerlink" href="#ai-agents" title="Permanent link">¶</a></h2>
-<p>Four specialized agents handle different aspects of development:</p>
-<h3 id="designagent">DesignAgent<a class="headerlink" href="#designagent" title="Permanent link">¶</a></h3>
+<h3 id="tdd-state-machine-per-story">TDD State Machine (Per Story)<a class="headerlink" href="#tdd-state-machine-per-story" title="Permanent link">¶</a></h3>
+<pre class="mermaid"><code>stateDiagram-v2
+    [*] --&gt; DESIGN
+    DESIGN --&gt; TEST_RED : specs complete
+    TEST_RED --&gt; CODE_GREEN : tests failing
+    CODE_GREEN --&gt; REFACTOR : tests passing
+    REFACTOR --&gt; COMMIT : quality gates met
+    COMMIT --&gt; [*] : story complete
+
+    REFACTOR --&gt; CODE_GREEN : tests broken
+    CODE_GREEN --&gt; TEST_RED : need more tests
+    TEST_RED --&gt; DESIGN : requirements unclear</code></pre>
+<p><strong>Key TDD Commands:</strong>
+- <code>/tdd overview</code> - Monitor all active TDD cycles
+- <code>/tdd status AUTH-1</code> - Check specific story progress
+- <code>/tdd review_cycle AUTH-1</code> - Request human review
+- <code>/tdd metrics</code> - View TDD performance data</p>
+<p><a href="user-guide/state-machine/"><strong>→ Complete State Machine Reference</strong></a> | <a href="user-guide/tdd-workflow/"><strong>→ TDD Workflow Guide</strong></a></p>
+<h2 id="ephemeral-ai-agent-system">Ephemeral AI Agent System<a class="headerlink" href="#ephemeral-ai-agent-system" title="Permanent link">¶</a></h2>
+<p>Specialized agents are created on-demand for optimal resource utilization:</p>
+<h3 id="orchestrator-agent-temporary">Orchestrator Agent (Temporary)<a class="headerlink" href="#orchestrator-agent-temporary" title="Permanent link">¶</a></h3>
 <ul>
-<li>System architecture creation</li>
-<li>Component design and interfaces  </li>
-<li>Technical specifications</li>
-<li>Design review and validation</li>
+<li>Sprint coordination and multi-task management</li>
+<li>Spun up during SPRINT_ACTIVE state</li>
+<li>Manages parallel TDD cycle execution</li>
+<li>Handles cross-story dependencies and coordination</li>
 </ul>
-<h3 id="codeagent">CodeAgent<a class="headerlink" href="#codeagent" title="Permanent link">¶</a></h3>
+<h3 id="design-agents-per-story">Design Agents (Per Story)<a class="headerlink" href="#design-agents-per-story" title="Permanent link">¶</a></h3>
 <ul>
-<li>Feature implementation</li>
-<li>Bug fixing and debugging</li>
-<li>Code refactoring</li>
-<li>Performance optimization</li>
+<li>Technical specifications for individual stories</li>
+<li>Created during TDD DESIGN phase</li>
+<li>Architecture decisions and interface definitions</li>
+<li>Destroyed after design phase completion</li>
 </ul>
-<h3 id="qaagent">QAAgent<a class="headerlink" href="#qaagent" title="Permanent link">¶</a></h3>
+<h3 id="qa-agents-per-tdd-cycle">QA Agents (Per TDD Cycle)<a class="headerlink" href="#qa-agents-per-tdd-cycle" title="Permanent link">¶</a></h3>
 <ul>
-<li>Test suite creation</li>
-<li>Quality validation</li>
-<li>Coverage analysis</li>
-<li>Performance testing</li>
+<li>Test suite creation following TDD methodology</li>
+<li>Active during TEST_RED phase</li>
+<li>Comprehensive test coverage for story requirements</li>
+<li>Ensures proper failing tests before implementation</li>
 </ul>
-<h3 id="dataagent">DataAgent<a class="headerlink" href="#dataagent" title="Permanent link">¶</a></h3>
+<h3 id="code-agents-per-tdd-cycle">Code Agents (Per TDD Cycle)<a class="headerlink" href="#code-agents-per-tdd-cycle" title="Permanent link">¶</a></h3>
 <ul>
-<li>Data analysis and insights</li>
-<li>Pipeline creation</li>
-<li>Metrics reporting</li>
-<li>Visualization generation</li>
+<li>Implementation during CODE_GREEN and REFACTOR phases</li>
+<li>Makes tests pass with minimal implementation</li>
+<li>Applies refactoring while maintaining green tests</li>
+<li>Handles version control and final commits</li>
+</ul>
+<h3 id="analytics-agent-persistent">Analytics Agent (Persistent)<a class="headerlink" href="#analytics-agent-persistent" title="Permanent link">¶</a></h3>
+<ul>
+<li>Cross-story metrics and performance analysis</li>
+<li>TDD cycle time tracking and optimization</li>
+<li>Sprint progress reporting and forecasting</li>
+<li>Continuous process improvement insights</li>
 </ul>
 <p><a href="concepts/overview/"><strong>→ Agent Capabilities Reference</strong></a></p>
 <h2 id="essential-commands">Essential Commands<a class="headerlink" href="#essential-commands" title="Permanent link">¶</a></h2>
-<p>Master these key slash commands in Discord:</p>
+<p>Master these key slash commands for dual state machine control:</p>
+<h3 id="workflow-commands">Workflow Commands<a class="headerlink" href="#workflow-commands" title="Permanent link">¶</a></h3>
 <table>
 <thead>
 <tr>
@@ -1006,7 +1163,7 @@
 </tr>
 <tr>
 <td><code>/sprint start</code></td>
-<td>Begin sprint execution</td>
+<td>Begin sprint execution (creates TDD cycles)</td>
 <td><code>/sprint start</code></td>
 </tr>
 <tr>
@@ -1018,6 +1175,43 @@
 <td><code>/state</code></td>
 <td>Interactive state inspection</td>
 <td><code>/state</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="tdd-commands">TDD Commands<a class="headerlink" href="#tdd-commands" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Purpose</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/tdd overview</code></td>
+<td>Monitor all TDD cycles</td>
+<td><code>/tdd overview</code></td>
+</tr>
+<tr>
+<td><code>/tdd status</code></td>
+<td>Check specific story progress</td>
+<td><code>/tdd status AUTH-1</code></td>
+</tr>
+<tr>
+<td><code>/tdd review_cycle</code></td>
+<td>Request human review</td>
+<td><code>/tdd review_cycle AUTH-1</code></td>
+</tr>
+<tr>
+<td><code>/tdd metrics</code></td>
+<td>View TDD performance data</td>
+<td><code>/tdd metrics</code></td>
+</tr>
+<tr>
+<td><code>/tdd pause/resume</code></td>
+<td>Control TDD cycle execution</td>
+<td><code>/tdd pause AUTH-1</code></td>
 </tr>
 </tbody>
 </table>
@@ -1060,19 +1254,35 @@
 <tbody>
 <tr>
 <td><a href="getting-started/quick-start/"><strong>Getting Started</strong></a></td>
-<td>Installation, setup, and first steps</td>
+<td>Installation, setup, and TDD workflow examples</td>
 </tr>
 <tr>
 <td><a href="user-guide/hitl-commands/"><strong>User Guide</strong></a></td>
 <td>Commands, workflows, and daily usage</td>
 </tr>
 <tr>
+<td><a href="user-guide/tdd-workflow/"><strong>TDD Workflow</strong></a></td>
+<td>Complete TDD cycle management and monitoring</td>
+</tr>
+<tr>
+<td><a href="user-guide/state-machine/"><strong>State Machines</strong></a></td>
+<td>Dual state machine architecture and transitions</td>
+</tr>
+<tr>
+<td><a href="architecture/overview/"><strong>Architecture</strong></a></td>
+<td>Dual state machine system design and coordination</td>
+</tr>
+<tr>
+<td><a href="architecture/context-management-system/"><strong>Context Management</strong></a></td>
+<td>Intelligent agent communication and context optimization</td>
+</tr>
+<tr>
 <td><a href="concepts/overview/"><strong>Concepts</strong></a></td>
-<td>System design and core principles</td>
+<td>Core principles and ephemeral agent patterns</td>
 </tr>
 <tr>
 <td><a href="advanced/architecture-detailed/"><strong>Advanced</strong></a></td>
-<td>Detailed technical documentation</td>
+<td>Detailed technical implementation</td>
 </tr>
 <tr>
 <td><a href="deployment/github-pages/"><strong>Deployment</strong></a></td>

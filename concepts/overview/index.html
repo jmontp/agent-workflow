@@ -159,6 +159,15 @@
         </a>
 </li>
 <li class="md-tabs__item">
+<a class="md-tabs__link" href="../../architecture/overview/">
+          
+  
+  
+  Architecture
+
+        </a>
+</li>
+<li class="md-tabs__item">
 <a class="md-tabs__link" href="../../development/contributing/">
           
   
@@ -286,6 +295,14 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="../../user-guide/tdd-workflow/">
+<span class="md-ellipsis">
+    TDD Workflow
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="../../user-guide/project-setup/">
 <span class="md-ellipsis">
     Project Setup
@@ -373,9 +390,16 @@
 <nav aria-label="Core Concepts" class="md-nav">
 <ul class="md-nav__list">
 <li class="md-nav__item">
-<a class="md-nav__link" href="#multi-agent-coordination">
+<a class="md-nav__link" href="#dual-state-machine-architecture">
 <span class="md-ellipsis">
-      Multi-Agent Coordination
+      Dual State Machine Architecture
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#ephemeral-multi-agent-coordination">
+<span class="md-ellipsis">
+      Ephemeral Multi-Agent Coordination
     </span>
 </a>
 </li>
@@ -387,9 +411,9 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#state-driven-workflow">
+<a class="md-nav__link" href="#parallel-processing">
 <span class="md-ellipsis">
-      State-Driven Workflow
+      Parallel Processing
     </span>
 </a>
 </li>
@@ -437,23 +461,23 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#state-machine">
+<a class="md-nav__link" href="#dual-state-machine-coordination">
 <span class="md-ellipsis">
-      State Machine
+      Dual State Machine Coordination
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#agent-security">
+<a class="md-nav__link" href="#enhanced-agent-security">
 <span class="md-ellipsis">
-      Agent Security
+      Enhanced Agent Security
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#project-management">
+<a class="md-nav__link" href="#integrated-tdd-scrum-management">
 <span class="md-ellipsis">
-      Project Management
+      Integrated TDD-Scrum Management
     </span>
 </a>
 </li>
@@ -466,6 +490,31 @@
       Workflow Philosophy
     </span>
 </a>
+<nav aria-label="Workflow Philosophy" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#core-principles">
+<span class="md-ellipsis">
+      Core Principles
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-integration-benefits">
+<span class="md-ellipsis">
+      TDD Integration Benefits
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#balanced-automation">
+<span class="md-ellipsis">
+      Balanced Automation
+    </span>
+</a>
+</li>
+</ul>
+</nav>
 </li>
 </ul>
 </nav>
@@ -583,13 +632,55 @@
 <input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_6" type="checkbox"/>
 <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
 <span class="md-ellipsis">
-    Development
+    Architecture
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
 <nav aria-expanded="false" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
 <label class="md-nav__title" for="__nav_6">
+<span class="md-nav__icon md-icon"></span>
+            Architecture
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../architecture/overview/">
+<span class="md-ellipsis">
+    System Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../architecture/context-management-system/">
+<span class="md-ellipsis">
+    Context Management
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../architecture/parallel-tdd-architecture/">
+<span class="md-ellipsis">
+    Parallel TDD Design
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_7" type="checkbox"/>
+<label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+<span class="md-ellipsis">
+    Development
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_7_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_7">
 <span class="md-nav__icon md-icon"></span>
             Development
           </label>
@@ -614,16 +705,16 @@
 </nav>
 </li>
 <li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_7" type="checkbox"/>
-<label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_8" type="checkbox"/>
+<label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
 <span class="md-ellipsis">
     Deployment
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="false" aria-labelledby="__nav_7_label" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="__nav_7">
+<nav aria-expanded="false" aria-labelledby="__nav_8_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_8">
 <span class="md-nav__icon md-icon"></span>
             Deployment
           </label>
@@ -678,9 +769,16 @@
 <nav aria-label="Core Concepts" class="md-nav">
 <ul class="md-nav__list">
 <li class="md-nav__item">
-<a class="md-nav__link" href="#multi-agent-coordination">
+<a class="md-nav__link" href="#dual-state-machine-architecture">
 <span class="md-ellipsis">
-      Multi-Agent Coordination
+      Dual State Machine Architecture
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#ephemeral-multi-agent-coordination">
+<span class="md-ellipsis">
+      Ephemeral Multi-Agent Coordination
     </span>
 </a>
 </li>
@@ -692,9 +790,9 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#state-driven-workflow">
+<a class="md-nav__link" href="#parallel-processing">
 <span class="md-ellipsis">
-      State-Driven Workflow
+      Parallel Processing
     </span>
 </a>
 </li>
@@ -742,23 +840,23 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#state-machine">
+<a class="md-nav__link" href="#dual-state-machine-coordination">
 <span class="md-ellipsis">
-      State Machine
+      Dual State Machine Coordination
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#agent-security">
+<a class="md-nav__link" href="#enhanced-agent-security">
 <span class="md-ellipsis">
-      Agent Security
+      Enhanced Agent Security
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#project-management">
+<a class="md-nav__link" href="#integrated-tdd-scrum-management">
 <span class="md-ellipsis">
-      Project Management
+      Integrated TDD-Scrum Management
     </span>
 </a>
 </li>
@@ -771,6 +869,31 @@
       Workflow Philosophy
     </span>
 </a>
+<nav aria-label="Workflow Philosophy" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#core-principles">
+<span class="md-ellipsis">
+      Core Principles
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tdd-integration-benefits">
+<span class="md-ellipsis">
+      TDD Integration Benefits
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#balanced-automation">
+<span class="md-ellipsis">
+      Balanced Automation
+    </span>
+</a>
+</li>
+</ul>
+</nav>
 </li>
 </ul>
 </nav>
@@ -780,25 +903,40 @@
 <div class="md-content" data-md-component="content">
 <article class="md-content__inner md-typeset">
 <h1 id="system-overview">System Overview<a class="headerlink" href="#system-overview" title="Permanent link">¶</a></h1>
-<p>The AI Agent TDD-Scrum Workflow system is a Human-In-The-Loop orchestration framework that coordinates specialized AI agents for software development tasks.</p>
+<p>The AI Agent TDD-Scrum Workflow system is a Human-In-The-Loop orchestration framework that coordinates specialized AI agents through a sophisticated dual state machine architecture for Test-Driven Development and Scrum workflow management.</p>
 <h2 id="core-concepts">Core Concepts<a class="headerlink" href="#core-concepts" title="Permanent link">¶</a></h2>
-<h3 id="multi-agent-coordination">Multi-Agent Coordination<a class="headerlink" href="#multi-agent-coordination" title="Permanent link">¶</a></h3>
-<p>The system manages four specialized AI agents:
-- <strong>DesignAgent</strong>: Architecture and technical specifications
-- <strong>CodeAgent</strong>: Feature implementation and bug fixes<br/>
-- <strong>QAAgent</strong>: Testing and quality validation
-- <strong>DataAgent</strong>: Data analysis and visualization</p>
+<h3 id="dual-state-machine-architecture">Dual State Machine Architecture<a class="headerlink" href="#dual-state-machine-architecture" title="Permanent link">¶</a></h3>
+<p>The system operates two coordinated state machines:</p>
+<p><strong>Primary Workflow State Machine:</strong>
+- Manages high-level Scrum development lifecycle
+- States: <code>IDLE</code> → <code>BACKLOG_READY</code> → <code>SPRINT_PLANNED</code> → <code>SPRINT_ACTIVE</code> → <code>SPRINT_REVIEW</code>
+- Handles epic creation, sprint planning, and project coordination
+- Enforces human approval gates for strategic decisions</p>
+<p><strong>Secondary TDD State Machines:</strong>
+- Manages individual story implementation through proper TDD cycles
+- States: <code>DESIGN</code> → <code>TEST_RED</code> → <code>CODE_GREEN</code> → <code>REFACTOR</code> → <code>COMMIT</code>
+- Multiple instances run in parallel during active sprints
+- Ensures proper RED-GREEN-REFACTOR methodology for each story</p>
+<h3 id="ephemeral-multi-agent-coordination">Ephemeral Multi-Agent Coordination<a class="headerlink" href="#ephemeral-multi-agent-coordination" title="Permanent link">¶</a></h3>
+<p>The system creates agents on-demand based on workload:
+- <strong>Orchestrator Agent</strong>: Spun up for sprint coordination and multi-task management
+- <strong>Design Agents</strong>: Architecture and technical specifications per story
+- <strong>QA Agents</strong>: Test creation and quality validation per TDD cycle
+- <strong>Code Agents</strong>: Feature implementation and refactoring per story
+- <strong>Analytics Agent</strong>: Cross-story metrics and progress reporting</p>
 <h3 id="human-in-the-loop-control">Human-In-The-Loop Control<a class="headerlink" href="#human-in-the-loop-control" title="Permanent link">¶</a></h3>
-<p>Strategic decisions require human approval:
-- Epic and story creation
-- Sprint planning and execution
-- Code review and deployment
-- Error handling and escalation</p>
-<h3 id="state-driven-workflow">State-Driven Workflow<a class="headerlink" href="#state-driven-workflow" title="Permanent link">¶</a></h3>
-<p>A finite state machine enforces proper development sequences:
-- <code>IDLE</code> → <code>BACKLOG_READY</code> → <code>SPRINT_PLANNED</code> → <code>SPRINT_ACTIVE</code>
-- Invalid commands are rejected with helpful guidance
-- Current state determines available actions</p>
+<p>Strategic decisions require human approval while TDD cycles can run autonomously:
+- Epic and story creation (workflow level)
+- Sprint planning and execution (workflow level)
+- TDD phase reviews and error handling (story level)
+- Code review and deployment (workflow level)
+- Multi-story coordination and dependencies</p>
+<h3 id="parallel-processing">Parallel Processing<a class="headerlink" href="#parallel-processing" title="Permanent link">¶</a></h3>
+<p>Multiple TDD cycles execute simultaneously:
+- Independent story development with isolated state machines
+- Parallel RED-GREEN-REFACTOR cycles for different features
+- Shared coordination layer for progress tracking and resource management
+- Cross-story analytics and dependency management</p>
 <h2 id="two-repository-architecture">Two-Repository Architecture<a class="headerlink" href="#two-repository-architecture" title="Permanent link">¶</a></h2>
 <h3 id="orchestration-repository">Orchestration Repository<a class="headerlink" href="#orchestration-repository" title="Permanent link">¶</a></h3>
 <p><strong>Purpose</strong>: Central coordination framework
@@ -819,37 +957,61 @@
 - Clear security boundaries</p>
 <h2 id="key-components">Key Components<a class="headerlink" href="#key-components" title="Permanent link">¶</a></h2>
 <h3 id="discord-interface">Discord Interface<a class="headerlink" href="#discord-interface" title="Permanent link">¶</a></h3>
-<p>Primary user interaction through slash commands:
-- <code>/epic "description"</code> - Define high-level initiatives
-- <code>/sprint plan|start|status</code> - Manage development cycles
-- <code>/approve [ID...]</code> - Authorize agent actions
-- <code>/state</code> - Interactive system inspection</p>
-<h3 id="state-machine">State Machine<a class="headerlink" href="#state-machine" title="Permanent link">¶</a></h3>
-<p>Enforces proper workflow sequences:
-- Prevents invalid operations
-- Guides users through correct command sequences
-- Provides clear error messages
-- Visual state diagrams for understanding</p>
-<h3 id="agent-security">Agent Security<a class="headerlink" href="#agent-security" title="Permanent link">¶</a></h3>
-<p>Tool access control ensures safe operation:
-- DesignAgent: Read-only documentation creation
-- CodeAgent: Code editing and version control
-- QAAgent: Testing and quality analysis only
-- DataAgent: Data processing and visualization</p>
-<h3 id="project-management">Project Management<a class="headerlink" href="#project-management" title="Permanent link">¶</a></h3>
-<p>Integrated development lifecycle:
-- Epic and story hierarchies
-- Sprint planning and execution
-- Progress tracking and reporting
-- Automated task escalation</p>
+<p>Primary user interaction through comprehensive slash commands:
+- <strong>Workflow Commands</strong>: <code>/epic</code>, <code>/sprint plan|start|status|pause|resume</code> - Manage development cycles
+- <strong>TDD Commands</strong>: <code>/tdd start|status|overview|pause|resume</code> - Control individual TDD cycles
+- <strong>Phase Commands</strong>: <code>/tdd design_complete|tests_ready|code_green|refactor_done</code> - Advance TDD phases
+- <strong>Review Commands</strong>: <code>/tdd review_cycle</code>, <code>/approve</code>, <code>/request_changes</code> - Human oversight
+- <strong>System Commands</strong>: <code>/state</code>, <code>/tdd metrics</code> - Interactive system inspection</p>
+<h3 id="dual-state-machine-coordination">Dual State Machine Coordination<a class="headerlink" href="#dual-state-machine-coordination" title="Permanent link">¶</a></h3>
+<p>Enforces proper workflow and TDD sequences:
+- <strong>Workflow Level</strong>: Prevents invalid sprint operations, guides Scrum sequences
+- <strong>TDD Level</strong>: Enforces RED-GREEN-REFACTOR methodology per story
+- <strong>Cross-State Validation</strong>: Sprint commands affect all active TDD cycles
+- <strong>State Recovery</strong>: System can resume from any state after interruption
+- <strong>Visual Feedback</strong>: Interactive state diagrams for both state machines</p>
+<h3 id="enhanced-agent-security">Enhanced Agent Security<a class="headerlink" href="#enhanced-agent-security" title="Permanent link">¶</a></h3>
+<p>Tool access control with ephemeral agent patterns:
+- <strong>Orchestrator Agent</strong>: Full system access for coordination (temporary)
+- <strong>Design Agents</strong>: Read-only access per story for architecture (temporary)
+- <strong>QA Agents</strong>: Test execution tools per TDD cycle (temporary)
+- <strong>Code Agents</strong>: Code editing and version control per story (temporary)
+- <strong>Analytics Agent</strong>: Cross-story data analysis and reporting (persistent)</p>
+<h3 id="integrated-tdd-scrum-management">Integrated TDD-Scrum Management<a class="headerlink" href="#integrated-tdd-scrum-management" title="Permanent link">¶</a></h3>
+<p>Complete development lifecycle with proper TDD methodology:
+- <strong>Epic and Story Hierarchies</strong>: Traditional Scrum backlog management
+- <strong>Sprint Planning</strong>: Automatic TDD cycle estimation and resource allocation
+- <strong>Parallel TDD Execution</strong>: Multiple stories developed simultaneously with proper TDD
+- <strong>Progress Tracking</strong>: Real-time visibility into both workflow and TDD states
+- <strong>Quality Gates</strong>: Automated TDD phase validation with human oversight options
+- <strong>Error Escalation</strong>: Multi-level escalation from TDD cycles to sprint coordination</p>
 <h2 id="workflow-philosophy">Workflow Philosophy<a class="headerlink" href="#workflow-philosophy" title="Permanent link">¶</a></h2>
-<p>The system follows <strong>research-mode Scrum</strong> principles:
-- Minimal ceremony, maximum momentum
-- Solo engineer optimization
-- AI-assisted task execution
-- Human oversight for strategic decisions
-- Continuous learning and adaptation</p>
-<p>This approach balances automation benefits with human control, ensuring high-quality output while reducing manual effort.</p>
+<p>The system follows <strong>TDD-enhanced research-mode Scrum</strong> principles:</p>
+<h3 id="core-principles">Core Principles<a class="headerlink" href="#core-principles" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Test-First Development</strong>: Every story follows proper RED-GREEN-REFACTOR methodology</li>
+<li><strong>Parallel Processing</strong>: Multiple TDD cycles execute simultaneously for velocity</li>
+<li><strong>Minimal Ceremony</strong>: Streamlined Scrum adapted for solo engineers with AI assistance</li>
+<li><strong>Maximum Momentum</strong>: Automated TDD cycles with human oversight only when needed</li>
+<li><strong>Quality by Design</strong>: Built-in quality gates through TDD methodology</li>
+<li><strong>Continuous Learning</strong>: Both workflow and TDD metrics inform process improvements</li>
+</ul>
+<h3 id="tdd-integration-benefits">TDD Integration Benefits<a class="headerlink" href="#tdd-integration-benefits" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Enforced Quality</strong>: RED-GREEN-REFACTOR ensures proper test coverage and design</li>
+<li><strong>Parallel Development</strong>: Multiple stories can be developed simultaneously without conflicts</li>
+<li><strong>Automated Validation</strong>: TDD cycles validate implementation against requirements automatically</li>
+<li><strong>Human Oversight</strong>: Strategic decisions escalated while technical implementation automated</li>
+<li><strong>Rapid Feedback</strong>: Real-time TDD progress visibility with immediate error detection</li>
+</ul>
+<h3 id="balanced-automation">Balanced Automation<a class="headerlink" href="#balanced-automation" title="Permanent link">¶</a></h3>
+<p>This approach balances automation benefits with human control:
+- <strong>Strategic Control</strong>: Humans manage epics, sprint planning, and story prioritization
+- <strong>Technical Automation</strong>: AI agents handle TDD implementation with proper methodology
+- <strong>Quality Assurance</strong>: Automated TDD cycles ensure high-quality output
+- <strong>Error Recovery</strong>: Multi-level escalation from TDD phase issues to human intervention
+- <strong>Continuous Improvement</strong>: TDD metrics drive both technical and process improvements</p>
+<p>The dual state machine architecture ensures both proper Scrum methodology at the project level and rigorous TDD practices at the story level, maximizing both velocity and quality.</p>
 </article>
 </div>
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
