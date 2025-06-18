@@ -85,7 +85,7 @@ class AgentMetrics:
         )
         error_penalty = self.error_rate * 10
         
-        return max(0, base_load - time_factor + error_penalty)
+        return max(0.0, base_load - time_factor + error_penalty)
 
 
 @dataclass

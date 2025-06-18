@@ -109,6 +109,14 @@ class TokenCalculator(ITokenCalculator):
             if metadata:
                 base_allocation = self._apply_metadata_adjustments(base_allocation, metadata)
             
+            # Normalize allocations to ensure they don't exceed 1.0 total
+            total_allocation = sum(base_allocation.values())
+            if total_allocation > 1.0:
+                # Scale down proportionally
+                scale_factor = 1.0 / total_allocation
+                for key in base_allocation:
+                    base_allocation[key] *= scale_factor
+            
             # Calculate absolute token amounts
             budget = TokenBudget(
                 total_budget=total_tokens,

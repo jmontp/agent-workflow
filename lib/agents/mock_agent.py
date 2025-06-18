@@ -269,6 +269,47 @@ Ready for COMMIT phase.
 
 This is a mock analysis for state machine validation.
 """
+    
+    async def run(self, task: Task, dry_run: bool = False) -> AgentResult:
+        """
+        Mock implementation of BaseAgent.run method.
+        
+        Simulates realistic agent execution with configurable delays and success rates.
+        
+        Args:
+            task: Task to execute
+            dry_run: If True, simulate without making changes
+            
+        Returns:
+            AgentResult with mock execution outcome
+        """
+        start_time = time.time()
+        
+        # Simulate realistic execution delay (0.1-2.0 seconds)
+        delay = random.uniform(0.1, 2.0)
+        await asyncio.sleep(delay)
+        
+        # Simulate realistic success rate (95% success)
+        success = random.random() < self.success_rate
+        
+        if success:
+            output = f"Mock agent {self.name} successfully completed task: {task.description}"
+            if dry_run:
+                output += " (dry run mode)"
+                
+            return AgentResult(
+                success=True,
+                output=output,
+                artifacts={"mock_artifact": "mock_content"},
+                execution_time=time.time() - start_time
+            )
+        else:
+            return AgentResult(
+                success=False,
+                output="Mock agent execution failed",
+                error="Simulated random failure for testing",
+                execution_time=time.time() - start_time
+            )
 
 
 class MockDesignAgent(MockAgent):
