@@ -641,12 +641,12 @@ class ContextManager:
             context_id: ID of context to invalidate
         """
         keys_to_remove = []
-        for cache_key, (cached_context, _) in self._context_cache.items():
+        for cache_key, (cached_context, _) in self._legacy_cache.items():
             if cached_context.request_id == context_id:
                 keys_to_remove.append(cache_key)
         
         for key in keys_to_remove:
-            del self._context_cache[key]
+            del self._legacy_cache[key]
         
         # Remove from active contexts
         if context_id in self._active_contexts:
@@ -659,12 +659,12 @@ class ContextManager:
         current_time = datetime.utcnow()
         expired_keys = []
         
-        for cache_key, (context, timestamp) in self._context_cache.items():
+        for cache_key, (context, timestamp) in self._legacy_cache.items():
             if current_time - timestamp > timedelta(seconds=self.cache_ttl_seconds):
                 expired_keys.append(cache_key)
         
         for key in expired_keys:
-            del self._context_cache[key]
+            del self._legacy_cache[key]
         
         logger.info(f"Cleaned up {len(expired_keys)} expired cache entries")
         return len(expired_keys)
@@ -833,7 +833,7 @@ class ContextManager:
                 "average_preparation_time": avg_preparation_time,
                 "max_preparation_time": max(self._preparation_times) if self._preparation_times else 0.0,
                 "min_preparation_time": min(self._preparation_times) if self._preparation_times else 0.0,
-                "cached_contexts": len(self._context_cache),
+                "cached_contexts": len(self._legacy_cache),
                 "active_contexts": len(self._active_contexts),
                 "intelligence_enabled": self.enable_intelligence
             },
