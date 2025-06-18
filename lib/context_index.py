@@ -921,6 +921,10 @@ class ContextIndex:
         if s1 == s2:
             return 1.0
         
+        # Handle empty strings
+        if not s1 or not s2:
+            return 0.0
+        
         if s1 in s2 or s2 in s1:
             return max(len(s1) / len(s2), len(s2) / len(s1))
         

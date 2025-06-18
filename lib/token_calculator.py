@@ -671,55 +671,105 @@ class TokenCalculator(ITokenCalculator):
     
     def _optimize_for_underuse(self, budget: TokenBudget, usage: TokenUsage) -> TokenBudget:
         """Optimize budget when tokens are under-utilized"""
-        # Reduce allocations for under-used components
+        # Reduce allocations for under-used components but ensure we don't exceed budget
+        available_tokens = budget.total_budget - budget.buffer
+        
+        # Calculate optimized allocations with caps
+        new_core = max(usage.core_task_used * 1.5, budget.core_task // 2)
+        new_historical = max(usage.historical_used * 1.5, budget.historical // 2)
+        new_dependencies = max(usage.dependencies_used * 1.5, budget.dependencies // 2)
+        new_agent_memory = max(usage.agent_memory_used * 1.5, budget.agent_memory // 2)
+        
+        # Check if total exceeds available budget and scale down if necessary
+        total_new = new_core + new_historical + new_dependencies + new_agent_memory
+        if total_new > available_tokens:
+            scale_factor = available_tokens / total_new
+            new_core = int(new_core * scale_factor)
+            new_historical = int(new_historical * scale_factor)
+            new_dependencies = int(new_dependencies * scale_factor)
+            new_agent_memory = int(new_agent_memory * scale_factor)
+        
         optimized = TokenBudget(
             total_budget=budget.total_budget,
-            core_task=max(usage.core_task_used * 2, budget.core_task // 2),
-            historical=max(usage.historical_used * 2, budget.historical // 2),
-            dependencies=max(usage.dependencies_used * 2, budget.dependencies // 2),
-            agent_memory=max(usage.agent_memory_used * 2, budget.agent_memory // 2),
+            core_task=int(new_core),
+            historical=int(new_historical),
+            dependencies=int(new_dependencies),
+            agent_memory=int(new_agent_memory),
             buffer=budget.buffer
         )
         
-        return self._validate_and_adjust_budget(optimized)
+        return optimized
     
     def _optimize_for_overuse(self, budget: TokenBudget, usage: TokenUsage) -> TokenBudget:
         """Optimize budget when tokens are over-utilized"""
-        # Increase allocations for over-used components
+        # Increase allocations for over-used components, ensuring total doesn't exceed budget
+        # Reserve some space for buffer to avoid validation issues
+        available_tokens = budget.total_budget - budget.buffer
+        
+        # Calculate desired increases with caps
+        desired_core = min(usage.core_task_used * 1.3, available_tokens * 0.5)
+        desired_historical = min(usage.historical_used * 1.3, available_tokens * 0.3)
+        desired_dependencies = min(usage.dependencies_used * 1.3, available_tokens * 0.3)
+        desired_agent_memory = min(usage.agent_memory_used * 1.3, available_tokens * 0.15)
+        
+        # Ensure total allocation doesn't exceed available tokens
+        total_desired = desired_core + desired_historical + desired_dependencies + desired_agent_memory
+        if total_desired > available_tokens:
+            # Scale down proportionally
+            scale_factor = available_tokens / total_desired
+            desired_core = int(desired_core * scale_factor)
+            desired_historical = int(desired_historical * scale_factor)
+            desired_dependencies = int(desired_dependencies * scale_factor)
+            desired_agent_memory = int(desired_agent_memory * scale_factor)
+        
         optimized = TokenBudget(
             total_budget=budget.total_budget,
-            core_task=min(usage.core_task_used * 1.5, budget.total_budget // 2),
-            historical=min(usage.historical_used * 1.5, budget.total_budget // 4),
-            dependencies=min(usage.dependencies_used * 1.5, budget.total_budget // 4),
-            agent_memory=min(usage.agent_memory_used * 1.5, budget.total_budget // 8),
+            core_task=int(desired_core),
+            historical=int(desired_historical),
+            dependencies=int(desired_dependencies),
+            agent_memory=int(desired_agent_memory),
             buffer=budget.buffer
         )
         
-        return self._validate_and_adjust_budget(optimized)
+        return optimized
     
     def _fine_tune_allocation(self, budget: TokenBudget, usage: TokenUsage, quality: float) -> TokenBudget:
         """Fine-tune allocation based on quality score"""
         if quality > 0.8:
             # High quality, minor adjustments
-            adjustment_factor = 1.05
+            adjustment_factor = 1.03
         elif quality < 0.6:
             # Low quality, more significant adjustments
-            adjustment_factor = 1.15
+            adjustment_factor = 1.12
         else:
             # Medium quality, moderate adjustments
-            adjustment_factor = 1.10
+            adjustment_factor = 1.07
         
-        # Adjust based on component usage efficiency
+        # Calculate adjusted components
+        new_core = budget.core_task * self._get_component_efficiency_factor(budget.core_task, usage.core_task_used) * adjustment_factor
+        new_historical = budget.historical * self._get_component_efficiency_factor(budget.historical, usage.historical_used) * adjustment_factor
+        new_dependencies = budget.dependencies * self._get_component_efficiency_factor(budget.dependencies, usage.dependencies_used) * adjustment_factor
+        new_agent_memory = budget.agent_memory * self._get_component_efficiency_factor(budget.agent_memory, usage.agent_memory_used) * adjustment_factor
+        
+        # Check if total exceeds budget and scale down if necessary
+        total_new = new_core + new_historical + new_dependencies + new_agent_memory + budget.buffer
+        if total_new > budget.total_budget:
+            scale_factor = (budget.total_budget - budget.buffer) / (new_core + new_historical + new_dependencies + new_agent_memory)
+            new_core *= scale_factor
+            new_historical *= scale_factor
+            new_dependencies *= scale_factor
+            new_agent_memory *= scale_factor
+        
         optimized = TokenBudget(
             total_budget=budget.total_budget,
-            core_task=int(budget.core_task * self._get_component_efficiency_factor(budget.core_task, usage.core_task_used) * adjustment_factor),
-            historical=int(budget.historical * self._get_component_efficiency_factor(budget.historical, usage.historical_used) * adjustment_factor),
-            dependencies=int(budget.dependencies * self._get_component_efficiency_factor(budget.dependencies, usage.dependencies_used) * adjustment_factor),
-            agent_memory=int(budget.agent_memory * self._get_component_efficiency_factor(budget.agent_memory, usage.agent_memory_used) * adjustment_factor),
+            core_task=int(new_core),
+            historical=int(new_historical),
+            dependencies=int(new_dependencies),
+            agent_memory=int(new_agent_memory),
             buffer=budget.buffer
         )
         
-        return self._validate_and_adjust_budget(optimized)
+        return optimized
     
     def _get_component_efficiency_factor(self, budgeted: int, used: int) -> float:
         """Calculate efficiency factor for a budget component"""

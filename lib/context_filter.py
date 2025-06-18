@@ -253,16 +253,21 @@ class ContextFilter:
         task_text = ""
         if request.task:
             if hasattr(request.task, 'description'):
-                task_text = request.task.description
+                task_text = str(request.task.description) if request.task.description is not None else ""
             elif isinstance(request.task, dict):
-                task_text = request.task.get('description', '')
-                task_text += " " + request.task.get('acceptance_criteria', '')
+                description = request.task.get('description', '')
+                task_text = str(description) if description is not None else ""
+                
+                acceptance_criteria = request.task.get('acceptance_criteria', '')
+                if acceptance_criteria is not None:
+                    task_text += " " + str(acceptance_criteria)
         
         # Extract from focus areas
         for focus_area in request.focus_areas:
-            task_text += " " + focus_area
+            if focus_area is not None:
+                task_text += " " + str(focus_area)
         
-        if not task_text:
+        if not task_text.strip():
             return search_terms
         
         # Extract function/method names (snake_case and camelCase)
@@ -287,7 +292,9 @@ class ContextFilter:
             'can', 'this', 'that', 'these', 'those', 'a', 'an'
         }
         
-        words = re.findall(r'\b[a-zA-Z]{3,}\b', task_text.lower())
+        words = re.findall(r'\b[a-zA-Z_][a-zA-Z0-9_]*\b', task_text.lower())
+        # Filter to words with at least 3 characters
+        words = [w for w in words if len(w) >= 3]
         search_terms["keywords"] = [w for w in set(words) if w not in common_words][:20]
         
         # Extract programming concepts
@@ -621,10 +628,10 @@ class ContextFilter:
             
             elif tdd_phase == TDDState.CODE_GREEN:
                 # Favor implementation files during GREEN phase
-                if file_type == FileType.PYTHON and file_type != FileType.TEST:
-                    score += 0.8
-                elif 'implement' in file_name or 'main' in file_name:
+                if 'implement' in file_name or 'main' in file_name:
                     score += 0.6
+                elif file_type == FileType.PYTHON and file_type != FileType.TEST:
+                    score += 0.8
             
             elif tdd_phase == TDDState.REFACTOR:
                 # Favor both test and implementation files during REFACTOR
