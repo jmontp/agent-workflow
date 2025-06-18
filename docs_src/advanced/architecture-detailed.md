@@ -26,6 +26,8 @@ This separation ensures:
 
 ## System Architecture
 
+The system implements a dual state machine architecture that coordinates workflow management with Test-Driven Development cycles:
+
 ```mermaid
 graph TB
     subgraph "User Interface Layer"
@@ -35,31 +37,41 @@ graph TB
     
     subgraph "Application Layer"
         Orch[Orchestrator]
-        SM[State Machine]
+        WSM[Workflow State Machine]
+        TSM[TDD State Machine]
         Commands[Command Handlers]
+        Coord[State Coordination]
     end
     
     subgraph "Domain Layer"
-        Agents[AI Agent Library]
+        Agents[Enhanced AI Agent Library]
         Tasks[Task Management]
         Projects[Project Management]
+        TDDCycles[TDD Cycle Management]
     end
     
     subgraph "Infrastructure Layer"
         State[State Persistence]
+        TDDState[TDD State Storage]
         Config[Configuration]
         Logging[Logging & Monitoring]
     end
     
     Discord --> Orch
     CLI --> Orch
-    Orch --> SM
+    Orch --> WSM
+    Orch --> TSM
     Orch --> Commands
+    WSM --> Coord
+    TSM --> Coord
     Commands --> Agents
     Commands --> Tasks
     Commands --> Projects
+    Commands --> TDDCycles
     Agents --> State
+    Agents --> TDDState
     Projects --> State
+    TDDCycles --> TDDState
     Orch --> Config
     Orch --> Logging
 ```
@@ -73,11 +85,25 @@ Each layer has distinct responsibilities:
 - **Domain Layer**: Core business entities and AI agent coordination
 - **Infrastructure Layer**: Data persistence, configuration, and cross-cutting concerns
 
-### 2. **Finite State Machine**
-The system enforces a strict state machine to ensure workflow integrity:
-- Prevents invalid command sequences
-- Provides clear error messages and hints
-- Enables state visualization and debugging
+### 2. **Dual State Machine Architecture**
+The system enforces dual state machines for comprehensive workflow management:
+
+**Workflow State Machine:**
+- Manages project lifecycle (IDLE → BACKLOG_READY → SPRINT_PLANNED → SPRINT_ACTIVE → SPRINT_REVIEW)
+- Controls high-level workflow transitions
+- Coordinates multi-project orchestration
+
+**TDD State Machine:**
+- Manages story-level development cycles (DESIGN → TEST_RED → CODE_GREEN → REFACTOR → COMMIT)
+- Enforces Test-Driven Development best practices
+- Coordinates agent handoffs between TDD phases
+- Preserves test artifacts through the development cycle
+
+**State Coordination:**
+- Dual state machines operate in parallel
+- TDD cycles activate automatically when sprints start
+- Workflow states gate TDD progression
+- Cross-state validation ensures consistency
 
 ### 3. **Event-Driven Architecture**
 Components communicate through well-defined events:
@@ -100,11 +126,15 @@ agent-workflow/
 ├── scripts/           # Executable entry points
 │   └── orchestrator.py
 ├── lib/               # Core library code
-│   ├── agents/        # AI agent implementations
-│   ├── state_machine.py
+│   ├── agents/        # Enhanced AI agent implementations
+│   ├── state_machine.py      # Workflow state machine
+│   ├── tdd_state_machine.py  # TDD state machine
+│   ├── tdd_models.py         # TDD data models
 │   └── discord_bot.py
 ├── tests/             # Test suite
 │   ├── unit/         # Unit tests
+│   │   ├── test_tdd_models.py
+│   │   └── test_tdd_state_machine.py
 │   ├── integration/  # Integration tests
 │   └── conftest.py   # Test configuration
 ├── requirements.txt   # Dependencies
@@ -115,37 +145,52 @@ agent-workflow/
 
 ## Component Interaction
 
-### 1. **Command Flow**
+### 1. **Dual State Machine Command Flow**
 ```mermaid
 sequenceDiagram
     participant User
     participant Discord
     participant Orchestrator
-    participant StateMachine
+    participant WSM as Workflow SM
+    participant TSM as TDD SM
     participant Agent
     
     User->>Discord: /epic "Build auth system"
     Discord->>Orchestrator: handle_command()
-    Orchestrator->>StateMachine: validate_command()
-    StateMachine-->>Orchestrator: validation_result
+    Orchestrator->>WSM: validate_command()
+    WSM-->>Orchestrator: validation_result
     Orchestrator->>Agent: dispatch_task()
     Agent-->>Orchestrator: task_result
-    Orchestrator->>StateMachine: transition_state()
+    Orchestrator->>WSM: transition_state()
+    
+    Note over Orchestrator,TSM: Sprint activation triggers TDD
+    Orchestrator->>TSM: create_tdd_cycle(story)
+    TSM->>Agent: design_phase()
+    Agent->>TSM: design_complete
+    TSM->>Agent: test_red_phase()
+    Agent->>TSM: tests_committed
+    TSM->>Agent: code_green_phase()
+    
     Orchestrator-->>Discord: command_response
     Discord-->>User: Success message
 ```
 
-### 2. **State Management**
-- **Centralized State**: Single source of truth in orchestrator
-- **Persistent Storage**: State saved to `.orch-state/status.json`
-- **State Recovery**: System recovers state on restart
-- **Multi-Project**: Independent state machines per project
+### 2. **Dual State Management**
+- **Workflow State**: Project-level state in `.orch-state/status.json`
+- **TDD State**: Story-level state in `.orch-state/tdd/`
+- **State Coordination**: Orchestrator coordinates both state machines
+- **State Recovery**: Both systems recover state on restart
+- **Multi-Project**: Independent dual state machines per project
+- **Test Preservation**: TDD state preserves test artifacts through cycles
 
-### 3. **Agent Coordination**
-- **Task Queue**: Orchestrator maintains task queues per project
-- **Retry Logic**: Automatic retry with exponential backoff
-- **Human Escalation**: HITL approval after 3 failed attempts
-- **Parallel Execution**: Multiple agents can work simultaneously
+### 3. **Enhanced Agent Coordination**
+- **Dual Task Queues**: Workflow tasks and TDD tasks managed separately
+- **Phase-Specific Agents**: Agents specialized for TDD phases (Design, QA, Code)
+- **TDD Agent Handoffs**: Coordinated transitions between TDD phases
+- **Test Preservation**: QA Agent preserves tests through code and refactor phases
+- **Retry Logic**: TDD-aware retry with phase-specific backoff
+- **Human Escalation**: HITL approval for both workflow and TDD decisions
+- **Parallel TDD Cycles**: Multiple stories can run TDD cycles simultaneously
 
 ## Design Patterns
 
@@ -211,6 +256,72 @@ The system implements comprehensive security through multiple layers of protecti
 - Audit logging of all commands and agent tool usage
 - State file access controls
 
+## TDD Architecture Components
+
+### TDD State Machine
+
+The TDD State Machine manages the Test-Driven Development cycle for individual stories:
+
+```mermaid
+stateDiagram-v2
+    [*] --> DESIGN
+    DESIGN --> DESIGN : /tdd design
+    DESIGN --> TEST_RED : /tdd test
+    TEST_RED --> TEST_RED : /tdd test
+    TEST_RED --> CODE_GREEN : /tdd commit-tests
+    CODE_GREEN --> CODE_GREEN : /tdd code
+    CODE_GREEN --> REFACTOR : /tdd commit-code
+    CODE_GREEN --> COMMIT : /tdd commit
+    REFACTOR --> REFACTOR : /tdd refactor
+    REFACTOR --> COMMIT : /tdd commit-refactor
+    COMMIT --> DESIGN : /tdd next (new task)
+    COMMIT --> [*] : cycle complete
+    
+    note right of DESIGN : Create specs & acceptance criteria
+    note right of TEST_RED : Write failing tests (preserved in repo)
+    note right of CODE_GREEN : Implement minimal code (tests committed)
+    note right of REFACTOR : Improve code quality (code committed)
+    note right of COMMIT : Save progress (refactoring committed)
+```
+
+### TDD Data Models
+
+Comprehensive data models support the TDD workflow:
+
+- **TDDCycle**: Links to story, manages tasks and overall progress
+- **TDDTask**: Individual task within cycle, tracks test files and results
+- **TestFile**: Manages test file lifecycle and CI integration
+- **TestResult**: Captures test execution outcomes and metrics
+
+### Test Preservation Workflow
+
+The system preserves test artifacts through the entire development cycle:
+
+1. **TEST_RED Phase**: Tests created in `tests/tdd/{story_id}/`
+2. **CODE_GREEN Phase**: Tests committed to repository
+3. **REFACTOR Phase**: Tests remain unchanged, validate refactoring
+4. **COMMIT Phase**: Tests promoted to permanent test locations
+5. **Integration**: Tests integrated into CI/CD pipeline
+
+### Enhanced Agent Capabilities
+
+**Design Agent (TDD-Enhanced):**
+- Creates technical specifications for TDD cycles
+- Defines acceptance criteria and test strategies
+- Generates design artifacts for test creation
+
+**QA Agent (TDD-Enhanced):**
+- Writes comprehensive failing tests (RED phase)
+- Manages test file lifecycle and preservation
+- Validates test coverage and quality
+- Ensures tests remain green through refactoring
+
+**Code Agent (TDD-Enhanced):**
+- Implements minimal code to make tests pass (GREEN phase)
+- Refactors code while preserving test success
+- Commits code with proper test integration
+- Maintains TDD discipline throughout development
+
 ## Extensibility Points
 
 ### 1. **Custom Agents**
@@ -236,11 +347,31 @@ async def custom_command(self, interaction, param: str):
     pass
 ```
 
-### 3. **Custom States**
-Extend the state machine with new workflow states:
+### 3. **Custom Workflow States**
+Extend the workflow state machine with new states:
 ```python
-class CustomState(Enum):
+class CustomWorkflowState(Enum):
     CUSTOM_STATE = "CUSTOM_STATE"
+```
+
+### 4. **Custom TDD States**
+Extend the TDD state machine with new phases:
+```python
+class CustomTDDState(Enum):
+    SECURITY_REVIEW = "SECURITY_REVIEW"
+    PERFORMANCE_TEST = "PERFORMANCE_TEST"
+```
+
+### 5. **TDD Cycle Customization**
+Customize TDD cycles for specific story types:
+```python
+class CustomTDDCycle(TDDCycle):
+    def __init__(self, story_type: str):
+        super().__init__()
+        if story_type == "api":
+            self.add_integration_tests = True
+        elif story_type == "ui":
+            self.add_e2e_tests = True
 ```
 
 ## Monitoring & Observability

@@ -1,6 +1,6 @@
 # Project Repository Architecture
 
-Project repositories contain the actual code being developed with AI assistance. Each project repository maintains its own project management data and state while being coordinated by the orchestration system.
+Project repositories contain the actual code being developed with AI assistance using Test-Driven Development workflows. Each project repository maintains its own project management data, workflow state, and TDD state while being coordinated by the orchestration system's dual state machine architecture.
 
 ## Repository Structure
 
@@ -8,12 +8,26 @@ Project repositories contain the actual code being developed with AI assistance.
 project-repository/
 ├── src/                     # Project source code
 ├── tests/                   # Project tests
+│   ├── unit/                # Permanent unit tests
+│   ├── integration/         # Permanent integration tests
+│   └── tdd/                 # TDD working directory
+│       ├── AUTH-1/          # Story-specific TDD tests
+│       │   ├── test_login.py
+│       │   └── test_auth.py
+│       └── AUTH-2/          # Another story's TDD tests
 ├── .git/                    # Git repository
 ├── .orch-state/            # AI workflow state (managed by orchestration)
 │   ├── backlog.json        # Epics, stories, and priorities
 │   ├── sprints/            # Sprint data and retrospectives
 │   │   ├── sprint-abc123.json
 │   │   └── sprint-def456.json
+│   ├── tdd/                # TDD state storage
+│   │   ├── cycles/         # TDD cycle data per story
+│   │   │   ├── AUTH-1-cycle.json
+│   │   │   └── AUTH-2-cycle.json
+│   │   └── test-results/   # Test execution results
+│   │       ├── AUTH-1-results.json
+│   │       └── coverage-reports/
 │   ├── architecture.md     # Project-specific architecture decisions
 │   ├── best-practices.md   # Project conventions and patterns
 │   └── status.json         # Current workflow state
@@ -23,9 +37,24 @@ project-repository/
 ## `.orch-state/` Directory
 
 ### Purpose
-The `.orch-state/` directory stores all AI workflow-related data within the project repository, ensuring that project management information is version-controlled alongside the code.
+The `.orch-state/` directory stores all AI workflow-related data and TDD state within the project repository, ensuring that project management information and TDD cycle data are version-controlled alongside the code. This includes both high-level workflow state and detailed TDD cycle progression.
 
-### Contents
+### Enhanced Contents (with TDD Support)
+
+#### New TDD-Specific Storage
+
+**`.orch-state/tdd/` Directory Structure:**
+- `cycles/`: TDD cycle data per story
+- `test-results/`: Test execution results and metrics
+- `coverage-reports/`: Test coverage data and trends
+- `metrics/`: TDD performance and quality metrics
+
+**`tests/tdd/` Directory Structure:**
+- `{story-id}/`: Story-specific test files during TDD development
+- Test files preserved through TDD phases
+- Eventually promoted to permanent test locations
+
+### Traditional Contents (Enhanced)
 
 #### `backlog.json`
 Contains all project management data:
@@ -154,7 +183,7 @@ Project-specific coding standards and AI agent guidelines:
 ```
 
 #### `status.json`
-Current workflow state and metadata:
+Current workflow state and metadata with TDD integration:
 ```json
 {
   "current_state": "SPRINT_ACTIVE",
@@ -165,37 +194,134 @@ Current workflow state and metadata:
       "id": "task-001",
       "agent_type": "CodeAgent",
       "command": "Implement user login form",
-      "status": "in_progress"
+      "status": "in_progress",
+      "tdd_context": {
+        "story_id": "AUTH-1",
+        "current_tdd_state": "CODE_GREEN",
+        "cycle_id": "cycle-abc123"
+      }
     }
   ],
-  "pending_approvals": ["story-003", "story-004"]
+  "pending_approvals": ["story-003", "story-004"],
+  "active_tdd_cycles": {
+    "AUTH-1": "CODE_GREEN",
+    "AUTH-2": "TEST_RED",
+    "AUTH-3": "DESIGN"
+  },
+  "tdd_summary": {
+    "total_cycles": 3,
+    "completed_cycles": 0,
+    "average_cycle_time": "0h 00m",
+    "overall_test_coverage": 0.0
+  }
+}
+```
+
+#### TDD Cycle Data (`.orch-state/tdd/cycles/AUTH-1-cycle.json`)
+Detailed TDD cycle state and progress:
+```json
+{
+  "id": "cycle-abc123",
+  "story_id": "AUTH-1",
+  "current_state": "CODE_GREEN",
+  "current_task_id": "task-def456",
+  "tasks": [
+    {
+      "id": "task-def456",
+      "description": "Implement user login validation",
+      "current_state": "CODE_GREEN",
+      "test_files": ["tests/tdd/AUTH-1/test_login.py"],
+      "test_file_objects": [
+        {
+          "id": "testfile-ghi789",
+          "file_path": "/project/tests/tdd/AUTH-1/test_login.py",
+          "relative_path": "tests/tdd/AUTH-1/test_login.py",
+          "status": "committed",
+          "test_count": 5,
+          "passing_tests": 5,
+          "failing_tests": 0,
+          "coverage_percentage": 92.5
+        }
+      ],
+      "design_notes": "Login form with email/password validation",
+      "implementation_notes": "Minimal implementation to pass tests"
+    }
+  ],
+  "started_at": "2024-01-20T10:00:00Z",
+  "total_test_runs": 12,
+  "total_commits": 3,
+  "ci_status": "passed",
+  "overall_test_coverage": 92.5
+}
+```
+
+#### Test Results Data (`.orch-state/tdd/test-results/AUTH-1-results.json`)
+Test execution history and metrics:
+```json
+{
+  "story_id": "AUTH-1",
+  "cycle_id": "cycle-abc123",
+  "latest_results": [
+    {
+      "id": "result-jkl012",
+      "test_file": "tests/tdd/AUTH-1/test_login.py",
+      "test_name": "test_valid_login",
+      "status": "green",
+      "execution_time": 0.045,
+      "timestamp": "2024-01-20T14:25:00Z"
+    }
+  ],
+  "test_run_history": [
+    {
+      "timestamp": "2024-01-20T14:25:00Z",
+      "total_tests": 5,
+      "passing": 5,
+      "failing": 0,
+      "coverage": 92.5,
+      "phase": "CODE_GREEN"
+    }
+  ],
+  "coverage_trend": {
+    "baseline": 0.0,
+    "current": 92.5,
+    "target": 90.0,
+    "trend": "increasing"
+  }
 }
 ```
 
 ## Version Control Integration
 
-### Git Integration
-- All `.orch-state/` files are version controlled
-- Changes tracked alongside code modifications
-- Sprint data preserved in project history
-- Architecture decisions documented over time
+### Enhanced Git Integration (with TDD Support)
+- All `.orch-state/` files are version controlled (workflow + TDD data)
+- TDD cycle changes tracked alongside code modifications
+- Test file preservation through git commits during TDD phases
+- Sprint data and TDD metrics preserved in project history
+- Architecture decisions and TDD insights documented over time
+- Complete TDD audit trail from design through commit phases
 
-### Branching Strategy
-- `.orch-state/` changes typically made on main branch
-- Sprint planning updates committed as project milestones
-- Feature branches may update story status
+### Enhanced Branching Strategy (with TDD Support)
+- `.orch-state/` changes typically made on main branch (workflow + TDD data)
+- Sprint planning updates committed as project milestones with TDD cycle initialization
+- Feature branches may update story status and TDD cycle progress
+- TDD test files committed during RED phase to preserve failing tests
+- Code implementation committed during GREEN phase with passing tests
+- Refactored code committed during REFACTOR phase with continued test success
 
-### Conflict Resolution
-- Merge conflicts in `.orch-state/` resolved like any code
-- Orchestrator detects and reports state inconsistencies
-- Manual intervention required for complex conflicts
+### Enhanced Conflict Resolution (with TDD Support)
+- Merge conflicts in `.orch-state/` resolved like any code (workflow + TDD data)
+- Orchestrator detects and reports dual state inconsistencies
+- TDD cycle conflicts resolved with test preservation priority
+- Manual intervention required for complex workflow and TDD conflicts
+- Test file conflicts resolved with latest working test version
 
 ## Data Ownership
 
-### Project Data
-- **Belongs to Project**: Stories, epics, sprints, architecture decisions
-- **Versioned with Code**: All management data tracked in git
-- **Project-Specific**: No shared data between projects
+### Enhanced Project Data (with TDD Support)
+- **Belongs to Project**: Stories, epics, sprints, architecture decisions, TDD cycles, test results
+- **Versioned with Code**: All management and TDD data tracked in git
+- **Project-Specific**: No shared data between projects or TDD cycles
+- **Story-Level TDD Isolation**: TDD cycles and test files isolated per story
 
 ### Orchestration Data
 - **Belongs to Orchestrator**: Agent definitions, security policies
@@ -221,17 +347,22 @@ Current workflow state and metadata:
 
 ## Access Patterns
 
-### Read Access
-- Orchestrator reads project state and data
-- Discord Bot displays current status and history
-- Agents access project context for decision making
+### Enhanced Read Access (with TDD Support)
+- Orchestrator reads project workflow and TDD state
+- Discord Bot displays current workflow and TDD status with progress
+- Agents access project and TDD context for decision making
+- TDD agents read test files and execution results for phase coordination
 
-### Write Access
-- Only orchestrator writes to `.orch-state/`
-- Changes made through Discord commands
-- Agent results persisted automatically
+### Enhanced Write Access (with TDD Support)
+- Only orchestrator writes to `.orch-state/` (workflow + TDD data)
+- TDD agents write to `tests/tdd/` directory during appropriate phases
+- Changes made through Discord workflow and TDD commands
+- Agent results persisted automatically in appropriate storage locations
+- Test files preserved through TDD phase transitions
 
-### Security
-- Repository access controls apply to workflow data
-- No cross-project data leakage
-- Standard git permissions model used
+### Enhanced Security (with TDD Support)
+- Repository access controls apply to workflow and TDD data
+- No cross-project or cross-story TDD data leakage
+- TDD phase-specific access controls for test file modifications
+- Standard git permissions model used for both code and test artifacts
+- Story-level TDD isolation enforced through directory structure and access controls
