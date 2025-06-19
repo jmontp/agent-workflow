@@ -16,8 +16,15 @@ class StateVisualizer {
         this.maxReconnectAttempts = 5;
         this.reconnectDelay = 5000; // 5 seconds
         
+        // Interface management
+        this.interfaceStatus = {};
+        this.activeInterface = null;
+        this.interfaceTypes = [];
+        this.agentTypes = [];
+        
         this.initializeSocketIO();
         this.initializeEventHandlers();
+        this.initializeInterfaceManagement();
         this.initializeMermaid();
         this.updateConnectionStatus(false);
     }
@@ -40,8 +47,9 @@ class StateVisualizer {
                 this.updateConnectionStatus(true);
                 this.addActivityLog('System', 'Connected to state broadcaster', 'success');
                 
-                // Request current state
+                // Request current state and interface status
                 this.socket.emit('request_state');
+                this.socket.emit('request_interface_status');
             });
 
             this.socket.on('disconnect', (reason) => {
@@ -80,6 +88,23 @@ class StateVisualizer {
 
             this.socket.on('raw_update', (data) => {
                 console.log('Raw update received:', data);
+            });
+
+            // Interface management events
+            this.socket.on('interface_changed', (data) => {
+                this.handleInterfaceChanged(data);
+            });
+
+            this.socket.on('interface_status', (data) => {
+                this.handleInterfaceStatus(data);
+            });
+
+            this.socket.on('interface_error', (data) => {
+                this.handleInterfaceError(data);
+            });
+
+            this.socket.on('interface_switch_result', (data) => {
+                this.handleInterfaceSwitchResult(data);
             });
 
         } catch (error) {
@@ -574,6 +599,740 @@ class StateVisualizer {
         if (this.socket && !this.connected) {
             this.socket.connect();
             this.addActivityLog('System', 'Attempting to connect...', 'info');
+        }
+    }
+
+    /**
+     * Initialize interface management functionality
+     */
+    async initializeInterfaceManagement() {
+        try {
+            // Load interface types and agent types
+            await this.loadInterfaceTypes();
+            
+            // Load current interface status
+            await this.loadInterfaceStatus();
+            
+            // Setup interface management event handlers
+            this.setupInterfaceEventHandlers();
+            
+            console.log('Interface management initialized');
+        } catch (error) {
+            console.error('Failed to initialize interface management:', error);
+        }
+    }
+
+    /**
+     * Load available interface and agent types
+     */
+    async loadInterfaceTypes() {
+        try {
+            const response = await fetch('/api/interfaces/types');
+            const data = await response.json();
+            
+            this.interfaceTypes = data.interface_types || [];
+            this.agentTypes = data.agent_types || [];
+            
+            // Populate interface selector
+            this.populateInterfaceSelector();
+            
+            // Populate agent type selector
+            this.populateAgentTypeSelector();
+            
+        } catch (error) {
+            console.error('Failed to load interface types:', error);
+        }
+    }
+
+    /**
+     * Load current interface status
+     */
+    async loadInterfaceStatus() {
+        try {
+            const response = await fetch('/api/interfaces');
+            const data = await response.json();
+            
+            this.interfaceStatus = data.interfaces || {};
+            this.activeInterface = data.active_interface;
+            
+            // Update UI
+            this.updateInterfaceStatusDisplay();
+            this.updateActiveInterfaceDisplay();
+            
+        } catch (error) {
+            console.error('Failed to load interface status:', error);
+        }
+    }
+
+    /**
+     * Setup interface management event handlers
+     */
+    setupInterfaceEventHandlers() {
+        // Interface selector
+        const interfaceSelect = document.getElementById('interface-select');
+        const switchBtn = document.getElementById('switch-interface-btn');
+        const testBtn = document.getElementById('test-interface-btn');
+        
+        if (switchBtn) {
+            switchBtn.addEventListener('click', () => {
+                const selectedInterface = interfaceSelect.value;
+                if (selectedInterface && selectedInterface !== this.activeInterface) {
+                    this.switchInterface(selectedInterface);
+                }
+            });
+        }
+        
+        if (testBtn) {
+            testBtn.addEventListener('click', () => {
+                const selectedInterface = interfaceSelect.value;
+                if (selectedInterface) {
+                    this.testInterface(selectedInterface);
+                }
+            });
+        }
+
+        // Configuration modal
+        const configBtn = document.getElementById('interface-config-btn');
+        const configModal = document.getElementById('interface-config-modal');
+        const closeModalBtn = document.getElementById('close-config-modal');
+        const cancelBtn = document.getElementById('cancel-config-btn');
+        const saveBtn = document.getElementById('save-config-btn');
+        
+        if (configBtn) {
+            configBtn.addEventListener('click', () => {
+                this.openConfigurationModal();
+            });
+        }
+        
+        if (closeModalBtn) {
+            closeModalBtn.addEventListener('click', () => {
+                this.closeConfigurationModal();
+            });
+        }
+        
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', () => {
+                this.closeConfigurationModal();
+            });
+        }
+        
+        if (saveBtn) {
+            saveBtn.addEventListener('click', () => {
+                this.saveConfiguration();
+            });
+        }
+
+        // Configuration tabs
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const targetTab = btn.getAttribute('data-tab');
+                this.switchConfigTab(targetTab);
+            });
+        });
+
+        // Agent testing
+        const generateBtn = document.getElementById('test-generate-btn');
+        const clearBtn = document.getElementById('clear-response-btn');
+        
+        if (generateBtn) {
+            generateBtn.addEventListener('click', () => {
+                this.testAgentGeneration();
+            });
+        }
+        
+        if (clearBtn) {
+            clearBtn.addEventListener('click', () => {
+                this.clearTestResponse();
+            });
+        }
+
+        // Range input updates
+        const temperatureRange = document.getElementById('anthropic-temperature');
+        const temperatureValue = document.getElementById('temperature-value');
+        if (temperatureRange && temperatureValue) {
+            temperatureRange.addEventListener('input', (e) => {
+                temperatureValue.textContent = e.target.value;
+            });
+        }
+
+        const delayRange = document.getElementById('mock-response-delay');
+        const delayValue = document.getElementById('delay-value');
+        if (delayRange && delayValue) {
+            delayRange.addEventListener('input', (e) => {
+                delayValue.textContent = parseFloat(e.target.value).toFixed(1);
+            });
+        }
+
+        const failureRange = document.getElementById('mock-failure-rate');
+        const failureValue = document.getElementById('failure-value');
+        if (failureRange && failureValue) {
+            failureRange.addEventListener('input', (e) => {
+                failureValue.textContent = parseFloat(e.target.value).toFixed(2);
+            });
+        }
+
+        // Close modal on outside click
+        if (configModal) {
+            configModal.addEventListener('click', (e) => {
+                if (e.target === configModal) {
+                    this.closeConfigurationModal();
+                }
+            });
+        }
+    }
+
+    /**
+     * Populate interface selector dropdown
+     */
+    populateInterfaceSelector() {
+        const select = document.getElementById('interface-select');
+        if (!select) return;
+        
+        select.innerHTML = '';
+        
+        this.interfaceTypes.forEach(interfaceType => {
+            const option = document.createElement('option');
+            option.value = interfaceType.type;
+            option.textContent = interfaceType.name;
+            if (interfaceType.type === this.activeInterface) {
+                option.selected = true;
+            }
+            select.appendChild(option);
+        });
+    }
+
+    /**
+     * Populate agent type selector
+     */
+    populateAgentTypeSelector() {
+        const select = document.getElementById('agent-type-select');
+        if (!select) return;
+        
+        // Keep existing options but ensure they match our agent types
+        select.innerHTML = '';
+        
+        this.agentTypes.forEach(agentType => {
+            const option = document.createElement('option');
+            option.value = agentType.type;
+            option.textContent = agentType.name;
+            select.appendChild(option);
+        });
+    }
+
+    /**
+     * Update interface status display
+     */
+    updateInterfaceStatusDisplay() {
+        const interfaceMap = {
+            'claude_code': 'claude',
+            'anthropic_api': 'anthropic',
+            'mock': 'mock'
+        };
+        
+        Object.entries(this.interfaceStatus).forEach(([interfaceType, status]) => {
+            const cardId = interfaceMap[interfaceType];
+            if (!cardId) return;
+            
+            const card = document.getElementById(`interface-status-${cardId}`);
+            if (!card) return;
+            
+            const indicator = card.querySelector('.status-indicator');
+            const text = card.querySelector('.status-text');
+            
+            if (indicator && text) {
+                const statusValue = status.status || 'unknown';
+                indicator.setAttribute('data-status', statusValue);
+                
+                let displayText = statusValue.charAt(0).toUpperCase() + statusValue.slice(1);
+                if (status.request_count > 0) {
+                    displayText += ` (${status.request_count} requests)`;
+                }
+                if (status.error_count > 0) {
+                    displayText += ` [${status.error_count} errors]`;
+                }
+                
+                text.textContent = displayText;
+            }
+        });
+    }
+
+    /**
+     * Update active interface display
+     */
+    updateActiveInterfaceDisplay() {
+        const interfaceElement = document.getElementById('active-interface');
+        if (!interfaceElement) return;
+        
+        if (this.activeInterface) {
+            const interfaceType = this.interfaceTypes.find(type => type.type === this.activeInterface);
+            const displayName = interfaceType ? interfaceType.name : this.activeInterface;
+            interfaceElement.textContent = displayName;
+            
+            // Update interface selector
+            const select = document.getElementById('interface-select');
+            if (select) {
+                select.value = this.activeInterface;
+            }
+        } else {
+            interfaceElement.textContent = 'None';
+        }
+    }
+
+    /**
+     * Switch to a different interface
+     */
+    async switchInterface(interfaceType) {
+        try {
+            const switchBtn = document.getElementById('switch-interface-btn');
+            if (switchBtn) {
+                switchBtn.disabled = true;
+                switchBtn.innerHTML = '<span class="loading-spinner"></span>Switching...';
+            }
+            
+            const response = await fetch(`/api/interfaces/${interfaceType}/switch`, {
+                method: 'POST'
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                this.activeInterface = result.active_interface;
+                this.updateActiveInterfaceDisplay();
+                this.addActivityLog('Interface', `Switched to ${interfaceType}`, 'success');
+                
+                // Update interface status
+                await this.loadInterfaceStatus();
+            } else {
+                this.addActivityLog('Interface', `Failed to switch: ${result.error}`, 'error');
+                this.showMessage(result.error, 'error');
+            }
+            
+        } catch (error) {
+            console.error('Failed to switch interface:', error);
+            this.addActivityLog('Interface', `Switch error: ${error.message}`, 'error');
+            this.showMessage('Failed to switch interface', 'error');
+        } finally {
+            const switchBtn = document.getElementById('switch-interface-btn');
+            if (switchBtn) {
+                switchBtn.disabled = false;
+                switchBtn.innerHTML = 'Switch';
+            }
+        }
+    }
+
+    /**
+     * Test an interface connection
+     */
+    async testInterface(interfaceType) {
+        try {
+            const testBtn = document.getElementById('test-interface-btn');
+            if (testBtn) {
+                testBtn.disabled = true;
+                testBtn.innerHTML = '<span class="loading-spinner"></span>Testing...';
+            }
+            
+            const response = await fetch(`/api/interfaces/${interfaceType}/test`, {
+                method: 'POST'
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                this.addActivityLog('Interface', `Test passed: ${interfaceType}`, 'success');
+                this.showMessage(`${interfaceType} test successful`, 'success');
+            } else {
+                this.addActivityLog('Interface', `Test failed: ${result.error}`, 'error');
+                this.showMessage(`Test failed: ${result.error}`, 'error');
+            }
+            
+            // Update interface status
+            await this.loadInterfaceStatus();
+            
+        } catch (error) {
+            console.error('Failed to test interface:', error);
+            this.addActivityLog('Interface', `Test error: ${error.message}`, 'error');
+            this.showMessage('Failed to test interface', 'error');
+        } finally {
+            const testBtn = document.getElementById('test-interface-btn');
+            if (testBtn) {
+                testBtn.disabled = false;
+                testBtn.innerHTML = 'Test';
+            }
+        }
+    }
+
+    /**
+     * Test agent generation
+     */
+    async testAgentGeneration() {
+        try {
+            const promptTextarea = document.getElementById('test-prompt');
+            const agentSelect = document.getElementById('agent-type-select');
+            const responseDiv = document.getElementById('test-response');
+            const generateBtn = document.getElementById('test-generate-btn');
+            
+            if (!promptTextarea || !agentSelect || !responseDiv) return;
+            
+            const prompt = promptTextarea.value.trim();
+            const agentType = agentSelect.value;
+            
+            if (!prompt) {
+                this.showMessage('Please enter a test prompt', 'warning');
+                return;
+            }
+            
+            // Show loading state
+            generateBtn.disabled = true;
+            generateBtn.innerHTML = '<span class="loading-spinner"></span>Generating...';
+            responseDiv.classList.add('loading');
+            responseDiv.innerHTML = '';
+            
+            const response = await fetch('/api/interfaces/generate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    prompt: prompt,
+                    agent_type: agentType,
+                    context: {}
+                })
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                responseDiv.textContent = result.response;
+                this.addActivityLog('Agent Test', `Generated response using ${result.interface_type}`, 'success');
+            } else {
+                responseDiv.textContent = `Error: ${result.error}`;
+                responseDiv.classList.add('error');
+                this.addActivityLog('Agent Test', `Generation failed: ${result.error}`, 'error');
+            }
+            
+        } catch (error) {
+            console.error('Failed to generate response:', error);
+            const responseDiv = document.getElementById('test-response');
+            if (responseDiv) {
+                responseDiv.textContent = `Error: ${error.message}`;
+                responseDiv.classList.add('error');
+            }
+            this.addActivityLog('Agent Test', `Generation error: ${error.message}`, 'error');
+        } finally {
+            const generateBtn = document.getElementById('test-generate-btn');
+            const responseDiv = document.getElementById('test-response');
+            
+            if (generateBtn) {
+                generateBtn.disabled = false;
+                generateBtn.innerHTML = 'Generate Response';
+            }
+            
+            if (responseDiv) {
+                responseDiv.classList.remove('loading');
+            }
+        }
+    }
+
+    /**
+     * Clear test response
+     */
+    clearTestResponse() {
+        const responseDiv = document.getElementById('test-response');
+        if (responseDiv) {
+            responseDiv.innerHTML = '<div class="response-placeholder">Test responses will appear here...</div>';
+            responseDiv.classList.remove('error');
+        }
+    }
+
+    /**
+     * Open configuration modal
+     */
+    async openConfigurationModal() {
+        const modal = document.getElementById('interface-config-modal');
+        if (!modal) return;
+        
+        // Load current configurations
+        await this.loadConfigurationData();
+        
+        modal.classList.add('show');
+    }
+
+    /**
+     * Close configuration modal
+     */
+    closeConfigurationModal() {
+        const modal = document.getElementById('interface-config-modal');
+        if (modal) {
+            modal.classList.remove('show');
+        }
+    }
+
+    /**
+     * Switch configuration tab
+     */
+    switchConfigTab(targetTab) {
+        // Update tab buttons
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        tabBtns.forEach(btn => {
+            if (btn.getAttribute('data-tab') === targetTab) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+        
+        // Update panels
+        const panels = document.querySelectorAll('.config-panel');
+        panels.forEach(panel => {
+            if (panel.id === targetTab) {
+                panel.classList.add('active');
+            } else {
+                panel.classList.remove('active');
+            }
+        });
+    }
+
+    /**
+     * Load configuration data into modal
+     */
+    async loadConfigurationData() {
+        const interfaceTypes = ['claude_code', 'anthropic_api', 'mock'];
+        
+        for (const interfaceType of interfaceTypes) {
+            try {
+                const response = await fetch(`/api/interfaces/${interfaceType}/config`);
+                const config = await response.json();
+                
+                this.populateConfigurationForm(interfaceType, config);
+            } catch (error) {
+                console.error(`Failed to load config for ${interfaceType}:`, error);
+            }
+        }
+    }
+
+    /**
+     * Populate configuration form with data
+     */
+    populateConfigurationForm(interfaceType, config) {
+        const prefix = interfaceType.replace('_', '-');
+        
+        // Common fields
+        const enabledCheckbox = document.getElementById(`${prefix}-enabled`);
+        if (enabledCheckbox) {
+            enabledCheckbox.checked = config.enabled || false;
+        }
+        
+        if (interfaceType === 'claude_code') {
+            const timeoutInput = document.getElementById('claude-timeout');
+            if (timeoutInput) {
+                timeoutInput.value = config.timeout || 300;
+            }
+        } else if (interfaceType === 'anthropic_api') {
+            const apiKeyInput = document.getElementById('anthropic-api-key');
+            const modelSelect = document.getElementById('anthropic-model');
+            const maxTokensInput = document.getElementById('anthropic-max-tokens');
+            const temperatureInput = document.getElementById('anthropic-temperature');
+            const temperatureValue = document.getElementById('temperature-value');
+            
+            if (apiKeyInput) {
+                apiKeyInput.value = config.api_key || '';
+            }
+            if (modelSelect) {
+                modelSelect.value = config.model || 'claude-3-sonnet-20240229';
+            }
+            if (maxTokensInput) {
+                maxTokensInput.value = config.max_tokens || 4000;
+            }
+            if (temperatureInput && temperatureValue) {
+                temperatureInput.value = config.temperature || 0.7;
+                temperatureValue.textContent = config.temperature || 0.7;
+            }
+        } else if (interfaceType === 'mock') {
+            const delayInput = document.getElementById('mock-response-delay');
+            const delayValue = document.getElementById('delay-value');
+            const failureInput = document.getElementById('mock-failure-rate');
+            const failureValue = document.getElementById('failure-value');
+            
+            const customSettings = config.custom_settings || {};
+            
+            if (delayInput && delayValue) {
+                const delay = customSettings.response_delay || 1.0;
+                delayInput.value = delay;
+                delayValue.textContent = delay.toFixed(1);
+            }
+            if (failureInput && failureValue) {
+                const failure = customSettings.failure_rate || 0.05;
+                failureInput.value = failure;
+                failureValue.textContent = failure.toFixed(2);
+            }
+        }
+    }
+
+    /**
+     * Save configuration
+     */
+    async saveConfiguration() {
+        try {
+            const saveBtn = document.getElementById('save-config-btn');
+            if (saveBtn) {
+                saveBtn.disabled = true;
+                saveBtn.innerHTML = '<span class="loading-spinner"></span>Saving...';
+            }
+            
+            const configs = this.gatherConfigurationData();
+            const results = [];
+            
+            for (const [interfaceType, config] of Object.entries(configs)) {
+                try {
+                    const response = await fetch(`/api/interfaces/${interfaceType}/config`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(config)
+                    });
+                    
+                    const result = await response.json();
+                    results.push({interfaceType, result});
+                } catch (error) {
+                    results.push({interfaceType, result: {success: false, error: error.message}});
+                }
+            }
+            
+            // Check results
+            const failures = results.filter(r => !r.result.success);
+            if (failures.length === 0) {
+                this.showMessage('Configuration saved successfully', 'success');
+                this.closeConfigurationModal();
+                
+                // Reload interface status
+                await this.loadInterfaceStatus();
+            } else {
+                const errorMsg = failures.map(f => `${f.interfaceType}: ${f.result.error}`).join('; ');
+                this.showMessage(`Some configurations failed: ${errorMsg}`, 'error');
+            }
+            
+        } catch (error) {
+            console.error('Failed to save configuration:', error);
+            this.showMessage('Failed to save configuration', 'error');
+        } finally {
+            const saveBtn = document.getElementById('save-config-btn');
+            if (saveBtn) {
+                saveBtn.disabled = false;
+                saveBtn.innerHTML = 'Save Configuration';
+            }
+        }
+    }
+
+    /**
+     * Gather configuration data from forms
+     */
+    gatherConfigurationData() {
+        const configs = {};
+        
+        // Claude Code configuration
+        const claudeEnabled = document.getElementById('claude-enabled')?.checked || false;
+        const claudeTimeout = parseInt(document.getElementById('claude-timeout')?.value) || 300;
+        
+        configs.claude_code = {
+            enabled: claudeEnabled,
+            timeout: claudeTimeout
+        };
+        
+        // Anthropic API configuration
+        const anthropicEnabled = document.getElementById('anthropic-enabled')?.checked || false;
+        const anthropicApiKey = document.getElementById('anthropic-api-key')?.value || '';
+        const anthropicModel = document.getElementById('anthropic-model')?.value || 'claude-3-sonnet-20240229';
+        const anthropicMaxTokens = parseInt(document.getElementById('anthropic-max-tokens')?.value) || 4000;
+        const anthropicTemperature = parseFloat(document.getElementById('anthropic-temperature')?.value) || 0.7;
+        
+        configs.anthropic_api = {
+            enabled: anthropicEnabled,
+            api_key: anthropicApiKey,
+            model: anthropicModel,
+            max_tokens: anthropicMaxTokens,
+            temperature: anthropicTemperature
+        };
+        
+        // Mock configuration
+        const mockEnabled = document.getElementById('mock-enabled')?.checked || false;
+        const mockDelay = parseFloat(document.getElementById('mock-response-delay')?.value) || 1.0;
+        const mockFailure = parseFloat(document.getElementById('mock-failure-rate')?.value) || 0.05;
+        
+        configs.mock = {
+            enabled: mockEnabled,
+            custom_response_delay: mockDelay,
+            custom_failure_rate: mockFailure
+        };
+        
+        return configs;
+    }
+
+    /**
+     * Show message to user
+     */
+    showMessage(message, type = 'info') {
+        // Create message element
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `${type}-message`;
+        messageDiv.textContent = message;
+        
+        // Add to activity log
+        this.addActivityLog('System', message, type);
+        
+        // Show temporarily in header
+        const header = document.querySelector('header');
+        if (header) {
+            header.appendChild(messageDiv);
+            
+            setTimeout(() => {
+                if (messageDiv.parentNode) {
+                    messageDiv.parentNode.removeChild(messageDiv);
+                }
+            }, 5000);
+        }
+    }
+
+    /**
+     * Handle interface changed event
+     */
+    handleInterfaceChanged(data) {
+        console.log('Interface changed:', data);
+        this.activeInterface = data.new_interface;
+        this.updateActiveInterfaceDisplay();
+        this.addActivityLog('Interface', `Switched from ${data.old_interface} to ${data.new_interface}`, 'info');
+    }
+
+    /**
+     * Handle interface status event
+     */
+    handleInterfaceStatus(data) {
+        console.log('Interface status update:', data);
+        this.interfaceStatus = data.interfaces || {};
+        this.activeInterface = data.active_interface;
+        this.updateInterfaceStatusDisplay();
+        this.updateActiveInterfaceDisplay();
+    }
+
+    /**
+     * Handle interface error event
+     */
+    handleInterfaceError(data) {
+        console.error('Interface error:', data);
+        this.addActivityLog('Interface', `Error: ${data.error}`, 'error');
+        this.showMessage(data.error, 'error');
+    }
+
+    /**
+     * Handle interface switch result
+     */
+    handleInterfaceSwitchResult(data) {
+        console.log('Interface switch result:', data);
+        if (data.success) {
+            this.showMessage(`Successfully switched to ${data.active_interface}`, 'success');
+        } else {
+            this.showMessage(`Failed to switch: ${data.error}`, 'error');
         }
     }
 }

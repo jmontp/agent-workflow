@@ -24,6 +24,11 @@ lib_path = Path(__file__).parent.parent.parent / "lib"
 sys.path.insert(0, str(lib_path))
 
 from state_broadcaster import broadcaster
+from agent_interfaces import interface_manager, InterfaceType, AgentType
+from security import (
+    validate_configuration, sanitize_prompt, sanitize_code,
+    audit_operation, SecurityLevel, mask_api_key
+)
 
 # Configure logging
 logging.basicConfig(
@@ -131,6 +136,431 @@ def debug_info():
     })
 
 
+# =====================================================
+# Agent Interface Management Endpoints
+# =====================================================
+
+@app.route('/api/interfaces')
+def get_interfaces():
+    """Get status of all agent interfaces"""
+    try:
+        status = interface_manager.get_interface_status()
+        return jsonify(status)
+    except Exception as e:
+        logger.error(f"Error getting interface status: {e}")
+        return jsonify({"error": "Failed to get interface status"}), 500
+
+
+@app.route('/api/interfaces/<interface_type>/switch', methods=['POST'])
+def switch_interface(interface_type):
+    """Switch to a different agent interface"""
+    async def _switch():
+        try:
+            result = await interface_manager.switch_interface(interface_type)
+            return result
+        except Exception as e:
+            logger.error(f"Error switching interface: {e}")
+            return {"success": False, "error": str(e)}
+    
+    # Run async function in event loop
+    import asyncio
+    try:
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        result = loop.run_until_complete(_switch())
+        loop.close()
+        
+        if result.get("success"):
+            # Emit interface change event via WebSocket
+            socketio.emit('interface_changed', {
+                "type": "interface_switch",
+                "old_interface": result.get("old_interface"),
+                "new_interface": result.get("active_interface"),
+                "timestamp": datetime.now().isoformat()
+            })
+            
+            return jsonify(result)
+        else:
+            return jsonify(result), 400
+            
+    except Exception as e:
+        logger.error(f"Error in switch_interface endpoint: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+@app.route('/api/interfaces/<interface_type>/test', methods=['POST'])
+def test_interface(interface_type):
+    """Test a specific agent interface"""
+    async def _test():
+        try:
+            # Initialize interface if needed
+            if interface_type not in interface_manager.interfaces:
+                await interface_manager.initialize_interface(interface_type)
+            
+            # Get interface and test it
+            interface = interface_manager.interfaces.get(interface_type)
+            if not interface:
+                return {"success": False, "error": "Interface not available"}
+            
+            return await interface.test_connection()
+        except Exception as e:
+            logger.error(f"Error testing interface: {e}")
+            return {"success": False, "error": str(e)}
+    
+    import asyncio
+    try:
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        result = loop.run_until_complete(_test())
+        loop.close()
+        
+        return jsonify(result)
+        
+    except Exception as e:
+        logger.error(f"Error in test_interface endpoint: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+@app.route('/api/interfaces/<interface_type>/config', methods=['GET', 'PUT'])
+def manage_interface_config(interface_type):
+    """Get or update interface configuration"""
+    if request.method == 'GET':
+        try:
+            if interface_type not in interface_manager.configs:
+                return jsonify({"error": "Interface not found"}), 404
+            
+            config = interface_manager.configs[interface_type]
+            return jsonify(config.mask_sensitive_data())
+            
+        except Exception as e:
+            logger.error(f"Error getting interface config: {e}")
+            return jsonify({"error": "Failed to get configuration"}), 500
+    
+    elif request.method == 'PUT':
+        try:
+            config_updates = request.get_json()
+            if not config_updates:
+                return jsonify({"error": "No configuration data provided"}), 400
+            
+            # Security validation
+            security_audit = audit_operation('configure', interface_type, config_updates)
+            if not security_audit.valid:
+                logger.warning(f"Configuration validation failed for {interface_type}: {security_audit.errors}")
+                return jsonify({
+                    "error": "Configuration validation failed",
+                    "details": security_audit.errors,
+                    "warnings": security_audit.warnings
+                }), 400
+            
+            # Additional configuration validation
+            config_validation = validate_configuration(config_updates, interface_type)
+            if not config_validation.valid:
+                logger.warning(f"Configuration security check failed for {interface_type}: {config_validation.errors}")
+                return jsonify({
+                    "error": "Configuration security check failed",
+                    "details": config_validation.errors,
+                    "warnings": config_validation.warnings
+                }), 400
+            
+            # Use sanitized data if available
+            sanitized_config = config_validation.sanitized_data or config_updates
+            
+            # Mask sensitive data in logs
+            log_config = {k: mask_api_key(v) if k == 'api_key' else v for k, v in sanitized_config.items()}
+            logger.info(f"Updating configuration for {interface_type}: {log_config}")
+            
+            result = interface_manager.update_interface_config(interface_type, sanitized_config)
+            
+            if result.get("success"):
+                # Emit config change event
+                socketio.emit('interface_config_changed', {
+                    "type": "config_update",
+                    "interface_type": interface_type,
+                    "needs_reinitialization": result.get("needs_reinitialization", False),
+                    "timestamp": datetime.now().isoformat()
+                })
+                
+                return jsonify(result)
+            else:
+                return jsonify(result), 400
+                
+        except Exception as e:
+            logger.error(f"Error updating interface config: {e}")
+            return jsonify({"error": "Failed to update configuration"}), 500
+
+
+@app.route('/api/interfaces/<interface_type>/initialize', methods=['POST'])
+def initialize_interface(interface_type):
+    """Initialize a specific interface"""
+    async def _initialize():
+        try:
+            return await interface_manager.initialize_interface(interface_type)
+        except Exception as e:
+            logger.error(f"Error initializing interface: {e}")
+            return False
+    
+    import asyncio
+    try:
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        success = loop.run_until_complete(_initialize())
+        loop.close()
+        
+        if success:
+            socketio.emit('interface_initialized', {
+                "type": "interface_init",
+                "interface_type": interface_type,
+                "timestamp": datetime.now().isoformat()
+            })
+            
+            return jsonify({"success": True, "message": f"Interface {interface_type} initialized"})
+        else:
+            return jsonify({"success": False, "error": "Initialization failed"}), 500
+            
+    except Exception as e:
+        logger.error(f"Error in initialize_interface endpoint: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+@app.route('/api/interfaces/generate', methods=['POST'])
+def generate_with_interface():
+    """Generate content using the active agent interface"""
+    async def _generate():
+        try:
+            data = request.get_json()
+            if not data:
+                return {"success": False, "error": "No data provided"}
+            
+            prompt = data.get("prompt")
+            agent_type_str = data.get("agent_type", "CODE")
+            context = data.get("context", {})
+            
+            if not prompt:
+                return {"success": False, "error": "Prompt is required"}
+            
+            # Security validation for prompt
+            prompt_validation = sanitize_prompt(prompt)
+            if not prompt_validation.valid:
+                logger.warning(f"Prompt validation failed: {prompt_validation.errors}")
+                return {
+                    "success": False, 
+                    "error": "Prompt validation failed",
+                    "details": prompt_validation.errors
+                }
+            
+            # Use sanitized prompt
+            sanitized_prompt = prompt_validation.sanitized_data.get('prompt', prompt)
+            
+            # Security audit
+            security_audit = audit_operation('generate', interface_manager.active_interface or 'unknown', {
+                'prompt': sanitized_prompt,
+                'agent_type': agent_type_str
+            })
+            
+            # Log security warnings but allow operation to continue
+            if security_audit.warnings:
+                logger.warning(f"Generation security warnings: {security_audit.warnings}")
+            
+            if security_audit.security_level == SecurityLevel.CRITICAL:
+                logger.error(f"Critical security issue in generation request: {security_audit.errors}")
+                return {
+                    "success": False,
+                    "error": "Request blocked due to security concerns",
+                    "details": security_audit.errors
+                }
+            
+            # Convert agent type string to enum
+            try:
+                agent_type = AgentType(agent_type_str)
+            except ValueError:
+                return {"success": False, "error": f"Invalid agent type: {agent_type_str}"}
+            
+            # Get active interface
+            interface = await interface_manager.get_active_interface()
+            if not interface:
+                return {"success": False, "error": "No active interface available"}
+            
+            # Generate response
+            response = await interface.generate_response(sanitized_prompt, agent_type, context)
+            
+            return {
+                "success": True,
+                "response": response,
+                "interface_type": interface_manager.active_interface,
+                "agent_type": agent_type_str,
+                "timestamp": datetime.now().isoformat()
+            }
+            
+        except Exception as e:
+            logger.error(f"Error generating response: {e}")
+            return {"success": False, "error": str(e)}
+    
+    import asyncio
+    try:
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        result = loop.run_until_complete(_generate())
+        loop.close()
+        
+        if result.get("success"):
+            return jsonify(result)
+        else:
+            return jsonify(result), 400
+            
+    except Exception as e:
+        logger.error(f"Error in generate_with_interface endpoint: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+@app.route('/api/interfaces/analyze', methods=['POST'])
+def analyze_with_interface():
+    """Analyze code using the active agent interface"""
+    async def _analyze():
+        try:
+            data = request.get_json()
+            if not data:
+                return {"success": False, "error": "No data provided"}
+            
+            code = data.get("code")
+            analysis_type = data.get("analysis_type", "review")
+            agent_type_str = data.get("agent_type", "CODE")
+            
+            if not code:
+                return {"success": False, "error": "Code is required"}
+            
+            # Security validation for code
+            code_validation = sanitize_code(code)
+            if not code_validation.valid:
+                logger.warning(f"Code validation failed: {code_validation.errors}")
+                return {
+                    "success": False,
+                    "error": "Code validation failed",
+                    "details": code_validation.errors
+                }
+            
+            # Use sanitized code
+            sanitized_code = code_validation.sanitized_data.get('code', code)
+            
+            # Security audit
+            security_audit = audit_operation('analyze', interface_manager.active_interface or 'unknown', {
+                'code': sanitized_code,
+                'analysis_type': analysis_type,
+                'agent_type': agent_type_str
+            })
+            
+            # Log security warnings but allow operation to continue
+            if security_audit.warnings:
+                logger.warning(f"Analysis security warnings: {security_audit.warnings}")
+            
+            if security_audit.security_level == SecurityLevel.CRITICAL:
+                logger.error(f"Critical security issue in analysis request: {security_audit.errors}")
+                return {
+                    "success": False,
+                    "error": "Request blocked due to security concerns",
+                    "details": security_audit.errors
+                }
+            
+            # Convert agent type string to enum
+            try:
+                agent_type = AgentType(agent_type_str)
+            except ValueError:
+                return {"success": False, "error": f"Invalid agent type: {agent_type_str}"}
+            
+            # Get active interface
+            interface = await interface_manager.get_active_interface()
+            if not interface:
+                return {"success": False, "error": "No active interface available"}
+            
+            # Analyze code
+            analysis = await interface.analyze_code(sanitized_code, analysis_type, agent_type)
+            
+            return {
+                "success": True,
+                "analysis": analysis,
+                "interface_type": interface_manager.active_interface,
+                "agent_type": agent_type_str,
+                "analysis_type": analysis_type,
+                "timestamp": datetime.now().isoformat()
+            }
+            
+        except Exception as e:
+            logger.error(f"Error analyzing code: {e}")
+            return {"success": False, "error": str(e)}
+    
+    import asyncio
+    try:
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        result = loop.run_until_complete(_analyze())
+        loop.close()
+        
+        if result.get("success"):
+            return jsonify(result)
+        else:
+            return jsonify(result), 400
+            
+    except Exception as e:
+        logger.error(f"Error in analyze_with_interface endpoint: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+@app.route('/api/interfaces/types')
+def get_interface_types():
+    """Get available interface types"""
+    return jsonify({
+        "interface_types": [
+            {
+                "type": InterfaceType.CLAUDE_CODE.value,
+                "name": "Claude Code",
+                "description": "Uses Claude Code CLI with tool restrictions",
+                "requires_api_key": False,
+                "features": ["Tool restrictions", "Agent-specific security", "Local execution"]
+            },
+            {
+                "type": InterfaceType.ANTHROPIC_API.value,
+                "name": "Anthropic API",
+                "description": "Direct Anthropic API integration",
+                "requires_api_key": True,
+                "features": ["Direct API access", "High performance", "Latest models"]
+            },
+            {
+                "type": InterfaceType.MOCK.value,
+                "name": "Mock Interface",
+                "description": "Mock interface for testing and demonstrations",
+                "requires_api_key": False,
+                "features": ["Testing", "Demo mode", "No external dependencies"]
+            }
+        ],
+        "agent_types": [
+            {
+                "type": AgentType.ORCHESTRATOR.value,
+                "name": "Orchestrator",
+                "description": "Coordinates workflow and manages other agents"
+            },
+            {
+                "type": AgentType.DESIGN.value,
+                "name": "Design Agent",
+                "description": "Creates architecture and technical specifications"
+            },
+            {
+                "type": AgentType.CODE.value,
+                "name": "Code Agent",
+                "description": "Implements features and writes code"
+            },
+            {
+                "type": AgentType.QA.value,
+                "name": "QA Agent",
+                "description": "Creates and runs tests for quality assurance"
+            },
+            {
+                "type": AgentType.DATA.value,
+                "name": "Data Agent",
+                "description": "Analyzes data and generates insights"
+            }
+        ]
+    })
+
+
 @socketio.on('connect')
 def handle_connect():
     """Handle new SocketIO client connection"""
@@ -161,6 +591,56 @@ def handle_history_request():
         "history": broadcaster.transition_history[-50:],
         "count": len(broadcaster.transition_history)
     })
+
+
+@socketio.on('request_interface_status')
+def handle_interface_status_request():
+    """Handle client request for interface status"""
+    try:
+        status = interface_manager.get_interface_status()
+        emit('interface_status', status)
+    except Exception as e:
+        logger.error(f"Error getting interface status: {e}")
+        emit('interface_error', {"error": "Failed to get interface status"})
+
+
+@socketio.on('switch_interface')
+def handle_interface_switch(data):
+    """Handle WebSocket interface switch request"""
+    async def _switch():
+        try:
+            interface_type = data.get('interface_type')
+            if not interface_type:
+                return {"success": False, "error": "Interface type required"}
+            
+            result = await interface_manager.switch_interface(interface_type)
+            return result
+        except Exception as e:
+            logger.error(f"Error switching interface via WebSocket: {e}")
+            return {"success": False, "error": str(e)}
+    
+    import asyncio
+    try:
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        result = loop.run_until_complete(_switch())
+        loop.close()
+        
+        # Emit result to the requesting client
+        emit('interface_switch_result', result)
+        
+        # If successful, broadcast to all clients
+        if result.get("success"):
+            socketio.emit('interface_changed', {
+                "type": "interface_switch",
+                "old_interface": result.get("old_interface"),
+                "new_interface": result.get("active_interface"),
+                "timestamp": datetime.now().isoformat()
+            })
+            
+    except Exception as e:
+        logger.error(f"Error in WebSocket interface switch: {e}")
+        emit('interface_error', {"error": str(e)})
 
 
 class StateMonitor:

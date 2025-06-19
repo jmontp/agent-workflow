@@ -1,0 +1,41 @@
+{
+  "configs": {
+    "claude_code": {
+      "interface_type": "claude_code",
+      "enabled": true,
+      "api_key": null,
+      "endpoint_url": null,
+      "timeout": 300,
+      "max_tokens": 4000,
+      "model": "claude-3-sonnet-20240229",
+      "temperature": 0.7,
+      "custom_settings": {}
+    },
+    "anthropic_api": {
+      "interface_type": "anthropic_api",
+      "enabled": false,
+      "api_key": null,
+      "endpoint_url": null,
+      "timeout": 300,
+      "max_tokens": 4000,
+      "model": "claude-3-sonnet-20240229",
+      "temperature": 0.7,
+      "custom_settings": {}
+    },
+    "mock": {
+      "interface_type": "mock",
+      "enabled": true,
+      "api_key": null,
+      "endpoint_url": null,
+      "timeout": 300,
+      "max_tokens": 4000,
+      "model": "claude-3-sonnet-20240229",
+      "temperature": 0.7,
+      "custom_settings": {
+        "response_delay": 0.1,
+        "failure_rate": 0.0
+      }
+    }
+  },
+  "active_interface": "mock"
+}
