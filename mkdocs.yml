@@ -179,10 +179,6 @@ plugins:
       repository: jmontp/agent-workflow
       branch: main
   - awesome-pages
-  - macros:
-      module_name: docs_src.macros
-      include_yaml:
-        - docs_src/data/config.yml
   - glightbox:
       touchNavigation: true
       loop: false
