@@ -1,119 +1,535 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides comprehensive guidance to Claude Code (claude.ai/code) when working with this repository. It serves as the main navigation guide for the entire AI Agent TDD-Scrum Workflow system.
+
+## Repository Overview
+
+This is the **AI Agent TDD-Scrum Workflow** orchestration framework - a comprehensive system for coordinating AI agents in software development with Human-in-the-Loop oversight. The repository contains a complete implementation with dual architecture patterns supporting both modern Python packaging and legacy library structure.
 
 ## Project Status
 
-**IMPORTANT**: This repository contains a complete implementation of the AI Agent TDD-Scrum workflow system. The documentation in `docs_src/` (built with MkDocs) is current and the code implementation in `lib/`, `scripts/`, and `tests/` is fully functional and up-to-date.
+**PRODUCTION READY**: Complete implementation with comprehensive testing, documentation, and compliance features. The system has achieved government audit compliance with 95%+ test coverage across critical modules.
 
-## Project Overview
+## Repository Structure
 
-This is an **AI Agent TDD-Scrum workflow** system that implements a Human-In-The-Loop (HITL) orchestration framework. The system coordinates multiple specialized AI agents through a Discord interface, following a research-mode Scrum methodology optimized for solo engineers working with AI assistance.
+### 🏗️ Dual Architecture Design
 
-## Architecture
+The repository implements both modern Python packaging standards and a legacy library structure for backward compatibility:
 
-### Two-Repository Model
+**Modern Python Package** (`agent_workflow/`):
+- Clean, standards-compliant package structure
+- CLI interface with comprehensive command system (`agent-orch`/`aw` commands)
+- Modular core components (orchestrator, state machine, storage)
+- Professional integration points and PyPI distribution
+- **See `agent_workflow/CLAUDE.md` for detailed package documentation**
 
-The system operates on a clear separation between orchestration and project concerns:
+**Legacy Library** (`lib/`):
+- Complete feature implementation (42 modules)
+- Specialized AI agents with security controls
+- Context management and token calculation
+- Discord bot and multi-project coordination
 
-**Orchestration Repository** (this repo):
-- Central framework for AI agent coordination
-- Agent definitions, workflow engine, Discord bot, security policies
-- Global configuration and multi-project management
+### 📁 Root Directory Organization
 
-**Project Repositories** (1 to n):
-- Individual codebases being developed with AI assistance
-- Project-specific data stored in `.orch-state/` directory within each project
-- Backlog, sprints, architecture decisions version-controlled with code
-
-### Directory Structure
 ```
-├── agent_workflow/          # Main Python package
-├── lib/                     # Core libraries (agents, state machine, Discord bot, security, storage)
-│   ├── data_models.py       # Epic, Story, Sprint data models
-│   ├── project_storage.py   # File-based persistence for project data
-│   └── ...                  # 42 total modules
-├── scripts/                 # Essential executable scripts (3 core files)
-│   ├── install.sh           # Installation script
-│   ├── orchestrator.py      # Main orchestrator entry point
-│   └── multi_project_orchestrator.py  # Multi-project coordination
-├── tests/                   # Comprehensive test suite (99+ test files)
-│   ├── unit/                # Unit tests (77 files)
-│   ├── integration/         # Integration tests (6 files)
-│   ├── performance/         # Performance tests
-│   ├── security/            # Security tests
-│   └── mocks/               # Professional mock infrastructure
-├── tools/                   # Development utilities (organized by category)
-│   ├── compliance/          # Compliance monitoring (2 tools)
-│   ├── coverage/            # Coverage analysis and validation (5 tools)
-│   ├── documentation/       # API documentation generation (1 tool)
-│   └── visualizer/          # Web-based state visualization
-├── docs_src/                # MkDocs documentation source files
-│   └── archive/             # Archived compliance documents
-│       └── compliance/      # 19 preserved achievement documents
-└── Essential configs only   # Clean root directory
+agent-workflow/
+├── 🐍 Core Implementation
+│   ├── agent_workflow/              # Modern Python package (7 modules)
+│   │   ├── CLAUDE.md                # Package documentation and architecture
+│   │   ├── __init__.py              # Package entry point with core exports
+│   │   ├── orchestrator.py          # Simple orchestrator runner
+│   │   ├── cli/                     # Command-line interface (8 commands)
+│   │   │   ├── main.py              # Primary CLI entry point (agent-orch/aw)
+│   │   │   ├── init.py              # Global environment initialization
+│   │   │   ├── project.py           # Project registration and management
+│   │   │   ├── orchestrator.py      # Orchestrator control commands
+│   │   │   ├── setup.py             # Integration setup (Discord, AI)
+│   │   │   ├── info.py              # System information and diagnostics
+│   │   │   ├── migrate.py           # Migration from git-clone installs
+│   │   │   ├── web.py               # Web interface management
+│   │   │   └── utils.py             # CLI utilities and helpers
+│   │   ├── core/                    # Core orchestration components
+│   │   │   ├── orchestrator.py      # Central coordination engine
+│   │   │   ├── state_machine.py     # Finite state machine
+│   │   │   ├── data_models.py       # Project, Epic, Story, Sprint models
+│   │   │   └── project_storage.py   # File-based persistence
+│   │   ├── config/                  # Configuration management
+│   │   ├── security/                # Security framework
+│   │   ├── integrations/            # External integrations
+│   │   └── templates/               # Project templates
+│   └── lib/                         # Legacy library implementation (42 modules)
+│       ├── agents/                  # AI agent implementations (5 specialized agents)
+│       ├── context/                 # Context management system (5 modules)
+│       ├── discord_bot.py          # Discord integration
+│       ├── global_orchestrator.py  # Multi-project coordination
+│       ├── parallel_tdd_*.py       # Parallel TDD system (3 modules)
+│       └── state_machine.py        # Workflow state management
+│
+├── 🔧 Build System & Configuration
+│   ├── pyproject.toml              # Modern Python packaging configuration
+│   ├── setup.py                    # Legacy setup (backward compatibility)
+│   ├── requirements.txt            # Production dependencies
+│   ├── pytest.ini                 # Test configuration
+│   └── Makefile                    # Development automation (40+ targets)
+│
+├── 📚 Documentation System
+│   ├── docs_src/                   # MkDocs documentation source (comprehensive)
+│   │   ├── CLAUDE.md               # Documentation architecture overview
+│   │   ├── STYLE_GUIDE.md          # Content standards and formatting guide
+│   │   ├── getting-started/        # Installation and setup guides (4 files)
+│   │   ├── user-guide/            # Command reference and workflows (13 files)
+│   │   ├── concepts/               # Core system concepts (3 files)
+│   │   ├── architecture/           # System design and specifications (16 files)
+│   │   ├── advanced/               # Deep technical content (11 files)
+│   │   ├── planning/               # UI/UX design and roadmaps (7 files)
+│   │   ├── development/            # API reference and contributing (4 files)
+│   │   ├── deployment/             # Production deployment guides (5 files)
+│   │   ├── templates/              # Documentation templates (6 files)
+│   │   ├── archive/compliance/     # Government audit compliance (22 reports)
+│   │   ├── stylesheets/            # Custom CSS styling (3 files)
+│   │   ├── js/                     # Custom JavaScript enhancements (3 files)
+│   │   └── images/                 # Documentation assets and screenshots
+│   ├── mkdocs.yml                 # MkDocs configuration (advanced Material theme)
+│   └── README.md                   # Quick start guide
+│
+├── 🧪 Testing Infrastructure
+│   ├── tests/                      # Comprehensive test suite (99+ files)
+│   │   ├── unit/                   # Unit tests (77 files, 95%+ coverage)
+│   │   ├── integration/            # Integration tests (9 files)
+│   │   ├── performance/            # Performance benchmarks
+│   │   ├── security/               # Security validation
+│   │   ├── acceptance/             # User acceptance tests
+│   │   ├── regression/             # Regression test suite
+│   │   ├── edge_cases/             # Edge case validation
+│   │   └── mocks/                  # Professional mock infrastructure
+│   └── coverage.json              # Coverage analysis data
+│
+├── 🛠️ Development Tools
+│   ├── tools/                      # Specialized development utilities
+│   │   ├── compliance/             # Government audit compliance monitoring
+│   │   │   ├── audit_compliance_tracker.py  # Real-time compliance dashboard
+│   │   │   └── monitor_compliance.py        # Lightweight compliance monitoring
+│   │   ├── coverage/               # Test coverage analysis and validation
+│   │   │   ├── analyze_coverage.py          # Coverage gap analysis
+│   │   │   ├── test_runner.py               # Validation without external deps
+│   │   │   ├── validate_tdd.py              # TDD workflow validation
+│   │   │   ├── validate_test_preservation.py # Test preservation checks
+│   │   │   └── coverage_analysis_global_orchestrator.py # Targeted analysis
+│   │   ├── documentation/          # Automated API documentation generation
+│   │   │   └── generate_api_docs.py         # AST-based doc generation (Markdown/OpenAPI)
+│   │   └── visualizer/             # Real-time web-based state visualization
+│   │       ├── app.py               # Flask/SocketIO web application
+│   │       ├── static/              # Frontend assets (CSS, JS)
+│   │       └── templates/           # HTML templates with real-time updates
+│   └── scripts/                    # Main executable entry points (documented in scripts/CLAUDE.md)
+│       ├── orchestrator.py         # Single-project orchestrator with TDD support
+│       ├── multi_project_orchestrator.py  # Multi-project coordination system
+│       └── CLAUDE.md               # Comprehensive scripts documentation
+│
+├── 🚀 Installation & Deployment
+│   ├── install.sh                  # One-click installation script
+│   └── orch-config.yaml           # Orchestration configuration
+│
+└── 📋 Project Planning & Compliance
+    ├── Strategic Planning Documents (25+ files)
+    │   ├── IMPLEMENTATION_ROADMAP.md
+    │   ├── ARCHITECTURE_SPECIFICATIONS.md
+    │   └── UI_PORTAL_IMPLEMENTATION.md
+    └── Compliance Documentation
+        ├── CI_CD_INTEGRATION.md
+        ├── DOCUMENTATION_OPTIMIZATION.md
+        └── CONFIGURATION_SCHEMAS.md
 ```
 
-### Core Components
-- **Orchestrator** (`scripts/orchestrator.py`): Central coordination engine that manages workflows across multiple projects, implements HITL approval gates, and maintains state
-- **State Machine** (`lib/state_machine.py`): Finite state machine enforcing proper command sequencing (IDLE → BACKLOG_READY → SPRINT_PLANNED → SPRINT_ACTIVE → SPRINT_REVIEW)
-- **Agent Library** (`lib/agents/`): Specialized AI agents (Design, Code, Data, QA) with base class inheritance and security controls
-- **Discord Bot** (`lib/discord_bot.py`): Primary HITL command interface with project registration and interactive state visualization
-- **Security System** (`lib/agent_tool_config.py`): Command access control and tool restrictions per agent type
-- **Data Models** (`lib/data_models.py`): Epic, Story, Sprint entities with serialization
-- **Project Storage** (`lib/project_storage.py`): File-based persistence for project management data
+## 🔧 Build System & Configuration
 
-### Key Patterns
-- **Multi-Project Orchestration**: Single orchestrator manages multiple projects defined in YAML configuration
-- **HITL Approval Workflow**: Strategic decisions escalate to humans after 3 failed attempts
-- **Discord-First Interface**: Project-specific channels (`hostname-projectname`) with interactive buttons
-- **State Persistence**: Runtime state maintained in `.orch-state/status.json` per project
-- **Agent Security**: Command access control through Claude Code CLI flags with per-agent restrictions
+### Modern Python Packaging (`pyproject.toml`)
+- **Package Name**: `agent-workflow` (v1.0.0)
+- **Python Support**: 3.8+ (tested on 3.8-3.12)
+- **Build System**: setuptools with modern `pyproject.toml` configuration
+- **CLI Entry Points**: `agent-orch` and `aw` commands with 10 subcommands
+- **Dependencies**: 15+ production dependencies with version constraints
+- **Optional Features**: `dev`, `docs`, `web`, `ai` dependency groups
+- **Code Quality**: Black, flake8, mypy, pytest configuration
+- **Type Checking**: Full mypy configuration with strict typing
 
-## Development Commands
+### Development Automation (`Makefile`)
+The Makefile provides 40+ targets organized into categories:
+
+**Setup & Installation**:
+- `make install` - Install dependencies
+- `make setup` - Complete project setup  
+- `make dev-setup` - Development environment
+
+**Testing** (8 comprehensive targets):
+- `make test` - Run comprehensive test suite
+- `make test-unit` - Unit tests only
+- `make test-integration` - Integration tests
+- `make test-security` - Security validation
+- `make test-performance` - Performance benchmarks
+- `make test-ci` - CI/CD optimized suite
+
+**Code Quality**:
+- `make lint` - Linting with flake8 and mypy
+- `make format` - Code formatting with black
+- `make validate` - Comprehensive validation
+
+**Documentation**:
+- `make docs` - Build and serve MkDocs
+- `make serve-docs` - Local documentation server
+- `make build-docs` - Static documentation build
+
+### Configuration Files
+
+**Core Configuration**:
+- `orch-config.yaml` - Multi-project orchestration settings
+- `pytest.ini` - Comprehensive test configuration with async support
+- `requirements.txt` - Production dependencies with version constraints
+- `mkdocs.yml` - Professional documentation configuration
+
+**Security & Quality**:
+- Black configuration in `pyproject.toml` (line-length: 88)
+- MyPy strict typing configuration
+- Pytest markers for test categorization
+- Coverage reporting configuration
+
+## 🐍 Core System Architecture
+
+### Orchestration Engine
+- **Main Entry Points** (`scripts/`): Two primary executable scripts (see `scripts/CLAUDE.md`)
+  - **Single-Project Orchestrator** (`scripts/orchestrator.py`): Focused development with TDD support
+  - **Multi-Project Orchestrator** (`scripts/multi_project_orchestrator.py`): Advanced coordination system
+- **State Machine** (`lib/state_machine.py`): Finite state machine with strict transitions
+- **Global Orchestrator** (`lib/global_orchestrator.py`): Cross-project intelligence
+- **Resource Scheduler** (`lib/resource_scheduler.py`): Agent pool management
+
+### AI Agent System
+- **Agent Pool** (`lib/agent_pool.py`): Dynamic agent lifecycle management
+- **Agent Memory** (`lib/agent_memory.py`): Context-aware agent memory system
+- **Specialized Agents** (`lib/agents/`):
+  - **Design Agent**: Architecture and technical specifications
+  - **Code Agent**: Implementation and refactoring
+  - **QA Agent**: Testing and quality validation
+  - **Data Agent**: Analysis and reporting
+  - **Mock Agent**: Testing and development
+
+### Context Management System
+- **Context Manager** (`lib/context_manager.py`): Advanced context handling
+- **Context Cache** (`lib/context_cache.py`): Efficient context caching
+- **Context Filter** (`lib/context_filter.py`): Context relevance filtering
+- **Context Compressor** (`lib/context_compressor.py`): Context size optimization
+- **Context Index** (`lib/context_index.py`): Context search and retrieval
+
+### Security & Control
+- **Agent Tool Config** (`lib/agent_tool_config.py`): Command access control
+- **Multi-Project Security** (`lib/multi_project_security.py`): Cross-project isolation
+- **Token Calculator** (`lib/token_calculator.py`): AI token usage optimization
+
+### Integration Layer
+- **Discord Bot** (`lib/discord_bot.py`): Primary HITL interface
+- **Multi-Project Discord Bot** (`lib/multi_project_discord_bot.py`): Multi-project coordination
+- **Claude Client** (`lib/claude_client.py`): AI service integration
+- **Cross-Project Intelligence** (`lib/cross_project_intelligence.py`): Knowledge sharing
+
+### Data & Storage
+- **Data Models** (`lib/data_models.py`): Epic, Story, Sprint entities
+- **Project Storage** (`lib/project_storage.py`): File-based persistence
+- **TDD Models** (`lib/tdd_models.py`): Test-driven development entities
+- **State Broadcaster** (`lib/state_broadcaster.py`): Real-time state updates
+
+## 📋 CLI Command System
+
+The system provides comprehensive CLI commands via `agent-orch` or `aw`:
+
+### Project Management
+- `init` - Initialize orchestration environment
+- `register-project` - Register new project repository
+- `projects` - List and manage projects
+
+### Orchestration Control
+- `start` - Start orchestration engine
+- `stop` - Stop orchestration gracefully
+- `status` - Check system status
+
+### Configuration & Setup
+- `setup-discord` - Configure Discord integration
+- `setup-api` - Configure AI API integration
+- `configure` - Interactive configuration wizard
+
+### System Information
+- `version` - Display version information
+- `health` - System health check
+- `migrate` - Database/configuration migration
+
+## 🧪 Testing & Quality Assurance
+
+### Comprehensive Test Suite (99+ files)
+The testing infrastructure achieves 95%+ coverage across critical modules:
+
+**Unit Tests** (`tests/unit/` - 77 files):
+- Individual module testing with comprehensive mocking
+- Security validation for all agent restrictions
+- Context management system validation
+- State machine transition testing
+
+**Integration Tests** (`tests/integration/` - 9 files):
+- Cross-module interaction testing
+- Discord bot integration validation
+- Multi-project orchestration testing
+- End-to-end workflow validation
+
+**Specialized Testing**:
+- **Performance Tests**: Benchmark critical operations
+- **Security Tests**: Validate agent restrictions and access controls
+- **Acceptance Tests**: User scenario validation
+- **Regression Tests**: Prevent functionality degradation
+- **Edge Case Tests**: Boundary condition validation
+
+### Professional Mock Infrastructure (`tests/mocks/`)
+- **Discord Mocks**: Complete Discord API simulation
+- **GitHub Mocks**: Repository interaction simulation
+- **WebSocket Mocks**: Real-time communication testing
+- **Async Fixtures**: Comprehensive async test support
+
+### Coverage & Compliance
+- **Government Audit Compliance**: Achieved Tier 3 compliance
+- **Real-time Coverage Monitoring**: Continuous coverage tracking
+- **Compliance Dashboard**: Live compliance status
+- **Achievement Documentation**: 19 preserved compliance records
+
+## 🚀 Installation & Setup
+
+### Quick Installation
+```bash
+# One-click installation (recommended)
+curl -sSL https://raw.githubusercontent.com/jmontp/agent-workflow/main/install.sh | bash
+
+# Or via pip
+pip install agent-workflow
+
+# Initialize environment
+agent-orch init
+
+# Register a project
+agent-orch register-project /path/to/project
+
+# Start orchestration
+agent-orch start
+```
+
+### Development Setup
+```bash
+# Clone repository
+git clone https://github.com/jmontp/agent-workflow.git
+cd agent-workflow
+
+# Setup development environment
+make dev-setup
+
+# Run comprehensive validation
+make validate-system
+```
+
+## 💻 Development Commands
+
+### Core Orchestration
+```bash
+# Modern CLI interface
+agent-orch start                 # Start orchestration engine
+agent-orch status                # Check system status
+agent-orch projects              # List registered projects
+
+# Script interface (see scripts/CLAUDE.md for comprehensive documentation)
+python scripts/orchestrator.py          # Single-project orchestrator with TDD support
+python scripts/multi_project_orchestrator.py --interactive  # Multi-project coordination
+python scripts/multi_project_orchestrator.py --daemon       # Multi-project daemon mode
+
+# Discord bot integration
+python lib/discord_bot.py               # Start Discord bot
+python lib/multi_project_discord_bot.py # Multi-project Discord bot
+```
+
+### Testing & Validation
+```bash
+# Comprehensive testing
+make test                        # Run all tests
+make test-unit                   # Unit tests only (77 files)
+make test-integration           # Integration tests (9 files)
+make test-security              # Security validation
+make test-performance           # Performance benchmarks
+
+# Direct pytest commands
+pytest tests/ -v                # Full test suite with verbose output
+pytest tests/unit/ -m "not slow"  # Fast unit tests only
+pytest tests/integration/ --tb=short  # Integration tests with short traceback
+
+# Coverage analysis
+python tools/coverage/analyze_coverage.py       # Generate coverage report
+python tools/coverage/test_runner.py            # Advanced test runner
+python tools/coverage/validate_tdd.py           # TDD validation
+```
+
+### Code Quality & Compliance
+```bash
+# Code formatting and quality
+make format                      # Format with black and isort
+make lint                        # Lint with flake8 and mypy
+make validate                    # Comprehensive validation
+
+# Compliance monitoring
+python tools/compliance/monitor_compliance.py   # Live compliance tracking
+python tools/compliance/audit_compliance_tracker.py  # Audit compliance
+
+# Security validation
+python tests/unit/test_agent_tool_config.py     # Agent security validation
+python tests/security/test_tdd_security.py      # Security test suite
+```
+
+### Documentation & API
+```bash
+# Documentation system
+make docs                        # Build and serve documentation
+make serve-docs                  # Local documentation server
+mkdocs serve                     # Direct MkDocs serving
+mkdocs build                     # Build static documentation
+
+# API documentation
+python tools/documentation/generate_api_docs.py  # Generate API docs
+```
+
+### Development Utilities
+
+#### Development Tools Suite (`tools/`)
+Comprehensive set of specialized utilities organized by category:
 
 ```bash
-# Run orchestrator directly
-python scripts/orchestrator.py
+# Compliance Monitoring
+python tools/compliance/audit_compliance_tracker.py   # Real-time compliance dashboard
+python tools/compliance/monitor_compliance.py         # Lightweight compliance monitoring
 
-# Run Discord bot with orchestrator
-python lib/discord_bot.py
+# Coverage Analysis & Validation
+python tools/coverage/analyze_coverage.py             # Coverage gap analysis
+python tools/coverage/test_runner.py                  # System validation without deps
+python tools/coverage/validate_tdd.py                 # TDD workflow validation
+python tools/coverage/validate_test_preservation.py   # Test preservation checks
+python tools/coverage/coverage_analysis_global_orchestrator.py  # Targeted analysis
 
-# Run tests
-pytest tests/                    # Full test suite
-pytest tests/unit/              # Unit tests only
-pytest tests/integration/       # Integration tests only
-pytest -m "not slow"           # Skip slow tests
+# API Documentation Generation
+python tools/documentation/generate_api_docs.py --format markdown  # Markdown docs
+python tools/documentation/generate_api_docs.py --format openapi   # OpenAPI spec
+python tools/documentation/generate_api_docs.py --include-private  # Include privates
 
-# Run security tests
-python3 tests/unit/test_agent_tool_config.py
-
-# Run coverage analysis
-python tools/coverage/analyze_coverage.py
-
-# Run compliance monitoring
-python tools/compliance/monitor_compliance.py
-
-# Generate API documentation
-python tools/documentation/generate_api_docs.py
-
-# Start orchestrator (CLI only, no web interface)
-aw start
-
-# Start web visualization interface
-aw web                               # Web interface at http://localhost:5000
-aw web --port 8080                   # Custom port
-aw web --daemon                      # Run as background daemon
-aw web-status                        # Check web interface status
-aw web-stop                          # Stop web interface
-
-# Alternative: Run visualization server directly  
-python3 tools/visualizer/app.py     # Direct execution
-
-# Build documentation
-mkdocs serve                    # Local development server
-mkdocs build                    # Build static site
+# Real-time State Visualization
+cd tools/visualizer && python app.py                  # Web-based state dashboard
+cd tools/visualizer && python app.py --host 0.0.0.0 --port 8080  # Custom host/port
 ```
+
+#### System Validation
+```bash
+# System validation
+make quick-check                 # Emergency validation
+make production-check           # Production readiness validation
+make ci-simulation              # Simulate CI/CD pipeline
+```
+
+**Note**: All tools in `tools/` directory include built-in help via `--help` flag and comprehensive documentation in `tools/CLAUDE.md`
+
+## 📚 Documentation System
+
+### MkDocs Professional Configuration
+The documentation system uses MkDocs Material with:
+- **74 navigation pages** organized in 9 sections
+- **Professional theme** with Inter/JetBrains Mono fonts
+- **Advanced features**: search, navigation, code highlighting
+- **Mermaid diagrams** with zoom functionality
+- **GitHub integration** with edit/view actions
+- **Analytics support** with cookie consent
+- **Version management** with mike
+
+### Documentation Structure
+- **Getting Started**: Installation, quick start, configuration
+- **User Guide**: Commands, workflows, troubleshooting (9 guides)
+- **Architecture**: System design, context management, parallel TDD (11 specs)
+- **Advanced Topics**: Detailed technical implementation (10 topics)
+- **Development**: API reference, contributing, testing (3 guides)
+- **Deployment**: Discord setup, production deployment (4 guides)
+- **Planning**: UI portal, websocket API, user journeys (6 specs)
+
+## ⚙️ Configuration Management
+
+### Multi-Project Configuration (`orch-config.yaml`)
+- **Global Settings**: Resource limits, scheduling, security
+- **Project Registration**: 12 registered projects with individual settings
+- **Resource Management**: CPU, memory, disk limits per project
+- **Security Controls**: Project isolation, access controls
+- **Work Hours**: Configurable working hours per project
+
+### Environment Configuration
+Required environment variables:
+- `DISCORD_BOT_TOKEN` - Discord bot authentication
+- Optional: `GOOGLE_ANALYTICS_KEY` - Documentation analytics
+
+### Dependencies
+**Production Dependencies** (from `requirements.txt`):
+- Discord.py 2.3.0+ - Discord integration
+- PyGithub 1.59.0+ - GitHub API integration
+- PyYAML 6.0+ - Configuration management
+- websockets 11.0+ - WebSocket communication
+- aiohttp 3.8.0+ - Async HTTP client
+- Flask 2.3.0+ - Web dashboard
+- pytest 7.4.0+ - Testing framework
+- mkdocs-material 9.4.0+ - Documentation
+
+## 🔒 Security & Agent Control
+
+### Agent Security Architecture
+The system implements comprehensive security controls:
+
+**Agent Types & Restrictions**:
+- **Orchestrator Agent**: Full system access (with safety limits)
+- **Code Agent**: File editing, git operations, testing
+- **Design Agent**: Read-only access, documentation creation
+- **QA Agent**: Testing tools only, no code modification
+- **Data Agent**: Data processing, analysis tools only
+
+**Security Features**:
+- Command access control per agent type
+- Tool restriction enforcement via Claude Code CLI flags
+- Multi-project isolation with resource limits
+- Comprehensive security testing (95+ test cases)
+
+## 🎯 Important Notes for Claude Code
+
+### Repository Navigation
+1. **Primary Implementation**: Most functionality in `lib/` directory (42 modules)
+2. **Modern Interface**: CLI commands in `agent_workflow/cli/` (8 commands)  
+3. **Core Scripts**: Essential executables in `scripts/` (2 files)
+4. **Documentation**: Comprehensive guides in `docs_src/` (74+ pages)
+5. **Testing**: Extensive test suite in `tests/` (99+ files)
+
+### Development Workflow
+1. **Setup**: Use `make dev-setup` for complete environment
+2. **Testing**: Always run `make test-unit` before changes
+3. **Validation**: Use `make validate` for comprehensive checks
+4. **Security**: Run security tests after any agent-related changes
+5. **Documentation**: Update docs in `docs_src/` as needed
+
+### Key Patterns
+- **Dual Architecture**: Both modern package and legacy library
+- **Multi-Project Support**: Single orchestrator, multiple projects
+- **HITL Workflow**: Human approval for strategic decisions
+- **State Management**: Finite state machine with strict transitions
+- **Security First**: Comprehensive agent access controls
+- **Test-Driven**: 95%+ coverage with professional test infrastructure
+
+### System Capabilities
+- **Production Ready**: Complete implementation with compliance
+- **Scalable**: Multi-project orchestration with resource management
+- **Secure**: Government audit compliance achieved
+- **Extensible**: Plugin architecture for new agents and integrations
+- **Observable**: Real-time monitoring and compliance dashboards with comprehensive development tools
+
+This repository represents a complete, production-ready AI agent orchestration framework with comprehensive documentation, testing, and compliance features.
 
 ## Dependencies
 
@@ -225,12 +641,49 @@ docs_src/
 └── deployment/                 # Deployment guides
 ```
 
-### Documentation Best Practices
-- **Living Documentation**: Keep docs in sync with code changes
-- **Security Documentation**: Document all agent restrictions and security boundaries
-- **Architecture Diagrams**: Use Mermaid for visual documentation
-- **Code Examples**: Include working code examples in documentation
-- **Testing Coverage**: Document testing strategy and security validation
+### Documentation Architecture & Strategy
+
+The `docs_src/` directory implements a comprehensive MkDocs-based documentation system with professional standards:
+
+#### Documentation Organization Strategy
+- **User Journey Focus**: Content organized by user experience level and needs
+- **Progressive Disclosure**: Information complexity increases with user expertise
+- **Multi-Audience Support**: Separate sections for users, developers, architects, and compliance
+- **Task-Oriented Structure**: Documentation organized around what users want to accomplish
+
+#### MkDocs Build System Features
+- **Material Design Theme**: Professional, responsive design with advanced navigation
+- **Enhanced Functionality**: Mermaid diagrams, code highlighting, search, and image zoom
+- **Performance Optimization**: Minification, instant loading, and progressive enhancement
+- **Accessibility Standards**: Screen reader support, mobile-responsive design
+- **Analytics Integration**: Google Analytics with user feedback collection
+
+#### Documentation Categories Overview
+1. **Getting Started** (4 files): Installation, quick start, configuration
+2. **User Guide** (13 files): Commands, workflows, integration examples, troubleshooting
+3. **Core Concepts** (3 files): System overview, security model
+4. **Architecture** (16 files): Detailed technical specifications and design decisions
+5. **Advanced Topics** (11 files): Deep technical content for power users
+6. **Planning & Design** (7 files): UI/UX specifications and development roadmaps
+7. **Development** (4 files): API reference, contributing guidelines, testing
+8. **Deployment** (5 files): Production setup, Discord configuration, GitHub Pages
+9. **Templates** (6 files): Standardized documentation templates
+10. **Archive/Compliance** (22 files): Government audit reports and compliance certificates
+
+#### Content Standards & Quality Control
+- **Style Guide**: Comprehensive formatting and writing standards (`STYLE_GUIDE.md`)
+- **Template System**: Reusable templates for consistent content creation
+- **Visual Standards**: Consistent icon usage, diagram styling, and formatting
+- **Quality Checklist**: Pre-publication validation for content, visual, UX, and technical quality
+- **Cross-Reference System**: Strategic linking for optimal user navigation
+
+#### Custom Enhancements
+- **JavaScript**: Mermaid diagram zoom, universal search, enhanced navigation
+- **CSS**: Professional color schemes, responsive design, accessibility features
+- **Macros**: Python-based content generation and automation
+- **Images**: Organized visual assets with proper alt text and responsive sizing
+
+**Detailed Documentation**: See `/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs_src/CLAUDE.md` for complete documentation architecture overview.
 
 ## Agent Security Profiles
 
@@ -283,7 +736,7 @@ This repository has undergone comprehensive cleanup achieving:
 - **Preserved achievements**: All compliance documents archived in `docs_src/archive/compliance/`
 
 ### File Location Guide
-- **Main executables**: `scripts/` (3 core files only)
+- **Main executables**: `scripts/` (2 core scripts + documentation - see `scripts/CLAUDE.md`)
 - **Development utilities**: `tools/` (organized by function)
 - **Test suite**: `tests/` (99+ comprehensive test files)
 - **Documentation**: `docs_src/` (MkDocs source + archived achievements)
@@ -295,9 +748,43 @@ This repository has undergone comprehensive cleanup achieving:
 - **Documentation**: `tools/documentation/` - API documentation generation
 - **Visualization**: `tools/visualizer/` - Web-based state visualization interface
 
+## Automatic Dependency Tracking System
+
+The repository includes an intelligent dependency tracking system in `tools/dependencies/` that maintains consistency across code, tests, and documentation:
+
+### Key Features
+- **Automatic Mapping**: Identifies relationships between code, tests, and documentation
+- **Real-time Monitoring**: Watches for file changes and suggests updates
+- **Convention-based**: Uses naming patterns (e.g., `lib/module.py` → `tests/unit/test_module.py`)
+- **Claude Integration**: Designed to work with Claude Code for intelligent updates
+
+### Usage
+```bash
+# Check dependencies for a file
+python3 tools/dependencies/tracker.py --related lib/some_module.py
+
+# Preview what would be updated
+python3 tools/dependencies/updater.py lib/some_module.py --dry-run
+
+# Start real-time monitoring
+python3 tools/dependencies/watcher.py
+
+# Run initial setup
+python3 tools/dependencies/setup.py
+```
+
+### Configuration
+- **`.dependency-config.yaml`**: Configure update strategies and automation levels
+- **`dependencies.yaml`**: Generated dependency map for the entire project
+- **Pre-commit hooks**: Automatic validation before commits
+- **VS Code integration**: Tasks for quick dependency checking
+
+See `tools/dependencies/README.md` for complete documentation.
+
 ## Important Notes for Claude Code
 
 - **Documentation Location**: Primary docs are in `docs_src/` (MkDocs format)
+- **Dependency Tracking**: Use `tools/dependencies/` to identify affected files when making changes
 - **Security Testing**: Always run `tests/unit/test_agent_tool_config.py` after security changes
 - **Agent Restrictions**: Each agent type has specific tool limitations for security
 - **State Management**: The system uses finite state machines with strict validation
