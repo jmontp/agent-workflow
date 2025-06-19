@@ -29,6 +29,8 @@ from security import (
     validate_configuration, sanitize_prompt, sanitize_code,
     audit_operation, SecurityLevel, mask_api_key
 )
+from context_manager_factory import get_context_manager_factory, ContextMode
+from context_config import ContextConfig
 
 # Configure logging
 logging.basicConfig(
@@ -134,6 +136,258 @@ def debug_info():
             "uptime_seconds": (datetime.now() - datetime.fromisoformat("2024-01-01T00:00:00")).total_seconds()
         }
     })
+
+
+# =====================================================
+# Context Management Endpoints
+# =====================================================
+
+@app.route('/api/context/status')
+def get_context_status():
+    """Get current context management status"""
+    try:
+        factory = get_context_manager_factory()
+        current_mode = factory.get_current_mode()
+        current_manager = factory.get_current_manager()
+        
+        status = {
+            "current_mode": current_mode.value if current_mode else None,
+            "factory_status": factory.get_detection_status(),
+            "mode_info": factory.get_mode_info(),
+            "manager_active": current_manager is not None
+        }
+        
+        # Add performance metrics if manager is active
+        if current_manager:
+            status["performance_metrics"] = current_manager.get_performance_metrics()
+        
+        return jsonify(status)
+        
+    except Exception as e:
+        logger.error(f"Error getting context status: {e}")
+        return jsonify({"error": "Failed to get context status"}), 500
+
+
+@app.route('/api/context/modes')
+def get_context_modes():
+    """Get available context modes and their information"""
+    try:
+        factory = get_context_manager_factory()
+        
+        modes_info = {}
+        for mode in ContextMode:
+            modes_info[mode.value] = factory.get_mode_info(mode)
+        
+        return jsonify({
+            "modes": modes_info,
+            "current_mode": factory.get_current_mode().value if factory.get_current_mode() else None
+        })
+        
+    except Exception as e:
+        logger.error(f"Error getting context modes: {e}")
+        return jsonify({"error": "Failed to get context modes"}), 500
+
+
+@app.route('/api/context/switch', methods=['POST'])
+def switch_context_mode():
+    """Switch context management mode"""
+    async def _switch():
+        try:
+            data = request.get_json()
+            if not data or 'mode' not in data:
+                return {"success": False, "error": "Mode is required"}
+            
+            mode_str = data['mode']
+            try:
+                new_mode = ContextMode(mode_str)
+            except ValueError:
+                return {"success": False, "error": f"Invalid mode: {mode_str}"}
+            
+            factory = get_context_manager_factory()
+            old_mode = factory.get_current_mode()
+            
+            # Switch mode
+            manager = await factory.switch_mode(new_mode)
+            
+            return {
+                "success": True,
+                "message": f"Successfully switched to {new_mode.value} mode",
+                "old_mode": old_mode.value if old_mode else None,
+                "new_mode": new_mode.value,
+                "manager_type": type(manager).__name__
+            }
+            
+        except Exception as e:
+            logger.error(f"Error switching context mode: {e}")
+            return {"success": False, "error": str(e)}
+    
+    import asyncio
+    try:
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        result = loop.run_until_complete(_switch())
+        loop.close()
+        
+        if result.get("success"):
+            # Emit context mode change event
+            socketio.emit('context_mode_changed', {
+                "type": "context_mode_switch",
+                "old_mode": result.get("old_mode"),
+                "new_mode": result.get("new_mode"),
+                "timestamp": datetime.now().isoformat()
+            })
+            
+            return jsonify(result)
+        else:
+            return jsonify(result), 400
+            
+    except Exception as e:
+        logger.error(f"Error in switch_context_mode endpoint: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+@app.route('/api/context/config', methods=['GET', 'PUT'])
+def manage_context_config():
+    """Get or update context configuration"""
+    if request.method == 'GET':
+        try:
+            factory = get_context_manager_factory()
+            config_summary = factory.config.get_summary()
+            validation = factory.config.validate()
+            
+            return jsonify({
+                "config": config_summary,
+                "validation": validation,
+                "config_path": factory.config_path
+            })
+            
+        except Exception as e:
+            logger.error(f"Error getting context config: {e}")
+            return jsonify({"error": "Failed to get configuration"}), 500
+    
+    elif request.method == 'PUT':
+        try:
+            config_updates = request.get_json()
+            if not config_updates:
+                return jsonify({"error": "No configuration data provided"}), 400
+            
+            factory = get_context_manager_factory()
+            
+            # Update configuration
+            new_config = factory.config.update_from_dict(config_updates)
+            
+            # Validate new configuration
+            validation = new_config.validate()
+            if validation["errors"]:
+                return jsonify({
+                    "error": "Configuration validation failed",
+                    "details": validation["errors"],
+                    "warnings": validation["warnings"]
+                }), 400
+            
+            # Save new configuration
+            factory.config = new_config
+            factory.save_config()
+            
+            # Emit config change event
+            socketio.emit('context_config_changed', {
+                "type": "context_config_update",
+                "timestamp": datetime.now().isoformat()
+            })
+            
+            return jsonify({
+                "success": True,
+                "message": "Configuration updated successfully",
+                "config": new_config.get_summary(),
+                "warnings": validation["warnings"]
+            })
+            
+        except Exception as e:
+            logger.error(f"Error updating context config: {e}")
+            return jsonify({"error": "Failed to update configuration"}), 500
+
+
+@app.route('/api/context/performance')
+def get_context_performance():
+    """Get context management performance comparison"""
+    async def _get_performance():
+        try:
+            factory = get_context_manager_factory()
+            return await factory.get_performance_comparison()
+        except Exception as e:
+            logger.error(f"Error getting context performance: {e}")
+            return {"error": str(e)}
+    
+    import asyncio
+    try:
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        result = loop.run_until_complete(_get_performance())
+        loop.close()
+        
+        return jsonify(result)
+        
+    except Exception as e:
+        logger.error(f"Error in get_context_performance endpoint: {e}")
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route('/api/context/test', methods=['POST'])
+def test_context_preparation():
+    """Test context preparation with current mode"""
+    async def _test():
+        try:
+            data = request.get_json() or {}
+            agent_type = data.get('agent_type', 'CodeAgent')
+            task_description = data.get('task', 'Test task for context preparation')
+            
+            factory = get_context_manager_factory()
+            manager = await factory.create_context_manager()
+            
+            if not manager:
+                return {"success": False, "error": "No context manager available"}
+            
+            # Create test task
+            test_task = {
+                "description": task_description,
+                "story_id": "test-story",
+                "current_state": "WRITE_TEST"
+            }
+            
+            # Measure preparation time
+            start_time = time.time()
+            context = await manager.prepare_context(agent_type, test_task)
+            preparation_time = time.time() - start_time
+            
+            return {
+                "success": True,
+                "mode": factory.get_current_mode().value,
+                "preparation_time": preparation_time,
+                "token_usage": {
+                    "total_used": context.token_usage.total_used,
+                    "core_task_used": context.token_usage.core_task_used
+                },
+                "file_count": len(context.file_contents) if context.file_contents else 0,
+                "compression_applied": getattr(context, 'compression_applied', False),
+                "cache_hit": getattr(context, 'cache_hit', False)
+            }
+            
+        except Exception as e:
+            logger.error(f"Error testing context preparation: {e}")
+            return {"success": False, "error": str(e)}
+    
+    import asyncio
+    try:
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        result = loop.run_until_complete(_test())
+        loop.close()
+        
+        return jsonify(result)
+        
+    except Exception as e:
+        logger.error(f"Error in test_context_preparation endpoint: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
 
 
 # =====================================================
@@ -641,6 +895,140 @@ def handle_interface_switch(data):
     except Exception as e:
         logger.error(f"Error in WebSocket interface switch: {e}")
         emit('interface_error', {"error": str(e)})
+
+
+@socketio.on('request_context_status')
+def handle_context_status_request():
+    """Handle client request for context status"""
+    try:
+        factory = get_context_manager_factory()
+        current_mode = factory.get_current_mode()
+        current_manager = factory.get_current_manager()
+        
+        status = {
+            "current_mode": current_mode.value if current_mode else None,
+            "factory_status": factory.get_detection_status(),
+            "mode_info": factory.get_mode_info(),
+            "manager_active": current_manager is not None
+        }
+        
+        emit('context_status', status)
+    except Exception as e:
+        logger.error(f"Error getting context status: {e}")
+        emit('context_error', {"error": "Failed to get context status"})
+
+
+@socketio.on('switch_context_mode')
+def handle_context_mode_switch(data):
+    """Handle WebSocket context mode switch request"""
+    async def _switch():
+        try:
+            mode_str = data.get('mode')
+            if not mode_str:
+                return {"success": False, "error": "Mode is required"}
+            
+            try:
+                new_mode = ContextMode(mode_str)
+            except ValueError:
+                return {"success": False, "error": f"Invalid mode: {mode_str}"}
+            
+            factory = get_context_manager_factory()
+            old_mode = factory.get_current_mode()
+            
+            # Switch mode
+            manager = await factory.switch_mode(new_mode)
+            
+            return {
+                "success": True,
+                "message": f"Successfully switched to {new_mode.value} mode",
+                "old_mode": old_mode.value if old_mode else None,
+                "new_mode": new_mode.value,
+                "manager_type": type(manager).__name__
+            }
+            
+        except Exception as e:
+            logger.error(f"Error switching context mode via WebSocket: {e}")
+            return {"success": False, "error": str(e)}
+    
+    import asyncio
+    try:
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        result = loop.run_until_complete(_switch())
+        loop.close()
+        
+        # Emit result to the requesting client
+        emit('context_switch_result', result)
+        
+        # If successful, broadcast to all clients
+        if result.get("success"):
+            socketio.emit('context_mode_changed', {
+                "type": "context_mode_switch",
+                "old_mode": result.get("old_mode"),
+                "new_mode": result.get("new_mode"),
+                "timestamp": datetime.now().isoformat()
+            })
+            
+    except Exception as e:
+        logger.error(f"Error in WebSocket context mode switch: {e}")
+        emit('context_error', {"error": str(e)})
+
+
+@socketio.on('test_context_preparation')
+def handle_context_test(data):
+    """Handle WebSocket context preparation test"""
+    async def _test():
+        try:
+            agent_type = data.get('agent_type', 'CodeAgent')
+            task_description = data.get('task', 'Test task for context preparation')
+            
+            factory = get_context_manager_factory()
+            manager = await factory.create_context_manager()
+            
+            if not manager:
+                return {"success": False, "error": "No context manager available"}
+            
+            # Create test task
+            test_task = {
+                "description": task_description,
+                "story_id": "test-story",
+                "current_state": "WRITE_TEST"
+            }
+            
+            # Measure preparation time
+            start_time = time.time()
+            context = await manager.prepare_context(agent_type, test_task)
+            preparation_time = time.time() - start_time
+            
+            return {
+                "success": True,
+                "mode": factory.get_current_mode().value,
+                "preparation_time": preparation_time,
+                "token_usage": {
+                    "total_used": context.token_usage.total_used,
+                    "core_task_used": context.token_usage.core_task_used
+                },
+                "file_count": len(context.file_contents) if context.file_contents else 0,
+                "compression_applied": getattr(context, 'compression_applied', False),
+                "cache_hit": getattr(context, 'cache_hit', False)
+            }
+            
+        except Exception as e:
+            logger.error(f"Error testing context preparation: {e}")
+            return {"success": False, "error": str(e)}
+    
+    import asyncio
+    try:
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        result = loop.run_until_complete(_test())
+        loop.close()
+        
+        emit('context_test_result', result)
+        
+    except Exception as e:
+        logger.error(f"Error in WebSocket context test: {e}")
+        emit('context_error', {"error": str(e)})
 
 
 class StateMonitor:

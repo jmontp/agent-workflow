@@ -30,10 +30,16 @@ from tdd_models import TDDCycle, TDDTask, TDDState, TestResult, TestStatus
 
 # Import context management
 try:
-    from context_manager import ContextManager
+    from context_manager_factory import create_context_manager, ContextMode
+    CONTEXT_FACTORY_AVAILABLE = True
 except ImportError:
-    # Graceful fallback if context manager is not available
-    ContextManager = None
+    # Graceful fallback if context manager factory is not available
+    try:
+        from context_manager import ContextManager
+        CONTEXT_FACTORY_AVAILABLE = False
+    except ImportError:
+        ContextManager = None
+        CONTEXT_FACTORY_AVAILABLE = False
 
 # Import state broadcaster for real-time visualization
 try:
@@ -134,8 +140,22 @@ class Orchestrator:
                     
                     # Initialize context manager for project if available
                     context_manager = None
-                    if ContextManager:
+                    if CONTEXT_FACTORY_AVAILABLE:
                         try:
+                            # Use context manager factory for automatic mode detection
+                            import asyncio
+                            loop = asyncio.new_event_loop()
+                            asyncio.set_event_loop(loop)
+                            context_manager = loop.run_until_complete(
+                                create_context_manager(project_path=str(project_path))
+                            )
+                            loop.close()
+                            logger.info(f"Context manager factory initialized for project {project_name}")
+                        except Exception as e:
+                            logger.warning(f"Failed to initialize context manager factory for {project_name}: {str(e)}")
+                    elif ContextManager:
+                        try:
+                            # Fallback to direct context manager initialization
                             context_manager = ContextManager(project_path=str(project_path))
                             logger.info(f"Context manager initialized for project {project_name}")
                         except Exception as e:
