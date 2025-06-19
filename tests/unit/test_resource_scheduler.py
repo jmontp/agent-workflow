@@ -913,19 +913,26 @@ class TestResourceScheduler:
 
     def test_update_available_resources_single_project(self, resource_scheduler, sample_project_config):
         """Test available resources calculation with one project."""
+        total = resource_scheduler.total_resources
+        
         resource_scheduler.register_project(sample_project_config)
         
         allocated = resource_scheduler.allocated_resources["test-project"]
         available = resource_scheduler.available_resources
         
         # Check that available resources are properly calculated
-        expected_cpu = max(0, 16.0 - allocated.cpu_cores)
-        expected_memory = max(0, 32768 - allocated.memory_mb)
-        expected_agents = max(0, 20 - allocated.max_agents)
+        total_allocated_cpu = sum(q.cpu_cores for q in resource_scheduler.allocated_resources.values())
+        expected_cpu = max(0, total.cpu_cores - total_allocated_cpu)
+        expected_memory = max(0, total.memory_mb - sum(q.memory_mb for q in resource_scheduler.allocated_resources.values()))
+        expected_agents = max(0, total.max_agents - sum(q.max_agents for q in resource_scheduler.allocated_resources.values()))
+        expected_disk = max(0, total.disk_mb - sum(q.disk_mb for q in resource_scheduler.allocated_resources.values()))
+        expected_network = max(0, total.network_bandwidth_mbps - sum(q.network_bandwidth_mbps for q in resource_scheduler.allocated_resources.values()))
         
         assert available.cpu_cores == expected_cpu
         assert available.memory_mb == expected_memory
         assert available.max_agents == expected_agents
+        assert available.disk_mb == expected_disk
+        assert available.network_bandwidth_mbps == expected_network
 
     def test_update_available_resources_multiple_projects(self, resource_scheduler):
         """Test available resources calculation with multiple projects."""
@@ -997,7 +1004,7 @@ class TestResourceScheduler:
         # For utilization of 1.0: 1.0 - (1.0 - 0.8) * 5 = 1.0 - 1.0 = 0.0
         expected = max(0.0, 1.0 - (1.0 - 0.8) * 5)
         assert score == expected
-        assert score == 0.0
+        assert abs(score - 0.0) < 1e-10  # Allow for floating point precision
 
     @pytest.mark.asyncio
     async def test_process_task_queue_no_ready_tasks(self, resource_scheduler, sample_project_config):

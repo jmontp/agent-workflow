@@ -236,6 +236,12 @@ def conflict_resolver_factory(mock_context_manager, temp_project_dir):
     return _create_resolver
 
 
+@pytest.fixture
+def conflict_resolver(conflict_resolver_factory):
+    """Create a ConflictResolver instance."""
+    return conflict_resolver_factory()
+
+
 class TestConflictResolver:
     """Test the ConflictResolver class."""
     

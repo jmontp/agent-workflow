@@ -58,13 +58,30 @@ class ResourceQuota:
     network_bandwidth_mbps: float = 100.0
     
     def __post_init__(self):
-        """Validate quota values"""
+        """Validate quota values for actual allocations"""
+        # Only validate if this appears to be an actual resource allocation
+        # (not a calculation intermediate like available resources)
+        if hasattr(self, '_skip_validation'):
+            return
+            
         if self.cpu_cores <= 0:
             raise ValueError("CPU cores must be positive")
         if self.memory_mb <= 0:
             raise ValueError("Memory must be positive")
         if self.max_agents <= 0:
             raise ValueError("Max agents must be positive")
+    
+    @classmethod
+    def create_unvalidated(cls, cpu_cores=0.0, memory_mb=0, max_agents=0, disk_mb=0, network_bandwidth_mbps=0.0):
+        """Create a ResourceQuota without validation for internal calculations"""
+        quota = cls.__new__(cls)
+        quota.cpu_cores = cpu_cores
+        quota.memory_mb = memory_mb
+        quota.max_agents = max_agents
+        quota.disk_mb = disk_mb
+        quota.network_bandwidth_mbps = network_bandwidth_mbps
+        quota._skip_validation = True
+        return quota
 
 
 @dataclass
@@ -253,10 +270,12 @@ class ResourceScheduler:
             return False
         
         # Cancel all pending tasks for this project
+        # Note: global_task_queue stores tuples (priority, created_at, task)
         self.global_task_queue = [
-            task for task in self.global_task_queue
-            if task.project_name != project_name
+            task_tuple for task_tuple in self.global_task_queue
+            if task_tuple[2].project_name != project_name
         ]
+        heapq.heapify(self.global_task_queue)  # Restore heap property
         
         # Free up allocated resources
         if project_name in self.allocated_resources:
@@ -417,13 +436,26 @@ class ResourceScheduler:
         multiplier = priority_multipliers.get(project_config.priority, 1.0)
         limits = project_config.resource_limits
         
-        # Start with project limits, adjusted by priority
+        # Calculate initial allocation, ensuring minimum valid values
+        allocated_cpu = min(limits.max_parallel_agents * 0.5 * multiplier, self.available_resources.cpu_cores)
+        allocated_memory = min(limits.max_memory_mb * multiplier, self.available_resources.memory_mb)
+        allocated_agents = min(limits.max_parallel_agents, self.available_resources.max_agents)
+        allocated_disk = min(limits.max_disk_mb, self.available_resources.disk_mb)
+        allocated_network = min(100.0 * multiplier, self.available_resources.network_bandwidth_mbps)
+        
+        # Ensure minimum allocations to pass validation
+        allocated_cpu = max(0.1, allocated_cpu)
+        allocated_memory = max(1, allocated_memory)
+        allocated_agents = max(1, allocated_agents)
+        allocated_disk = max(1, allocated_disk)
+        allocated_network = max(0.1, allocated_network)
+        
         return ResourceQuota(
-            cpu_cores=min(limits.max_parallel_agents * 0.5 * multiplier, self.available_resources.cpu_cores),
-            memory_mb=min(limits.max_memory_mb * multiplier, self.available_resources.memory_mb),
-            max_agents=min(limits.max_parallel_agents, self.available_resources.max_agents),
-            disk_mb=min(limits.max_disk_mb, self.available_resources.disk_mb),
-            network_bandwidth_mbps=min(100.0 * multiplier, self.available_resources.network_bandwidth_mbps)
+            cpu_cores=allocated_cpu,
+            memory_mb=allocated_memory,
+            max_agents=allocated_agents,
+            disk_mb=allocated_disk,
+            network_bandwidth_mbps=allocated_network
         )
     
     def _can_allocate_resources(self, quota: ResourceQuota) -> bool:
@@ -438,21 +470,26 @@ class ResourceScheduler:
     
     def _update_available_resources(self) -> None:
         """Update available resources based on current allocations"""
-        allocated_total = ResourceQuota()
+        # Initialize totals to zero
+        total_allocated_cpu = 0.0
+        total_allocated_memory = 0
+        total_allocated_agents = 0
+        total_allocated_disk = 0
+        total_allocated_network = 0.0
         
         for quota in self.allocated_resources.values():
-            allocated_total.cpu_cores += quota.cpu_cores
-            allocated_total.memory_mb += quota.memory_mb
-            allocated_total.max_agents += quota.max_agents
-            allocated_total.disk_mb += quota.disk_mb
-            allocated_total.network_bandwidth_mbps += quota.network_bandwidth_mbps
+            total_allocated_cpu += quota.cpu_cores
+            total_allocated_memory += quota.memory_mb
+            total_allocated_agents += quota.max_agents
+            total_allocated_disk += quota.disk_mb
+            total_allocated_network += quota.network_bandwidth_mbps
         
-        self.available_resources = ResourceQuota(
-            cpu_cores=max(0, self.total_resources.cpu_cores - allocated_total.cpu_cores),
-            memory_mb=max(0, self.total_resources.memory_mb - allocated_total.memory_mb),
-            max_agents=max(0, self.total_resources.max_agents - allocated_total.max_agents),
-            disk_mb=max(0, self.total_resources.disk_mb - allocated_total.disk_mb),
-            network_bandwidth_mbps=max(0, self.total_resources.network_bandwidth_mbps - allocated_total.network_bandwidth_mbps)
+        self.available_resources = ResourceQuota.create_unvalidated(
+            cpu_cores=max(0, self.total_resources.cpu_cores - total_allocated_cpu),
+            memory_mb=max(0, self.total_resources.memory_mb - total_allocated_memory),
+            max_agents=max(0, self.total_resources.max_agents - total_allocated_agents),
+            disk_mb=max(0, self.total_resources.disk_mb - total_allocated_disk),
+            network_bandwidth_mbps=max(0, self.total_resources.network_bandwidth_mbps - total_allocated_network)
         )
     
     def _update_performance_metrics(self, project_name: str) -> None:
