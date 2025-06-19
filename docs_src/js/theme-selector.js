@@ -75,6 +75,7 @@ class ThemeSelector {
   }
   
   init() {
+    console.log('Theme selector initializing...');
     this.createHTML();
     this.bindEvents();
     this.applyTheme(this.currentTheme);
@@ -85,6 +86,8 @@ class ThemeSelector {
     
     // Handle system theme preference changes
     this.handleSystemThemeChanges();
+    
+    console.log('Theme selector initialized successfully');
   }
   
   createHTML() {
@@ -267,7 +270,25 @@ class ThemeSelector {
   }
   
   applyTheme(themeId) {
+    console.log(`Applying theme: ${themeId}`);
     document.documentElement.setAttribute('data-theme', themeId);
+    console.log(`Theme attribute set to: ${document.documentElement.getAttribute('data-theme')}`);
+    
+    // Also apply to body for better compatibility
+    document.body.setAttribute('data-theme', themeId);
+    
+    // Force CSS recalculation by triggering reflow
+    const theme = this.themes.find(t => t.id === themeId);
+    if (theme) {
+      // Apply theme colors directly to CSS custom properties for immediate effect
+      const root = document.documentElement;
+      root.style.setProperty('--md-primary-fg-color', theme.colors[0]);
+      root.style.setProperty('--md-default-bg-color', themeId === 'dracula' ? theme.colors[1] : '#ffffff');
+      root.style.setProperty('--md-default-fg-color', theme.colors[2]);
+      root.style.setProperty('--md-accent-fg-color', theme.colors[3]);
+      
+      console.log(`Applied colors: primary=${theme.colors[0]}, bg=${theme.colors[1]}, fg=${theme.colors[2]}, accent=${theme.colors[3]}`);
+    }
     
     // Update meta theme-color for mobile browsers
     this.updateMetaThemeColor(themeId);

@@ -13,26 +13,32 @@
   position: fixed;
   top: 20px;
   right: 20px;
-  z-index: 1000;
-  background: var(--md-default-bg-color);
-  border: 1px solid var(--md-default-fg-color--lighter);
+  z-index: 9999;
+  background: var(--md-default-bg-color, #ffffff);
+  border: 2px solid var(--md-primary-fg-color, #0969da);
   border-radius: 12px;
   padding: 8px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(10px);
   transition: var(--theme-transition);
+  min-width: 120px;
 }
 
 .theme-selector-toggle {
-  background: var(--md-primary-fg-color);
-  color: var(--md-primary-bg-color);
+  background: var(--md-primary-fg-color, #0969da);
+  color: var(--md-primary-bg-color, #ffffff);
   border: none;
   border-radius: 8px;
-  padding: 8px 12px;
+  padding: 10px 16px;
   cursor: pointer;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   transition: var(--theme-transition);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  justify-content: center;
 }
 
 .theme-selector-toggle:hover {
@@ -44,13 +50,14 @@
   position: absolute;
   top: 100%;
   right: 0;
-  background: var(--md-default-bg-color);
-  border: 1px solid var(--md-default-fg-color--lighter);
+  background: var(--md-default-bg-color, #ffffff);
+  border: 1px solid var(--md-default-fg-color--lighter, #cccccc);
   border-radius: 8px;
   padding: 8px;
   margin-top: 8px;
-  min-width: 200px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  min-width: 220px;
+  max-width: 280px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
   opacity: 0;
   visibility: hidden;
   transform: translateY(-10px);
@@ -66,20 +73,21 @@
 .theme-option {
   display: flex;
   align-items: center;
-  padding: 8px 12px;
+  padding: 10px 12px;
   border-radius: 6px;
   cursor: pointer;
   transition: var(--theme-transition);
   border: 2px solid transparent;
+  margin-bottom: 4px;
 }
 
 .theme-option:hover {
-  background: var(--md-default-fg-color--lightest);
+  background: var(--md-default-fg-color--lightest, #f0f0f0);
 }
 
 .theme-option.active {
-  border-color: var(--md-primary-fg-color);
-  background: var(--md-primary-fg-color--light);
+  border-color: var(--md-primary-fg-color, #0969da);
+  background: var(--md-primary-fg-color--light, #e6f2ff);
 }
 
 .theme-preview {
@@ -98,7 +106,7 @@
 .theme-name {
   font-size: 13px;
   font-weight: 500;
-  color: var(--md-default-fg-color);
+  color: var(--md-default-fg-color, #333333);
 }
 
 /* ==========================================================================
