@@ -277,8 +277,6 @@ markdown_extensions:
       fractions: true
       ordinal_numbers: true
   - pymdownx.snippets:
-      auto_append:
-        - includes/mkdocs.md
       dedent_subsections: true
       check_paths: true
   - pymdownx.striphtml:
