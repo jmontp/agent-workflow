@@ -28,12 +28,30 @@ The system operates on a clear separation between orchestration and project conc
 
 ### Directory Structure
 ```
-docs_src/       # MkDocs documentation source files
-scripts/        # Executable scripts (orchestrator entry point)
-lib/            # Library code (agents, state machine, Discord bot, security, storage)
-├── data_models.py       # Epic, Story, Sprint data models
-├── project_storage.py   # File-based persistence for project data
-tests/          # Comprehensive test suite
+├── agent_workflow/          # Main Python package
+├── lib/                     # Core libraries (agents, state machine, Discord bot, security, storage)
+│   ├── data_models.py       # Epic, Story, Sprint data models
+│   ├── project_storage.py   # File-based persistence for project data
+│   └── ...                  # 42 total modules
+├── scripts/                 # Essential executable scripts (3 core files)
+│   ├── install.sh           # Installation script
+│   ├── orchestrator.py      # Main orchestrator entry point
+│   └── multi_project_orchestrator.py  # Multi-project coordination
+├── tests/                   # Comprehensive test suite (99+ test files)
+│   ├── unit/                # Unit tests (77 files)
+│   ├── integration/         # Integration tests (6 files)
+│   ├── performance/         # Performance tests
+│   ├── security/            # Security tests
+│   └── mocks/               # Professional mock infrastructure
+├── tools/                   # Development utilities (organized by category)
+│   ├── compliance/          # Compliance monitoring (2 tools)
+│   ├── coverage/            # Coverage analysis and validation (5 tools)
+│   ├── documentation/       # API documentation generation (1 tool)
+│   └── visualizer/          # Web-based state visualization
+├── docs_src/                # MkDocs documentation source files
+│   └── archive/             # Archived compliance documents
+│       └── compliance/      # 19 preserved achievement documents
+└── Essential configs only   # Clean root directory
 ```
 
 ### Core Components
@@ -69,6 +87,18 @@ pytest -m "not slow"           # Skip slow tests
 
 # Run security tests
 python3 tests/unit/test_agent_tool_config.py
+
+# Run coverage analysis
+python tools/coverage/analyze_coverage.py
+
+# Run compliance monitoring
+python tools/compliance/monitor_compliance.py
+
+# Generate API documentation
+python tools/documentation/generate_api_docs.py
+
+# Run state visualization server
+python tools/visualizer/app.py
 
 # Build documentation
 mkdocs serve                    # Local development server
@@ -233,6 +263,28 @@ When working with this repository, Claude Code should be aware of:
 3. **Test Requirements**: All security-related changes must include tests
 4. **Documentation Updates**: Security changes require documentation updates
 
+## Repository Organization & Cleanup
+
+### Clean Structure Achievement
+This repository has undergone comprehensive cleanup achieving:
+- **80% file reduction**: 150+ → 31 files in root directory
+- **Organized utilities**: All development tools moved to `tools/` with categorical organization
+- **Professional structure**: Clear separation of executables, utilities, tests, and documentation
+- **Preserved achievements**: All compliance documents archived in `docs_src/archive/compliance/`
+
+### File Location Guide
+- **Main executables**: `scripts/` (3 core files only)
+- **Development utilities**: `tools/` (organized by function)
+- **Test suite**: `tests/` (99+ comprehensive test files)
+- **Documentation**: `docs_src/` (MkDocs source + archived achievements)
+- **Core libraries**: `lib/` (42 modules)
+
+### Utility Tools Organization
+- **Coverage/Testing**: `tools/coverage/` - Analysis, validation, test running utilities
+- **Compliance**: `tools/compliance/` - Government audit monitoring and tracking
+- **Documentation**: `tools/documentation/` - API documentation generation
+- **Visualization**: `tools/visualizer/` - Web-based state visualization interface
+
 ## Important Notes for Claude Code
 
 - **Documentation Location**: Primary docs are in `docs_src/` (MkDocs format)
@@ -240,3 +292,4 @@ When working with this repository, Claude Code should be aware of:
 - **Agent Restrictions**: Each agent type has specific tool limitations for security
 - **State Management**: The system uses finite state machines with strict validation
 - **HITL Workflow**: Human approval is required for strategic decisions
+- **Clean Structure**: Repository follows professional organization with tools separated from executables
