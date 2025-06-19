@@ -34,6 +34,7 @@ try:
     from agent_workflow.cli.info import version_command, health_command
     from agent_workflow.cli.migrate import migrate_command
     from agent_workflow.cli.web import web_command, web_stop_command, web_status_command
+    from agent_workflow.cli.config import config
 except ImportError as e:
     # Graceful fallback if command modules aren't implemented yet
     init_command = None
@@ -51,6 +52,7 @@ except ImportError as e:
     web_command = None
     web_stop_command = None
     web_status_command = None
+    config = None
 
 
 @click.group(name="agent-orch", invoke_without_command=True)
@@ -434,6 +436,15 @@ def web_status(ctx, verbose, output_json):
         ctx.invoke(web_status_command, verbose=verbose, output_json=output_json)
     else:
         handle_cli_error("web-status command not yet implemented")
+
+
+# ============================================================================
+# Configuration Management Commands
+# ============================================================================
+
+# Add configuration command group if available
+if config:
+    cli.add_command(config)
 
 
 # ============================================================================

@@ -78,6 +78,59 @@ def health_check():
     })
 
 
+@app.route('/metrics')
+def metrics_endpoint():
+    """Prometheus-compatible metrics endpoint"""
+    try:
+        current_state = broadcaster.get_current_state()
+        
+        # Generate Prometheus-style metrics
+        metrics_output = []
+        metrics_output.append("# HELP workflow_current_state Current workflow state")
+        metrics_output.append("# TYPE workflow_current_state gauge")
+        
+        # Map states to numeric values for Prometheus
+        state_values = {
+            "IDLE": 0, "BACKLOG_READY": 1, "SPRINT_PLANNED": 2,
+            "SPRINT_ACTIVE": 3, "SPRINT_PAUSED": 4, "SPRINT_REVIEW": 5,
+            "BLOCKED": 6, "EXPLORING": 7, "QUICK_FIX": 8
+        }
+        
+        state_value = state_values.get(current_state.get("workflow_state", "IDLE"), 0)
+        metrics_output.append(f'workflow_current_state {state_value}')
+        
+        metrics_output.append("# HELP tdd_active_cycles Number of active TDD cycles")
+        metrics_output.append("# TYPE tdd_active_cycles gauge")
+        metrics_output.append(f'tdd_active_cycles {len(current_state.get("tdd_cycles", {}))}')
+        
+        metrics_output.append("# HELP visualizer_connected_clients Number of connected WebSocket clients")
+        metrics_output.append("# TYPE visualizer_connected_clients gauge")
+        metrics_output.append(f'visualizer_connected_clients {len(broadcaster.clients)}')
+        
+        return "\n".join(metrics_output), 200, {'Content-Type': 'text/plain; charset=utf-8'}
+        
+    except Exception as e:
+        logger.error(f"Metrics endpoint error: {e}")
+        return jsonify({"error": "metrics collection failed"}), 500
+
+
+@app.route('/debug')
+def debug_info():
+    """Debug information endpoint"""
+    return jsonify({
+        "broadcaster_clients": len(broadcaster.clients),
+        "socketio_clients": len(socketio.server.manager.rooms.get("/", {})),
+        "transition_history_count": len(broadcaster.transition_history),
+        "memory_usage": {
+            "transition_history": len(str(broadcaster.transition_history)),
+            "tdd_cycles": len(str(broadcaster.tdd_cycles))
+        },
+        "performance": {
+            "uptime_seconds": (datetime.now() - datetime.fromisoformat("2024-01-01T00:00:00")).total_seconds()
+        }
+    })
+
+
 @socketio.on('connect')
 def handle_connect():
     """Handle new SocketIO client connection"""

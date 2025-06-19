@@ -792,17 +792,25 @@ class AgentPool:
             await self._process_task_queue()
     
     async def _process_task_queue(self) -> None:
-        """Process queued tasks"""
-        while self.task_queue:
+        """Process queued tasks with batch optimization"""
+        batch_size = 5  # Process up to 5 tasks at once
+        processed_count = 0
+        
+        while self.task_queue and processed_count < batch_size:
             task = self.task_queue.popleft()
             agent = await self._select_agent(task.agent_type, task)
             
             if agent:
                 await self._assign_task_to_agent(agent, task)
+                processed_count += 1
             else:
                 # Put task back in queue if no agent available
                 self.task_queue.appendleft(task)
                 break
+        
+        # If we processed some tasks but queue still has items, schedule another batch
+        if processed_count > 0 and self.task_queue:
+            asyncio.create_task(self._process_task_queue())
     
     async def _attempt_auto_scale(self, agent_type: str) -> None:
         """Attempt to auto-scale agents for a type"""
@@ -870,18 +878,38 @@ class AgentPool:
             await self._check_auto_scaling_conditions()
     
     async def _check_auto_scaling_conditions(self) -> None:
-        """Check if auto-scaling is needed"""
+        """Check if auto-scaling is needed with improved efficiency"""
+        # Check utilization for all agent types in parallel
+        scaling_tasks = []
+        
         for agent_type in get_available_agents():
+            scaling_tasks.append(self._evaluate_agent_type_scaling(agent_type))
+        
+        # Execute scaling evaluations concurrently
+        if scaling_tasks:
+            await asyncio.gather(*scaling_tasks, return_exceptions=True)
+    
+    async def _evaluate_agent_type_scaling(self, agent_type: str) -> None:
+        """Evaluate scaling needs for a specific agent type"""
+        try:
             utilization = await self._calculate_type_utilization(agent_type)
+            queue_length = len([t for t in self.task_queue if t.agent_type == agent_type])
             
-            if utilization > self.config.scaling_thresholds["scale_up_threshold"]:
+            # Enhanced scaling logic with queue consideration
+            scale_up_threshold = self.config.scaling_thresholds["scale_up_threshold"]
+            scale_down_threshold = self.config.scaling_thresholds["scale_down_threshold"]
+            
+            # Consider queue length in scaling decisions
+            if utilization > scale_up_threshold or queue_length > 3:
                 await self.scale_pool(agent_type)
-            elif utilization < self.config.scaling_thresholds["scale_down_threshold"]:
+            elif utilization < scale_down_threshold and queue_length == 0:
                 current_count = len(self.agent_types[agent_type])
                 min_count = self.config.min_agents_per_type.get(agent_type, 1)
                 if current_count > min_count:
                     target_count = max(min_count, current_count - 1)
                     await self.scale_pool(agent_type, target_count)
+        except Exception as e:
+            logger.error(f"Error evaluating scaling for {agent_type}: {e}")
     
     async def _calculate_type_utilization(self, agent_type: str) -> float:
         """Calculate utilization for a specific agent type"""
@@ -955,11 +983,12 @@ class AgentPool:
     def _get_max_concurrent_tasks(self, agent_type: str) -> int:
         """Get maximum concurrent tasks for agent type"""
         # Different agent types have different concurrency capabilities
+        # Optimized based on typical resource usage patterns
         defaults = {
             "DesignAgent": 1,      # Design work is typically sequential
-            "CodeAgent": 2,        # Can handle multiple small code tasks
-            "QAAgent": 3,          # Can run multiple test suites
-            "DataAgent": 2         # Data analysis tasks
+            "CodeAgent": 3,        # Increased from 2 - can handle more parallel tasks
+            "QAAgent": 4,          # Increased from 3 - test suites are often I/O bound
+            "DataAgent": 3         # Increased from 2 - data ops can be parallelized
         }
         return defaults.get(agent_type, 1)
     
@@ -976,3 +1005,57 @@ class AgentPool:
             return max(current_count - 1, self.config.min_agents_per_type.get(agent_type, 1))
         
         return current_count
+    
+    async def prewarm_agents_for_workload(self, workload_prediction: Dict[str, int]) -> Dict[str, Any]:
+        """
+        Pre-warm agents based on predicted workload.
+        
+        Args:
+            workload_prediction: Dict mapping agent_type to expected task count
+            
+        Returns:
+            Dictionary with pre-warming results
+        """
+        results = {
+            "prewarmed_agents": {},
+            "total_prewarmed": 0,
+            "skipped_types": [],
+            "errors": []
+        }
+        
+        for agent_type, expected_tasks in workload_prediction.items():
+            try:
+                current_count = len(self.agent_types.get(agent_type, []))
+                
+                # Calculate optimal count based on expected tasks
+                # Assume each agent can handle 2-3 tasks concurrently on average
+                avg_concurrent = self._get_max_concurrent_tasks(agent_type) * 0.7  # Conservative estimate
+                optimal_count = max(1, int(expected_tasks / avg_concurrent))
+                
+                # Limit to max allowed
+                max_count = self.config.max_agents_per_type.get(agent_type, 5)
+                target_count = min(optimal_count, max_count)
+                
+                if target_count > current_count:
+                    # Pre-warm additional agents
+                    agents_to_add = target_count - current_count
+                    added_count = 0
+                    
+                    for _ in range(agents_to_add):
+                        agent = await self._create_agent(agent_type)
+                        if agent:
+                            added_count += 1
+                    
+                    results["prewarmed_agents"][agent_type] = added_count
+                    results["total_prewarmed"] += added_count
+                    
+                    logger.info(f"Pre-warmed {added_count} {agent_type} agents for workload")
+                else:
+                    results["skipped_types"].append(agent_type)
+                    
+            except Exception as e:
+                error_msg = f"Failed to pre-warm {agent_type}: {str(e)}"
+                results["errors"].append(error_msg)
+                logger.error(error_msg)
+        
+        return results

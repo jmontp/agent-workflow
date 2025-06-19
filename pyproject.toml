@@ -29,18 +29,27 @@ classifiers = [
 ]
 requires-python = ">=3.8"
 dependencies = [
+    # Core Discord/GitHub Integration
     "discord.py>=2.3.0,<3.0.0",
     "PyGithub>=1.59.0,<2.0.0",
+    
+    # Configuration & Security
     "PyYAML>=6.0,<7.0",
     "cryptography>=41.0.0,<42.0.0",
+    "python-dotenv>=1.0.0,<2.0.0",
+    
+    # CLI & UI
     "click>=8.1.0,<9.0.0",
     "rich>=13.0.0,<14.0.0",
     "tabulate>=0.9.0,<1.0.0",
-    "python-dotenv>=1.0.0,<2.0.0",
+    
+    # Async & Networking
     "aiofiles>=23.0.0,<24.0.0",
     "aiohttp>=3.8.0,<4.0.0",
     "requests>=2.31.0,<3.0.0",
     "websockets>=11.0.0,<12.0.0",
+    
+    # System Monitoring
     "watchdog>=3.0.0,<4.0.0",
     "psutil>=5.9.0,<6.0.0",
     "python-dateutil>=2.8.0,<3.0.0",
@@ -68,6 +77,10 @@ web = [
     "Flask>=2.3.0,<3.0.0",
     "Flask-SocketIO>=5.3.0,<6.0.0",
 ]
+data = [
+    "pandas>=2.0.0,<3.0.0",
+    "numpy>=1.24.0,<2.0.0",
+]  
 ai = [
     "anthropic>=0.7.0,<1.0.0",
     "openai>=1.0.0,<2.0.0",
@@ -97,6 +110,7 @@ status = "agent_workflow.cli.orchestrator:status_command"
 version = "agent_workflow.cli.info:version_command"
 health = "agent_workflow.cli.info:health_command"
 migrate = "agent_workflow.cli.migrate:migrate_command"
+config = "agent_workflow.cli.config:config"
 
 [tool.setuptools.packages.find]
 where = ["."]

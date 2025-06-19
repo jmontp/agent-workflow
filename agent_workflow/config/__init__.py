@@ -1,11 +1,25 @@
 """
-Configuration management system.
+Configuration Management Package
 
-This module provides:
-- Global configuration management
-- Project-specific configuration
-- Default settings and templates
-- Configuration validation and migration
+Centralized configuration management for the Agent Workflow system.
+Provides schema validation, environment variable handling, and
+configuration file management.
 """
 
-__all__ = []
+from .schema import (
+    ConfigValidator,
+    EnvironmentVariable,
+    ConfigSchema,
+    validator,
+    validate_environment_variables,
+    generate_config_template
+)
+
+__all__ = [
+    'ConfigValidator',
+    'EnvironmentVariable', 
+    'ConfigSchema',
+    'validator',
+    'validate_environment_variables',
+    'generate_config_template'
+]

@@ -9,7 +9,7 @@ import asyncio
 import time
 import json
 import csv
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 from . import BaseAgent, Task, AgentResult, TDDState, TDDCycle, TDDTask, TestResult
 import sys
 from pathlib import Path
@@ -18,6 +18,16 @@ from claude_client import claude_client, create_agent_client
 from agent_tool_config import AgentType
 import logging
 from datetime import datetime, timedelta
+
+# Optional data science dependencies - graceful fallback
+try:
+    import pandas as pd
+    import numpy as np
+    HAS_DATA_DEPS = True
+except ImportError:
+    pd = None
+    np = None
+    HAS_DATA_DEPS = False
 
 logger = logging.getLogger(__name__)
 
@@ -55,6 +65,14 @@ class DataAgent(BaseAgent):
             ]
         )
         self.claude_client = claude_code_client or create_agent_client(AgentType.DATA)
+        
+    def _check_data_dependencies(self) -> None:
+        """Check if optional data science dependencies are available."""
+        if not HAS_DATA_DEPS:
+            raise ImportError(
+                "Data science dependencies not available. "
+                "Install with: pip install agent-workflow[data]"
+            )
         
     async def run(self, task: Task, dry_run: bool = False) -> AgentResult:
         """Execute data-related tasks"""
@@ -369,19 +387,24 @@ class DataPipeline:
     
     def __init__(self, config: Dict[str, Any]):
         self.config = config
-        self.source_type = "{source_type}"
+        self.source_type = config.get("source_type", "csv")
         
-    def extract(self, source_path: str) -> pd.DataFrame:
+    def extract(self, source_path: str):
         """Extract data from source"""
+        if not HAS_DATA_DEPS:
+            raise ImportError("Data dependencies required. Install with: pip install agent-workflow[data]")
+            
         if self.source_type == "csv":
             return pd.read_csv(source_path)
         elif self.source_type == "json":
             return pd.read_json(source_path)
         else:
-            raise ValueError(f"Unsupported source type: {{self.source_type}}")
+            raise ValueError(f"Unsupported source type: {self.source_type}")
     
-    def transform(self, data: pd.DataFrame) -> pd.DataFrame:
+    def transform(self, data):
         """Transform data according to specifications"""
+        if not HAS_DATA_DEPS:
+            raise ImportError("Data dependencies required. Install with: pip install agent-workflow[data]")
         # Apply transformations
         transformed = data.copy()
         
@@ -396,18 +419,21 @@ class DataPipeline:
         
         return transformed
     
-    def load(self, data: pd.DataFrame, destination: str) -> None:
+    def load(self, data, destination: str) -> None:
         """Load transformed data to destination"""
+        if not HAS_DATA_DEPS:
+            raise ImportError("Data dependencies required. Install with: pip install agent-workflow[data]")
+            
         if destination.endswith('.csv'):
             data.to_csv(destination, index=False)
         elif destination.endswith('.json'):
             data.to_json(destination, orient='records')
         else:
-            raise ValueError(f"Unsupported destination format: {{destination}}")
+            raise ValueError(f"Unsupported destination format: {destination}")
         
-        logger.info(f"Data loaded to {{destination}}: {{len(data)}} records")
+        logger.info(f"Data loaded to {destination}: {len(data)} records")
     
-    def _clean_data(self, data: pd.DataFrame) -> pd.DataFrame:
+    def _clean_data(self, data):
         """Clean and preprocess data"""
         # Remove duplicates
         data = data.drop_duplicates()
@@ -427,12 +453,12 @@ class DataPipeline:
         
         return data
     
-    def _engineer_features(self, data: pd.DataFrame) -> pd.DataFrame:
+    def _engineer_features(self, data):
         """Create new features from existing data"""
         # Add feature engineering logic here
         return data
     
-    def _validate_data(self, data: pd.DataFrame) -> None:
+    def _validate_data(self, data) -> None:
         """Validate data quality"""
         if data.empty:
             raise ValueError("Data is empty after transformation")
@@ -441,7 +467,7 @@ class DataPipeline:
         required_columns = self.config.get('required_columns', [])
         missing_columns = set(required_columns) - set(data.columns)
         if missing_columns:
-            raise ValueError(f"Missing required columns: {{missing_columns}}")
+            raise ValueError(f"Missing required columns: {missing_columns}")
 
 def run_pipeline(source_path: str, destination_path: str, config: Dict[str, Any]):
     """Run the complete data pipeline"""
@@ -452,21 +478,21 @@ def run_pipeline(source_path: str, destination_path: str, config: Dict[str, Any]
     transformed_data = pipeline.transform(raw_data)
     pipeline.load(transformed_data, destination_path)
     
-    return {{
+    return {
         "status": "success",
         "records_processed": len(transformed_data),
         "source": source_path,
         "destination": destination_path
-    }}
+    }
 
 if __name__ == "__main__":
-    config = {{
+    config = {
         "required_columns": ["id", "timestamp"],
-        "source_type": "{source_type}"
-    }}
+        "source_type": "csv"
+    }
     
-    result = run_pipeline("input.{source_type}", "output.csv", config)
-    print(f"Pipeline completed: {{result}}")
+    result = run_pipeline("input.csv", "output.csv", config)
+    print(f"Pipeline completed: {result}")
 '''
     
     def _generate_pipeline_config(self, spec: str) -> str:

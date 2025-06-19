@@ -9,6 +9,8 @@ from enum import Enum
 from typing import Dict, List, Optional, Tuple, Any
 from dataclasses import dataclass
 import logging
+import json
+from datetime import datetime
 
 # Import state broadcaster for real-time visualization
 try:
@@ -115,12 +117,13 @@ class StateMachine:
         self.tdd_transition_listeners: List[callable] = []
         logger.info(f"StateMachine initialized in state: {initial_state.value}")
     
-    def validate_command(self, command: str) -> CommandResult:
+    def validate_command(self, command: str, context: Optional[Dict] = None) -> CommandResult:
         """
         Validate if a command is allowed in the current state.
         
         Args:
             command: The command to validate (e.g., "/epic", "/sprint start")
+            context: Optional validation context (e.g., {"has_pending_tasks": True})
             
         Returns:
             CommandResult with validation outcome
@@ -159,7 +162,43 @@ class StateMachine:
             )
         
         new_state = allowed_states[self.current_state]
+        
+        # Apply context-aware validation
+        if context:
+            context_result = self._validate_transition_context(command, new_state, context)
+            if not context_result.success:
+                return context_result
+        
         return CommandResult(success=True, new_state=new_state)
+    
+    def _validate_transition_context(self, command: str, target_state: State, context: Dict) -> CommandResult:
+        """Apply context-aware validation rules"""
+        # Validate TDD cycle constraints
+        if target_state in [State.SPRINT_REVIEW, State.IDLE] and self.has_active_tdd_cycles():
+            if not context.get("force_transition", False):
+                return CommandResult(
+                    success=False,
+                    error_message=f"Cannot transition to {target_state.value} with active TDD cycles",
+                    hint="Complete active TDD cycles or use force_transition=True in context"
+                )
+        
+        # Validate pending work constraints
+        if command == "/sprint start" and context.get("has_uncommitted_changes", False):
+            return CommandResult(
+                success=False,
+                error_message="Cannot start sprint with uncommitted changes",
+                hint="Commit or stash pending changes before starting sprint"
+            )
+        
+        # Validate CI status constraints
+        if target_state == State.SPRINT_ACTIVE and context.get("ci_status") == "failing":
+            return CommandResult(
+                success=False,
+                error_message="Cannot start sprint with failing CI",
+                hint="Fix CI failures before starting sprint"
+            )
+        
+        return CommandResult(success=True)
     
     def transition(self, command: str, project_name: str = "default") -> CommandResult:
         """
@@ -179,6 +218,9 @@ class StateMachine:
             self.current_state = result.new_state
             logger.info(f"State transition: {old_state.value} → {self.current_state.value} via {command}")
             
+            # Always track transition history
+            self._track_transition_minimal(old_state, self.current_state, command)
+            
             # Emit workflow transition for real-time visualization
             try:
                 emit_workflow_transition(old_state, self.current_state, project_name)
@@ -186,6 +228,22 @@ class StateMachine:
                 logger.warning(f"Failed to emit workflow transition: {e}")
         
         return result
+    
+    def _track_transition_minimal(self, old_state: State, new_state: State, command: str) -> None:
+        """Minimal transition tracking for history and debugging"""
+        if not hasattr(self, '_transition_history'):
+            self._transition_history = []
+        
+        self._transition_history.append({
+            "timestamp": datetime.now().isoformat(),
+            "from": old_state.value,
+            "to": new_state.value,
+            "command": command
+        })
+        
+        # Keep only last 20 transitions to prevent memory growth
+        if len(self._transition_history) > 20:
+            self._transition_history.pop(0)
     
     def get_allowed_commands(self) -> List[str]:
         """Get list of commands allowed in current state"""
@@ -202,23 +260,74 @@ class StateMachine:
         
         return sorted(allowed)
     
-    def get_state_info(self) -> Dict:
+    def get_state_info(self, include_matrix: bool = False) -> Dict:
         """Get comprehensive state information for debugging"""
-        return {
+        base_info = {
             "current_state": self.current_state.value,
             "allowed_commands": self.get_allowed_commands(),
-            "all_states": [s.value for s in State],
-            "transition_matrix": {
-                cmd: {s.value: target.value for s, target in states.items()}
-                for cmd, states in self.TRANSITIONS.items()
+            "tdd_integration": {
+                "active_cycles": len(self.active_tdd_cycles),
+                "cycle_ids": list(self.active_tdd_cycles.keys()),
+                "can_transition_to_review": not self.has_active_tdd_cycles()
+            },
+            "state_flags": {
+                "is_terminal": self.is_terminal_state(),
+                "can_auto_progress": self.can_auto_progress(),
+                "has_active_work": bool(self.active_tdd_cycles)
             }
         }
+        
+        # Include expensive transition matrix only when requested
+        if include_matrix:
+            base_info.update({
+                "all_states": [s.value for s in State],
+                "transition_matrix": {
+                    cmd: {s.value: target.value for s, target in states.items()}
+                    for cmd, states in self.TRANSITIONS.items()
+                }
+            })
+        
+        # Include recent transition history if available
+        if hasattr(self, '_transition_history'):
+            base_info["recent_transitions"] = self._transition_history[-5:]  # Last 5 transitions
+        
+        return base_info
     
-    def force_state(self, state: State) -> None:
+    def force_state(self, state: State, reason: str = "manual") -> None:
         """Force transition to specific state (for testing/recovery)"""
         old_state = self.current_state
         self.current_state = state
-        logger.warning(f"Forced state transition: {old_state.value} → {state.value}")
+        logger.warning(f"Forced state transition: {old_state.value} → {state.value} (reason: {reason})")
+        
+        # Track this as a transition for history
+        self._track_transition_minimal(old_state, state, f"force_state:{reason}")
+    
+    def get_transition_history(self, limit: int = 10) -> List[Dict]:
+        """Get recent transition history for debugging and analysis"""
+        if not hasattr(self, '_transition_history'):
+            return []
+        
+        return self._transition_history[-limit:] if limit > 0 else self._transition_history
+    
+    def get_recovery_options(self) -> List[Dict]:
+        """Get available recovery options based on state history"""
+        if not hasattr(self, '_transition_history') or not self._transition_history:
+            return [{"state": State.IDLE.value, "reason": "fallback_to_idle"}]
+        
+        # Return unique recent states as recovery options
+        recent_states = []
+        seen_states = set()
+        for transition in reversed(self._transition_history[-5:]):  # Last 5 transitions
+            state = transition["from"]
+            if state not in seen_states and state != self.current_state.value:
+                seen_states.add(state)
+                recent_states.append({
+                    "state": state,
+                    "timestamp": transition["timestamp"],
+                    "reason": f"recover_from_{transition['command']}"
+                })
+        
+        return recent_states[:3]  # Top 3 recovery options
     
     def is_terminal_state(self) -> bool:
         """Check if current state requires external input to progress"""

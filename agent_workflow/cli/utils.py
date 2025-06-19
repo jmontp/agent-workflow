@@ -18,6 +18,54 @@ from rich.text import Text
 
 console = Console()
 
+
+def _is_safe_path(path: Path) -> bool:
+    """
+    Validate that a path is safe and doesn't contain traversal attacks.
+    
+    Args:
+        path: Path to validate
+        
+    Returns:
+        bool: True if path is safe
+    """
+    try:
+        # Resolve to absolute path
+        resolved_path = path.resolve()
+        
+        # Check for suspicious patterns
+        path_str = str(resolved_path)
+        dangerous_patterns = ['..', '~/', '/etc/', '/usr/', '/var/', '/bin/', '/sbin/']
+        
+        # Allow paths under user home directory or system-appropriate config locations
+        home_dir = Path.home().resolve()
+        
+        # On Windows, also allow AppData
+        if platform.system() == "Windows":
+            appdata_local = home_dir / "AppData" / "Local"
+            appdata_roaming = home_dir / "AppData" / "Roaming"
+            allowed_bases = [home_dir, appdata_local, appdata_roaming]
+        else:
+            # On Unix-like systems, allow ~/.config and ~/.local
+            config_dir = home_dir / ".config"
+            local_dir = home_dir / ".local"
+            allowed_bases = [home_dir, config_dir, local_dir]
+        
+        # Check if path is under an allowed base directory
+        for base in allowed_bases:
+            try:
+                resolved_path.relative_to(base)
+                return True
+            except ValueError:
+                continue
+        
+        # If we get here, path is not under any allowed directory
+        return False
+        
+    except (OSError, ValueError):
+        return False
+
+
 def check_system_requirements() -> bool:
     """
     Check if system meets minimum requirements for agent-workflow.
@@ -99,8 +147,12 @@ def get_config_dir() -> Path:
         Path: Configuration directory path
     """
     # Check environment variable first
-    if config_dir := os.environ.get("AGENT_WORKFLOW_CONFIG_DIR"):
-        return Path(config_dir).expanduser()
+    if config_dir := os.getenv("AGENT_WORKFLOW_CONFIG_DIR"):
+        path = Path(config_dir).expanduser().resolve()
+        # SECURITY: Validate path is safe and not attempting directory traversal
+        if not _is_safe_path(path):
+            raise ValueError(f"Unsafe configuration directory path: {config_dir}")
+        return path
     
     # Use platform-appropriate default
     if platform.system() == "Windows":
@@ -108,7 +160,7 @@ def get_config_dir() -> Path:
     else:
         base_dir = Path.home()
     
-    return base_dir / ".agent-workflow"
+    return (base_dir / ".agent-workflow").resolve()
 
 
 def ensure_config_dir(config_dir: Optional[Path] = None) -> Path:
@@ -254,6 +306,60 @@ def format_status_info(status_data: Dict[str, Any]) -> str:
         console.print(tree)
     
     return capture.get()
+
+
+def validate_config() -> Dict[str, Any]:
+    """
+    Validate system configuration including environment variables and config files.
+    
+    Returns:
+        Dict containing validation results
+    """
+    try:
+        from ..config import validate_environment_variables
+        return validate_environment_variables("all")
+    except ImportError:
+        # Fallback validation if config module not available
+        return {
+            "overall_valid": True,
+            "files": {},
+            "env_vars": {},
+            "summary": {"total_files": 0, "valid_files": 0, "total_env_vars": 0, "valid_env_vars": 0}
+        }
+
+
+def load_config_with_validation(config_path: str, schema: str = "orchestration") -> Dict[str, Any]:
+    """
+    Load and validate configuration file.
+    
+    Args:
+        config_path: Path to configuration file
+        schema: Schema name to validate against
+        
+    Returns:
+        Dict with config data and validation results
+    """
+    try:
+        from ..config import validator
+        return validator.validate_config_file(config_path, schema)
+    except ImportError:
+        # Fallback - load without validation
+        try:
+            import yaml
+            with open(config_path, 'r') as f:
+                return {
+                    "valid": True,
+                    "errors": [],
+                    "warnings": [],
+                    "config": yaml.safe_load(f) or {}
+                }
+        except Exception as e:
+            return {
+                "valid": False,
+                "errors": [str(e)],
+                "warnings": [],
+                "config": {}
+            }
 
 
 def validate_project_path(path: str) -> Path:

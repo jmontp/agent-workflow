@@ -11,6 +11,7 @@ from dataclasses import dataclass
 from enum import Enum
 import logging
 import asyncio
+import time
 from datetime import datetime
 import json
 
@@ -383,6 +384,7 @@ class BaseAgent(ABC):
     async def handle_tdd_task(self, tdd_cycle: TDDCycle, phase: TDDState) -> AgentResult:
         """
         Main TDD task handler that coordinates phase execution.
+        Optimized for better handoff and context management.
         
         Args:
             tdd_cycle: The current TDD cycle
@@ -391,6 +393,8 @@ class BaseAgent(ABC):
         Returns:
             AgentResult with task execution outcome
         """
+        execution_start = time.time()
+        
         # Set TDD context
         self.current_tdd_cycle = tdd_cycle
         self.log_tdd_action("handle_tdd_task", f"phase: {phase.value}, cycle: {tdd_cycle.id}")
@@ -400,35 +404,75 @@ class BaseAgent(ABC):
         if not validation_result.success:
             return validation_result
         
-        # Get TDD context for execution
+        # Prepare context with optimizations
         context = await self.get_tdd_context(tdd_cycle.story_id)
         context.update({
             "tdd_cycle": tdd_cycle,
             "current_phase": phase,
-            "story_id": tdd_cycle.story_id
+            "story_id": tdd_cycle.story_id,
+            "execution_start": execution_start,
+            "agent_capabilities": self.capabilities
         })
+        
+        # Create context snapshot for handoff tracking
+        await self.create_context_snapshot(
+            f"Starting {phase.value} phase execution",
+            tdd_cycle.story_id
+        )
         
         try:
             # Execute the phase-specific logic
             result = await self.execute_tdd_phase(phase, context)
             
-            # Log successful execution
+            # Record execution metrics
+            execution_time = time.time() - execution_start
+            result.execution_time = execution_time
+            
+            # Record decision for learning
             if result.success:
-                self.log_tdd_action("phase_completed", f"phase: {phase.value} completed successfully")
+                await self.record_decision(
+                    description=f"Successfully executed {phase.value} phase",
+                    rationale=f"Phase completed within {execution_time:.2f}s",
+                    outcome="success",
+                    confidence=0.9,
+                    artifacts=result.artifacts,
+                    story_id=tdd_cycle.story_id
+                )
+                self.log_tdd_action("phase_completed", f"phase: {phase.value} completed successfully in {execution_time:.2f}s")
             else:
+                await self.record_decision(
+                    description=f"Failed to execute {phase.value} phase",
+                    rationale=f"Error: {result.error}",
+                    outcome="failure",
+                    confidence=0.1,
+                    artifacts={},
+                    story_id=tdd_cycle.story_id
+                )
                 self.log_tdd_action("phase_failed", f"phase: {phase.value} failed: {result.error}")
             
             return result
             
         except Exception as e:
-            error_msg = f"TDD task execution failed: {str(e)}"
+            execution_time = time.time() - execution_start
+            error_msg = f"TDD task execution failed after {execution_time:.2f}s: {str(e)}"
             self.logger.error(error_msg)
             self.log_tdd_action("task_error", error_msg)
+            
+            # Record failure decision
+            await self.record_decision(
+                description=f"Exception in {phase.value} phase",
+                rationale=f"Unhandled exception: {str(e)}",
+                outcome="exception",
+                confidence=0.0,
+                artifacts={},
+                story_id=tdd_cycle.story_id
+            )
             
             return AgentResult(
                 success=False,
                 output="",
-                error=error_msg
+                error=error_msg,
+                execution_time=execution_time
             )
     
     async def validate_tdd_phase(self, current_phase: TDDState, target_phase: TDDState) -> AgentResult:

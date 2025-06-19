@@ -51,9 +51,11 @@ class FileBasedAgentMemory(IAgentMemory):
         # Create directories if they don't exist
         self.memory_dir.mkdir(parents=True, exist_ok=True)
         
-        # In-memory cache for frequently accessed memories
+        # In-memory cache for frequently accessed memories with LRU eviction
         self._memory_cache: Dict[str, tuple[AgentMemory, datetime]] = {}
         self._cache_ttl = timedelta(minutes=30)
+        self._cache_access_times: Dict[str, datetime] = {}  # For LRU tracking
+        self._max_cache_entries = 100  # Limit cache size
         
         # Performance tracking
         self._get_calls = 0
@@ -86,11 +88,14 @@ class FileBasedAgentMemory(IAgentMemory):
             memory, timestamp = self._memory_cache[cache_key]
             if datetime.utcnow() - timestamp < self._cache_ttl:
                 self._cache_hits += 1
+                self._cache_access_times[cache_key] = datetime.utcnow()  # Update LRU
                 logger.debug(f"Memory cache hit for {cache_key}")
                 return memory
             else:
                 # Remove expired entry
                 del self._memory_cache[cache_key]
+                if cache_key in self._cache_access_times:
+                    del self._cache_access_times[cache_key]
         
         self._cache_misses += 1
         
@@ -107,8 +112,8 @@ class FileBasedAgentMemory(IAgentMemory):
             
             memory = AgentMemory.from_dict(data)
             
-            # Cache the loaded memory
-            self._memory_cache[cache_key] = (memory, datetime.utcnow())
+            # Cache the loaded memory with LRU management
+            self._cache_memory_with_lru(cache_key, memory)
             
             logger.debug(f"Loaded memory for {agent_type}:{story_id} from {memory_file}")
             return memory
@@ -141,9 +146,9 @@ class FileBasedAgentMemory(IAgentMemory):
             with open(memory_file, 'w', encoding='utf-8') as f:
                 json.dump(data, f, indent=2, ensure_ascii=False)
             
-            # Update cache
+            # Update cache with LRU management
             cache_key = f"{memory.agent_type}:{memory.story_id}"
-            self._memory_cache[cache_key] = (memory, datetime.utcnow())
+            self._cache_memory_with_lru(cache_key, memory)
             
             logger.debug(f"Stored memory for {memory.agent_type}:{memory.story_id} to {memory_file}")
             
@@ -543,3 +548,23 @@ class FileBasedAgentMemory(IAgentMemory):
             "recent_snapshots": len(recent_snapshots),
             "last_activity": memory.updated_at.isoformat() if memory.updated_at else None
         }
+    
+    def _cache_memory_with_lru(self, cache_key: str, memory: AgentMemory) -> None:
+        """Cache memory with LRU eviction policy"""
+        now = datetime.utcnow()
+        
+        # Check if cache is full and needs eviction
+        if len(self._memory_cache) >= self._max_cache_entries:
+            # Find least recently used entry
+            if self._cache_access_times:
+                lru_key = min(self._cache_access_times.keys(), 
+                             key=lambda k: self._cache_access_times[k])
+                # Remove LRU entry
+                if lru_key in self._memory_cache:
+                    del self._memory_cache[lru_key]
+                del self._cache_access_times[lru_key]
+                logger.debug(f"Evicted LRU cache entry: {lru_key}")
+        
+        # Add new entry
+        self._memory_cache[cache_key] = (memory, now)
+        self._cache_access_times[cache_key] = now

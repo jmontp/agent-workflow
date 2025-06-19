@@ -137,13 +137,33 @@ class MockDiscordChannel:
     async def send(self, content: str = None, embed=None, embeds=None, file=None, 
                    files=None, view=None, ephemeral: bool = False, 
                    reference=None, mention_author: bool = True):
-        """Mock message sending with realistic behavior"""
+        """Mock message sending with realistic behavior and failure scenarios"""
         # Simulate network delay
         await asyncio.sleep(random.uniform(0.1, 0.5))
         
-        # Simulate occasional rate limiting
-        if random.random() < 0.05:  # 5% chance of rate limiting
+        # Enhanced failure scenarios for better integration testing
+        failure_chance = random.random()
+        
+        # Simulate rate limiting (5% chance)
+        if failure_chance < 0.05:
+            from discord.errors import HTTPException
             await asyncio.sleep(random.uniform(1.0, 5.0))
+            raise HTTPException(response=Mock(status=429), message="Too Many Requests")
+        
+        # Simulate connection errors (2% chance)
+        elif failure_chance < 0.07:
+            from discord.errors import ConnectionClosed
+            raise ConnectionClosed(Mock(), code=1000)
+        
+        # Simulate permissions errors (1% chance)
+        elif failure_chance < 0.08:
+            from discord.errors import Forbidden
+            raise Forbidden(response=Mock(status=403), message="Missing Permissions")
+        
+        # Simulate message too long error (1% chance if content > 1500 chars)
+        elif content and len(content) > 1500 and failure_chance < 0.09:
+            from discord.errors import HTTPException
+            raise HTTPException(response=Mock(status=400), message="Message too long")
             
         message = MockDiscordMessage(
             content=content or "",

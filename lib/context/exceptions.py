@@ -116,3 +116,39 @@ class ContextLearningError(ContextError):
     def __init__(self, message: str, learning_type: Optional[str] = None, **kwargs):
         super().__init__(message, **kwargs)
         self.learning_type = learning_type
+
+
+class AgentPoolError(ContextError):
+    """Raised when agent pool operations fail"""
+    
+    def __init__(self, message: str, agent_id: Optional[str] = None, pool_state: Optional[str] = None, **kwargs):
+        super().__init__(message, **kwargs)
+        self.agent_id = agent_id
+        self.pool_state = pool_state
+
+
+class StateMachineError(ContextError):
+    """Raised when state machine operations fail"""
+    
+    def __init__(self, message: str, current_state: Optional[str] = None, transition: Optional[str] = None, **kwargs):
+        super().__init__(message, **kwargs)
+        self.current_state = current_state
+        self.transition = transition
+
+
+class OrchestrationError(ContextError):
+    """Raised when orchestration operations fail"""
+    
+    def __init__(self, message: str, project_id: Optional[str] = None, orchestration_phase: Optional[str] = None, **kwargs):
+        super().__init__(message, **kwargs)
+        self.project_id = project_id
+        self.orchestration_phase = orchestration_phase
+
+
+class RecoveryError(ContextError):
+    """Raised when error recovery operations fail"""
+    
+    def __init__(self, message: str, recovery_type: Optional[str] = None, attempt_count: int = 0, **kwargs):
+        super().__init__(message, **kwargs)
+        self.recovery_type = recovery_type
+        self.attempt_count = attempt_count

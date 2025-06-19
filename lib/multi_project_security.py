@@ -357,6 +357,18 @@ class MultiProjectSecurity:
             )
             return None
         
+        # SECURITY: Rate limiting check before password verification
+        if not self._check_rate_limit(user.user_id, ip_address):
+            self._log_security_event(
+                SecurityAction.SECURITY_VIOLATION,
+                user.user_id,
+                f"user:{user.user_id}",
+                success=False,
+                error_message="Rate limit exceeded",
+                ip_address=ip_address
+            )
+            return None
+        
         # Verify password
         if not self._verify_password(password, user.password_hash, user.salt):
             user.failed_login_attempts += 1
@@ -746,6 +758,65 @@ class MultiProjectSecurity:
         
         return session_token
     
+    def validate_session(self, session_token: str, ip_address: Optional[str] = None) -> Optional[str]:
+        """
+        Validate an active session and return user ID if valid.
+        
+        Args:
+            session_token: Session token to validate
+            ip_address: IP address for additional validation
+            
+        Returns:
+            User ID if session is valid, None otherwise
+        """
+        if session_token not in self.active_sessions:
+            return None
+        
+        session_data = self.active_sessions[session_token]
+        current_time = datetime.utcnow()
+        
+        # Check session timeout
+        last_activity = session_data.get("last_activity", session_data["created_at"])
+        if current_time - last_activity > timedelta(seconds=self.session_timeout):
+            # Session expired
+            self._cleanup_expired_session(session_token)
+            return None
+        
+        # SECURITY: Optional IP validation (can be disabled for mobile users)
+        if ip_address and session_data.get("ip_address"):
+            if session_data["ip_address"] != ip_address:
+                logger.warning(f"Session IP mismatch for user {session_data['user_id']}: expected {session_data['ip_address']}, got {ip_address}")
+                # For now, just log the warning rather than invalidating session
+                # This could be made configurable based on security requirements
+        
+        # Update last activity
+        session_data["last_activity"] = current_time
+        
+        return session_data["user_id"]
+    
+    def _cleanup_expired_session(self, session_token: str) -> None:
+        """Clean up an expired session"""
+        if session_token in self.active_sessions:
+            session_data = self.active_sessions[session_token]
+            user_id = session_data["user_id"]
+            
+            # Remove from user's active sessions
+            if user_id in self.users:
+                user = self.users[user_id]
+                if session_token in user.active_sessions:
+                    user.active_sessions.remove(session_token)
+            
+            # Remove from active sessions
+            del self.active_sessions[session_token]
+            
+            self._log_security_event(
+                SecurityAction.LOGOUT,
+                user_id,
+                f"session:{session_token}",
+                session_id=session_token,
+                additional_data={"reason": "session_timeout"}
+            )
+    
     def _should_lockout_user(self, user_id: str, ip_address: Optional[str] = None) -> bool:
         """Check if user should be locked out due to failed attempts"""
         # Check failed attempts in last 15 minutes
@@ -761,6 +832,37 @@ class MultiProjectSecurity:
                 return True
         
         return False
+    
+    def _check_rate_limit(self, user_id: str, ip_address: Optional[str] = None) -> bool:
+        """
+        Check if user/IP is within rate limits for authentication attempts.
+        
+        Args:
+            user_id: User ID to check
+            ip_address: IP address to check
+            
+        Returns:
+            True if within limits, False if rate limited
+        """
+        current_time = datetime.utcnow()
+        window_minutes = 5
+        max_attempts = 10
+        
+        # Check user-based rate limiting
+        if user_id in self.failed_login_tracker:
+            recent_attempts = [
+                attempt for attempt in self.failed_login_tracker[user_id]
+                if current_time - attempt < timedelta(minutes=window_minutes)
+            ]
+            
+            if len(recent_attempts) >= max_attempts:
+                logger.warning(f"Rate limit exceeded for user {user_id}: {len(recent_attempts)} attempts in {window_minutes} minutes")
+                return False
+        
+        # Additional IP-based rate limiting could be added here
+        # For now, rely on user-based limiting
+        
+        return True
     
     def _track_failed_login(self, user_id: str, ip_address: Optional[str] = None):
         """Track failed login attempt"""

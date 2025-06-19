@@ -6,7 +6,7 @@ This provides security boundaries to prevent agents from executing
 inappropriate or dangerous commands.
 """
 
-from typing import Dict, List, Set
+from typing import Dict, List, Set, Any
 from enum import Enum
 
 
@@ -286,6 +286,7 @@ def get_claude_tool_args(agent_type: AgentType) -> List[str]:
 def validate_agent_access(agent_type: AgentType, tool_name: str) -> bool:
     """
     Validate if an agent type has access to a specific tool.
+    Optimized for better performance with caching.
     
     Args:
         agent_type: Type of agent
@@ -294,33 +295,48 @@ def validate_agent_access(agent_type: AgentType, tool_name: str) -> bool:
     Returns:
         True if agent has access, False otherwise
     """
+    # Cache validation results for performance
+    cache_key = f"{agent_type.value}:{tool_name}"
+    if hasattr(validate_agent_access, '_cache'):
+        if cache_key in validate_agent_access._cache:
+            return validate_agent_access._cache[cache_key]
+    else:
+        validate_agent_access._cache = {}
+    
+    # Perform validation
     allowed = get_allowed_tools(agent_type)
     disallowed = get_disallowed_tools(agent_type)
     
-    # Check if explicitly disallowed
+    result = False
+    
+    # Check if explicitly disallowed (fastest check first)
     if tool_name in disallowed:
-        return False
-    
+        result = False
     # Check if explicitly allowed
-    if tool_name in allowed:
-        return True
-    
+    elif tool_name in allowed:
+        result = True
     # Check bash command patterns
-    if tool_name.startswith("Bash("):
+    elif tool_name.startswith("Bash("):
         cmd = tool_name[5:-1]  # Extract command from Bash(command)
         
         # Check if specific bash command is allowed
         for allowed_tool in allowed:
             if allowed_tool.startswith("Bash(") and cmd in allowed_tool:
-                return True
+                result = True
+                break
         
-        # Check if command is in restricted lists
-        all_restricted = RESTRICTED_COMMANDS + ELEVATED_COMMANDS + CODE_MANAGEMENT_COMMANDS
-        if any(restricted in cmd for restricted in all_restricted):
-            return False
-    
+        # Check if command is in restricted lists (only if not already allowed)
+        if not result:
+            all_restricted = RESTRICTED_COMMANDS + ELEVATED_COMMANDS + CODE_MANAGEMENT_COMMANDS
+            if any(restricted in cmd for restricted in all_restricted):
+                result = False
     # Default to not allowed if not explicitly permitted
-    return False
+    else:
+        result = False
+    
+    # Cache the result
+    validate_agent_access._cache[cache_key] = result
+    return result
 
 
 def get_security_summary(agent_type: AgentType) -> Dict[str, any]:
@@ -532,5 +548,82 @@ def validate_tdd_tool_access(agent_type: AgentType, tool_name: str, tdd_context:
             result["recommendations"].append(f"Agent should not be active in {current_phase} phase")
         else:
             result["recommendations"].append(f"Agent is properly configured for {current_phase} phase")
+    
+    return result
+
+
+def validate_agent_command_security(agent_type: AgentType, command: str) -> Dict[str, Any]:
+    """
+    Comprehensive security validation for agent commands.
+    
+    Args:
+        agent_type: Type of agent requesting command
+        command: Command to validate
+        
+    Returns:
+        Dictionary with validation result and security assessment
+    """
+    import re
+    
+    result = {
+        "allowed": False,
+        "agent_type": agent_type.value,
+        "command": command,
+        "security_violations": [],
+        "recommendations": [],
+        "risk_level": "low"
+    }
+    
+    # SECURITY: Basic command sanitization
+    if not isinstance(command, str) or len(command) > 500:
+        result["security_violations"].append("Invalid command format or length")
+        result["risk_level"] = "high"
+        return result
+    
+    # Check for dangerous patterns
+    dangerous_patterns = [
+        r'rm\s+-rf\s+/',           # Recursive force delete
+        r'sudo\s+',                # Privilege escalation
+        r'curl\s+.*\|\s*sh',       # Remote code execution
+        r'wget\s+.*\|\s*sh',       # Remote code execution
+        r'eval\s*\(',              # Code evaluation
+        r'exec\s*\(',              # Code execution
+        r'\.\./',                  # Path traversal
+        r'\$\(',                   # Command substitution
+        r'`',                      # Command substitution
+        r'&&\s*rm\s+',            # Chained dangerous commands
+        r'\|\s*rm\s+',            # Piped dangerous commands
+    ]
+    
+    for pattern in dangerous_patterns:
+        if re.search(pattern, command, re.IGNORECASE):
+            result["security_violations"].append(f"Dangerous pattern detected: {pattern}")
+            result["risk_level"] = "critical"
+    
+    # Apply agent-specific restrictions
+    base_access = validate_agent_access(agent_type, f"Bash({command})")
+    result["allowed"] = base_access and len(result["security_violations"]) == 0
+    
+    # Add agent-specific recommendations
+    if agent_type == AgentType.DESIGN:
+        if any(word in command.lower() for word in ['edit', 'write', 'modify', 'delete']):
+            result["recommendations"].append("Design agents should use read-only operations")
+    
+    elif agent_type == AgentType.QA:
+        if 'git push' in command.lower() or 'git commit' in command.lower():
+            result["recommendations"].append("QA agents should not commit or push changes")
+    
+    elif agent_type == AgentType.DATA:
+        if any(word in command.lower() for word in ['sudo', 'install', 'remove']):
+            result["recommendations"].append("Data agents should focus on analysis operations")
+    
+    # Set risk level based on violations
+    if result["security_violations"]:
+        if len(result["security_violations"]) > 2:
+            result["risk_level"] = "critical"
+        elif any("dangerous" in v.lower() for v in result["security_violations"]):
+            result["risk_level"] = "high"
+        else:
+            result["risk_level"] = "medium"
     
     return result

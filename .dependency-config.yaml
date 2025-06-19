@@ -36,6 +36,11 @@ claude_integration:
     test_creation: Create comprehensive unit tests following existing patterns
     test_update: Update tests to cover changes, maintain existing test style
     doc_update: Update documentation to reflect changes, keep examples current
+  # Environment variable overrides
+  env_overrides:
+    model: CLAUDE_MODEL
+    max_tokens: CLAUDE_MAX_TOKENS
+    enabled: CLAUDE_INTEGRATION_ENABLED
 rules:
   test_file_pattern: tests/unit/test_{module}.py
   doc_file_pattern: docs_src/api/{module}.md
