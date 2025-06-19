@@ -6,35 +6,78 @@
 /* Vercel-inspired Color Scheme - Single Theme */
 :root {
   /* Vercel's clean, high-contrast color palette */
-  --md-primary-fg-color: #000000;
-  --md-primary-fg-color--light: #0000001a;
-  --md-primary-fg-color--dark: #000000;
-  --md-accent-fg-color: #0070f3;
-  --md-accent-fg-color--transparent: #0070f31a;
+  --md-primary-fg-color: #000000 !important;
+  --md-primary-fg-color--light: #0000001a !important;
+  --md-primary-fg-color--dark: #000000 !important;
+  --md-accent-fg-color: #0070f3 !important;
+  --md-accent-fg-color--transparent: #0070f31a !important;
   
-  --md-default-bg-color: #ffffff;
-  --md-default-fg-color: #000000;
-  --md-default-fg-color--light: #666666;
-  --md-default-fg-color--lighter: #999999;
-  --md-default-fg-color--lightest: #eaeaea;
+  --md-default-bg-color: #ffffff !important;
+  --md-default-fg-color: #000000 !important;
+  --md-default-fg-color--light: #666666 !important;
+  --md-default-fg-color--lighter: #999999 !important;
+  --md-default-fg-color--lightest: #eaeaea !important;
   
-  --md-code-bg-color: #fafafa;
-  --md-code-fg-color: #000000;
-  --md-code-hl-color: #e6f7ff;
+  --md-code-bg-color: #fafafa !important;
+  --md-code-fg-color: #000000 !important;
+  --md-code-hl-color: #e6f7ff !important;
   
-  --md-admonition-bg-color: #fafafa;
-  --md-footer-bg-color: #fafafa;
-  --md-footer-bg-color--dark: #f0f0f0;
+  --md-admonition-bg-color: #fafafa !important;
+  --md-footer-bg-color: #fafafa !important;
+  --md-footer-bg-color--dark: #f0f0f0 !important;
   
   /* Transitions */
   --theme-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Force override Material theme defaults */
+[data-md-color-scheme="default"] {
+  --md-primary-fg-color: #000000 !important;
+  --md-accent-fg-color: #0070f3 !important;
+  --md-default-bg-color: #ffffff !important;
+  --md-default-fg-color: #000000 !important;
+}
+
+[data-md-color-scheme="slate"] {
+  --md-primary-fg-color: #000000 !important;
+  --md-accent-fg-color: #0070f3 !important;
+  --md-default-bg-color: #ffffff !important;
+  --md-default-fg-color: #000000 !important;
+}
+
 /* Vercel-inspired clean styling overrides */
 .md-header {
-  background: var(--md-default-bg-color);
-  color: var(--md-default-fg-color);
-  border-bottom: 1px solid var(--md-default-fg-color--lightest);
+  background: var(--md-default-bg-color) !important;
+  color: var(--md-default-fg-color) !important;
+  border-bottom: 1px solid var(--md-default-fg-color--lightest) !important;
+}
+
+/* Force override any Material theme purple/indigo elements */
+.md-tabs__link--active,
+.md-tabs__link:hover {
+  color: var(--md-accent-fg-color) !important;
+}
+
+.md-nav__link--active {
+  color: var(--md-accent-fg-color) !important;
+}
+
+.md-sidebar__scrollwrap::-webkit-scrollbar-thumb {
+  background-color: var(--md-default-fg-color--lighter) !important;
+}
+
+/* Override any Material theme primary color usage */
+.md-typeset a.md-button--primary,
+.md-typeset button.md-button--primary {
+  background-color: var(--md-primary-fg-color) !important;
+  border-color: var(--md-primary-fg-color) !important;
+  color: var(--md-default-bg-color) !important;
+}
+
+/* Override Material theme accent color usage */
+.md-typeset a,
+.md-typeset .md-button {
+  color: var(--md-accent-fg-color) !important;
 }
 
 .md-nav--primary .md-nav__title {
