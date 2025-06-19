@@ -64,16 +64,16 @@ theme:
   icon:
     edit: material/file-edit-outline
     view: material/file-eye-outline
-    repo: fontawesome/brands/github
+    repo: material/github
     logo: material/book-open-page-variant
-    previous: fontawesome/solid/angle-left
-    next: fontawesome/solid/angle-right
+    previous: material/chevron-left
+    next: material/chevron-right
     tag:
-      default: fontawesome/solid/tag
-      html: fontawesome/brands/html5
-      js: fontawesome/brands/js-square
-      css: fontawesome/brands/css3-alt
-      python: fontawesome/brands/python
+      default: material/tag
+      html: material/language-html5
+      js: material/language-javascript
+      css: material/language-css3
+      python: material/language-python
 
 extra:
   analytics:
@@ -112,16 +112,16 @@ extra:
         name: GitHub
         checked: true
   social:
-    - icon: fontawesome/brands/github
+    - icon: material/github
       link: https://github.com/jmontp/agent-workflow
       name: GitHub Repository
-    - icon: fontawesome/solid/book
+    - icon: material/book-open-page-variant
       link: https://jmontp.github.io/agent-workflow/
       name: Documentation Site
-    - icon: fontawesome/brands/discord
+    - icon: material/discord
       link: https://discord.gg/your-discord-server
       name: Discord Community
-    - icon: fontawesome/solid/heart
+    - icon: material/heart
       link: https://github.com/sponsors/jmontp
       name: Sponsor
   generator: false
