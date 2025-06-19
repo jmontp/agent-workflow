@@ -1,6 +1,7 @@
 /* ==========================================================================
    AI Agent TDD-Scrum Workflow Documentation Custom Styles
    Professional Default Material Design Theme with Accessibility Compliance
+   Enhanced with Interactive Color Scheme Support
    ========================================================================== */
 
 /* Enhanced Typography with Default Material Design Colors */
@@ -576,3 +577,27 @@ html {
   margin: 1rem 0;
   border-left: 4px solid;
 }
+
+/* ==========================================================================
+   Color Scheme Integration Notes
+   ========================================================================== */
+
+/* This file provides the base styling that works with all color schemes.
+   The color schemes are defined in color-schemes.css and applied via
+   data-theme attributes on the document root element.
+   
+   Color schemes available:
+   - github (default)    - Professional blue, clean
+   - gitlab             - Orange, warm and energetic  
+   - vercel             - Black/white, ultra-minimal
+   - linear             - Purple, modern productivity
+   - stripe             - Indigo, professional finance
+   - nord               - Steel blue, developer-friendly
+   - dracula            - Purple, vibrant dark theme
+   - solarized          - Balanced, academic cream
+   - material           - Google's Material Design
+   - sunset             - Coral gradient, creative
+   
+   Interactive theme selector is provided by theme-selector.js
+   which allows users to switch between themes with full accessibility support.
+*/

@@ -1,0 +1,67 @@
+# Configuration data for MkDocs macros
+project:
+  name: "AI Agent TDD-Scrum Workflow"
+  version: "1.0.0"
+  description: "Human-In-The-Loop orchestration framework for AI-assisted software development"
+  author: "AI Agent Workflow Team"
+  repository: "https://github.com/jmontp/agent-workflow"
+  documentation: "https://jmontp.github.io/agent-workflow/"
+
+features:
+  - name: "Multi-Project Orchestration"
+    description: "Manage multiple projects simultaneously with independent state machines"
+    status: "stable"
+  - name: "Discord Integration" 
+    description: "Complete Discord bot interface with slash commands and interactive UI"
+    status: "stable"
+  - name: "Agent Security System"
+    description: "Command access control and tool restrictions per agent type"
+    status: "stable"
+  - name: "HITL Approval Workflow"
+    description: "Human approval gates for strategic decisions"
+    status: "stable"
+  - name: "Interactive Theme Selector"
+    description: "10 professional color schemes with live switching"
+    status: "beta"
+  - name: "UI Portal"
+    description: "Modern web-based management portal"
+    status: "planned"
+
+tech_stack:
+  languages:
+    - Python
+    - JavaScript
+    - TypeScript
+    - CSS
+    - HTML
+  frameworks:
+    - Discord.py
+    - MkDocs Material
+    - React
+    - FastAPI
+  tools:
+    - Claude Code
+    - GitHub
+    - Pytest
+    - Mermaid
+
+links:
+  getting_started: "getting-started/quick-start.md"
+  architecture: "architecture/system-overview.md"
+  api_reference: "development/api-reference.md"
+  troubleshooting: "user-guide/troubleshooting.md"
+  contribute: "development/contributing.md"
+
+badges:
+  build:
+    url: "https://github.com/jmontp/agent-workflow/actions/workflows/ci.yml/badge.svg"
+    alt: "Build Status"
+  coverage: 
+    url: "https://codecov.io/gh/jmontp/agent-workflow/branch/main/graph/badge.svg"
+    alt: "Code Coverage"
+  license:
+    url: "https://img.shields.io/github/license/jmontp/agent-workflow"
+    alt: "License"
+  version:
+    url: "https://img.shields.io/github/v/release/jmontp/agent-workflow"
+    alt: "Version"
