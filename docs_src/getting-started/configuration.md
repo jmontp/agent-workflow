@@ -192,10 +192,10 @@ Test your configuration:
 python -c "import yaml; yaml.safe_load(open('config.yml'))"
 
 # Test Discord connection
-python scripts/test-discord.py
+python tools/compliance/monitor_compliance.py --test-discord
 
 # Test AI integration
-python scripts/test-agents.py
+python tools/coverage/test_runner.py
 ```
 
 ## TDD Configuration
@@ -469,7 +469,7 @@ print('TDD state machine initialized successfully')
 "
 
 # Validate TDD directory structure
-python scripts/validate_tdd_config.py
+python tools/coverage/validate_tdd.py
 
 # Test TDD integration with main system
 python scripts/test_tdd_integration.py

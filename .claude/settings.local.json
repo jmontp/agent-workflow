@@ -17,7 +17,11 @@
       "Bash(coverage html:*)",
       "Bash(PYTHONPATH=/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/lib python3 -m coverage run --source=token_calculator -m pytest tests/unit/test_token_calculator.py -v)",
       "Bash(PYTHONPATH=/mnt/c/Users/jmontp/Documents/workspace/agent-workflow python3 -m pytest tests/unit/test_context_manager.py tests/unit/test_context_manager_coverage.py --cov=lib/context_manager --cov-report=term-missing -v)",
-      "Bash(PYTHONPATH=/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/lib python3 -m coverage report -m)"
+      "Bash(PYTHONPATH=/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/lib python3 -m coverage report -m)",
+      "Bash(gh run view:*)",
+      "Bash(gh workflow run:*)",
+      "Bash(gh run list:*)",
+      "Bash(gh run watch:*)"
     ],
     "deny": []
   }

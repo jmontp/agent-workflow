@@ -1,4 +1,4 @@
-# Python
+# Python Build & Distribution
 __pycache__/
 *.py[cod]
 *$py.class
@@ -16,7 +16,7 @@ lib/python*/site-packages/
 *.egg
 MANIFEST
 
-# Virtual environments
+# Virtual Environments
 .env
 .venv
 env/
@@ -24,25 +24,29 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+*_env/
+.cache/
 
-# Testing
+# Testing & Coverage
 .pytest_cache/
 .coverage
 htmlcov/
+htmlcov*/
 .tox/
 .coverage.*
 coverage.xml
+coverage.json
 *.cover
 .hypothesis/
 
-# IDE
+# IDE & Editors
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
 
-# OS
+# Operating System
 .DS_Store
 .DS_Store?
 ._*
@@ -51,17 +55,27 @@ coverage.xml
 ehthumbs.db
 Thumbs.db
 
-# Project specific
+# Project Specific
 .orch-state/
 *.log
 config/projects.yaml
 config/secrets.yaml
 
-# Temporary files
+# Documentation Build Output
+site/
+
+# Temporary & Backup Files
 tmp/
 temp/
 *.tmp
 *.bak
+*.backup
 
-# MkDocs build output
-site/
+# Audit & Report Files
+*_REPORT.md
+*_SUMMARY.md
+*_ANALYSIS.md
+
+# Demo & Test HTML Files
+*-demo.html
+test-*.html

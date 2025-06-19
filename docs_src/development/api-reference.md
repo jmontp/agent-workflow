@@ -2407,13 +2407,13 @@ This documentation can be regenerated using:
 
 ```bash
 # Generate API docs from code
-python scripts/generate_api_docs.py
+python tools/documentation/generate_api_docs.py
 
 # Include docstrings and type hints
-python scripts/generate_api_docs.py --include-private --format=markdown
+python tools/documentation/generate_api_docs.py --include-private --format=markdown
 
 # Generate OpenAPI spec
-python scripts/generate_api_docs.py --format=openapi --output=api-spec.json
+python tools/documentation/generate_api_docs.py --format=openapi --output=api-spec.json
 ```
 
 For the latest API updates, always refer to the source code docstrings which are the source of truth.
