@@ -97,8 +97,18 @@ python tools/compliance/monitor_compliance.py
 # Generate API documentation
 python tools/documentation/generate_api_docs.py
 
-# Run state visualization server
-python tools/visualizer/app.py
+# Start orchestrator (CLI only, no web interface)
+aw start
+
+# Start web visualization interface
+aw web                               # Web interface at http://localhost:5000
+aw web --port 8080                   # Custom port
+aw web --daemon                      # Run as background daemon
+aw web-status                        # Check web interface status
+aw web-stop                          # Stop web interface
+
+# Alternative: Run visualization server directly  
+python3 tools/visualizer/app.py     # Direct execution
 
 # Build documentation
 mkdocs serve                    # Local development server

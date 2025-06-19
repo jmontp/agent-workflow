@@ -19,8 +19,8 @@ from flask import Flask, render_template, jsonify, request
 from flask_socketio import SocketIO, emit
 import websockets
 
-# Add lib directory to path
-lib_path = Path(__file__).parent.parent / "lib"
+# Add lib directory to path  
+lib_path = Path(__file__).parent.parent.parent / "lib"
 sys.path.insert(0, str(lib_path))
 
 from state_broadcaster import broadcaster

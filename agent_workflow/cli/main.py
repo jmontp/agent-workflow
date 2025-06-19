@@ -33,6 +33,7 @@ try:
     from agent_workflow.cli.orchestrator import start_command, stop_command, status_command
     from agent_workflow.cli.info import version_command, health_command
     from agent_workflow.cli.migrate import migrate_command
+    from agent_workflow.cli.web import web_command, web_stop_command, web_status_command
 except ImportError as e:
     # Graceful fallback if command modules aren't implemented yet
     init_command = None
@@ -47,6 +48,9 @@ except ImportError as e:
     version_command = None
     health_command = None
     migrate_command = None
+    web_command = None
+    web_stop_command = None
+    web_status_command = None
 
 
 @click.group(name="agent-orch", invoke_without_command=True)
@@ -86,6 +90,7 @@ def cli(ctx, version, verbose, config_dir, no_banner):
       projects           Manage registered projects
       health             System health check and diagnostics
       migrate            Migrate from git-clone installation
+      web                Start web visualization interface
     
     Visit https://agent-workflow.readthedocs.io for comprehensive documentation.
     """
@@ -379,6 +384,56 @@ def health(ctx, check_all, fix_issues, export_report, project):
                   project=project)
     else:
         handle_cli_error("health command not yet implemented")
+
+
+# ============================================================================
+# Web Interface Commands
+# ============================================================================
+
+@cli.command()
+@click.option("--port", type=int, default=5000, help="Web interface port")
+@click.option("--host", default="localhost", help="Host to bind to")
+@click.option("--daemon", is_flag=True, help="Run as background daemon")
+@click.option("--debug", is_flag=True, help="Enable debug mode")
+@click.option("--no-browser", is_flag=True, help="Don't open browser automatically")
+@click.option("--log-level", type=click.Choice(["DEBUG", "INFO", "WARN", "ERROR"]),
+              default="INFO", help="Set logging level")
+@click.pass_context
+def web(ctx, port, host, daemon, debug, no_browser, log_level):
+    """Start the web visualization interface."""
+    if web_command:
+        ctx.invoke(web_command,
+                  port=port,
+                  host=host,
+                  daemon=daemon,
+                  debug=debug,
+                  no_browser=no_browser,
+                  log_level=log_level)
+    else:
+        handle_cli_error("web command not yet implemented")
+
+
+@cli.command("web-stop")
+@click.option("--force", is_flag=True, help="Force stop without graceful shutdown")
+@click.pass_context
+def web_stop(ctx, force):
+    """Stop the web interface."""
+    if web_stop_command:
+        ctx.invoke(web_stop_command, force=force)
+    else:
+        handle_cli_error("web-stop command not yet implemented")
+
+
+@cli.command("web-status")
+@click.option("--verbose", is_flag=True, help="Show detailed status information")
+@click.option("--json", "output_json", is_flag=True, help="Output in JSON format")
+@click.pass_context
+def web_status(ctx, verbose, output_json):
+    """Display web interface status."""
+    if web_status_command:
+        ctx.invoke(web_status_command, verbose=verbose, output_json=output_json)
+    else:
+        handle_cli_error("web-status command not yet implemented")
 
 
 # ============================================================================
