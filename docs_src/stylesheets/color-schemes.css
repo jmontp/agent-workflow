@@ -1,171 +1,11 @@
 /* ==========================================================================
-   AI Agent TDD-Scrum Workflow - 10 Professional Color Schemes
-   Interactive Theme Selector for MkDocs Material
+   AI Agent TDD-Scrum Workflow - Vercel-Inspired Single Theme
+   Ultra-clean, modern, high-contrast design
    ========================================================================== */
 
-/* Theme Storage and Root Variables */
+/* Vercel-inspired Color Scheme - Single Theme */
 :root {
-  --theme-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Theme Selector Interface */
-.theme-selector {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 9999;
-  background: var(--md-default-bg-color, #ffffff);
-  border: 2px solid var(--md-primary-fg-color, #0969da);
-  border-radius: 12px;
-  padding: 8px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(10px);
-  transition: var(--theme-transition);
-  min-width: 120px;
-}
-
-.theme-selector-toggle {
-  background: var(--md-primary-fg-color, #0969da);
-  color: var(--md-primary-bg-color, #ffffff);
-  border: none;
-  border-radius: 8px;
-  padding: 10px 16px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 600;
-  transition: var(--theme-transition);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  width: 100%;
-  justify-content: center;
-}
-
-.theme-selector-toggle:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-}
-
-.theme-selector-dropdown {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  background: var(--md-default-bg-color, #ffffff);
-  border: 1px solid var(--md-default-fg-color--lighter, #cccccc);
-  border-radius: 8px;
-  padding: 8px;
-  margin-top: 8px;
-  min-width: 220px;
-  max-width: 280px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-10px);
-  transition: var(--theme-transition);
-}
-
-.theme-selector-dropdown.active {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
-
-.theme-option {
-  display: flex;
-  align-items: center;
-  padding: 10px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: var(--theme-transition);
-  border: 2px solid transparent;
-  margin-bottom: 4px;
-}
-
-.theme-option:hover {
-  background: var(--md-default-fg-color--lightest, #f0f0f0);
-}
-
-.theme-option.active {
-  border-color: var(--md-primary-fg-color, #0969da);
-  background: var(--md-primary-fg-color--light, #e6f2ff);
-}
-
-.theme-preview {
-  display: flex;
-  gap: 3px;
-  margin-right: 10px;
-}
-
-.theme-preview-color {
-  width: 16px;
-  height: 16px;
-  border-radius: 3px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-.theme-name {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--md-default-fg-color, #333333);
-}
-
-/* ==========================================================================
-   THEME 1: GitHub Professional (Default)
-   Clean, professional, developer-focused
-   ========================================================================== */
-[data-theme="github"] {
-  --md-primary-fg-color: #0969da;
-  --md-primary-fg-color--light: #0969da1a;
-  --md-primary-fg-color--dark: #0550ae;
-  --md-accent-fg-color: #0969da;
-  --md-accent-fg-color--transparent: #0969da1a;
-  
-  --md-default-bg-color: #ffffff;
-  --md-default-fg-color: #1f2328;
-  --md-default-fg-color--light: #656d76;
-  --md-default-fg-color--lighter: #afb8c1;
-  --md-default-fg-color--lightest: #d1d9e0;
-  
-  --md-code-bg-color: #f6f8fa;
-  --md-code-fg-color: #1f2328;
-  --md-code-hl-color: #fff8c5;
-  
-  --md-admonition-bg-color: #f6f8fa;
-  --md-footer-bg-color: #f6f8fa;
-  --md-footer-bg-color--dark: #eaeef2;
-}
-
-/* ==========================================================================
-   THEME 2: GitLab Orange
-   Warm, energetic, collaboration-focused
-   ========================================================================== */
-[data-theme="gitlab"] {
-  --md-primary-fg-color: #fc6d26;
-  --md-primary-fg-color--light: #fc6d261a;
-  --md-primary-fg-color--dark: #e24329;
-  --md-accent-fg-color: #fca326;
-  --md-accent-fg-color--transparent: #fca3261a;
-  
-  --md-default-bg-color: #ffffff;
-  --md-default-fg-color: #303030;
-  --md-default-fg-color--light: #666666;
-  --md-default-fg-color--lighter: #999999;
-  --md-default-fg-color--lightest: #cccccc;
-  
-  --md-code-bg-color: #fafafa;
-  --md-code-fg-color: #303030;
-  --md-code-hl-color: #fff3e0;
-  
-  --md-admonition-bg-color: #fafafa;
-  --md-footer-bg-color: #fafafa;
-  --md-footer-bg-color--dark: #f5f5f5;
-}
-
-/* ==========================================================================
-   THEME 3: Vercel Minimalist
-   Ultra-clean, modern, high-contrast
-   ========================================================================== */
-[data-theme="vercel"] {
+  /* Vercel's clean, high-contrast color palette */
   --md-primary-fg-color: #000000;
   --md-primary-fg-color--light: #0000001a;
   --md-primary-fg-color--dark: #000000;
@@ -185,286 +25,166 @@
   --md-admonition-bg-color: #fafafa;
   --md-footer-bg-color: #fafafa;
   --md-footer-bg-color--dark: #f0f0f0;
+  
+  /* Transitions */
+  --theme-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* ==========================================================================
-   THEME 4: Linear Purple
-   Modern, sophisticated, productivity-focused
-   ========================================================================== */
-[data-theme="linear"] {
-  --md-primary-fg-color: #5e6ad2;
-  --md-primary-fg-color--light: #5e6ad21a;
-  --md-primary-fg-color--dark: #4c63d2;
-  --md-accent-fg-color: #a855f7;
-  --md-accent-fg-color--transparent: #a855f71a;
-  
-  --md-default-bg-color: #ffffff;
-  --md-default-fg-color: #0f0f23;
-  --md-default-fg-color--light: #6b7280;
-  --md-default-fg-color--lighter: #9ca3af;
-  --md-default-fg-color--lightest: #e5e7eb;
-  
-  --md-code-bg-color: #f8fafc;
-  --md-code-fg-color: #0f0f23;
-  --md-code-hl-color: #f3f4f6;
-  
-  --md-admonition-bg-color: #f8fafc;
-  --md-footer-bg-color: #f8fafc;
-  --md-footer-bg-color--dark: #f1f5f9;
+/* Vercel-inspired clean styling overrides */
+.md-header {
+  background: var(--md-default-bg-color);
+  color: var(--md-default-fg-color);
+  border-bottom: 1px solid var(--md-default-fg-color--lightest);
 }
 
-/* ==========================================================================
-   THEME 5: Stripe Blue
-   Professional, trustworthy, financial-grade
-   ========================================================================== */
-[data-theme="stripe"] {
-  --md-primary-fg-color: #635bff;
-  --md-primary-fg-color--light: #635bff1a;
-  --md-primary-fg-color--dark: #4f46e5;
-  --md-accent-fg-color: #00d4aa;
-  --md-accent-fg-color--transparent: #00d4aa1a;
-  
-  --md-default-bg-color: #ffffff;
-  --md-default-fg-color: #0a2540;
-  --md-default-fg-color--light: #425466;
-  --md-default-fg-color--lighter: #7a8591;
-  --md-default-fg-color--lightest: #c7d2de;
-  
-  --md-code-bg-color: #f7f9fc;
-  --md-code-fg-color: #0a2540;
-  --md-code-hl-color: #e6f7ff;
-  
-  --md-admonition-bg-color: #f7f9fc;
-  --md-footer-bg-color: #f7f9fc;
-  --md-footer-bg-color--dark: #eef4f8;
+.md-nav--primary .md-nav__title {
+  background: var(--md-default-bg-color);
+  color: var(--md-default-fg-color);
 }
 
-/* ==========================================================================
-   THEME 6: Nord Arctic
-   Cool, calm, developer-friendly
-   ========================================================================== */
-[data-theme="nord"] {
-  --md-primary-fg-color: #5e81ac;
-  --md-primary-fg-color--light: #5e81ac1a;
-  --md-primary-fg-color--dark: #4c566a;
-  --md-accent-fg-color: #88c0d0;
-  --md-accent-fg-color--transparent: #88c0d01a;
-  
-  --md-default-bg-color: #eceff4;
-  --md-default-fg-color: #2e3440;
-  --md-default-fg-color--light: #4c566a;
-  --md-default-fg-color--lighter: #677489;
-  --md-default-fg-color--lightest: #8fbcbb;
-  
-  --md-code-bg-color: #e5e9f0;
-  --md-code-fg-color: #2e3440;
-  --md-code-hl-color: #d8dee9;
-  
-  --md-admonition-bg-color: #e5e9f0;
-  --md-footer-bg-color: #e5e9f0;
-  --md-footer-bg-color--dark: #d8dee9;
+.md-typeset h1, 
+.md-typeset h2, 
+.md-typeset h3, 
+.md-typeset h4, 
+.md-typeset h5, 
+.md-typeset h6 {
+  color: var(--md-default-fg-color);
+  font-weight: 600;
 }
 
-/* ==========================================================================
-   THEME 7: Dracula Dark
-   Vibrant, dark, code-focused
-   ========================================================================== */
-[data-theme="dracula"] {
-  --md-primary-fg-color: #bd93f9;
-  --md-primary-fg-color--light: #bd93f91a;
-  --md-primary-fg-color--dark: #9580ff;
-  --md-accent-fg-color: #ff79c6;
-  --md-accent-fg-color--transparent: #ff79c61a;
-  
-  --md-default-bg-color: #282a36;
-  --md-default-fg-color: #f8f8f2;
-  --md-default-fg-color--light: #6272a4;
-  --md-default-fg-color--lighter: #44475a;
-  --md-default-fg-color--lightest: #44475a;
-  
-  --md-code-bg-color: #44475a;
-  --md-code-fg-color: #f8f8f2;
-  --md-code-hl-color: #44475a;
-  
-  --md-admonition-bg-color: #44475a;
-  --md-footer-bg-color: #21222c;
-  --md-footer-bg-color--dark: #191a21;
+.md-typeset a {
+  color: var(--md-accent-fg-color);
+  text-decoration: none;
 }
 
-/* ==========================================================================
-   THEME 8: Solarized Light
-   Balanced, easy on eyes, academic
-   ========================================================================== */
-[data-theme="solarized"] {
-  --md-primary-fg-color: #268bd2;
-  --md-primary-fg-color--light: #268bd21a;
-  --md-primary-fg-color--dark: #2176c7;
-  --md-accent-fg-color: #859900;
-  --md-accent-fg-color--transparent: #8599001a;
-  
-  --md-default-bg-color: #fdf6e3;
-  --md-default-fg-color: #657b83;
-  --md-default-fg-color--light: #839496;
-  --md-default-fg-color--lighter: #93a1a1;
-  --md-default-fg-color--lightest: #eee8d5;
-  
-  --md-code-bg-color: #eee8d5;
-  --md-code-fg-color: #657b83;
-  --md-code-hl-color: #fdf6e3;
-  
-  --md-admonition-bg-color: #eee8d5;
-  --md-footer-bg-color: #eee8d5;
-  --md-footer-bg-color--dark: #e5dcc9;
+.md-typeset a:hover {
+  text-decoration: underline;
 }
 
-/* ==========================================================================
-   THEME 9: Material Design Classic
-   Google's Material Design, consistent, familiar
-   ========================================================================== */
-[data-theme="material"] {
-  --md-primary-fg-color: #3f51b5;
-  --md-primary-fg-color--light: #3f51b51a;
-  --md-primary-fg-color--dark: #303f9f;
-  --md-accent-fg-color: #ff4081;
-  --md-accent-fg-color--transparent: #ff40811a;
-  
-  --md-default-bg-color: #ffffff;
-  --md-default-fg-color: #212121;
-  --md-default-fg-color--light: #424242;
-  --md-default-fg-color--lighter: #757575;
-  --md-default-fg-color--lightest: #e0e0e0;
-  
-  --md-code-bg-color: #f5f5f5;
-  --md-code-fg-color: #212121;
-  --md-code-hl-color: #fff3e0;
-  
-  --md-admonition-bg-color: #f5f5f5;
-  --md-footer-bg-color: #f5f5f5;
-  --md-footer-bg-color--dark: #eeeeee;
+/* Button styling */
+.md-button {
+  background: var(--md-primary-fg-color);
+  color: var(--md-default-bg-color);
+  border: 1px solid var(--md-primary-fg-color);
+  border-radius: 6px;
+  font-weight: 500;
+  transition: var(--theme-transition);
 }
 
-/* ==========================================================================
-   THEME 10: Gradient Sunset (Custom)
-   Vibrant, modern, eye-catching
-   ========================================================================== */
-[data-theme="sunset"] {
-  --md-primary-fg-color: #ff6b6b;
-  --md-primary-fg-color--light: #ff6b6b1a;
-  --md-primary-fg-color--dark: #ee5a52;
-  --md-accent-fg-color: #4ecdc4;
-  --md-accent-fg-color--transparent: #4ecdc41a;
-  
-  --md-default-bg-color: #ffffff;
-  --md-default-fg-color: #2c3e50;
-  --md-default-fg-color--light: #34495e;
-  --md-default-fg-color--lighter: #7f8c8d;
-  --md-default-fg-color--lightest: #ecf0f1;
-  
-  --md-code-bg-color: #f8f9fa;
-  --md-code-fg-color: #2c3e50;
-  --md-code-hl-color: #fef7f0;
-  
-  --md-admonition-bg-color: #f8f9fa;
-  --md-footer-bg-color: #fff5f5;
-  --md-footer-bg-color--dark: #fee;
+.md-button:hover {
+  background: var(--md-default-bg-color);
+  color: var(--md-primary-fg-color);
 }
 
-/* Gradient background for sunset theme */
-[data-theme="sunset"] .md-header {
-  background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 100%);
+.md-button--primary {
+  background: var(--md-primary-fg-color);
+  color: var(--md-default-bg-color);
 }
 
-[data-theme="sunset"] .md-nav--primary .md-nav__title {
-  background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 100%);
+.md-button--primary:hover {
+  background: var(--md-default-fg-color--light);
 }
 
-/* Theme-specific enhancements */
-[data-theme="dracula"] .md-typeset .highlight {
-  background: #44475a;
-  color: #f8f8f2;
+/* Additional Vercel-inspired component styling */
+.md-typeset .admonition {
+  border: 1px solid var(--md-default-fg-color--lightest);
+  background: var(--md-admonition-bg-color);
+  border-radius: 6px;
 }
 
-[data-theme="nord"] .md-typeset .highlight {
-  background: #d8dee9;
-  color: #2e3440;
+.md-typeset code {
+  background: var(--md-code-bg-color);
+  color: var(--md-code-fg-color);
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+  font-size: 0.85em;
+  border: 1px solid var(--md-default-fg-color--lightest);
 }
 
-[data-theme="solarized"] .md-typeset .highlight {
-  background: #eee8d5;
-  color: #657b83;
+.md-typeset pre {
+  background: var(--md-code-bg-color);
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 6px;
 }
 
-/* Smooth transitions for all theme changes */
+.md-typeset table {
+  border-collapse: collapse;
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.md-typeset table th,
+.md-typeset table td {
+  border: 1px solid var(--md-default-fg-color--lightest);
+  padding: 0.75em 1em;
+}
+
+.md-typeset table th {
+  background: var(--md-code-bg-color);
+  font-weight: 600;
+  color: var(--md-default-fg-color);
+}
+
+/* Clean navigation styling */
+.md-nav__item .md-nav__link {
+  color: var(--md-default-fg-color--light);
+  font-weight: 400;
+}
+
+.md-nav__item .md-nav__link:hover,
+.md-nav__item .md-nav__link--active {
+  color: var(--md-default-fg-color);
+  font-weight: 500;
+}
+
+/* Footer styling */
+.md-footer {
+  background: var(--md-footer-bg-color);
+  color: var(--md-default-fg-color--light);
+  border-top: 1px solid var(--md-default-fg-color--lightest);
+}
+
+/* Search styling */
+.md-search__input {
+  background: var(--md-default-bg-color);
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 6px;
+}
+
+.md-search__input:focus {
+  border-color: var(--md-accent-fg-color);
+  box-shadow: 0 0 0 2px var(--md-accent-fg-color--transparent);
+}
+
+/* Mermaid diagram styling */
+.mermaid {
+  background: transparent;
+}
+
+/* Smooth transitions for all elements */
 .md-header,
 .md-nav,
 .md-main,
 .md-footer,
 .md-typeset .highlight,
 .md-typeset .admonition,
-.md-typeset table {
+.md-typeset table,
+.md-button {
   transition: var(--theme-transition);
-}
-
-/* Mobile optimizations for theme selector */
-@media screen and (max-width: 76.1875em) {
-  .theme-selector {
-    position: relative;
-    top: auto;
-    right: auto;
-    margin: 1rem;
-    float: right;
-  }
-  
-  .theme-selector-dropdown {
-    position: fixed;
-    top: 60px;
-    right: 20px;
-    left: 20px;
-    width: auto;
-  }
-}
-
-@media screen and (max-width: 30em) {
-  .theme-selector {
-    width: 100%;
-    margin: 0.5rem;
-    float: none;
-  }
-  
-  .theme-selector-dropdown {
-    position: relative;
-    top: auto;
-    right: auto;
-    left: auto;
-    margin-top: 8px;
-  }
-  
-  .theme-option {
-    padding: 12px;
-  }
-  
-  .theme-preview-color {
-    width: 20px;
-    height: 20px;
-  }
-  
-  .theme-name {
-    font-size: 14px;
-  }
 }
 
 /* High contrast mode support */
 @media (prefers-contrast: high) {
-  .theme-selector {
-    border: 2px solid;
+  :root {
+    --md-default-fg-color--lightest: #cccccc;
   }
   
-  .theme-option {
-    border: 1px solid;
-  }
-  
-  .theme-preview-color {
-    border: 2px solid;
+  .md-typeset table,
+  .md-typeset code,
+  .md-typeset pre,
+  .md-typeset .admonition {
+    border-width: 2px;
   }
 }
 
@@ -474,25 +194,16 @@
     --theme-transition: none;
   }
   
-  .theme-selector-toggle:hover {
+  .md-button:hover {
     transform: none;
   }
-  
-  .theme-selector-dropdown {
-    transition: opacity 0.1s ease;
-  }
 }
 
-/* Focus management for accessibility */
-.theme-selector-toggle:focus,
-.theme-option:focus {
-  outline: 2px solid var(--md-accent-fg-color);
-  outline-offset: 2px;
-}
-
-/* Print styles - hide theme selector */
+/* Print styles */
 @media print {
-  .theme-selector {
-    display: none;
+  :root {
+    --md-primary-fg-color: #000000;
+    --md-default-bg-color: #ffffff;
+    --md-default-fg-color: #000000;
   }
 }

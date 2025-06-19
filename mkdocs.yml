@@ -152,7 +152,6 @@ extra_javascript:
   - js/mermaid-zoom.js
   - js/universal-search.js
   - js/enhanced-navigation.js
-  - js/theme-selector.js
 
 plugins:
   - search:
