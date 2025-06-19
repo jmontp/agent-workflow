@@ -11,9 +11,6 @@ docs_dir: docs_src
 
 theme:
   name: material
-  custom_dir: overrides
-  logo: assets/images/favicon.png
-  favicon: assets/images/favicon.png
   font:
     text: Inter
     code: JetBrains Mono
@@ -118,7 +115,7 @@ extra:
     - icon: material/book-open-page-variant
       link: https://jmontp.github.io/agent-workflow/
       name: Documentation Site
-    - icon: material/discord
+    - icon: material/chat
       link: https://discord.gg/your-discord-server
       name: Discord Community
     - icon: material/heart
@@ -192,11 +189,6 @@ plugins:
         - custom-skip-class-name
       auto_caption: false
       caption_position: bottom
-  - social:
-      cards: true
-      cards_layout_options:
-        background_color: "#1976d2"
-        color: "#ffffff"
 
 markdown_extensions:
   - abbr
