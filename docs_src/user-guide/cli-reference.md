@@ -1,905 +1,676 @@
-# CLI Reference Manual
+# 🎛️ CLI Command Palette
 
-Complete command-line interface reference for the AI Agent TDD-Scrum workflow system, covering all scripts, tools, and operational commands.
+> **Your interactive command center for the AI Agent TDD-Scrum workflow system**
 
-## Overview
+<div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; border-radius: 10px; color: white; margin: 20px 0;">
+  <h2 style="margin: 0; color: white;">⚡ Command Palette Design</h2>
+  <p style="margin: 10px 0 0 0;">Find, learn, and execute commands with progressive disclosure</p>
+</div>
 
-The system provides several CLI entry points for different operational modes, with seamless integration to a modern web-based UI portal:
+## 🔍 Command Search & Discovery
 
-- **`agent-orch ui`** - Holistic web portal with CLI integration
-- **`scripts/orchestrator.py`** - Single-project orchestrator
-- **`scripts/multi_project_orchestrator.py`** - Multi-project management
-- **`lib/discord_bot.py`** - Discord bot interface
-- **`visualizer/app.py`** - Real-time state visualizer
-- **Management scripts** - Various operational tools
-
-### UI Portal Integration
-
-The CLI now provides holistic UI portal capabilities through the `agent-orch ui` command family, offering:
-
-- **Cross-Platform Access**: Web portal accessible from any device with a browser
-- **Bidirectional Sync**: CLI commands reflect instantly in UI, UI actions update CLI state
-- **Multiple Launch Modes**: Interactive, headless, development, and production modes
-- **Mobile Optimization**: Responsive design with PWA capabilities and QR code access
-- **Team Collaboration**: Multi-user support with real-time synchronization
-- **Security Integration**: Session-based authentication with role-based access control
-
-## Core CLI Commands
-
-### UI Portal Commands
-
-#### `agent-orch ui`
-Holistic web portal for comprehensive project management with CLI integration.
-
+### Quick Search Box
 ```bash
-agent-orch ui [OPTIONS]
+# Type to search commands, descriptions, and examples
+[🔍 Search commands...] ⌨️ agent-orch init  ↩️
 ```
 
-**Options:**
+**Popular searches:**
+- `init` - Initialize environment
+- `start discord` - Start with Discord bot
+- `register project` - Add new project
+- `status` - Check system status
+
+---
+
+## ⭐ Most Used Commands
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; margin: 20px 0;">
+
+### 🚀 **Quick Start**
 ```bash
---port PORT                 Custom port for UI server [default: 8080]
---host HOST                 Host to bind server [default: localhost]
---mode MODE                 Launch specific UI mode [dashboard|chat|config|monitor]
---project PROJECT           Open specific project view directly
---headless                  Run background server without opening browser
---theme THEME               Set UI theme [light|dark|auto]
---dev-mode                  Enable hot-reload and development features
---production                Enable production optimizations and security
---team-mode                 Enable multi-user collaboration features
---mobile-optimized          Optimize for mobile device access
---qr-code                   Display QR code for mobile access
---browser BROWSER           Specify browser [chrome|firefox|safari|edge]
---network-detect            Auto-detect best network interface
---ssl-cert FILE             SSL certificate for HTTPS (production)
---ssl-key FILE              SSL private key for HTTPS (production)
+agent-orch init --interactive
+```
+<details>
+<summary>📖 Interactive setup wizard</summary>
+
+Creates configuration, sets up AI provider, and guides through Discord setup.
+
+**Copy & Paste Ready:**
+```bash
+# Full first-time setup
+agent-orch init --interactive
+agent-orch setup-api --interactive  
+agent-orch setup-discord --interactive
+```
+</details>
+
+### 🎯 **Start Working**
+```bash
+agent-orch start --discord
+```
+<details>
+<summary>📖 Launch orchestration with Discord</summary>
+
+Starts the orchestrator with Discord bot integration for HITL commands.
+
+**Copy & Paste Ready:**
+```bash
+# Start with Discord integration
+agent-orch start --discord
+
+# Background daemon mode
+agent-orch start --daemon --discord
+```
+</details>
+
+### 📁 **Add Project**
+```bash
+agent-orch register-project .
+```
+<details>
+<summary>📖 Register current directory</summary>
+
+Adds current directory as a managed project with auto-detection.
+
+**Copy & Paste Ready:**
+```bash
+# Register current directory
+agent-orch register-project .
+
+# Register with validation and Discord channel
+agent-orch register-project . --validate --create-channel
+```
+</details>
+
+### 📊 **Check Status**
+```bash
+agent-orch status --brief
+```
+<details>
+<summary>📖 System health overview</summary>
+
+Quick status check for orchestrator and all registered projects.
+
+**Copy & Paste Ready:**
+```bash
+# Quick status
+agent-orch status --brief
+
+# Watch live updates
+agent-orch status --watch
+```
+</details>
+
+</div>
+
+---
+
+## 📋 Table of Contents
+
+- [Command Palette Navigation](#command-palette-navigation)
+- [Core Command Categories](#core-command-categories)
+- [Discord Bot Commands](#discord-bot-commands)
+- [Interactive Examples](#interactive-examples)
+- [Shell Autocomplete](#shell-autocomplete)
+- [Advanced Usage Patterns](#advanced-usage-patterns)
+- [Troubleshooting Guide](#troubleshooting-guide)
+
+## 🎛️ Command Palette Navigation
+
+### Interactive Command Discovery
+```bash
+# Access command palette mode
+agent-orch --help-interactive
+
+# Search by category
+agent-orch search "project management"
+
+# Get command suggestions
+agent-orch suggest setup
 ```
 
-**Examples:**
+### Quick Command Launcher
+<div style="background: #f8f9fa; padding: 15px; border-radius: 8px; border-left: 4px solid #007bff;">
+
+**Type to filter commands:**
+```
+> setup
+  ✅ setup-api        Configure AI provider integration
+  ✅ setup-discord    Configure Discord bot integration
+  
+> project
+  ✅ register-project Register project for orchestration
+  ✅ projects list    Show all registered projects
+  
+> start
+  ✅ start --discord  Start orchestration with Discord
+  ✅ status --brief   Quick system status check
+```
+</div>
+
+---
+
+## 📚 Core Command Categories
+
+### 🏗️ **Setup & Initialization**
+<details>
+<summary><strong>Essential first-time setup commands</strong></summary>
+
+| Command | Purpose | Interactive |
+|---------|---------|-------------|
+| `init` | Initialize global environment | ✅ |
+| `setup-api` | Configure AI provider | ✅ |
+| `setup-discord` | Configure Discord bot | ✅ |
+| `configure` | Manage all settings | ✅ |
+
+**Quick Setup Flow:**
 ```bash
-# Basic UI portal launch
-agent-orch ui
+# Interactive guided setup (recommended)
+agent-orch init --interactive
+agent-orch setup-api --interactive
+agent-orch setup-discord --interactive
+```
+</details>
 
-# Development mode with hot-reload
-agent-orch ui --dev-mode
+### 📁 **Project Management**
+<details>
+<summary><strong>Manage projects and repositories</strong></summary>
 
-# Team collaboration mode
-agent-orch ui --team-mode --network-detect
+| Command | Purpose | Auto-Detection |
+|---------|---------|----------------|
+| `register-project` | Add project to orchestration | ✅ Framework, Language, Git |
+| `projects list` | Show all registered projects | - |
+| `projects validate` | Check project configuration | ✅ |
+| `projects remove` | Remove project registration | - |
 
-# Production deployment
-agent-orch ui --production --ssl-cert /etc/ssl/certs/agent-workflow.crt
+**Common Patterns:**
+```bash
+# Register current directory with auto-detection
+agent-orch register-project .
 
-# Mobile-optimized with QR code
-agent-orch ui --mobile-optimized --qr-code
+# Register with full configuration
+agent-orch register-project ~/my-app \
+  --framework web \
+  --language javascript \
+  --mode blocking \
+  --create-channel
+```
+</details>
 
-# Headless server mode
-agent-orch ui --headless --port 8080
+### 🎮 **Orchestration Control**
+<details>
+<summary><strong>Start, stop, and monitor orchestration</strong></summary>
 
-# Project-specific dashboard
-agent-orch ui --mode dashboard --project webapp
+| Command | Purpose | Background Mode |
+|---------|---------|-----------------|
+| `start` | Start orchestration | ✅ `--daemon` |
+| `stop` | Stop orchestration | ✅ Graceful |
+| `status` | System status check | ✅ `--watch` |
+| `health` | Health diagnostics | ✅ Auto-fix |
+
+**Power User Commands:**
+```bash
+# Start all projects with Discord integration
+agent-orch start --discord --daemon
+
+# Watch live status updates
+agent-orch status --watch --verbose
+
+# Health check with auto-fix
+agent-orch health --check-all --fix-issues
+```
+</details>
+
+### ⚙️ **Configuration Management**
+<details>
+<summary><strong>Advanced configuration and migration</strong></summary>
+
+| Command | Purpose | Backup Support |
+|---------|---------|----------------|
+| `configure` | Interactive config management | ✅ |
+| `migrate-from-git` | Migrate from git installation | ✅ |
+| `version` | Version and update check | - |
+
+**Configuration Workflows:**
+```bash
+# Full configuration wizard
+agent-orch configure --wizard
+
+# Export configuration backup
+agent-orch configure --export config-backup.yaml
+
+# Migration from git clone
+agent-orch migrate-from-git ~/agent-workflow-git \
+  --backup-first \
+  --import-projects
+```
+</details>
+
+---
+
+## 🤖 Discord Bot Commands
+
+### HITL Command Interface
+The Discord bot provides the primary Human-In-The-Loop interface for workflow management.
+
+**Available Discord Commands:**
+```
+/epic <description>              - Define high-level initiatives
+/backlog view|add_story         - Manage product backlog  
+/sprint plan|start|status       - Sprint lifecycle management
+/approve [items]                - Approve pending tasks
+/request_changes <description>  - Request modifications
+/state                         - Interactive state visualization
+/project register <path>        - Register new project
 ```
 
-#### `agent-orch ui-status`
-Check UI portal server status and integration health.
+### Interactive Command Cards
+<div style="background: #f0f4f8; padding: 20px; border-radius: 10px; margin: 15px 0;">
 
+**🎯 Epic Definition**
+```discord
+/epic "Build user authentication system with OAuth integration"
+```
+<details>
+<summary>📋 Creates new epic with persistent storage</summary>
+
+- Automatically creates Epic ID
+- Stores in project's `.orch-state/epics.json`
+- Triggers backlog planning state transition
+- Notifies team members
+
+**Example Response:**
+```
+✅ Epic #EP001 created: "Build user authentication system with OAuth integration"
+📍 Project state: IDLE → BACKLOG_READY
+🎯 Next: Use /backlog add_story to break down into stories
+```
+</details>
+
+**📋 Backlog Management**
+```discord
+/backlog add_story "Implement OAuth login flow" feature:EP001 priority:high
+```
+<details>
+<summary>📋 Manages product and sprint backlogs</summary>
+
+- Creates stories linked to epics
+- Supports priority management
+- Auto-generates story IDs
+- Enables sprint planning
+
+**Example Response:**
+```
+✅ Story #ST001 added to backlog
+📝 "Implement OAuth login flow"
+🏷️ Epic: EP001 | Priority: High
+📊 Backlog: 5 stories ready for sprint planning
+```
+</details>
+
+</div>
+
+---
+
+## 🎨 Interactive Examples
+
+### Progressive Disclosure Interface
+
+#### Beginner → Setup Wizard
 ```bash
-agent-orch ui-status [OPTIONS]
+# 🟢 BEGINNER LEVEL
+agent-orch init --interactive
+
+# Guided prompts:
+? Choose your role: Solo Engineer / Team Lead / Researcher
+? AI Provider: Claude (Anthropic) / OpenAI / Local Model  
+? Discord Integration: Yes / No / Later
+? Default orchestration mode: Blocking / Partial / Autonomous
 ```
 
-**Options:**
+#### Intermediate → Project Management  
 ```bash
---json                      Output in JSON format
---verbose                   Show detailed component status
---health-check              Run comprehensive health check
---performance               Include performance metrics
---integration-health        Check CLI-UI integration health
+# 🟡 INTERMEDIATE LEVEL  
+agent-orch register-project ~/my-webapp \
+  --framework web \
+  --mode blocking \
+  --validate \
+  --create-channel
+
+# Auto-detection results:
+✅ Framework: React (detected from package.json)
+✅ Language: TypeScript (detected from tsconfig.json)  
+✅ Git: https://github.com/user/my-webapp (detected from remote)
+✅ Discord: #orch-my-webapp channel created
 ```
 
-#### `agent-orch ui-config`
-Configure UI portal settings and integrations.
-
+#### Advanced → Multi-Project Orchestration
 ```bash
-agent-orch ui-config [SUBCOMMAND] [OPTIONS]
+# 🔴 ADVANCED LEVEL
+# Start multiple projects with different modes
+agent-orch start \
+  --discord \
+  --daemon \
+  --config multi-project.yaml \
+  --log-level DEBUG \
+  --port 9090
+
+# Custom configuration:
+projects:
+  webapp: {mode: blocking, priority: high}
+  api-server: {mode: partial, priority: medium}  
+  ml-pipeline: {mode: autonomous, priority: low}
 ```
 
-**Subcommands:**
+### Copy-Paste Command Collections
+
+#### 🚀 **New Project Setup**
 ```bash
-setup                       Interactive UI configuration wizard
-validate                    Validate current UI configuration
-sync                        Synchronize CLI and UI configurations
-export FILE                 Export UI configuration to file
-import FILE                 Import UI configuration from file
+# Complete new project workflow
+mkdir awesome-app && cd awesome-app
+git init
+echo "# Awesome App" > README.md
+agent-orch register-project . --validate --create-channel
+agent-orch start --discord
 ```
 
-#### `agent-orch ui-token`
-Manage UI portal authentication tokens.
-
+#### 📊 **Daily Status Check**
 ```bash
-agent-orch ui-token [SUBCOMMAND] [OPTIONS]
+# Morning development routine
+agent-orch status --brief
+agent-orch health --check-all
+agent-orch projects list --verbose
 ```
 
-**Subcommands:**
+#### 🔧 **Troubleshooting Toolkit**
 ```bash
-generate                    Generate new access token
-list                        List active tokens
-revoke TOKEN                Revoke specific token
-cleanup                     Remove expired tokens
+# Debug failing orchestration
+agent-orch stop --save-state
+agent-orch start --log-level DEBUG --no-browser
+agent-orch health --check-all --export-report debug-report.json
 ```
 
-#### `agent-orch mobile`
-Configure mobile device access and optimization.
+---
 
+## ⌨️ Shell Autocomplete & Snippets
+
+### One-Command Setup
 ```bash
-agent-orch mobile [SUBCOMMAND] [OPTIONS]
+# Bash
+echo 'eval "$(_AGENT_ORCH_COMPLETE=bash_source agent-orch)"' >> ~/.bashrc
+
+# Zsh  
+echo 'eval "$(_AGENT_ORCH_COMPLETE=zsh_source agent-orch)"' >> ~/.zshrc
+
+# Fish
+echo 'eval (env _AGENT_ORCH_COMPLETE=fish_source agent-orch)' >> ~/.config/fish/config.fish
 ```
 
-**Subcommands:**
+### Smart Autocomplete Features
+<div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 15px 0;">
+
+**Tab Completion Examples:**
 ```bash
-setup                       Configure mobile access
-qr [PROJECT]               Generate QR code for mobile access
-optimize                    Enable mobile optimizations
-pwa-config                 Configure Progressive Web App features
+# Command completion
+agent-orch <TAB>
+# → configure  health  init  projects  register-project  setup-api  setup-discord  start  status  stop  version
+
+# Option completion  
+agent-orch start --<TAB>
+# → --daemon  --discord  --log-level  --mode  --port
+
+# Project name completion
+agent-orch status --project <TAB>
+# → webapp  api-server  ml-pipeline
+
+# Path completion with validation
+agent-orch register-project <TAB>
+# → ./  ../  ~/projects/webapp/  (shows only valid directories)
 ```
 
-### Primary Orchestrator
+**Smart Context Awareness:**
+- Only shows available options for current state
+- Validates paths and project names
+- Suggests commonly used flag combinations
+- Shows brief descriptions for complex commands
+</div>
 
-#### `scripts/orchestrator.py`
-Single-project orchestration with comprehensive options.
-
+### Custom Shell Aliases
 ```bash
-python scripts/orchestrator.py [OPTIONS]
+# Add to your shell profile (~/.bashrc, ~/.zshrc)
+alias ao='agent-orch'                    # Short command
+alias aos='agent-orch status --brief'    # Quick status
+alias aol='agent-orch projects list'     # List projects  
+alias aod='agent-orch start --discord'   # Start with Discord
+alias aoh='agent-orch health --check-all' # Health check
+
+# Power user aliases
+alias ao-setup='agent-orch init --interactive && agent-orch setup-api --interactive'
+alias ao-daily='agent-orch status --brief && agent-orch projects list --verbose'
+alias ao-debug='agent-orch start --log-level DEBUG --no-browser'
 ```
 
-**Options:**
+---
+
+## 🚀 Advanced Usage Patterns
+
+### Command Chaining & Workflows
 ```bash
---config, -c FILE           Configuration file path [default: config.yml]
---project-path, -p PATH     Project directory path [required]
---mode, -m MODE            Orchestration mode [blocking|partial|autonomous]
---verbose, -v              Enable verbose logging
---debug, -d                Enable debug mode with detailed output
---dry-run                  Simulate operations without making changes
---log-file FILE            Log file path [default: logs/orchestrator.log]
---log-level LEVEL          Logging level [DEBUG|INFO|WARNING|ERROR]
---no-discord               Run without Discord integration
---health-check             Run system health check and exit
---validate-config          Validate configuration and exit
---setup                    Initialize project structure
---reset                    Reset project state (use with caution)
-```
+# Conditional execution
+agent-orch health --check-all && agent-orch start --discord
 
-**Examples:**
-```bash
-# Basic usage
-python scripts/orchestrator.py --project-path /home/user/my-project
+# Sequential setup with error handling
+agent-orch init --interactive || exit 1
+agent-orch setup-api --interactive || exit 1  
+agent-orch register-project . --validate || exit 1
+agent-orch start --discord
 
-# Development mode with verbose logging
-python scripts/orchestrator.py -p /path/to/project -v --debug
-
-# Production mode with custom config
-python scripts/orchestrator.py -c production.yml -m autonomous -p /opt/projects/app
-
-# Health check only
-python scripts/orchestrator.py --health-check
-
-# Setup new project
-python scripts/orchestrator.py --setup -p /new/project/path
-```
-
-### Multi-Project Orchestrator
-
-#### `scripts/multi_project_orchestrator.py`
-Advanced multi-project management with enterprise features.
-
-```bash
-python scripts/multi_project_orchestrator.py [OPTIONS]
-```
-
-**Options:**
-```bash
---config, -c FILE           Multi-project configuration file
---list-projects, -l         List all configured projects
---project PROJECT           Target specific project for operations
---start-all                 Start orchestration for all projects
---stop-all                  Stop all active orchestrators
---status                    Show status of all projects
---logs PROJECT              Show logs for specific project
---monitor                   Real-time monitoring mode
---health-check              Comprehensive system health check
---performance-test          Run performance benchmarks
---backup                    Create backup of all project states
---restore BACKUP_PATH       Restore from backup
---cleanup                   Clean up old logs and temporary files
---export-metrics FILE       Export performance metrics to file
---import-config FILE        Import project configuration
---validate                  Validate all project configurations
-```
-
-**Examples:**
-```bash
-# List all projects
-python scripts/multi_project_orchestrator.py --list-projects
-
-# Start specific project
-python scripts/multi_project_orchestrator.py --project web-app
-
-# Monitor all projects
-python scripts/multi_project_orchestrator.py --monitor
-
-# Health check with detailed output
-python scripts/multi_project_orchestrator.py --health-check --verbose
-
-# Performance testing
-python scripts/multi_project_orchestrator.py --performance-test
-
-# Backup and restore
-python scripts/multi_project_orchestrator.py --backup
-python scripts/multi_project_orchestrator.py --restore backups/2024-01-15_full.tar.gz
-```
-
-### Discord Bot Interface
-
-#### `lib/discord_bot.py`
-Discord bot for Human-In-The-Loop control with advanced features.
-
-```bash
-python lib/discord_bot.py [OPTIONS]
-```
-
-**Options:**
-```bash
---token TOKEN               Discord bot token (or use DISCORD_BOT_TOKEN env)
---config FILE               Bot configuration file
---orchestrator-config FILE  Orchestrator configuration file
---channel-prefix PREFIX     Channel naming prefix [default: hostname-]
---command-prefix PREFIX     Command prefix [default: /]
---sync-commands             Sync slash commands on startup
---guild-only GUILD_ID       Restrict to specific guild (for testing)
---status-message MESSAGE    Custom bot status message
---activity-type TYPE        Activity type [playing|watching|listening]
---no-auto-channels          Disable automatic channel creation
---max-projects NUMBER       Maximum concurrent projects [default: 10]
---debug-mode                Enable debug features and logging
---metrics-port PORT         Metrics server port [default: 8000]
-```
-
-**Examples:**
-```bash
-# Basic bot startup
-python lib/discord_bot.py
-
-# Development mode with guild restriction
-python lib/discord_bot.py --guild-only 123456789 --debug-mode
-
-# Production with custom status
-python lib/discord_bot.py --status-message "Managing 5 projects" --activity-type watching
-
-# Sync commands for new bot
-python lib/discord_bot.py --sync-commands
-```
-
-### State Visualizer
-
-#### `visualizer/app.py`
-Real-time workflow visualization with WebSocket interface.
-
-```bash
-cd visualizer && python app.py [OPTIONS]
-```
-
-**Options:**
-```bash
---host HOST                 Host to bind to [default: localhost]
---port PORT                 Port to bind to [default: 5000]
---debug                     Enable Flask debug mode
---websocket-host HOST       WebSocket server host [default: localhost]
---websocket-port PORT       WebSocket server port [default: 8080]
---auto-connect              Auto-connect to orchestrator on startup
---theme THEME               UI theme [light|dark|auto]
---update-interval MS        Update interval in milliseconds [default: 1000]
---max-history NUMBER        Max state history to display [default: 100]
-```
-
-**Examples:**
-```bash
-# Basic visualizer
-cd visualizer && python app.py
-
-# Production with external access
-cd visualizer && python app.py --host 0.0.0.0 --port 8080
-
-# Development with auto-refresh
-cd visualizer && python app.py --debug --update-interval 500
-```
-
-## Management Scripts
-
-### Database Operations
-
-#### `scripts/db_manager.py`
-Database management and maintenance operations.
-
-```bash
-python scripts/db_manager.py [COMMAND] [OPTIONS]
-```
-
-**Commands:**
-```bash
-init                        Initialize database schema
-migrate                     Run database migrations
-backup [--output FILE]     Create database backup
-restore --input FILE       Restore from backup
-vacuum                      Vacuum and optimize database
-repair                      Repair corrupted data
-export --format FORMAT     Export data [json|csv|yaml]
-import --file FILE          Import data from file
-stats                       Show database statistics
-clean --older-than DAYS     Clean old records
-```
-
-**Examples:**
-```bash
-# Initialize new database
-python scripts/db_manager.py init
-
-# Create backup
-python scripts/db_manager.py backup --output backups/db_$(date +%Y%m%d).sql
-
-# Clean old data
-python scripts/db_manager.py clean --older-than 30
-
-# Export metrics
-python scripts/db_manager.py export --format json > metrics.json
+# Background monitoring
+agent-orch start --daemon --discord &
+agent-orch status --watch &
 ```
 
 ### Configuration Management
-
-#### `scripts/config_manager.py`
-Configuration file management and validation.
-
 ```bash
-python scripts/config_manager.py [COMMAND] [OPTIONS]
+# Environment-specific configs
+agent-orch start --config ~/.agent-workflow/dev.yaml     # Development
+agent-orch start --config ~/.agent-workflow/prod.yaml    # Production  
+agent-orch start --config ~/.agent-workflow/test.yaml    # Testing
+
+# Export and share configurations
+agent-orch configure --export team-config.yaml
+# Team members can import:
+agent-orch configure --import team-config.yaml
 ```
 
-**Commands:**
+### Multi-Project Orchestration Patterns
 ```bash
-validate FILE               Validate configuration file
-generate-template TYPE      Generate configuration template
-merge FILE1 FILE2          Merge configuration files
-diff FILE1 FILE2           Compare configuration files
-encrypt FILE                Encrypt sensitive configuration
-decrypt FILE                Decrypt configuration file
-lint FILE                   Check configuration best practices
-convert --from FORMAT       Convert between formats
+# Start specific project combinations
+agent-orch start webapp api-server --mode partial
+agent-orch start ml-pipeline --mode autonomous --daemon
+
+# Project-specific health monitoring
+for project in webapp api-server worker; do
+  agent-orch status --project $project --json >> status-report.json
+done
+
+# Bulk project operations
+agent-orch projects list --json | jq -r '.[].name' | \
+  xargs -I {} agent-orch projects validate {}
 ```
 
-**Examples:**
+---
+
+## 🛠️ Troubleshooting Guide
+
+### Quick Diagnostics
+<div style="background: #fff3cd; padding: 15px; border-radius: 8px; border-left: 4px solid #ffc107; margin: 15px 0;">
+
+**⚡ One-Liner Health Check**
 ```bash
-# Validate configuration
-python scripts/config_manager.py validate config/production.yml
-
-# Generate template
-python scripts/config_manager.py generate-template multi-project > new-config.yml
-
-# Encrypt secrets
-python scripts/config_manager.py encrypt config/secrets.yml
-
-# Compare configs
-python scripts/config_manager.py diff config/dev.yml config/prod.yml
+agent-orch health --check-all --fix-issues --export-report health-$(date +%Y%m%d).json
 ```
 
-### Log Management
+**📊 System Status Dashboard**
+```bash
+# Comprehensive status in one command
+agent-orch status --verbose --health --json | jq '{
+  orchestrator: .orchestrator.status,
+  projects: [.projects[] | {name: .name, state: .state, tasks: .active_tasks}],
+  health: {
+    api_connection: .health.api_connection,
+    discord_connection: .health.discord_connection,
+    disk_space: .health.disk_space
+  }
+}'
+```
+</div>
 
-#### `scripts/log_manager.py`
-Log file management and analysis tools.
+### Common Issues & Solutions
+
+#### 🔴 **"Command not found: agent-orch"**
+<details>
+<summary>Click for solutions</summary>
 
 ```bash
-python scripts/log_manager.py [COMMAND] [OPTIONS]
+# Check if installed
+pip show agent-workflow
+
+# Install/reinstall
+pip install --user --upgrade agent-workflow
+
+# Add to PATH (if needed)
+export PATH="$HOME/.local/bin:$PATH"  # Linux/Mac
+export PATH="$APPDATA/Python/Scripts:$PATH"  # Windows
+
+# Use Python module directly as fallback
+python -m agent_workflow.cli init
 ```
+</details>
 
-**Commands:**
-```bash
-analyze [FILE]              Analyze log files for patterns
-rotate                      Rotate log files
-compress --older-than DAYS  Compress old log files
-search PATTERN              Search across all log files
-tail --follow               Follow live log output
-errors --since TIME         Show errors since timestamp
-metrics --interval MINUTES  Extract metrics from logs
-report --format FORMAT      Generate log report
-```
-
-**Examples:**
-```bash
-# Analyze recent logs
-python scripts/log_manager.py analyze logs/orchestrator.log
-
-# Search for errors
-python scripts/log_manager.py search "ERROR|CRITICAL"
-
-# Follow live logs
-python scripts/log_manager.py tail --follow
-
-# Generate daily report
-python scripts/log_manager.py report --format html > daily_report.html
-```
-
-### Testing Utilities
-
-#### `scripts/test_runner.py`
-Advanced test execution and management.
+#### 🔴 **"Discord bot not responding"**
+<details>
+<summary>Click for solutions</summary>
 
 ```bash
-python scripts/test_runner.py [COMMAND] [OPTIONS]
+# Test Discord configuration
+agent-orch setup-discord --test-connection
+
+# Verify bot permissions
+agent-orch configure --section discord --validate
+
+# Re-register slash commands
+agent-orch start --discord --sync-commands
+
+# Debug mode
+DISCORD_BOT_DEBUG=1 agent-orch start --discord --log-level DEBUG
 ```
+</details>
 
-**Commands:**
-```bash
-run [PATTERN]               Run tests matching pattern
-coverage                    Run tests with coverage
-performance                 Run performance tests
-integration                 Run integration tests only
-security                    Run security tests
-regression                  Run regression test suite
-smoke                       Run smoke tests
-report --format FORMAT     Generate test report
-```
-
-**Options:**
-```bash
---parallel WORKERS          Number of parallel workers
---verbose, -v               Verbose output
---fail-fast                 Stop on first failure
---retry-failures            Retry failed tests
---timeout SECONDS           Test timeout
---markers MARKERS           Run tests with specific markers
---output-file FILE          Output results to file
---junit-xml FILE            Generate JUnit XML report
-```
-
-**Examples:**
-```bash
-# Run all tests with coverage
-python scripts/test_runner.py coverage --parallel 4
-
-# Run specific test pattern
-python scripts/test_runner.py run "test_tdd_*" --verbose
-
-# Performance testing
-python scripts/test_runner.py performance --timeout 300
-
-# Generate comprehensive report
-python scripts/test_runner.py report --format html --output-file test_report.html
-```
-
-## TDD-Specific CLI Tools
-
-### TDD Cycle Manager
-
-#### `scripts/tdd_manager.py`
-TDD cycle management and analysis tools.
+#### 🔴 **"API rate limit exceeded"**
+<details>
+<summary>Click for solutions</summary>
 
 ```bash
-python scripts/tdd_manager.py [COMMAND] [OPTIONS]
+# Check current rate limits
+agent-orch configure --section api
+
+# Increase rate limit
+agent-orch setup-api --rate-limit 100
+
+# Switch API provider temporarily
+agent-orch setup-api --provider openai --interactive
+
+# Enable request queuing
+agent-orch configure --section api --set request_queuing=true
 ```
+</details>
 
-**Commands:**
-```bash
-list-cycles [PROJECT]       List active TDD cycles
-status CYCLE_ID             Get detailed cycle status
-start STORY_ID              Start new TDD cycle
-pause CYCLE_ID              Pause TDD cycle
-resume CYCLE_ID             Resume paused cycle
-abort CYCLE_ID              Abort TDD cycle
-reset CYCLE_ID --to-state   Reset cycle to specific state
-validate CYCLE_ID           Validate cycle integrity
-metrics [--period DAYS]     Show TDD metrics
-export CYCLE_ID             Export cycle data
-import FILE                 Import cycle data
-```
-
-**Examples:**
-```bash
-# List all active cycles
-python scripts/tdd_manager.py list-cycles
-
-# Get detailed status
-python scripts/tdd_manager.py status tdd-cycle-abc123
-
-# Start new cycle
-python scripts/tdd_manager.py start AUTH-001
-
-# Get weekly metrics
-python scripts/tdd_manager.py metrics --period 7
-```
-
-### Test Preservation Manager
-
-#### `scripts/test_preservation.py`
-Test file preservation and integration management.
+#### 🔴 **"Project registration failed"**
+<details>
+<summary>Click for solutions</summary>
 
 ```bash
-python scripts/test_preservation.py [COMMAND] [OPTIONS]
-```
+# Validate project structure first
+agent-orch register-project . --validate --dry-run
 
-**Commands:**
+# Force re-registration
+agent-orch register-project . --force
+
+# Manual configuration
+agent-orch register-project . \
+  --framework general \
+  --language python \
+  --mode blocking
+
+# Debug registration process
+agent-orch register-project . --verbose --validate
+```
+</details>
+
+### Debug Mode Commands
 ```bash
-preserve STORY_ID           Preserve test files for story
-integrate STORY_ID          Integrate tests into main suite
-validate-structure          Validate test directory structure
-cleanup --older-than DAYS   Clean up old preserved tests
-migrate-tests SOURCE DEST   Migrate test files
-verify-integrity            Verify test file integrity
-report                      Generate preservation report
+# Global debug mode
+AGENT_WORKFLOW_DEBUG=1 agent-orch <command>
+
+# Component-specific debugging
+ORCHESTRATOR_DEBUG=1 agent-orch start
+DISCORD_BOT_DEBUG=1 agent-orch start --discord
+API_CLIENT_DEBUG=1 agent-orch setup-api --test-connection
+
+# Trace mode for detailed logging
+AGENT_WORKFLOW_TRACE=1 agent-orch start --log-level DEBUG
 ```
 
-**Examples:**
-```bash
-# Preserve tests for completed story
-python scripts/test_preservation.py preserve AUTH-001
+---
 
-# Integrate tests into main suite
-python scripts/test_preservation.py integrate AUTH-001
+## 📊 Command Reference Card
 
-# Clean up old test files
-python scripts/test_preservation.py cleanup --older-than 30
+<div style="background: #f8f9fa; padding: 20px; border-radius: 10px; font-family: monospace; margin: 20px 0;">
+
 ```
-
-## DevOps and Operations
-
-### Deployment Scripts
-
-#### `scripts/deploy.py`
-Deployment automation and management.
-
-```bash
-python scripts/deploy.py [ENVIRONMENT] [OPTIONS]
+┌────────────────────────────────────────────────────────────────────┐
+│                    🎛️ AGENT-ORCH COMMAND PALETTE                  │
+├────────────────────────────────────────────────────────────────────┤
+│ 🚀 QUICK START                                                    │
+│   agent-orch init --interactive           # Complete setup wizard │
+│   agent-orch register-project .           # Add current project   │
+│   agent-orch start --discord              # Launch with Discord   │
+│                                                                    │
+│ 📊 DAILY OPERATIONS                                               │
+│   agent-orch status --brief               # Quick status check    │
+│   agent-orch projects list --verbose      # Detailed project info │
+│   agent-orch health --check-all           # System diagnostics    │
+│                                                                    │
+│ 🎮 ORCHESTRATION CONTROL                                          │
+│   agent-orch start --daemon --discord     # Background service    │
+│   agent-orch stop --save-state            # Graceful shutdown     │
+│   agent-orch status --watch               # Live monitoring       │
+│                                                                    │
+│ ⚙️ CONFIGURATION                                                   │
+│   agent-orch configure --wizard           # Full config wizard    │
+│   agent-orch setup-api --interactive      # AI provider setup     │
+│   agent-orch setup-discord --interactive  # Discord bot setup     │
+│                                                                    │
+│ 🤖 DISCORD COMMANDS (in Discord channels)                        │
+│   /epic "description"                     # Define epic           │
+│   /backlog add_story "story"              # Add user story        │
+│   /sprint plan                            # Plan sprint           │
+│   /approve                                # Approve pending items │
+│   /state                                  # Interactive state UI  │
+└────────────────────────────────────────────────────────────────────┘
 ```
-
-**Environments:**
-- `development` - Local development deployment
-- `staging` - Staging environment deployment  
-- `production` - Production deployment
-
-**Options:**
-```bash
---config FILE               Deployment configuration
---version VERSION           Specific version to deploy
---rollback                  Rollback to previous version
---health-check              Run health check after deployment
---skip-tests                Skip test execution
---force                     Force deployment (bypass checks)
---dry-run                   Show what would be deployed
---notify WEBHOOK            Notification webhook URL
-```
-
-**Examples:**
-```bash
-# Deploy to staging
-python scripts/deploy.py staging --health-check
-
-# Production deployment with version
-python scripts/deploy.py production --version v1.2.3 --notify $SLACK_WEBHOOK
-
-# Rollback production
-python scripts/deploy.py production --rollback
-
-# Dry run for production
-python scripts/deploy.py production --dry-run
-```
-
-### Monitoring Scripts
-
-#### `scripts/monitor.py`
-System monitoring and alerting.
-
-```bash
-python scripts/monitor.py [COMMAND] [OPTIONS]
-```
-
-**Commands:**
-```bash
-start                       Start monitoring daemon
-stop                        Stop monitoring daemon
-status                      Show monitoring status
-check-health                Run health checks
-alert-test                  Test alerting configuration
-metrics                     Display current metrics
-dashboard                   Launch monitoring dashboard
-```
-
-**Options:**
-```bash
---interval SECONDS          Monitoring interval [default: 60]
---alert-threshold VALUE     Alert threshold configuration
---webhook URL               Webhook for notifications
---dashboard-port PORT       Dashboard port [default: 8080]
---config FILE               Monitoring configuration
-```
-
-**Examples:**
-```bash
-# Start monitoring with 30-second intervals
-python scripts/monitor.py start --interval 30
-
-# Test alert system
-python scripts/monitor.py alert-test --webhook $ALERT_WEBHOOK
-
-# Launch dashboard
-python scripts/monitor.py dashboard --dashboard-port 9090
-```
-
-## Utility Commands
-
-### Data Management
-
-#### `scripts/data_utils.py`
-Data manipulation and analysis utilities.
-
-```bash
-python scripts/data_utils.py [COMMAND] [OPTIONS]
-```
-
-**Commands:**
-```bash
-export --format FORMAT     Export system data
-import --file FILE          Import data from file
-migrate --from VERSION     Migrate data format
-validate                    Validate data integrity
-compress                    Compress data files
-decompress FILE             Decompress data files
-analyze                     Analyze data patterns
-report                      Generate data report
-```
-
-### System Maintenance
-
-#### `scripts/maintenance.py`
-System maintenance and cleanup operations.
-
-```bash
-python scripts/maintenance.py [COMMAND] [OPTIONS]
-```
-
-**Commands:**
-```bash
-cleanup                     General system cleanup
-vacuum                      Database vacuum and optimization
-rotate-logs                 Rotate log files
-compress-backups            Compress old backups
-update-dependencies         Update system dependencies
-health-check                Comprehensive health check
-repair                      Repair system issues
-optimize                    Optimize system performance
-```
-
-**Examples:**
-```bash
-# Daily maintenance
-python scripts/maintenance.py cleanup
-python scripts/maintenance.py rotate-logs
-python scripts/maintenance.py vacuum
-
-# Weekly maintenance
-python scripts/maintenance.py compress-backups
-python scripts/maintenance.py optimize
-
-# Health check
-python scripts/maintenance.py health-check --verbose
-```
-
-## Environment Variables
-
-### Core Configuration
-```bash
-# Required
-export DISCORD_BOT_TOKEN="your_discord_bot_token"
-
-# Optional but recommended
-export ANTHROPIC_API_KEY="your_anthropic_api_key"
-export GITHUB_TOKEN="your_github_token"
-
-# System configuration
-export HOSTNAME="your_hostname"
-export LOG_LEVEL="INFO"                    # DEBUG|INFO|WARNING|ERROR
-export ORCHESTRATOR_MODE="blocking"       # blocking|partial|autonomous
-export NO_AGENT_MODE="false"             # true for testing with mock agents
-
-# Performance tuning
-export MAX_CONCURRENT_PROJECTS="5"
-export AGENT_TIMEOUT_MINUTES="30"
-export STATE_SAVE_INTERVAL="60"
-
-# Storage configuration
-export DATA_DIRECTORY="/opt/agent-workflow/data"
-export LOG_DIRECTORY="/opt/agent-workflow/logs"
-export BACKUP_DIRECTORY="/opt/agent-workflow/backups"
-
-# Monitoring
-export METRICS_ENABLED="true"
-export METRICS_PORT="8000"
-export HEALTH_CHECK_INTERVAL="300"
-
-# Security
-export ENCRYPTION_KEY="your_encryption_key"
-export API_RATE_LIMIT="100"
-export ALLOWED_HOSTS="localhost,your-domain.com"
-```
-
-### UI Portal Configuration
-```bash
-# UI Portal server settings
-export UI_PORTAL_ENABLED="true"
-export UI_PORTAL_PORT="8080"
-export UI_PORTAL_HOST="localhost"            # Use 0.0.0.0 for external access
-export UI_API_PORT="8000"
-export UI_WEBSOCKET_PORT="8001"
-
-# UI Portal features
-export UI_THEME="auto"                       # light|dark|auto
-export UI_AUTO_LAUNCH="true"                 # Auto-launch browser
-export UI_MOBILE_OPTIMIZED="true"
-export UI_PWA_ENABLED="true"
-export UI_QR_CODE_ENABLED="true"
-
-# Team collaboration
-export UI_TEAM_MODE="false"                  # Enable multi-user features
-export UI_MAX_CONCURRENT_USERS="50"
-export UI_SESSION_TIMEOUT="3600"            # Session timeout in seconds
-export UI_SHARED_COMMAND_HISTORY="true"
-
-# Security and authentication
-export UI_AUTH_METHOD="session"             # session|token|none
-export UI_SESSION_SECRET="your_session_secret"
-export UI_CORS_ORIGINS="*"                  # Comma-separated origins
-export UI_RATE_LIMIT="1000"                 # Requests per hour per user
-
-# SSL/TLS configuration
-export UI_HTTPS_ENABLED="false"             # Enable HTTPS
-export UI_SSL_CERT_PATH="/path/to/cert.pem"
-export UI_SSL_KEY_PATH="/path/to/key.pem"
-export UI_SSL_REDIRECT="true"               # Redirect HTTP to HTTPS
-
-# Development settings
-export UI_DEV_MODE="false"                  # Enable development features
-export UI_HOT_RELOAD="false"                # Enable hot module replacement
-export UI_DEBUG_MODE="false"                # Enable debug logging
-export UI_SOURCE_MAPS="false"               # Generate source maps
-
-# Performance optimization
-export UI_CACHE_ENABLED="true"
-export UI_CACHE_TTL="3600"                  # Cache TTL in seconds
-export UI_COMPRESSION_ENABLED="true"
-export UI_STATIC_CDN_URL=""                 # CDN URL for static assets
-
-# Mobile and PWA settings
-export UI_PWA_NAME="Agent-Workflow Portal"
-export UI_PWA_SHORT_NAME="AgentWorkflow"
-export UI_PWA_THEME_COLOR="#1976d2"
-export UI_PWA_BACKGROUND_COLOR="#ffffff"
-export UI_OFFLINE_SUPPORT="true"
-export UI_PUSH_NOTIFICATIONS="true"
-
-# Integration settings
-export UI_CLI_SYNC_ENABLED="true"           # Enable CLI-UI synchronization
-export UI_DISCORD_MIRROR="true"             # Mirror Discord commands
-export UI_CONFIG_HOT_RELOAD="true"          # Auto-reload configuration
-export UI_STATE_BROADCAST="true"            # Real-time state broadcasting
-
-# Network and browser settings
-export UI_NETWORK_AUTO_DETECT="true"        # Auto-detect network interfaces
-export UI_BROWSER_AUTO_LAUNCH="true"        # Auto-launch browser
-export UI_PREFERRED_BROWSER=""              # chrome|firefox|safari|edge
-export UI_BROWSER_DEV_TOOLS="false"         # Open with dev tools
-```
-
-### TDD-Specific Variables
-```bash
-# TDD configuration
-export TDD_ENABLED="true"
-export TDD_AUTO_START="true"
-export TDD_PRESERVE_TESTS="true"
-export TDD_PARALLEL_EXECUTION="true"
-
-# Test execution
-export TEST_RUNNER="pytest"
-export TEST_PARALLEL_JOBS="4"
-export TEST_TIMEOUT_SECONDS="300"
-export COVERAGE_THRESHOLD="90"
-
-# Test preservation
-export TEST_PRESERVATION_DIR="tests/tdd"
-export TEST_INTEGRATION_DIR="tests/unit"
-export TEST_BACKUP_ENABLED="true"
-```
-
-## Configuration File Locations
-
-### Standard Locations
-```bash
-# Main configuration
-./config.yml                          # Default configuration
-./config/production.yml               # Production configuration
-./config/development.yml              # Development configuration
-
-# Project-specific
-./.orch-state/config.json             # Project runtime configuration
-./.orch-state/status.json             # Project state
-
-# User configuration
-~/.agent-workflow/config.yml          # User global configuration
-~/.agent-workflow/preferences.yml     # User preferences
-
-# Environment-specific
-/etc/agent-workflow/config.yml        # System-wide configuration
-/opt/agent-workflow/config.yml        # Installation configuration
-```
-
-## Exit Codes
-
-The CLI tools use standard exit codes:
-
-```bash
-0   Success
-1   General error
-2   Configuration error
-3   Permission error
-4   Network error
-5   API error
-10  Validation error
-20  Agent execution error
-30  TDD cycle error
-50  System resource error
-99  Unknown error
-```
-
-## Troubleshooting CLI Issues
-
-### Common Problems
-
-#### Command Not Found
-```bash
-# Check Python path
-python -c "import sys; print(sys.path)"
-
-# Verify script permissions
-ls -la scripts/orchestrator.py
-
-# Check virtual environment
-which python
-echo $VIRTUAL_ENV
-```
-
-#### Permission Errors
-```bash
-# Fix script permissions
-chmod +x scripts/*.py
-
-# Check file ownership
-ls -la config/
-sudo chown -R $USER:$USER .
-```
-
-#### Configuration Errors
-```bash
-# Validate configuration
-python scripts/config_manager.py validate config.yml
-
-# Check environment variables
-env | grep -E "(DISCORD|ANTHROPIC|GITHUB)"
-
-# Test basic imports
-python -c "import lib.discord_bot; print('OK')"
-```
-
-#### Performance Issues
-```bash
-# Check system resources
-top -p $(pgrep -f orchestrator)
-df -h
-free -m
-
-# Enable debug logging
-export LOG_LEVEL=DEBUG
-python scripts/orchestrator.py --debug
-```
-
-This comprehensive CLI reference provides complete documentation for all command-line interfaces and operational tools in the AI Agent TDD-Scrum workflow system.
+</div>
+
+---
+
+<div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 25px; border-radius: 10px; color: white; text-align: center; margin: 30px 0;">
+  <h2 style="margin: 0; color: white;">🎯 Master the Command Palette</h2>
+  <p style="margin: 15px 0 0 0; font-size: 1.1em;">
+    Start with <code style="background: rgba(255,255,255,0.2); padding: 3px 8px; border-radius: 4px; font-weight: bold;">agent-orch init --interactive</code>
+  </p>
+  <p style="margin: 10px 0 0 0; opacity: 0.9;">
+    Progressive disclosure from beginner to power user workflows
+  </p>
+</div>

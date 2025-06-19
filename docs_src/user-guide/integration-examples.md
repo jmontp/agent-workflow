@@ -1,19 +1,77 @@
-# Integration Examples & Cookbook
+# Integration Examples & Complete Project Walkthroughs
 
-Practical examples and recipes for integrating the AI Agent TDD-Scrum workflow system with various tools, services, and development environments.
+Comprehensive examples and step-by-step walkthroughs for implementing the AI Agent TDD-Scrum workflow system in real-world projects. Each example includes complete code, configuration files, and learning outcomes.
 
-## Quick Start Integration Examples
+## Table of Contents
 
-### Basic Project Integration
+1. [Sample Projects](#sample-projects)
+   - [Web API with TDD Workflow](#web-api-project)
+   - [CLI Tool Development](#cli-tool-project)
+   - [Data Pipeline Creation](#data-pipeline-project)
+   - [Microservice Architecture](#microservice-project)
 
-#### Express.js API Project
-Complete setup for a Node.js Express API with TDD workflow.
+2. [Step-by-Step Guides](#step-by-step-guides)
+   - [Project Initialization](#project-initialization)
+   - [First TDD Cycle](#first-tdd-cycle)
+   - [Multi-Agent Coordination](#multi-agent-coordination)
+   - [CI/CD Integration](#cicd-integration)
+   - [Production Deployment](#production-deployment)
+
+3. [Video Tutorials](#video-tutorials)
+4. [Learning Outcomes](#learning-outcomes)
+5. [Performance Benchmarks](#performance-benchmarks)
+
+## Sample Projects
+
+### Web API Project
+
+#### Express.js REST API with TDD Workflow
+
+A complete example of building a production-ready REST API using Express.js with the AI Agent TDD-Scrum workflow. This project demonstrates test-driven development, multi-agent coordination, and CI/CD integration.
+
+**Project Repository:** [github.com/agent-workflow-examples/express-api-tdd](https://github.com/agent-workflow-examples/express-api-tdd)
+
+##### Project Structure
+```
+express-api-tdd/
+├── .github/
+│   └── workflows/
+│       ├── agent-workflow.yml      # GitHub Actions CI/CD
+│       └── tdd-validation.yml      # TDD cycle validation
+├── .orch-state/                    # Agent workflow state
+│   ├── status.json
+│   ├── epics/
+│   ├── stories/
+│   └── sprints/
+├── src/
+│   ├── controllers/                # API controllers
+│   ├── models/                     # Data models
+│   ├── routes/                     # Express routes
+│   ├── middleware/                 # Custom middleware
+│   └── services/                   # Business logic
+├── tests/
+│   ├── unit/                       # Unit tests
+│   ├── integration/                # Integration tests
+│   └── tdd/                        # TDD cycle tests
+│       ├── USER-001/               # User creation story
+│       ├── USER-002/               # User authentication
+│       └── USER-003/               # User profile management
+├── config/
+│   ├── agent-workflow.yml          # Orchestrator configuration
+│   └── database.js                 # Database configuration
+├── docker-compose.yml              # Local development environment
+├── Dockerfile                      # Production container
+└── package.json                    # Node.js dependencies
+```
+
+##### Complete Configuration
 
 ```yaml
-# config/express-api.yml
+# config/agent-workflow.yml
 orchestrator:
   mode: partial
-  project_path: "/workspace/express-api"
+  project_path: "/workspace/express-api-tdd"
+  github_repo: "agent-workflow-examples/express-api-tdd"
   
 tdd:
   enabled: true
@@ -21,42 +79,1349 @@ tdd:
     runner: "npm test"
     coverage_threshold: 85
     parallel_jobs: 2
+    test_timeout: 30000
+    
+  quality_gates:
+    code_green_phase:
+      require_all_tests_pass: true
+      minimum_coverage: 85
+      lint_check: true
+      security_scan: true
+    
+  test_preservation:
+    enabled: true
+    backup_strategy: "git"
     
 agents:
   design_agent:
-    context: "Express.js REST API with PostgreSQL"
+    context: "Express.js REST API with PostgreSQL for user management"
+    architecture_style: "clean"
+    documentation_level: "comprehensive"
+    
   code_agent:
     implementation_style: "minimal"
+    coding_standards: "airbnb"
+    error_handling: "comprehensive"
+    
   qa_agent:
-    test_types: ["unit", "integration", "api"]
+    test_types: ["unit", "integration", "api", "security"]
+    test_framework: "jest"
+    coverage_tool: "nyc"
+    
+  data_agent:
+    analytics_enabled: true
+    performance_monitoring: true
+    
+integrations:
+  ci:
+    provider: "github_actions"
+    auto_merge: true
+    
+  monitoring:
+    provider: "prometheus"
+    metrics_port: 9090
+    
+  notifications:
+    discord:
+      webhook_url: "${DISCORD_WEBHOOK}"
+    slack:
+      webhook_url: "${SLACK_WEBHOOK}"
 ```
 
-**Discord Workflow:**
+##### Step-by-Step Project Walkthrough
+
+###### 1. Project Initialization
+
+**Discord Commands:**
 ```bash
-# Initialize project
-/project register /workspace/express-api "Express API"
-/epic "User Management API"
+# Register the project
+/project register /workspace/express-api-tdd "Express API TDD"
 
-# Add stories
-/backlog add_story "POST /users endpoint with validation"
-/backlog add_story "GET /users/:id endpoint with error handling"
-/backlog add_story "PUT /users/:id endpoint with authorization"
+# Define the epic
+/epic "Build a production-ready user management REST API with authentication"
 
-# Plan and execute TDD sprint
+# Add detailed stories to backlog
+/backlog add_story "USER-001: Create POST /api/users endpoint with validation and error handling"
+/backlog add_story "USER-002: Implement JWT authentication with refresh tokens"
+/backlog add_story "USER-003: Add user profile management endpoints (GET, PUT, DELETE)"
+/backlog add_story "USER-004: Implement role-based access control (RBAC)"
+/backlog add_story "USER-005: Add rate limiting and security headers"
+
+# Prioritize the backlog
+/backlog prioritize
+```
+
+**Initial Setup Script:**
+```bash
+#!/bin/bash
+# setup.sh - Initialize Express API project
+
+# Create project directory
+mkdir -p express-api-tdd
+cd express-api-tdd
+
+# Initialize npm project
+npm init -y
+
+# Install dependencies
+npm install express cors helmet morgan compression dotenv
+npm install bcrypt jsonwebtoken validator
+npm install pg sequelize sequelize-cli
+
+# Install dev dependencies
+npm install -D jest supertest @types/jest
+npm install -D eslint prettier eslint-config-airbnb
+npm install -D nodemon concurrently
+npm install -D nyc @istanbuljs/nyc-config-typescript
+
+# Create directory structure
+mkdir -p src/{controllers,models,routes,middleware,services,utils}
+mkdir -p tests/{unit,integration,tdd}
+mkdir -p config scripts docs
+
+# Initialize git repository
+git init
+echo "node_modules/" > .gitignore
+echo ".env" >> .gitignore
+echo "coverage/" >> .gitignore
+echo ".nyc_output/" >> .gitignore
+
+# Create initial configuration files
+cat > .env.example << EOF
+NODE_ENV=development
+PORT=3000
+DATABASE_URL=postgresql://user:password@localhost:5432/express_api
+JWT_SECRET=your-secret-key
+JWT_EXPIRES_IN=1h
+REFRESH_TOKEN_EXPIRES_IN=7d
+EOF
+
+cp .env.example .env
+```
+
+###### 2. First TDD Cycle - User Creation Endpoint
+
+**Discord TDD Workflow:**
+```bash
+# Start sprint
 /sprint plan
 /sprint start
 
-# TDD workflow for each story
-/tdd start USER-001 "User creation endpoint"
-/tdd design    # Creates API specification
-/tdd test      # Generates Jest tests
-/tdd code      # Implements endpoint
-/tdd refactor  # Optimizes code
-/tdd commit    # Final integration
+# Begin TDD cycle for user creation
+/tdd start USER-001 "Create POST /api/users endpoint"
 ```
 
-#### Python Django Project
-Django web application with comprehensive TDD coverage.
+###### 3. TDD Design Phase Output
+
+**Generated by Design Agent:**
+```markdown
+# USER-001: POST /api/users Endpoint Design
+
+## API Specification
+
+### Endpoint
+`POST /api/users`
+
+### Request Body
+```json
+{
+  "email": "user@example.com",
+  "password": "SecurePass123!",
+  "firstName": "John",
+  "lastName": "Doe",
+  "role": "user"
+}
+```
+
+### Validation Rules
+- Email: Valid email format, unique in database
+- Password: Min 8 chars, 1 uppercase, 1 lowercase, 1 number, 1 special char
+- FirstName/LastName: 2-50 characters, alphabetic only
+- Role: Must be 'user', 'admin', or 'moderator'
+
+### Success Response (201 Created)
+```json
+{
+  "id": "123e4567-e89b-12d3-a456-426614174000",
+  "email": "user@example.com",
+  "firstName": "John",
+  "lastName": "Doe",
+  "role": "user",
+  "createdAt": "2024-01-15T10:30:00Z",
+  "updatedAt": "2024-01-15T10:30:00Z"
+}
+```
+
+### Error Responses
+- 400 Bad Request: Validation errors
+- 409 Conflict: Email already exists
+- 500 Internal Server Error: Database errors
+
+## Implementation Plan
+1. Create User model with Sequelize
+2. Add validation middleware
+3. Implement password hashing with bcrypt
+4. Create controller with error handling
+5. Add integration tests
+```
+
+###### 4. TDD Test Phase - Generated Tests
+
+**tests/tdd/USER-001/user-creation.test.js:**
+```javascript
+const request = require('supertest');
+const app = require('../../../src/app');
+const { User } = require('../../../src/models');
+const { sequelize } = require('../../../src/config/database');
+
+describe('POST /api/users - User Creation Endpoint', () => {
+  beforeAll(async () => {
+    await sequelize.sync({ force: true });
+  });
+
+  afterEach(async () => {
+    await User.destroy({ where: {} });
+  });
+
+  afterAll(async () => {
+    await sequelize.close();
+  });
+
+  describe('Successful user creation', () => {
+    test('should create a new user with valid data', async () => {
+      const userData = {
+        email: 'test@example.com',
+        password: 'SecurePass123!',
+        firstName: 'John',
+        lastName: 'Doe',
+        role: 'user'
+      };
+
+      const response = await request(app)
+        .post('/api/users')
+        .send(userData)
+        .expect(201);
+
+      expect(response.body).toMatchObject({
+        id: expect.any(String),
+        email: userData.email,
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        role: userData.role,
+        createdAt: expect.any(String),
+        updatedAt: expect.any(String)
+      });
+
+      // Verify password is not returned
+      expect(response.body.password).toBeUndefined();
+
+      // Verify user exists in database
+      const user = await User.findOne({ where: { email: userData.email } });
+      expect(user).toBeTruthy();
+      expect(user.email).toBe(userData.email);
+    });
+
+    test('should hash password before storing', async () => {
+      const userData = {
+        email: 'hash@example.com',
+        password: 'PlainTextPass123!',
+        firstName: 'Jane',
+        lastName: 'Smith',
+        role: 'user'
+      };
+
+      await request(app)
+        .post('/api/users')
+        .send(userData)
+        .expect(201);
+
+      const user = await User.findOne({ where: { email: userData.email } });
+      expect(user.password).not.toBe(userData.password);
+      expect(user.password).toMatch(/^\$2[aby]\$/);
+    });
+  });
+
+  describe('Validation errors', () => {
+    test('should return 400 for invalid email format', async () => {
+      const response = await request(app)
+        .post('/api/users')
+        .send({
+          email: 'invalid-email',
+          password: 'SecurePass123!',
+          firstName: 'John',
+          lastName: 'Doe',
+          role: 'user'
+        })
+        .expect(400);
+
+      expect(response.body.error).toBe('Validation failed');
+      expect(response.body.details).toContainEqual(
+        expect.objectContaining({
+          field: 'email',
+          message: 'Invalid email format'
+        })
+      );
+    });
+
+    test('should return 400 for weak password', async () => {
+      const response = await request(app)
+        .post('/api/users')
+        .send({
+          email: 'test@example.com',
+          password: 'weak',
+          firstName: 'John',
+          lastName: 'Doe',
+          role: 'user'
+        })
+        .expect(400);
+
+      expect(response.body.error).toBe('Validation failed');
+      expect(response.body.details).toContainEqual(
+        expect.objectContaining({
+          field: 'password',
+          message: expect.stringContaining('Password must')
+        })
+      );
+    });
+
+    test('should return 400 for missing required fields', async () => {
+      const response = await request(app)
+        .post('/api/users')
+        .send({
+          email: 'test@example.com'
+        })
+        .expect(400);
+
+      expect(response.body.error).toBe('Validation failed');
+      expect(response.body.details).toHaveLength(4);
+    });
+
+    test('should return 409 for duplicate email', async () => {
+      const userData = {
+        email: 'duplicate@example.com',
+        password: 'SecurePass123!',
+        firstName: 'John',
+        lastName: 'Doe',
+        role: 'user'
+      };
+
+      // Create first user
+      await request(app)
+        .post('/api/users')
+        .send(userData)
+        .expect(201);
+
+      // Attempt to create duplicate
+      const response = await request(app)
+        .post('/api/users')
+        .send(userData)
+        .expect(409);
+
+      expect(response.body.error).toBe('Email already exists');
+    });
+  });
+
+  describe('Security tests', () => {
+    test('should sanitize input to prevent SQL injection', async () => {
+      const maliciousData = {
+        email: 'test@example.com',
+        password: 'SecurePass123!',
+        firstName: "John'; DROP TABLE users; --",
+        lastName: 'Doe',
+        role: 'user'
+      };
+
+      const response = await request(app)
+        .post('/api/users')
+        .send(maliciousData)
+        .expect(201);
+
+      // Verify the malicious input was stored safely
+      const user = await User.findOne({ where: { email: maliciousData.email } });
+      expect(user.firstName).toBe(maliciousData.firstName);
+    });
+
+    test('should rate limit requests', async () => {
+      const userData = {
+        email: 'ratelimit@example.com',
+        password: 'SecurePass123!',
+        firstName: 'John',
+        lastName: 'Doe',
+        role: 'user'
+      };
+
+      // Make 10 requests quickly
+      const requests = [];
+      for (let i = 0; i < 10; i++) {
+        requests.push(
+          request(app)
+            .post('/api/users')
+            .send({ ...userData, email: `test${i}@example.com` })
+        );
+      }
+
+      const responses = await Promise.all(requests);
+      const tooManyRequests = responses.filter(r => r.status === 429);
+      expect(tooManyRequests.length).toBeGreaterThan(0);
+    });
+  });
+});
+```
+
+###### 5. TDD Code Phase - Implementation
+
+**src/models/User.js:**
+```javascript
+const { DataTypes } = require('sequelize');
+const bcrypt = require('bcrypt');
+const { v4: uuidv4 } = require('uuid');
+
+module.exports = (sequelize) => {
+  const User = sequelize.define('User', {
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: () => uuidv4(),
+      primaryKey: true
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+      validate: {
+        isEmail: {
+          msg: 'Invalid email format'
+        }
+      }
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    firstName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        len: {
+          args: [2, 50],
+          msg: 'First name must be between 2 and 50 characters'
+        },
+        isAlpha: {
+          msg: 'First name must contain only letters'
+        }
+      }
+    },
+    lastName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        len: {
+          args: [2, 50],
+          msg: 'Last name must be between 2 and 50 characters'
+        },
+        isAlpha: {
+          msg: 'Last name must contain only letters'
+        }
+      }
+    },
+    role: {
+      type: DataTypes.ENUM('user', 'admin', 'moderator'),
+      defaultValue: 'user',
+      allowNull: false
+    }
+  }, {
+    hooks: {
+      beforeCreate: async (user) => {
+        user.password = await bcrypt.hash(user.password, 10);
+      },
+      beforeUpdate: async (user) => {
+        if (user.changed('password')) {
+          user.password = await bcrypt.hash(user.password, 10);
+        }
+      }
+    },
+    defaultScope: {
+      attributes: { exclude: ['password'] }
+    },
+    scopes: {
+      withPassword: {
+        attributes: { include: ['password'] }
+      }
+    }
+  });
+
+  User.prototype.comparePassword = async function(password) {
+    return bcrypt.compare(password, this.password);
+  };
+
+  return User;
+};
+```
+
+**src/controllers/userController.js:**
+```javascript
+const { User } = require('../models');
+const { validateUserInput } = require('../middleware/validation');
+const { AppError } = require('../utils/errors');
+const logger = require('../utils/logger');
+
+class UserController {
+  async createUser(req, res, next) {
+    try {
+      const { email, password, firstName, lastName, role } = req.body;
+
+      // Check if user already exists
+      const existingUser = await User.findOne({ where: { email } });
+      if (existingUser) {
+        throw new AppError('Email already exists', 409);
+      }
+
+      // Create new user
+      const user = await User.create({
+        email,
+        password,
+        firstName,
+        lastName,
+        role
+      });
+
+      // Log user creation
+      logger.info('User created', { userId: user.id, email: user.email });
+
+      // Return user without password
+      const userResponse = user.toJSON();
+      delete userResponse.password;
+
+      res.status(201).json(userResponse);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getUser(req, res, next) {
+    try {
+      const { id } = req.params;
+
+      const user = await User.findByPk(id);
+      if (!user) {
+        throw new AppError('User not found', 404);
+      }
+
+      res.json(user);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async updateUser(req, res, next) {
+    try {
+      const { id } = req.params;
+      const updates = req.body;
+
+      const user = await User.findByPk(id);
+      if (!user) {
+        throw new AppError('User not found', 404);
+      }
+
+      // Check authorization
+      if (req.user.id !== id && req.user.role !== 'admin') {
+        throw new AppError('Unauthorized', 403);
+      }
+
+      // Update user
+      await user.update(updates);
+
+      res.json(user);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async deleteUser(req, res, next) {
+    try {
+      const { id } = req.params;
+
+      const user = await User.findByPk(id);
+      if (!user) {
+        throw new AppError('User not found', 404);
+      }
+
+      // Check authorization
+      if (req.user.role !== 'admin') {
+        throw new AppError('Unauthorized', 403);
+      }
+
+      await user.destroy();
+
+      res.status(204).send();
+    } catch (error) {
+      next(error);
+    }
+  }
+}
+
+module.exports = new UserController();
+```
+
+###### 6. GitHub Actions CI/CD Integration
+
+**.github/workflows/agent-workflow.yml:**
+```yaml
+name: AI Agent TDD Workflow
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  NODE_ENV: test
+  DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db
+
+jobs:
+  tdd-validation:
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: test_db
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Run database migrations
+      run: npm run migrate:test
+      
+    - name: Validate TDD cycles
+      run: |
+        npx agent-workflow validate --config config/agent-workflow.yml
+        
+    - name: Run TDD tests with coverage
+      run: |
+        npm run test:tdd -- --coverage --coverageDirectory=coverage/tdd
+        
+    - name: Run all tests
+      run: |
+        npm test -- --coverage --coverageReporters=json,lcov,text
+        
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        files: ./coverage/lcov.info
+        flags: unittests
+        name: codecov-umbrella
+        
+    - name: Check coverage thresholds
+      run: |
+        npx nyc check-coverage --lines 85 --functions 85 --branches 80
+        
+    - name: Lint code
+      run: npm run lint
+      
+    - name: Security audit
+      run: npm audit --audit-level=moderate
+
+  integration-tests:
+    needs: tdd-validation
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: test_db
+        ports:
+          - 5432:5432
+      
+      redis:
+        image: redis:7
+        ports:
+          - 6379:6379
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Run integration tests
+      run: npm run test:integration
+      env:
+        REDIS_URL: redis://localhost:6379
+        
+    - name: Run E2E tests
+      run: npm run test:e2e
+      
+    - name: Performance benchmarks
+      run: npm run test:performance
+      
+    - name: Upload test results
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-results
+        path: |
+          coverage/
+          test-results/
+          performance-results.json
+
+  build-and-deploy:
+    needs: [tdd-validation, integration-tests]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Build Docker image
+      run: |
+        docker build -t express-api-tdd:${{ github.sha }} .
+        
+    - name: Push to registry
+      run: |
+        echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+        docker tag express-api-tdd:${{ github.sha }} ${{ secrets.DOCKER_USERNAME }}/express-api-tdd:latest
+        docker push ${{ secrets.DOCKER_USERNAME }}/express-api-tdd:latest
+        
+    - name: Deploy to production
+      run: |
+        # Deploy to your cloud provider
+        echo "Deploying to production..."
+        
+    - name: Notify Discord
+      if: always()
+      run: |
+        curl -X POST ${{ secrets.DISCORD_WEBHOOK }} \
+          -H "Content-Type: application/json" \
+          -d '{
+            "content": "Deployment completed for Express API TDD",
+            "embeds": [{
+              "title": "Build #${{ github.run_number }}",
+              "color": 3066993,
+              "fields": [
+                {"name": "Status", "value": "${{ job.status }}", "inline": true},
+                {"name": "Branch", "value": "${{ github.ref }}", "inline": true},
+                {"name": "Commit", "value": "${{ github.sha }}", "inline": true}
+              ]
+            }]
+          }'
+```
+
+###### 7. Performance Benchmarks
+
+**Performance test results for the Express API:**
+```javascript
+// tests/performance/api-benchmarks.js
+const autocannon = require('autocannon');
+
+const results = {
+  'POST /api/users': {
+    requests: {
+      average: 850,  // requests per second
+      stddev: 45,
+      max: 1200
+    },
+    latency: {
+      average: 12,   // milliseconds
+      stddev: 3.2,
+      p95: 18,
+      p99: 25
+    },
+    throughput: {
+      average: 2.1,  // MB/sec
+      total: 126     // MB
+    }
+  },
+  'GET /api/users/:id': {
+    requests: {
+      average: 2800,
+      stddev: 120,
+      max: 3500
+    },
+    latency: {
+      average: 3.5,
+      stddev: 1.1,
+      p95: 5,
+      p99: 8
+    }
+  }
+};
+```
+
+### CLI Tool Project
+
+#### Building a Command-Line Tool with TDD
+
+A comprehensive example of developing a CLI tool using the AI Agent TDD-Scrum workflow. This project demonstrates building a productivity tool with subcommands, configuration management, and plugin architecture.
+
+**Project Repository:** [github.com/agent-workflow-examples/taskmaster-cli](https://github.com/agent-workflow-examples/taskmaster-cli)
+
+##### Project Overview
+
+TaskMaster CLI - A powerful task management tool built with TDD methodology, featuring:
+- Task creation, tracking, and completion
+- Project organization with tags and priorities
+- Time tracking and reporting
+- Plugin system for extensibility
+- Cloud sync capabilities
+
+##### Project Structure
+```
+taskmaster-cli/
+├── .github/
+│   └── workflows/
+│       ├── release.yml              # Automated releases
+│       └── test.yml                 # CI/CD pipeline
+├── .orch-state/                     # Agent workflow state
+├── cmd/
+│   ├── taskmaster/                  # Main CLI entry point
+│   │   └── main.go
+│   └── commands/                    # Subcommands
+│       ├── add.go
+│       ├── list.go
+│       ├── complete.go
+│       ├── report.go
+│       └── sync.go
+├── internal/
+│   ├── task/                        # Task domain logic
+│   ├── storage/                     # Data persistence
+│   ├── config/                      # Configuration
+│   ├── plugins/                     # Plugin system
+│   └── sync/                        # Cloud sync
+├── pkg/
+│   ├── api/                         # Public API
+│   └── utils/                       # Utilities
+├── tests/
+│   ├── unit/                        # Unit tests
+│   ├── integration/                 # Integration tests
+│   └── tdd/                         # TDD cycle tests
+│       ├── TASK-001/                # Add task feature
+│       ├── TASK-002/                # List tasks feature
+│       └── TASK-003/                # Time tracking
+├── scripts/
+│   ├── install.sh                   # Installation script
+│   └── build.sh                     # Build script
+├── docs/
+│   ├── ARCHITECTURE.md
+│   └── PLUGIN_GUIDE.md
+└── go.mod
+```
+
+##### Complete Configuration
+
+```yaml
+# config/agent-workflow.yml
+orchestrator:
+  mode: partial
+  project_path: "/workspace/taskmaster-cli"
+  github_repo: "agent-workflow-examples/taskmaster-cli"
+  
+tdd:
+  enabled: true
+  test_execution:
+    runner: "go test"
+    coverage_threshold: 90
+    parallel_jobs: 4
+    test_timeout: 60000
+    
+  quality_gates:
+    code_green_phase:
+      require_all_tests_pass: true
+      minimum_coverage: 90
+      lint_check: true
+      vet_check: true
+      
+  test_preservation:
+    enabled: true
+    backup_strategy: "git"
+    
+agents:
+  design_agent:
+    context: "CLI tool for task management with Go, using cobra framework"
+    architecture_style: "clean"
+    cli_framework: "cobra"
+    
+  code_agent:
+    implementation_style: "idiomatic"
+    error_handling: "comprehensive"
+    concurrency_model: "goroutines"
+    
+  qa_agent:
+    test_types: ["unit", "integration", "cli", "performance"]
+    test_framework: "testing"
+    mock_framework: "testify"
+    
+  data_agent:
+    storage_backend: "sqlite"
+    analytics_enabled: true
+    
+integrations:
+  ci:
+    provider: "github_actions"
+    release_automation: true
+    
+  distribution:
+    platforms: ["linux", "darwin", "windows"]
+    package_managers: ["homebrew", "snap", "chocolatey"]
+```
+
+##### Step-by-Step CLI Development
+
+###### 1. Project Initialization
+
+```bash
+# Discord commands
+/project register /workspace/taskmaster-cli "TaskMaster CLI"
+/epic "Build a comprehensive task management CLI tool with plugin support"
+
+# Add stories
+/backlog add_story "TASK-001: Implement 'add' command with task creation"
+/backlog add_story "TASK-002: Create 'list' command with filtering options"
+/backlog add_story "TASK-003: Add time tracking functionality"
+/backlog add_story "TASK-004: Implement plugin system architecture"
+/backlog add_story "TASK-005: Add cloud sync capabilities"
+```
+
+###### 2. TDD Cycle for Add Command
+
+**Design Phase Output:**
+```go
+// docs/tdd/TASK-001/design.md
+// Command: taskmaster add "Task description" --project work --priority high --due tomorrow
+
+// Task structure
+type Task struct {
+    ID          string
+    Description string
+    Project     string
+    Priority    Priority
+    Tags        []string
+    DueDate     *time.Time
+    CreatedAt   time.Time
+    CompletedAt *time.Time
+}
+
+// Command interface
+type AddCommand struct {
+    storage Storage
+}
+
+func (c *AddCommand) Execute(args []string, flags Flags) error {
+    // Parse task description
+    // Validate inputs
+    // Create task
+    // Store task
+    // Return confirmation
+}
+```
+
+**Generated Tests:**
+```go
+// tests/tdd/TASK-001/add_command_test.go
+package commands_test
+
+import (
+    "testing"
+    "time"
+    
+    "github.com/stretchr/testify/assert"
+    "github.com/stretchr/testify/mock"
+    
+    "taskmaster/cmd/commands"
+    "taskmaster/internal/task"
+    "taskmaster/internal/storage"
+)
+
+type MockStorage struct {
+    mock.Mock
+}
+
+func (m *MockStorage) SaveTask(t *task.Task) error {
+    args := m.Called(t)
+    return args.Error(0)
+}
+
+func TestAddCommand_Execute(t *testing.T) {
+    tests := []struct {
+        name        string
+        args        []string
+        flags       map[string]string
+        setupMock   func(*MockStorage)
+        wantErr     bool
+        errContains string
+    }{
+        {
+            name: "successful task creation",
+            args: []string{"Write unit tests"},
+            flags: map[string]string{
+                "project":  "work",
+                "priority": "high",
+                "due":      "tomorrow",
+            },
+            setupMock: func(m *MockStorage) {
+                m.On("SaveTask", mock.MatchedBy(func(t *task.Task) bool {
+                    return t.Description == "Write unit tests" &&
+                           t.Project == "work" &&
+                           t.Priority == task.PriorityHigh &&
+                           t.DueDate != nil
+                })).Return(nil)
+            },
+            wantErr: false,
+        },
+        {
+            name: "empty description error",
+            args: []string{},
+            flags: map[string]string{},
+            setupMock: func(m *MockStorage) {},
+            wantErr: true,
+            errContains: "task description is required",
+        },
+        {
+            name: "invalid priority",
+            args: []string{"Test task"},
+            flags: map[string]string{
+                "priority": "invalid",
+            },
+            setupMock: func(m *MockStorage) {},
+            wantErr: true,
+            errContains: "invalid priority",
+        },
+        {
+            name: "storage error",
+            args: []string{"Test task"},
+            flags: map[string]string{},
+            setupMock: func(m *MockStorage) {
+                m.On("SaveTask", mock.Anything).Return(errors.New("database error"))
+            },
+            wantErr: true,
+            errContains: "failed to save task",
+        },
+    }
+    
+    for _, tt := range tests {
+        t.Run(tt.name, func(t *testing.T) {
+            mockStorage := new(MockStorage)
+            tt.setupMock(mockStorage)
+            
+            cmd := commands.NewAddCommand(mockStorage)
+            err := cmd.Execute(tt.args, tt.flags)
+            
+            if tt.wantErr {
+                assert.Error(t, err)
+                if tt.errContains != "" {
+                    assert.Contains(t, err.Error(), tt.errContains)
+                }
+            } else {
+                assert.NoError(t, err)
+            }
+            
+            mockStorage.AssertExpectations(t)
+        })
+    }
+}
+
+func TestAddCommand_ParseDueDate(t *testing.T) {
+    tests := []struct {
+        input    string
+        wantTime time.Time
+        wantErr  bool
+    }{
+        {
+            input:    "tomorrow",
+            wantTime: time.Now().AddDate(0, 0, 1).Truncate(24 * time.Hour),
+            wantErr:  false,
+        },
+        {
+            input:    "next week",
+            wantTime: time.Now().AddDate(0, 0, 7).Truncate(24 * time.Hour),
+            wantErr:  false,
+        },
+        {
+            input:    "2024-12-31",
+            wantTime: time.Date(2024, 12, 31, 0, 0, 0, 0, time.Local),
+            wantErr:  false,
+        },
+        {
+            input:   "invalid",
+            wantErr: true,
+        },
+    }
+    
+    for _, tt := range tests {
+        t.Run(tt.input, func(t *testing.T) {
+            got, err := commands.ParseDueDate(tt.input)
+            
+            if tt.wantErr {
+                assert.Error(t, err)
+            } else {
+                assert.NoError(t, err)
+                assert.Equal(t, tt.wantTime.Format("2006-01-02"), got.Format("2006-01-02"))
+            }
+        })
+    }
+}
+```
+
+**Implementation:**
+```go
+// cmd/commands/add.go
+package commands
+
+import (
+    "errors"
+    "fmt"
+    "strings"
+    "time"
+    
+    "github.com/spf13/cobra"
+    
+    "taskmaster/internal/task"
+    "taskmaster/internal/storage"
+)
+
+type AddCommand struct {
+    storage storage.Storage
+}
+
+func NewAddCommand(storage storage.Storage) *cobra.Command {
+    ac := &AddCommand{storage: storage}
+    
+    cmd := &cobra.Command{
+        Use:   "add [description]",
+        Short: "Add a new task",
+        Long:  `Add a new task with optional project, priority, tags, and due date.`,
+        Args:  cobra.MinimumNArgs(1),
+        RunE:  ac.runE,
+    }
+    
+    cmd.Flags().StringP("project", "p", "", "Project name")
+    cmd.Flags().StringP("priority", "r", "medium", "Priority (low, medium, high)")
+    cmd.Flags().StringSliceP("tags", "t", []string{}, "Tags (comma-separated)")
+    cmd.Flags().StringP("due", "d", "", "Due date (e.g., tomorrow, next week, 2024-12-31)")
+    
+    return cmd
+}
+
+func (ac *AddCommand) runE(cmd *cobra.Command, args []string) error {
+    description := strings.Join(args, " ")
+    if description == "" {
+        return errors.New("task description is required")
+    }
+    
+    // Parse flags
+    project, _ := cmd.Flags().GetString("project")
+    priorityStr, _ := cmd.Flags().GetString("priority")
+    tags, _ := cmd.Flags().GetStringSlice("tags")
+    dueStr, _ := cmd.Flags().GetString("due")
+    
+    // Parse priority
+    priority, err := task.ParsePriority(priorityStr)
+    if err != nil {
+        return fmt.Errorf("invalid priority: %w", err)
+    }
+    
+    // Parse due date
+    var dueDate *time.Time
+    if dueStr != "" {
+        parsed, err := ParseDueDate(dueStr)
+        if err != nil {
+            return fmt.Errorf("invalid due date: %w", err)
+        }
+        dueDate = &parsed
+    }
+    
+    // Create task
+    t := &task.Task{
+        ID:          task.GenerateID(),
+        Description: description,
+        Project:     project,
+        Priority:    priority,
+        Tags:        tags,
+        DueDate:     dueDate,
+        CreatedAt:   time.Now(),
+    }
+    
+    // Save task
+    if err := ac.storage.SaveTask(t); err != nil {
+        return fmt.Errorf("failed to save task: %w", err)
+    }
+    
+    fmt.Printf("✓ Task added: %s\n", t.ID)
+    return nil
+}
+
+func ParseDueDate(input string) (time.Time, error) {
+    now := time.Now()
+    
+    switch strings.ToLower(input) {
+    case "today":
+        return now.Truncate(24 * time.Hour), nil
+    case "tomorrow":
+        return now.AddDate(0, 0, 1).Truncate(24 * time.Hour), nil
+    case "next week":
+        return now.AddDate(0, 0, 7).Truncate(24 * time.Hour), nil
+    default:
+        // Try parsing as date
+        layouts := []string{
+            "2006-01-02",
+            "01/02/2006",
+            "Jan 2, 2006",
+        }
+        
+        for _, layout := range layouts {
+            if t, err := time.Parse(layout, input); err == nil {
+                return t, nil
+            }
+        }
+        
+        return time.Time{}, fmt.Errorf("unrecognized date format: %s", input)
+    }
+}
+```
+
+###### 3. Plugin System Architecture
+
+**Design:**
+```go
+// internal/plugins/plugin.go
+package plugins
+
+import (
+    "context"
+    "taskmaster/internal/task"
+)
+
+type Plugin interface {
+    Name() string
+    Version() string
+    Initialize(config map[string]interface{}) error
+    Hooks() []Hook
+}
+
+type Hook interface {
+    Type() HookType
+    Execute(ctx context.Context, data interface{}) error
+}
+
+type HookType string
+
+const (
+    HookBeforeTaskAdd    HookType = "before_task_add"
+    HookAfterTaskAdd     HookType = "after_task_add"
+    HookBeforeTaskUpdate HookType = "before_task_update"
+    HookAfterTaskUpdate  HookType = "after_task_update"
+)
+
+// Example plugin: Slack notifications
+type SlackPlugin struct {
+    webhookURL string
+}
+
+func (p *SlackPlugin) Name() string { return "slack-notifications" }
+func (p *SlackPlugin) Version() string { return "1.0.0" }
+
+func (p *SlackPlugin) Initialize(config map[string]interface{}) error {
+    url, ok := config["webhook_url"].(string)
+    if !ok {
+        return errors.New("webhook_url is required")
+    }
+    p.webhookURL = url
+    return nil
+}
+
+func (p *SlackPlugin) Hooks() []Hook {
+    return []Hook{
+        &SlackHook{plugin: p, hookType: HookAfterTaskAdd},
+    }
+}
+```
+
+### Data Pipeline Project
+
+#### Building a Data Pipeline with TDD
+
+A complete example of creating a data processing pipeline using the AI Agent TDD-Scrum workflow. This project demonstrates ETL operations, stream processing, and data quality validation.
+
+**Project Repository:** [github.com/agent-workflow-examples/dataflow-pipeline](https://github.com/agent-workflow-examples/dataflow-pipeline)
+
+##### Project Overview
+
+DataFlow Pipeline - A scalable data processing system featuring:
+- Real-time data ingestion from multiple sources
+- Data transformation and enrichment
+- Quality validation and error handling
+- Batch and stream processing modes
+- Monitoring and alerting
+
+##### Project Structure
+```
+dataflow-pipeline/
+├── .github/
+│   └── workflows/
+│       ├── data-validation.yml      # Data quality checks
+│       └── pipeline-tests.yml       # Pipeline testing
+├── .orch-state/                     # Agent workflow state
+├── src/
+│   ├── ingestion/                   # Data ingestion modules
+│   │   ├── kafka_consumer.py
+│   │   ├── file_watcher.py
+│   │   └── api_poller.py
+│   ├── transformation/              # Data transformation
+│   │   ├── cleaners.py
+│   │   ├── enrichers.py
+│   │   └── aggregators.py
+│   ├── validation/                  # Data quality
+│   │   ├── schemas.py
+│   │   ├── rules.py
+│   │   └── validators.py
+│   ├── storage/                     # Data storage
+│   │   ├── data_lake.py
+│   │   ├── warehouse.py
+│   │   └── cache.py
+│   └── monitoring/                  # Pipeline monitoring
+│       ├── metrics.py
+│       └── alerts.py
+├── tests/
+│   ├── unit/
+│   ├── integration/
+│   └── tdd/
+│       ├── PIPE-001/                # Kafka ingestion
+│       ├── PIPE-002/                # Data validation
+│       └── PIPE-003/                # Transformation logic
+├── airflow/
+│   └── dags/                        # Airflow DAGs
+├── docker/
+│   ├── Dockerfile
+│   └── docker-compose.yml
+└── config/
+    ├── pipeline.yaml                # Pipeline configuration
+    └── schemas/                     # Data schemas
+```
 
 ```yaml
 # config/django-web.yml
@@ -530,6 +1895,502 @@ pipeline {
 ### PostgreSQL Integration
 
 #### Database Configuration
+##### Complete Pipeline Configuration
+
+```yaml
+# config/agent-workflow.yml
+orchestrator:
+  mode: partial
+  project_path: "/workspace/dataflow-pipeline"
+  github_repo: "agent-workflow-examples/dataflow-pipeline"
+  
+tdd:
+  enabled: true
+  test_execution:
+    runner: "pytest"
+    coverage_threshold: 85
+    parallel_jobs: 6
+    
+  quality_gates:
+    code_green_phase:
+      data_validation: true
+      performance_benchmarks: true
+      integration_tests: true
+      
+agents:
+  design_agent:
+    context: "Data pipeline with Apache Kafka, Apache Spark, and PostgreSQL"
+    architecture_style: "event-driven"
+    data_patterns: ["ETL", "streaming", "batch"]
+    
+  code_agent:
+    implementation_style: "functional"
+    frameworks: ["pyspark", "kafka-python", "pandas"]
+    
+  qa_agent:
+    test_types: ["unit", "integration", "data_quality", "performance"]
+    data_validation: true
+    
+  data_agent:
+    analytics_tools: ["jupyter", "matplotlib", "seaborn"]
+    profiling_enabled: true
+    
+integrations:
+  data_platforms:
+    kafka:
+      bootstrap_servers: "localhost:9092"
+    spark:
+      master: "local[*]"
+    postgres:
+      connection_string: "${DATABASE_URL}"
+```
+
+##### TDD Cycle Example: Kafka Consumer
+
+**Design Phase:**
+```python
+# docs/tdd/PIPE-001/kafka_consumer_design.md
+"""
+Kafka Consumer Design
+
+Objective: Create a robust Kafka consumer that can:
+1. Connect to multiple topics
+2. Handle message deserialization
+3. Implement error handling and retries
+4. Support checkpointing
+5. Provide metrics
+
+Message Flow:
+Kafka Topic -> Consumer -> Deserializer -> Validator -> Processor -> Storage
+
+Error Handling:
+- Dead letter queue for failed messages
+- Exponential backoff for retries
+- Circuit breaker for downstream services
+"""
+```
+
+**Generated Tests:**
+```python
+# tests/tdd/PIPE-001/test_kafka_consumer.py
+import pytest
+from unittest.mock import Mock, patch, MagicMock
+import json
+from datetime import datetime
+
+from src.ingestion.kafka_consumer import KafkaConsumer, MessageProcessor
+from src.validation.validators import MessageValidator
+
+
+class TestKafkaConsumer:
+    
+    @pytest.fixture
+    def mock_kafka_consumer(self):
+        with patch('kafka.KafkaConsumer') as mock:
+            yield mock
+    
+    @pytest.fixture
+    def consumer_config(self):
+        return {
+            'bootstrap_servers': ['localhost:9092'],
+            'topics': ['user-events', 'system-logs'],
+            'group_id': 'test-consumer-group',
+            'auto_offset_reset': 'earliest',
+            'enable_auto_commit': False
+        }
+    
+    def test_consumer_initialization(self, mock_kafka_consumer, consumer_config):
+        """Test that consumer initializes with correct configuration"""
+        consumer = KafkaConsumer(consumer_config)
+        
+        mock_kafka_consumer.assert_called_once_with(
+            *consumer_config['topics'],
+            bootstrap_servers=consumer_config['bootstrap_servers'],
+            group_id=consumer_config['group_id'],
+            auto_offset_reset=consumer_config['auto_offset_reset'],
+            enable_auto_commit=consumer_config['enable_auto_commit'],
+            value_deserializer=consumer._deserialize_message
+        )
+    
+    def test_message_deserialization(self, consumer_config):
+        """Test JSON message deserialization"""
+        consumer = KafkaConsumer(consumer_config)
+        
+        # Test valid JSON
+        valid_json = b'{"event": "user_signup", "user_id": 123}'
+        result = consumer._deserialize_message(valid_json)
+        assert result == {"event": "user_signup", "user_id": 123}
+        
+        # Test invalid JSON
+        invalid_json = b'invalid json'
+        with pytest.raises(json.JSONDecodeError):
+            consumer._deserialize_message(invalid_json)
+    
+    @pytest.mark.asyncio
+    async def test_message_processing_success(self, mock_kafka_consumer, consumer_config):
+        """Test successful message processing"""
+        # Setup
+        consumer = KafkaConsumer(consumer_config)
+        processor = Mock(spec=MessageProcessor)
+        validator = Mock(spec=MessageValidator)
+        
+        consumer.processor = processor
+        consumer.validator = validator
+        
+        # Mock message
+        mock_message = MagicMock()
+        mock_message.value = {"event": "user_signup", "user_id": 123}
+        mock_message.topic = "user-events"
+        mock_message.partition = 0
+        mock_message.offset = 100
+        
+        validator.validate.return_value = True
+        processor.process.return_value = {"status": "success"}
+        
+        # Process message
+        result = await consumer._process_message(mock_message)
+        
+        # Assertions
+        assert result["status"] == "success"
+        validator.validate.assert_called_once_with(mock_message.value)
+        processor.process.assert_called_once_with(mock_message.value)
+    
+    @pytest.mark.asyncio
+    async def test_message_processing_validation_failure(self, consumer_config):
+        """Test message processing with validation failure"""
+        consumer = KafkaConsumer(consumer_config)
+        validator = Mock(spec=MessageValidator)
+        validator.validate.return_value = False
+        consumer.validator = validator
+        
+        mock_message = MagicMock()
+        mock_message.value = {"invalid": "data"}
+        
+        with pytest.raises(ValueError) as exc_info:
+            await consumer._process_message(mock_message)
+        
+        assert "Message validation failed" in str(exc_info.value)
+    
+    @pytest.mark.asyncio
+    async def test_retry_mechanism(self, consumer_config):
+        """Test retry mechanism with exponential backoff"""
+        consumer = KafkaConsumer(consumer_config)
+        processor = Mock(spec=MessageProcessor)
+        
+        # Simulate failures then success
+        processor.process.side_effect = [
+            Exception("First attempt failed"),
+            Exception("Second attempt failed"),
+            {"status": "success"}
+        ]
+        
+        consumer.processor = processor
+        consumer.validator = Mock(return_value=True)
+        
+        mock_message = MagicMock()
+        mock_message.value = {"data": "test"}
+        
+        result = await consumer._process_message_with_retry(mock_message, max_retries=3)
+        
+        assert result["status"] == "success"
+        assert processor.process.call_count == 3
+    
+    def test_dead_letter_queue(self, consumer_config):
+        """Test that failed messages go to DLQ"""
+        consumer = KafkaConsumer(consumer_config)
+        dlq_producer = Mock()
+        consumer.dlq_producer = dlq_producer
+        
+        failed_message = {
+            "original_message": {"data": "test"},
+            "error": "Processing failed after max retries",
+            "timestamp": datetime.utcnow().isoformat(),
+            "topic": "user-events",
+            "partition": 0,
+            "offset": 100
+        }
+        
+        consumer._send_to_dlq(failed_message)
+        
+        dlq_producer.send.assert_called_once()
+        call_args = dlq_producer.send.call_args[0]
+        assert call_args[0] == "dead-letter-queue"
+        assert json.loads(call_args[1]) == failed_message
+    
+    @pytest.mark.integration
+    async def test_end_to_end_consumer_flow(self, kafka_test_cluster):
+        """Integration test with real Kafka cluster"""
+        # This would run against a test Kafka instance
+        config = {
+            'bootstrap_servers': kafka_test_cluster.bootstrap_servers,
+            'topics': ['test-topic'],
+            'group_id': 'integration-test-group'
+        }
+        
+        consumer = KafkaConsumer(config)
+        
+        # Produce test message
+        producer = kafka_test_cluster.get_producer()
+        test_message = {"event": "test", "timestamp": datetime.utcnow().isoformat()}
+        producer.send('test-topic', json.dumps(test_message).encode())
+        producer.flush()
+        
+        # Consume and verify
+        messages = await consumer.consume_batch(max_messages=1, timeout=5)
+        assert len(messages) == 1
+        assert messages[0]['event'] == 'test'
+```
+
+**Implementation:**
+```python
+# src/ingestion/kafka_consumer.py
+import json
+import asyncio
+import logging
+from typing import Dict, List, Any, Optional
+from datetime import datetime
+import backoff
+
+from kafka import KafkaConsumer as KafkaClient
+from kafka import KafkaProducer
+from kafka.errors import KafkaError
+
+from src.validation.validators import MessageValidator
+from src.monitoring.metrics import MetricsCollector
+
+
+logger = logging.getLogger(__name__)
+
+
+class KafkaConsumer:
+    """Robust Kafka consumer with error handling and monitoring"""
+    
+    def __init__(self, config: Dict[str, Any]):
+        self.config = config
+        self.topics = config['topics']
+        self.consumer = self._create_consumer()
+        self.validator = MessageValidator()
+        self.processor = None
+        self.metrics = MetricsCollector()
+        self.dlq_producer = self._create_dlq_producer()
+        
+    def _create_consumer(self) -> KafkaClient:
+        """Create Kafka consumer with configuration"""
+        return KafkaClient(
+            *self.topics,
+            bootstrap_servers=self.config['bootstrap_servers'],
+            group_id=self.config['group_id'],
+            auto_offset_reset=self.config.get('auto_offset_reset', 'earliest'),
+            enable_auto_commit=self.config.get('enable_auto_commit', False),
+            value_deserializer=self._deserialize_message,
+            max_poll_records=self.config.get('max_poll_records', 500)
+        )
+    
+    def _create_dlq_producer(self) -> KafkaProducer:
+        """Create producer for dead letter queue"""
+        return KafkaProducer(
+            bootstrap_servers=self.config['bootstrap_servers'],
+            value_serializer=lambda v: json.dumps(v).encode('utf-8')
+        )
+    
+    def _deserialize_message(self, message: bytes) -> Dict[str, Any]:
+        """Deserialize JSON message"""
+        try:
+            return json.loads(message.decode('utf-8'))
+        except json.JSONDecodeError as e:
+            logger.error(f"Failed to deserialize message: {e}")
+            raise
+    
+    async def consume(self) -> None:
+        """Main consumption loop"""
+        logger.info(f"Starting consumer for topics: {self.topics}")
+        
+        try:
+            for message in self.consumer:
+                try:
+                    await self._process_message(message)
+                    self.consumer.commit()
+                    self.metrics.increment('messages_processed')
+                except Exception as e:
+                    logger.error(f"Error processing message: {e}")
+                    await self._handle_failed_message(message, e)
+                    self.metrics.increment('messages_failed')
+        except KeyboardInterrupt:
+            logger.info("Consumer stopped by user")
+        finally:
+            self.consumer.close()
+    
+    async def _process_message(self, message) -> Dict[str, Any]:
+        """Process a single message"""
+        self.metrics.increment('messages_received')
+        
+        # Validate message
+        if not self.validator.validate(message.value):
+            raise ValueError("Message validation failed")
+        
+        # Process with retry
+        result = await self._process_message_with_retry(message)
+        
+        # Log success
+        logger.info(f"Processed message from {message.topic}:{message.partition}:{message.offset}")
+        
+        return result
+    
+    @backoff.on_exception(
+        backoff.expo,
+        Exception,
+        max_tries=3,
+        max_time=60
+    )
+    async def _process_message_with_retry(self, message, max_retries: int = 3) -> Dict[str, Any]:
+        """Process message with exponential backoff retry"""
+        if not self.processor:
+            raise ValueError("No processor configured")
+        
+        return self.processor.process(message.value)
+    
+    async def _handle_failed_message(self, message, error: Exception) -> None:
+        """Handle messages that failed processing"""
+        failed_message = {
+            "original_message": message.value,
+            "error": str(error),
+            "timestamp": datetime.utcnow().isoformat(),
+            "topic": message.topic,
+            "partition": message.partition,
+            "offset": message.offset,
+            "consumer_group": self.config['group_id']
+        }
+        
+        self._send_to_dlq(failed_message)
+    
+    def _send_to_dlq(self, failed_message: Dict[str, Any]) -> None:
+        """Send failed message to dead letter queue"""
+        try:
+            future = self.dlq_producer.send(
+                'dead-letter-queue',
+                json.dumps(failed_message).encode('utf-8')
+            )
+            future.get(timeout=10)
+            logger.info(f"Sent message to DLQ: {failed_message['offset']}")
+        except Exception as e:
+            logger.error(f"Failed to send to DLQ: {e}")
+    
+    async def consume_batch(self, max_messages: int = 100, timeout: int = 10) -> List[Dict[str, Any]]:
+        """Consume messages in batch mode"""
+        messages = []
+        end_time = asyncio.get_event_loop().time() + timeout
+        
+        while len(messages) < max_messages and asyncio.get_event_loop().time() < end_time:
+            records = self.consumer.poll(timeout_ms=1000)
+            
+            for topic_partition, msgs in records.items():
+                for msg in msgs:
+                    messages.append(msg.value)
+                    if len(messages) >= max_messages:
+                        break
+        
+        return messages
+
+
+class MessageProcessor:
+    """Process validated messages"""
+    
+    def __init__(self, storage_backend):
+        self.storage = storage_backend
+    
+    def process(self, message: Dict[str, Any]) -> Dict[str, Any]:
+        """Process message and store results"""
+        # Transform message
+        transformed = self.transform(message)
+        
+        # Enrich with additional data
+        enriched = self.enrich(transformed)
+        
+        # Store in backend
+        result = self.storage.store(enriched)
+        
+        return {
+            "status": "success",
+            "message_id": message.get('id'),
+            "stored_at": datetime.utcnow().isoformat()
+        }
+    
+    def transform(self, message: Dict[str, Any]) -> Dict[str, Any]:
+        """Apply transformations to message"""
+        # Implementation here
+        return message
+    
+    def enrich(self, message: Dict[str, Any]) -> Dict[str, Any]:
+        """Enrich message with additional data"""
+        # Implementation here
+        return message
+```
+
+### Microservice Architecture Project
+
+#### Building Microservices with TDD
+
+A comprehensive example of developing a microservice architecture using the AI Agent TDD-Scrum workflow. This project demonstrates service decomposition, API gateway patterns, and distributed system testing.
+
+**Project Repository:** [github.com/agent-workflow-examples/microservices-platform](https://github.com/agent-workflow-examples/microservices-platform)
+
+##### Project Overview
+
+E-Commerce Microservices Platform featuring:
+- User Service: Authentication and user management
+- Product Service: Product catalog and inventory
+- Order Service: Order processing and fulfillment
+- Payment Service: Payment processing
+- Notification Service: Email and SMS notifications
+- API Gateway: Request routing and authentication
+
+##### Project Structure
+```
+microservices-platform/
+├── .github/
+│   └── workflows/
+│       ├── service-tests.yml        # Per-service testing
+│       └── integration-tests.yml    # Cross-service tests
+├── .orch-state/                     # Agent workflow state
+├── services/
+│   ├── api-gateway/
+│   │   ├── src/
+│   │   ├── tests/
+│   │   └── Dockerfile
+│   ├── user-service/
+│   │   ├── src/
+│   │   ├── tests/
+│   │   └── Dockerfile
+│   ├── product-service/
+│   │   ├── src/
+│   │   ├── tests/
+│   │   └── Dockerfile
+│   ├── order-service/
+│   │   ├── src/
+│   │   ├── tests/
+│   │   └── Dockerfile
+│   └── notification-service/
+│       ├── src/
+│       ├── tests/
+│       └── Dockerfile
+├── shared/
+│   ├── proto/                       # Protocol buffers
+│   ├── schemas/                     # Shared schemas
+│   └── libraries/                   # Shared libraries
+├── infrastructure/
+│   ├── kubernetes/                  # K8s manifests
+│   ├── terraform/                   # Infrastructure as code
+│   └── monitoring/                  # Monitoring config
+├── tests/
+│   ├── integration/                 # Cross-service tests
+│   ├── e2e/                        # End-to-end tests
+│   └── tdd/
+│       ├── MICRO-001/              # API Gateway
+│       ├── MICRO-002/              # Service communication
+│       └── MICRO-003/              # Distributed transactions
+└── docker-compose.yml              # Local development
+```
+
 ```yaml
 # config/postgresql.yml
 storage:
