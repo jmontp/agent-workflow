@@ -983,7 +983,7 @@ class TestSecretManagement:
             owner=owner_id
         )
         
-        can_access = security_system._can_access_secret(secret, owner_id)
+        can_access = security_system._can_access_secret(secret, owner_id, "test_project")
         assert can_access is True
     
     def test_can_access_secret_allowed_user(self, security_system):
@@ -1006,7 +1006,7 @@ class TestSecretManagement:
             allowed_users=[user_id]
         )
         
-        can_access = security_system._can_access_secret(secret, user_id)
+        can_access = security_system._can_access_secret(secret, user_id, "test_project")
         assert can_access is True
     
     def test_can_access_secret_allowed_project(self, security_system):
@@ -1076,7 +1076,7 @@ class TestSecretManagement:
             owner=owner_id
         )
         
-        can_access = security_system._can_access_secret(secret, user_id)
+        can_access = security_system._can_access_secret(secret, user_id, "test_project")
         assert can_access is False
 
 
@@ -1196,14 +1196,28 @@ class TestProjectIsolation:
     @patch('lib.multi_project_security.logger')
     def test_setup_process_isolation_error(self, mock_logger, security_system):
         """Test process isolation setup error."""
-        # Create a ProjectIsolation instance and test error handling
+        # Create a ProjectIsolation instance that will cause an error
         isolation = ProjectIsolation("test_project", IsolationMode.PROCESS)
         
-        # Mock an exception during process isolation setup
-        with patch.object(security_system, '_setup_process_isolation', side_effect=Exception("Process setup failed")):
-            success = security_system._setup_process_isolation(isolation)
+        # Create a custom class that raises an exception when resource_limits is set
+        class BrokenIsolation:
+            def __init__(self):
+                self.project_name = "test_project"
+                self.mode = IsolationMode.PROCESS
             
-            assert success is False
+            @property
+            def resource_limits(self):
+                return {}
+                
+            @resource_limits.setter
+            def resource_limits(self, value):
+                raise Exception("Process setup failed")
+        
+        broken_isolation = BrokenIsolation()
+        success = security_system._setup_process_isolation(broken_isolation)
+        
+        assert success is False
+        mock_logger.error.assert_called_once()
 
 
 class TestAuditLogging:

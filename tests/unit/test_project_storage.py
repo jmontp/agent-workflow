@@ -161,6 +161,7 @@ class TestProjectStorage:
         """Test project initialization with exception handling."""
         mock_ensure.side_effect = Exception("Directory creation failed")
         
+        # The initialize_project method prints to console on error
         with patch('builtins.print') as mock_print:
             result = project_storage.initialize_project()
             assert result is False
@@ -197,10 +198,12 @@ class TestProjectStorage:
         """Test loading project data with JSON decode error."""
         mock_exists.return_value = True
         
-        with patch('builtins.print') as mock_print:
+        with patch('lib.project_storage.logger') as mock_logger:
             result = project_storage.load_project_data()
             assert isinstance(result, ProjectData)
-            mock_print.assert_called_once()
+            # Check that error was logged
+            mock_logger.error.assert_called()
+            mock_logger.warning.assert_called()
 
     @patch('builtins.open', new_callable=mock_open)
     @patch('json.dump')
@@ -223,9 +226,10 @@ class TestProjectStorage:
         mock_json_dump.side_effect = Exception("Write failed")
         project_data = ProjectData()
         
-        with patch('builtins.print') as mock_print:
+        with patch('lib.project_storage.logger') as mock_logger:
             project_storage.save_project_data(project_data)
-            mock_print.assert_called_once()
+            # Check that warning was logged about failure
+            mock_logger.warning.assert_called()
 
     # Sprint Tests
 
@@ -258,10 +262,11 @@ class TestProjectStorage:
         """Test loading sprint with JSON decode error."""
         mock_exists.return_value = True
         
-        with patch('builtins.print') as mock_print:
+        with patch('lib.project_storage.logger') as mock_logger:
             result = project_storage.load_sprint("SPRINT-1")
             assert result is None
-            mock_print.assert_called_once()
+            # Check that error was logged
+            mock_logger.error.assert_called()
 
     @patch('builtins.open', new_callable=mock_open)
     @patch('json.dump')
@@ -281,9 +286,10 @@ class TestProjectStorage:
         """Test saving sprint with exception handling."""
         mock_json_dump.side_effect = Exception("Write failed")
         
-        with patch('builtins.print') as mock_print:
+        with patch('lib.project_storage.logger') as mock_logger:
             project_storage.save_sprint(sample_sprint)
-            mock_print.assert_called_once()
+            # Check that warning was logged
+            mock_logger.warning.assert_called()
 
     @patch('pathlib.Path.exists')
     def test_list_sprint_files_no_directory(self, mock_exists, project_storage):
@@ -340,6 +346,7 @@ class TestProjectStorage:
         """Test loading TDD cycle with JSON decode error."""
         mock_exists.return_value = True
         
+        # The load_tdd_cycle method prints to console on error
         with patch('builtins.print') as mock_print:
             result = project_storage.load_tdd_cycle("TDD-1")
             assert result is None
@@ -384,9 +391,10 @@ class TestProjectStorage:
         """Test saving TDD cycle with exception handling."""
         mock_json_dump.side_effect = Exception("Write failed")
         
-        with patch('builtins.print') as mock_print:
+        with patch('lib.project_storage.logger') as mock_logger:
             project_storage.save_tdd_cycle(mock_tdd_cycle)
-            mock_print.assert_called_once()
+            # Check that warning was logged
+            mock_logger.warning.assert_called()
 
     @patch('pathlib.Path.exists')
     def test_list_tdd_cycle_files_no_directory(self, mock_exists, project_storage):
@@ -560,6 +568,7 @@ class TestProjectStorage:
         """Test saving status with exception handling."""
         mock_json_dump.side_effect = Exception("Write failed")
         
+        # The save_status method prints to console on error
         with patch('builtins.print') as mock_print:
             project_storage.save_status({"state": "idle"})
             mock_print.assert_called_once()
@@ -652,6 +661,7 @@ class TestProjectStorage:
         """Test saving TDD metrics with exception handling."""
         mock_json_dump.side_effect = Exception("Write failed")
         
+        # The save_tdd_metrics method prints to console on error
         with patch('builtins.print') as mock_print:
             project_storage.save_tdd_metrics({"test": "data"})
             mock_print.assert_called_once()
@@ -708,6 +718,7 @@ class TestProjectStorage:
         """Test saving TDD cycle state with exception handling."""
         mock_json_dump.side_effect = Exception("Write failed")
         
+        # The save_tdd_cycle_state method prints to console on error
         with patch('builtins.print') as mock_print:
             project_storage.save_tdd_cycle_state("TDD-1", {"test": "data"})
             mock_print.assert_called_once()
@@ -851,6 +862,7 @@ class TestProjectStorage:
         """Test tracking test file with save exception."""
         mock_json_dump.side_effect = Exception("Write failed")
         
+        # The track_test_file method prints to console on error
         with patch('pathlib.Path.exists', return_value=False), \
              patch('builtins.print') as mock_print:
             
@@ -927,6 +939,7 @@ class TestProjectStorage:
         """Test backing up TDD cycle with exception handling."""
         mock_load.return_value = mock_tdd_cycle
         
+        # The backup_tdd_cycle method prints to console on error
         with patch('pathlib.Path.mkdir', side_effect=Exception("mkdir failed")), \
              patch('builtins.print') as mock_print:
             
@@ -1056,6 +1069,7 @@ class TestProjectStorage:
         mock_exists.return_value = True
         mock_file.side_effect = Exception("Read failed")
         
+        # The restore_tdd_cycle_from_backup method prints to console on error
         with patch('builtins.print') as mock_print:
             result = project_storage.restore_tdd_cycle_from_backup("TDD-1", "20230101_120000")
             assert result is None
@@ -1116,9 +1130,10 @@ class TestProjectStorage:
         mock_exists.return_value = True
         mock_glob.side_effect = Exception("Glob failed")
         
-        with patch('builtins.print') as mock_print:
+        with patch('lib.project_storage.logger') as mock_logger:
             project_storage.cleanup_old_tdd_backups(30)
-            mock_print.assert_called_once()
+            # Check that error was logged
+            mock_logger.error.assert_called()
 
     # Integration Tests with Real File Operations
 

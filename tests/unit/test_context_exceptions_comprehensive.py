@@ -26,7 +26,11 @@ from context.exceptions import (
     ContextCacheError,
     ContextMonitoringError,
     ContextBackgroundError,
-    ContextLearningError
+    ContextLearningError,
+    AgentPoolError,
+    StateMachineError,
+    OrchestrationError,
+    RecoveryError
 )
 
 
@@ -823,6 +827,246 @@ class TestContextLearningError:
         assert hasattr(error, 'learning_type')
 
 
+class TestAgentPoolError:
+    """Test AgentPoolError class"""
+    
+    def test_basic_initialization(self):
+        """Test basic AgentPoolError initialization"""
+        error = AgentPoolError("Agent pool operation failed")
+        
+        assert str(error) == "Agent pool operation failed"
+        assert error.agent_id is None
+        assert error.pool_state is None
+        assert error.context_id is None
+    
+    def test_initialization_with_agent_id(self):
+        """Test AgentPoolError with agent_id"""
+        error = AgentPoolError(
+            "Agent failed to initialize",
+            agent_id="agent-123"
+        )
+        
+        assert str(error) == "Agent failed to initialize"
+        assert error.agent_id == "agent-123"
+        assert error.pool_state is None
+    
+    def test_initialization_with_pool_state(self):
+        """Test AgentPoolError with pool_state"""
+        error = AgentPoolError(
+            "Pool state invalid",
+            pool_state="corrupted"
+        )
+        
+        assert str(error) == "Pool state invalid"
+        assert error.agent_id is None
+        assert error.pool_state == "corrupted"
+    
+    def test_initialization_with_all_parameters(self):
+        """Test AgentPoolError with all parameters"""
+        error = AgentPoolError(
+            "Agent pool capacity exceeded",
+            agent_id="agent-456",
+            pool_state="full",
+            context_id="pool-ctx",
+            details={"max_agents": 10, "current_count": 11}
+        )
+        
+        assert str(error) == "Agent pool capacity exceeded"
+        assert error.agent_id == "agent-456" 
+        assert error.pool_state == "full"
+        assert error.context_id == "pool-ctx"
+        assert error.details["max_agents"] == 10
+        assert error.details["current_count"] == 11
+    
+    def test_agent_pool_error_inheritance(self):
+        """Test AgentPoolError inheritance"""
+        error = AgentPoolError("Test")
+        
+        assert isinstance(error, ContextError)
+        assert hasattr(error, 'agent_id')
+        assert hasattr(error, 'pool_state')
+
+
+class TestStateMachineError:
+    """Test StateMachineError class"""
+    
+    def test_basic_initialization(self):
+        """Test basic StateMachineError initialization"""
+        error = StateMachineError("State machine operation failed")
+        
+        assert str(error) == "State machine operation failed"
+        assert error.current_state is None
+        assert error.transition is None
+        assert error.context_id is None
+    
+    def test_initialization_with_current_state(self):
+        """Test StateMachineError with current_state"""
+        error = StateMachineError(
+            "Invalid state transition",
+            current_state="idle"
+        )
+        
+        assert str(error) == "Invalid state transition"
+        assert error.current_state == "idle"
+        assert error.transition is None
+    
+    def test_initialization_with_transition(self):
+        """Test StateMachineError with transition"""
+        error = StateMachineError(
+            "Transition failed",
+            transition="idle->running"
+        )
+        
+        assert str(error) == "Transition failed"
+        assert error.current_state is None
+        assert error.transition == "idle->running"
+    
+    def test_initialization_with_all_parameters(self):
+        """Test StateMachineError with all parameters"""
+        error = StateMachineError(
+            "State machine deadlock detected",
+            current_state="processing",
+            transition="processing->completed",
+            context_id="sm-ctx",
+            details={"retry_count": 3, "timeout": 30}
+        )
+        
+        assert str(error) == "State machine deadlock detected"
+        assert error.current_state == "processing"
+        assert error.transition == "processing->completed"
+        assert error.context_id == "sm-ctx"
+        assert error.details["retry_count"] == 3
+        assert error.details["timeout"] == 30
+    
+    def test_state_machine_error_inheritance(self):
+        """Test StateMachineError inheritance"""
+        error = StateMachineError("Test")
+        
+        assert isinstance(error, ContextError)
+        assert hasattr(error, 'current_state')
+        assert hasattr(error, 'transition')
+
+
+class TestOrchestrationError:
+    """Test OrchestrationError class"""
+    
+    def test_basic_initialization(self):
+        """Test basic OrchestrationError initialization"""
+        error = OrchestrationError("Orchestration operation failed")
+        
+        assert str(error) == "Orchestration operation failed"
+        assert error.project_id is None
+        assert error.orchestration_phase is None
+        assert error.context_id is None
+    
+    def test_initialization_with_project_id(self):
+        """Test OrchestrationError with project_id"""
+        error = OrchestrationError(
+            "Project orchestration failed",
+            project_id="proj-123"
+        )
+        
+        assert str(error) == "Project orchestration failed"
+        assert error.project_id == "proj-123"
+        assert error.orchestration_phase is None
+    
+    def test_initialization_with_orchestration_phase(self):
+        """Test OrchestrationError with orchestration_phase"""
+        error = OrchestrationError(
+            "Phase execution failed",
+            orchestration_phase="planning"
+        )
+        
+        assert str(error) == "Phase execution failed"
+        assert error.project_id is None
+        assert error.orchestration_phase == "planning"
+    
+    def test_initialization_with_all_parameters(self):
+        """Test OrchestrationError with all parameters"""
+        error = OrchestrationError(
+            "Multi-project orchestration conflict",
+            project_id="proj-456",
+            orchestration_phase="execution",
+            context_id="orch-ctx",
+            details={"conflict_type": "resource", "affected_projects": ["proj-1", "proj-2"]}
+        )
+        
+        assert str(error) == "Multi-project orchestration conflict"
+        assert error.project_id == "proj-456"
+        assert error.orchestration_phase == "execution"
+        assert error.context_id == "orch-ctx"
+        assert error.details["conflict_type"] == "resource"
+        assert error.details["affected_projects"] == ["proj-1", "proj-2"]
+    
+    def test_orchestration_error_inheritance(self):
+        """Test OrchestrationError inheritance"""
+        error = OrchestrationError("Test")
+        
+        assert isinstance(error, ContextError)
+        assert hasattr(error, 'project_id')
+        assert hasattr(error, 'orchestration_phase')
+
+
+class TestRecoveryError:
+    """Test RecoveryError class"""
+    
+    def test_basic_initialization(self):
+        """Test basic RecoveryError initialization"""
+        error = RecoveryError("Recovery operation failed")
+        
+        assert str(error) == "Recovery operation failed"
+        assert error.recovery_type is None
+        assert error.attempt_count == 0
+        assert error.context_id is None
+    
+    def test_initialization_with_recovery_type(self):
+        """Test RecoveryError with recovery_type"""
+        error = RecoveryError(
+            "Automatic recovery failed",
+            recovery_type="checkpoint_restore"
+        )
+        
+        assert str(error) == "Automatic recovery failed"
+        assert error.recovery_type == "checkpoint_restore"
+        assert error.attempt_count == 0
+    
+    def test_initialization_with_attempt_count(self):
+        """Test RecoveryError with attempt_count"""
+        error = RecoveryError(
+            "Recovery attempt failed",
+            attempt_count=3
+        )
+        
+        assert str(error) == "Recovery attempt failed"
+        assert error.recovery_type is None
+        assert error.attempt_count == 3
+    
+    def test_initialization_with_all_parameters(self):
+        """Test RecoveryError with all parameters"""
+        error = RecoveryError(
+            "Recovery system exhausted all attempts",
+            recovery_type="state_rollback",
+            attempt_count=5,
+            context_id="recovery-ctx",
+            details={"max_attempts": 5, "last_error": "network_timeout"}
+        )
+        
+        assert str(error) == "Recovery system exhausted all attempts"
+        assert error.recovery_type == "state_rollback"
+        assert error.attempt_count == 5
+        assert error.context_id == "recovery-ctx"
+        assert error.details["max_attempts"] == 5
+        assert error.details["last_error"] == "network_timeout"
+    
+    def test_recovery_error_inheritance(self):
+        """Test RecoveryError inheritance"""
+        error = RecoveryError("Test")
+        
+        assert isinstance(error, ContextError)
+        assert hasattr(error, 'recovery_type')
+        assert hasattr(error, 'attempt_count')
+
+
 class TestExceptionHierarchy:
     """Test exception hierarchy and inheritance"""
     
@@ -841,7 +1085,11 @@ class TestExceptionHierarchy:
             ContextCacheError,
             ContextMonitoringError,
             ContextBackgroundError,
-            ContextLearningError
+            ContextLearningError,
+            AgentPoolError,
+            StateMachineError,
+            OrchestrationError,
+            RecoveryError
         ]
         
         for exc_class in exception_classes:
@@ -867,6 +1115,14 @@ class TestExceptionHierarchy:
             elif exc_class == ContextBackgroundError:
                 instance = exc_class("Test")
             elif exc_class == ContextLearningError:
+                instance = exc_class("Test")
+            elif exc_class == AgentPoolError:
+                instance = exc_class("Test")
+            elif exc_class == StateMachineError:
+                instance = exc_class("Test")
+            elif exc_class == OrchestrationError:
+                instance = exc_class("Test")
+            elif exc_class == RecoveryError:
                 instance = exc_class("Test")
             else:
                 instance = exc_class("Test")

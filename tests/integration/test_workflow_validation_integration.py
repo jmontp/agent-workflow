@@ -34,7 +34,7 @@ from mocks.async_fixtures import async_fixture_factory
 
 # Import system components
 from state_machine import StateMachine, State
-from discord_bot import DiscordBot
+from discord_bot import WorkflowBot
 from orchestrator import Orchestrator
 from data_models import Epic, Story
 

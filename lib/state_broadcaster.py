@@ -170,7 +170,12 @@ class StatebroadCaster:
         self.transition_history.append(transition)
         
         # Broadcast asynchronously
-        asyncio.create_task(self.broadcast_to_all(transition))
+        try:
+            loop = asyncio.get_running_loop()
+            asyncio.create_task(self.broadcast_to_all(transition))
+        except RuntimeError:
+            # No event loop running, skip broadcasting
+            pass
         logger.info(f"Workflow transition: {old_state} → {new_state}")
         
     def emit_tdd_transition(self, story_id: str, old_state: Optional[TDDState], new_state: TDDState, project_name: str = "default"):
@@ -197,7 +202,12 @@ class StatebroadCaster:
         self.transition_history.append(transition)
         
         # Broadcast asynchronously
-        asyncio.create_task(self.broadcast_to_all(transition))
+        try:
+            loop = asyncio.get_running_loop()
+            asyncio.create_task(self.broadcast_to_all(transition))
+        except RuntimeError:
+            # No event loop running, skip broadcasting
+            pass
         logger.info(f"TDD transition [{story_id}]: {old_state} → {new_state}")
         
     def emit_agent_activity(self, agent_type: str, story_id: str, action: str, status: str, project_name: str = "default"):
@@ -213,7 +223,12 @@ class StatebroadCaster:
         }
         
         # Broadcast asynchronously
-        asyncio.create_task(self.broadcast_to_all(activity))
+        try:
+            loop = asyncio.get_running_loop()
+            asyncio.create_task(self.broadcast_to_all(activity))
+        except RuntimeError:
+            # No event loop running, skip broadcasting
+            pass
         logger.info(f"Agent activity [{story_id}]: {agent_type} {action} - {status}")
         
     def emit_parallel_status(self, status_data: Dict[str, Any], project_name: str = "default"):
@@ -226,7 +241,12 @@ class StatebroadCaster:
         }
         
         # Broadcast asynchronously
-        asyncio.create_task(self.broadcast_to_all(parallel_status))
+        try:
+            loop = asyncio.get_running_loop()
+            asyncio.create_task(self.broadcast_to_all(parallel_status))
+        except RuntimeError:
+            # No event loop running, skip broadcasting
+            pass
         logger.info(f"Parallel status update [{project_name}]: {status_data}")
         
     def get_current_state(self) -> Dict[str, Any]:

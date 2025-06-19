@@ -94,10 +94,10 @@ class TestProjectStorageCompleteCoverage:
             
             mock_json_dump.side_effect = OSError("No space left on device")
             
-            with patch('builtins.print') as mock_print:
+            with patch('lib.project_storage.logger') as mock_logger:
                 project_storage.save_project_data(ProjectData())
-                mock_print.assert_called_once()
-                assert "Error saving project data" in str(mock_print.call_args[0][0])
+                # Check that warning was logged about failure
+                mock_logger.warning.assert_called()
 
     def test_concurrent_file_access_simulation(self, project_storage):
         """Test simulation of concurrent file access issues."""

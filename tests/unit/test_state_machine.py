@@ -161,7 +161,7 @@ class TestStateMachine(unittest.TestCase):
         """Test get_state_info returns comprehensive state information"""
         self.state_machine.force_state(State.SPRINT_ACTIVE)
         
-        info = self.state_machine.get_state_info()
+        info = self.state_machine.get_state_info(include_matrix=True)
         
         # Verify structure and content
         self.assertIn("current_state", info)
