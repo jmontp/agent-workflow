@@ -40,6 +40,44 @@ Comprehensive guide to using the AI Agent TDD-Scrum Workflow system for daily de
 
 </div>
 
+## New Features
+
+<div class="grid cards" markdown>
+
+-   :material-robot:{ .lg .middle } **Agent Interface Management**
+
+    ---
+    
+    Switch between Claude Code, Anthropic API, and Mock interfaces
+    
+    [:octicons-arrow-right-24: Interface Guide](agent-interface-management.md)
+
+-   :material-brain:{ .lg .middle } **Context Management**
+
+    ---
+    
+    Optimize context processing with FANCY, SIMPLE, and AUTO modes
+    
+    [:octicons-arrow-right-24: Context Guide](context-management.md)
+
+-   :material-monitor:{ .lg .middle } **Web Portal**
+
+    ---
+    
+    Enhanced web interface with real-time monitoring
+    
+    [:octicons-arrow-right-24: Portal Guide](ui-portal-guide.md)
+
+-   :material-chart-line:{ .lg .middle } **Performance Monitoring**
+
+    ---
+    
+    Monitor and optimize system performance
+    
+    [:octicons-arrow-right-24: Performance Guide](performance-monitoring.md)
+
+</div>
+
 ## Reference Guides
 
 <div class="grid cards" markdown>

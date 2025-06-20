@@ -10,11 +10,17 @@ Launch your personal AI command center in seconds:
 # 🚀 One-command launch (auto-opens browser)
 agent-orch ui
 
-# 🎯 Direct to your active project
-agent-orch ui --mode dashboard --project my-webapp
+# 🎯 Direct to your active project with interface management
+agent-orch ui --mode dashboard --project my-webapp --interface-manager
+
+# 🎮 Launch with context management panel
+agent-orch ui --context-manager --performance-mode
 
 # 👥 Team collaboration mode
 agent-orch ui --team-mode --network-detect
+
+# 🔧 Developer mode with all advanced features
+agent-orch ui --dev-mode --debug
 ```
 
 The portal automatically detects your system, finds the best browser, and creates secure access URLs for all your devices - including that phone in your pocket.
@@ -33,6 +39,8 @@ The interface mirrors Discord's intuitive design but supercharges it for develop
 │ │ 🏠 Dashboard                      Active Sprint: 3/5 ✅     │ │
 │ │ 💬 Chat                           TDD Cycle: GREEN Phase    │ │
 │ │ 📋 Projects                                                 │ │
+│ │ 🤖 Agent Interfaces               Context: FANCY Mode      │ │
+│ │ 🧠 Context Management             🔄 Auto-Detection ON     │ │
 │ │ ⚙️  Configure                     [GIF: Live TDD cycle]    │ │
 │ │ 📊 Monitor                                                  │ │
 │ │                                   ┌─ Real-time Updates ──┐  │ │
@@ -42,8 +50,8 @@ The interface mirrors Discord's intuitive design but supercharges it for develop
 │ │ # mobile-app                       │                     │  │ │
 │ │                                    │ 📈 95% test coverage │  │ │
 │ │ 🔗 INTEGRATIONS                    └─────────────────────┘  │ │
-│ │ 🎮 Discord Bot                                             │ │
-│ │ 🐙 GitHub                                                  │ │
+│ │ 🎮 Discord Bot                     Interface: Claude Code  │ │
+│ │ 🐙 GitHub                          🟢 Connected           │ │
 │ └─────────────────────────────────────────────────────────────┘ │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -103,6 +111,17 @@ The chat interface isn't just messaging - it's your direct line to AI agents wit
 | `Esc` | **Cancel/Close** | Cancel operation or close modal |
 | `Ctrl/Cmd + R` | **Refresh Project** | Reload current project data |
 
+<h4>🤖 Interface & Context Shortcuts</h4>
+
+| Shortcut | Action | Description |
+|----------|--------|-------------|
+| `Ctrl/Cmd + I` | **Interface Panel** | Open agent interface management |
+| `Ctrl/Cmd + Shift + I` | **Switch Interface** | Quick interface switcher |
+| `Ctrl/Cmd + M` | **Context Mode** | Toggle context management panel |
+| `Ctrl/Cmd + Shift + M` | **Switch Mode** | Quick context mode switcher |
+| `Ctrl/Cmd + T` | **Test Interface** | Test current interface connection |
+| `Ctrl/Cmd + P` | **Performance** | View performance metrics |
+
 <h4>🎯 Chat Shortcuts</h4>
 
 | Shortcut | Action | Description |
@@ -116,6 +135,72 @@ The chat interface isn't just messaging - it's your direct line to AI agents wit
 </div>
 
 ## 🎯 Feature Tours
+
+### 🤖 Agent Interface Management - Backend Switching Made Easy
+
+**[Animated GIF Placeholder: Interface Management]**
+*Shows switching between Claude Code, Anthropic API, and Mock interfaces with real-time status updates*
+
+Switch between different AI backends seamlessly through an intuitive panel:
+
+```
+┌─ Agent Interface Control ──────────────────────────────────────┐
+│                                                                │
+│ 🟢 Claude Code        [ACTIVE]    ⚡ Ready      [Configure]   │
+│    Local CLI with tool restrictions                           │
+│    Response Time: 1.2s • Success Rate: 99.1%                 │
+│                                                                │
+│ 🟡 Anthropic API      [AVAILABLE] 🔑 Key Set   [Switch To]   │
+│    Direct API access with latest models                       │
+│    Response Time: 0.8s • Rate Limit: 95/100                  │
+│                                                                │
+│ 🟢 Mock Interface     [AVAILABLE] 🎭 Demo      [Test]        │
+│    Simulated responses for testing                            │
+│    Perfect for demos and CI/CD pipelines                     │
+│                                                                │
+│ [Test All Interfaces] [Performance Comparison] [Security]     │
+└────────────────────────────────────────────────────────────────┘
+```
+
+- **🔄 One-Click Switching**: Change backends instantly with validation
+- **🧪 Interface Testing**: Validate connections before switching
+- **🔒 Security Management**: Secure API key storage and validation
+- **📊 Performance Monitoring**: Real-time metrics and comparison
+
+### 🧠 Context Management - Intelligent Processing Modes
+
+**[Animated GIF Placeholder: Context Mode Switching]**
+*Demonstrates switching between FANCY and SIMPLE modes with performance metrics*
+
+Optimize context processing for your current scenario:
+
+```
+┌─ Context Management Control ───────────────────────────────────┐
+│                                                                │
+│ Current Mode: AUTO 🎯                                         │
+│ ├─ Detected: FANCY (Full system resources available)          │
+│ ├─ Performance: 2.3s prep time • 245MB memory                 │
+│ └─ Accuracy: 95% relevant context • 23/150 files              │
+│                                                                │
+│ ┌─ Quick Mode Switch ─────────────────────────────────────┐   │
+│ │ ○ AUTO     Smart detection based on environment        │   │
+│ │ ● FANCY    Full-featured (2-10s, high accuracy)        │   │
+│ │ ○ SIMPLE   Fast processing (0.1-1s, good accuracy)     │   │
+│ └─────────────────────────────────────────────────────────┘   │
+│                                                                │
+│ ┌─ Performance Comparison ────────────────────────────────┐   │
+│ │ FANCY:  █████████░░ 95% accuracy • 2.3s • 245MB       │   │
+│ │ SIMPLE: ████████░░░ 82% accuracy • 0.2s • 35MB        │   │
+│ └─────────────────────────────────────────────────────────┘   │
+│                                                                │
+│ [Test Performance] [Configure Thresholds] [View Metrics]      │
+└────────────────────────────────────────────────────────────────┘
+```
+
+- **⚡ Performance Optimization**: Choose speed vs accuracy based on needs
+- **🔍 Auto-Detection**: Intelligent mode selection based on environment
+- **📈 Real-Time Metrics**: Monitor preparation time, memory usage, and accuracy
+- **🎛️ Custom Thresholds**: Fine-tune switching behavior and performance limits
 
 ### 📊 Project Dashboard - Your Mission Control
 
@@ -147,6 +232,42 @@ Watch your stories flow through the development pipeline:
 └──────────────┴───────────────┴──────────────┴───────────────┘
 ```
 
+### 📡 Real-Time Monitoring & WebSocket Integration
+
+**[Animated GIF Placeholder: Real-Time Dashboard]**
+*Shows live updates flowing through WebSocket connections with interface and context changes*
+
+Experience true real-time monitoring with live data streams:
+
+```
+┌─ Live System Monitor ──────────────────────────────────────────┐
+│                                                                │
+│ 🔴 LIVE • Interface: Claude Code • Context: FANCY • 2.3s      │
+│                                                                │
+│ ┌─ Recent Events ────────────────────────────────────────┐    │
+│ │ 14:23:45 🤖 Interface switched: mock → claude_code     │    │
+│ │ 14:23:32 🧠 Context mode: auto → fancy (detected)      │    │
+│ │ 14:23:15 ⚡ Performance test: 1.8s preparation         │    │
+│ │ 14:23:01 🔄 State transition: IDLE → SPRINT_ACTIVE     │    │
+│ │ 14:22:48 🧪 CodeAgent: test_user_auth.py (95% pass)    │    │
+│ └─────────────────────────────────────────────────────────┘    │
+│                                                                │
+│ ┌─ Performance Metrics ──────────────────────────────────┐    │
+│ │ Response Times:  [████████░░] Avg: 1.2s               │    │
+│ │ Memory Usage:    [██████░░░░] 245MB / 8GB              │    │
+│ │ Success Rate:    [██████████] 99.1%                    │    │
+│ │ Cache Hit Rate:  [████████░░] 78%                      │    │
+│ └─────────────────────────────────────────────────────────┘    │
+│                                                                │
+│ [Export Metrics] [Configure Alerts] [Performance Report]      │
+└────────────────────────────────────────────────────────────────┘
+```
+
+- **📊 Live Performance Charts**: Real-time graphs of response times and resource usage
+- **🔔 Smart Alerts**: Configurable notifications for performance thresholds
+- **📈 Historical Analysis**: Track performance trends over time
+- **⚡ WebSocket Efficiency**: Sub-100ms update latency for instant feedback
+
 ### 🔧 Configuration Made Simple
 
 **[Animated GIF Placeholder: Configuration Interface]**
@@ -158,6 +279,8 @@ No more YAML wrestling or environment variable confusion:
 - **🔐 Secure Key Management**: Encrypted storage with rotation capabilities
 - **🤖 Discord Integration**: Step-by-step bot setup with live testing
 - **⚡ Performance Tuning**: Slider controls for timeouts, concurrency, and resource limits
+- **🧠 Context Configuration**: Visual mode selection and threshold adjustment
+- **🔄 Interface Management**: Drag-and-drop interface priority and fallback chains
 
 ## 🎮 Interactive Elements
 

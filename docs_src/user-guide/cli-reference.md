@@ -247,6 +247,36 @@ agent-orch migrate-from-git ~/agent-workflow-git \
 ```
 </details>
 
+### 🌐 **Web Interface Management**
+<details>
+<summary><strong>Web tool and interface management</strong></summary>
+
+| Command | Purpose | Advanced Features |
+|---------|---------|-------------------|
+| `web` | Launch web interface | ✅ Multiple modes |
+| `web --interface-manager` | Launch with interface panel | ✅ |
+| `web --context-manager` | Launch with context controls | ✅ |
+| `web --performance-mode` | Launch in performance mode | ✅ |
+
+**Web Interface Workflows:**
+```bash
+# Launch full web interface
+agent-orch web
+
+# Launch with interface management panel
+agent-orch web --interface-manager --port 8080
+
+# Launch with context management controls
+agent-orch web --context-manager --debug
+
+# Developer mode with all features
+agent-orch web --dev-mode --interface-manager --context-manager
+
+# Team collaboration mode
+agent-orch web --team-mode --network-detect --qr-code
+```
+</details>
+
 ---
 
 ## 🤖 Discord Bot Commands
