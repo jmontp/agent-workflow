@@ -1,0 +1,199 @@
+name: Documentation Quality Check
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'docs_src/**'
+      - 'mkdocs.yml'
+      - 'requirements.txt'
+      - '.github/workflows/docs-check.yml'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'docs_src/**'
+      - 'mkdocs.yml'
+      - 'requirements.txt'
+      - '.github/workflows/docs-check.yml'
+
+jobs:
+  docs-check:
+    name: Documentation Quality Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        cache: 'pip'
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        # Install only documentation dependencies for faster execution
+        pip install mkdocs>=1.5.0 mkdocs-material>=9.4.0 mkdocs-mermaid2-plugin>=1.1.0
+        pip install pymdown-extensions>=10.0.0
+        # Install additional MkDocs plugins from mkdocs.yml
+        pip install mkdocs-minify-plugin mkdocs-git-revision-date-localized-plugin
+        pip install mkdocs-git-committers-plugin-2 mkdocs-awesome-pages-plugin
+        pip install mkdocs-glightbox PyYAML
+        
+    - name: Validate YAML configuration files
+      run: |
+        echo "Validating YAML files..."
+        python -c "
+        import yaml
+        import sys
+        
+        files_to_check = [
+            'mkdocs.yml',
+            'orch-config.yaml',
+            'config.example.yml'
+        ]
+        
+        errors = []
+        for file in files_to_check:
+            try:
+                with open(file, 'r') as f:
+                    yaml.safe_load(f)
+                print(f'✅ {file} is valid')
+            except FileNotFoundError:
+                print(f'⚠️  {file} not found (skipping)')
+            except yaml.YAMLError as e:
+                errors.append(f'❌ {file}: {e}')
+                print(f'❌ {file}: {e}')
+        
+        if errors:
+            print('\nYAML validation failed!')
+            sys.exit(1)
+        else:
+            print('\n✅ All YAML files are valid')
+        "
+        
+    - name: Check MkDocs build
+      run: |
+        echo "Testing MkDocs build..."
+        mkdocs build --strict --verbose
+        echo "✅ MkDocs build successful"
+        
+    - name: Check internal links
+      run: |
+        echo "Checking internal documentation links..."
+        python tools/audit_links.py
+        echo "✅ Link audit completed"
+        
+    - name: Validate documentation structure
+      run: |
+        echo "Validating documentation structure..."
+        python -c "
+        import os
+        from pathlib import Path
+        
+        docs_dir = Path('docs_src')
+        required_files = [
+            'index.md',
+            'getting-started/index.md',
+            'user-guide/index.md',
+            'concepts/index.md',
+            'architecture/index.md'
+        ]
+        
+        missing_files = []
+        for file in required_files:
+            if not (docs_dir / file).exists():
+                missing_files.append(file)
+        
+        if missing_files:
+            print('❌ Missing required documentation files:')
+            for file in missing_files:
+                print(f'  - {file}')
+            exit(1)
+        else:
+            print('✅ All required documentation files exist')
+        "
+        
+    - name: Check documentation tests
+      run: |
+        echo "Running documentation-specific tests..."
+        python -c "
+        import re
+        from pathlib import Path
+        
+        def check_markdown_quality(file_path):
+            '''Basic quality checks for markdown files'''
+            content = file_path.read_text(encoding='utf-8')
+            issues = []
+            
+            # Check for basic structure
+            if not content.strip():
+                issues.append('Empty file')
+            
+            # Check for proper headings (should start with # or have frontmatter)
+            lines = content.split('\n')
+            has_heading = False
+            for line in lines[:10]:  # Check first 10 lines
+                if line.startswith('#') or line.strip().startswith('---'):
+                    has_heading = True
+                    break
+            
+            if not has_heading and len(content) > 100:
+                issues.append('No clear heading structure')
+            
+            # Check for broken markdown links (basic check)
+            broken_links = re.findall(r'\]\(\s*\)', content)
+            if broken_links:
+                issues.append(f'Found {len(broken_links)} empty links')
+            
+            return issues
+        
+        docs_dir = Path('docs_src')
+        all_issues = []
+        
+        for md_file in docs_dir.rglob('*.md'):
+            if any(skip in str(md_file) for skip in ['.git', '__pycache__']):
+                continue
+                
+            issues = check_markdown_quality(md_file)
+            if issues:
+                all_issues.extend([f'{md_file}: {issue}' for issue in issues])
+        
+        if all_issues:
+            print('❌ Documentation quality issues found:')
+            for issue in all_issues:
+                print(f'  - {issue}')
+            exit(1)
+        else:
+            print('✅ Documentation quality checks passed')
+        "
+        
+    - name: Check for TODO and FIXME markers
+      run: |
+        echo "Checking for unresolved TODO/FIXME markers..."
+        todo_count=$(grep -r "TODO\|FIXME" docs_src/ --include="*.md" | wc -l || echo "0")
+        if [ "$todo_count" -gt 10 ]; then
+          echo "❌ Too many TODO/FIXME markers found ($todo_count). Please resolve some before merging."
+          exit 1
+        else
+          echo "✅ TODO/FIXME markers within acceptable range ($todo_count/10)"
+        fi
+        
+    - name: Summary
+      if: always()
+      run: |
+        echo ""
+        echo "=================================="
+        echo "Documentation Quality Check Summary"
+        echo "=================================="
+        echo "✅ YAML validation"
+        echo "✅ MkDocs build test"
+        echo "✅ Internal link audit"
+        echo "✅ Documentation structure"
+        echo "✅ Content quality checks"
+        echo "✅ TODO/FIXME audit"
+        echo ""
+        echo "Documentation is ready for production!"

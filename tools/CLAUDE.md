@@ -9,6 +9,7 @@ The tools/ directory provides specialized utilities for:
 - **Coverage Analysis**: Test coverage validation and TDD workflow verification  
 - **Documentation Generation**: Automated API documentation from source code
 - **State Visualization**: Real-time web-based monitoring of workflow states
+- **Validation Tools**: Diagram validation and visual consistency checking
 
 ## Directory Structure
 
@@ -25,6 +26,9 @@ tools/
 │   └── validate_test_preservation.py
 ├── documentation/      # API documentation generation tools
 │   └── generate_api_docs.py
+├── validation/         # Diagram validation and visual consistency tools
+│   ├── diagram_validator.py
+│   └── README.md
 └── visualizer/         # Web-based state visualization interface
     ├── app.py
     ├── static/
@@ -204,6 +208,48 @@ python3 generate_api_docs.py --directory scripts --format markdown
 - **Markdown**: Human-readable documentation with hierarchical organization
 - **OpenAPI**: Machine-readable API specification for REST endpoints
 
+### Validation Tools (`validation/`)
+
+Diagram validation and visual consistency tools for maintaining documentation quality.
+
+#### `diagram_validator.py`
+**Purpose**: Comprehensive Mermaid diagram validation for syntax, theme, and content consistency
+
+**Features**:
+- **Syntax Validation**: Checks for common Mermaid syntax errors (unmatched brackets, missing diagram types)
+- **Theme Consistency**: Enforces dark theme across all diagrams (`%%{init: {'theme': 'dark'}}%%`)
+- **State Machine Validation**: Validates state diagrams against known state machine states
+- **Command Validation**: Checks command references in transitions against valid commands
+- **Auto-Fix Capability**: Automatically fixes common issues (missing themes, incorrect themes)
+- **Multiple Output Formats**: Human-readable reports or JSON for CI integration
+
+**Usage**:
+```bash
+# Basic validation
+python3 tools/validation/diagram_validator.py
+
+# Verbose output with detailed reporting
+python3 tools/validation/diagram_validator.py --verbose
+
+# Auto-fix common issues
+python3 tools/validation/diagram_validator.py --fix --verbose
+
+# JSON output for CI integration
+python3 tools/validation/diagram_validator.py --json --exit-code
+```
+
+**Validation Rules**:
+- **Theme Consistency**: All diagrams must use dark theme
+- **State Machine Alignment**: State names must match known states (IDLE, BACKLOG_READY, etc.)
+- **Command Recognition**: Commands in transitions should match valid workflow commands
+- **Syntax Correctness**: Basic syntax validation for common errors
+
+**Integration Points**:
+- Pre-commit hooks for diagram validation
+- CI/CD pipeline integration with exit codes
+- Documentation build process validation
+- Development workflow quality checks
+
 ### Visualizer Tools (`visualizer/`)
 
 Real-time web-based visualization interface for workflow and TDD state monitoring.
@@ -309,6 +355,7 @@ All tools support command-line operation and can be integrated into:
 2. **During Development**: Use visualizer for real-time state monitoring
 3. **After Changes**: Run coverage analysis to identify test gaps
 4. **Documentation Updates**: Generate API docs after interface changes
+5. **Diagram Changes**: Validate Mermaid diagrams with `diagram_validator.py --fix`
 
 ### Release Preparation
 
@@ -316,6 +363,7 @@ All tools support command-line operation and can be integrated into:
 2. **Coverage Validation**: Ensure all modules meet coverage targets
 3. **Documentation Generation**: Update API documentation
 4. **TDD Validation**: Verify TDD workflow integrity
+5. **Visual Consistency**: Validate all diagrams with `diagram_validator.py`
 
 ### Continuous Integration
 
@@ -323,6 +371,7 @@ All tools support command-line operation and can be integrated into:
 2. **Coverage Reporting**: Integrate coverage tools with CI metrics
 3. **State Monitoring**: Deploy visualizer for runtime monitoring
 4. **Documentation Automation**: Auto-generate docs on commits
+5. **Diagram Validation**: Add `diagram_validator.py --json --exit-code` to CI pipeline
 
 ## Dependencies
 

@@ -23,6 +23,7 @@ help:
 	@echo "  test-regression    Run regression tests only"
 	@echo "  test-edge-cases    Run edge case tests only"
 	@echo "  test-e2e           Run end-to-end tests only"
+	@echo "  test-docs          Run documentation example validation tests"
 	@echo "  test-all           Run comprehensive test suite"
 	@echo "  test-quick         Run quick test suite (unit + integration)"
 	@echo "  test-ci            Run CI/CD optimized test suite"
@@ -37,6 +38,15 @@ help:
 	@echo "  docs               Build documentation"
 	@echo "  serve-docs         Serve documentation locally"
 	@echo "  build-docs         Build static documentation"
+	@echo "  docs-check         Run documentation quality checks"
+	@echo "  docs-check-ci      Run CI-style documentation checks"
+	@echo "  docs-fix           Auto-fix minor documentation issues"
+	@echo "  docs-links         Check documentation links"
+	@echo "  docs-install-hook  Install pre-commit hook for docs"
+	@echo "  docs-health        Quick documentation health check"
+	@echo "  docs-health-full   Full documentation health check"
+	@echo "  docs-health-html   Generate HTML health report"
+	@echo "  docs-health-ci     CI documentation health check"
 	@echo ""
 	@echo "Application:"
 	@echo "  run                Run Discord bot with orchestrator"
@@ -108,6 +118,11 @@ test-e2e:
 	@echo "Running end-to-end tests..."
 	python test_tdd_e2e.py
 
+# Documentation Tests
+test-docs:
+	@echo "Running documentation example validation tests..."
+	python3 -m pytest tests/documentation/ -v --tb=short
+
 # Comprehensive Test Suite
 test-all:
 	@echo "Running comprehensive test suite..."
@@ -116,12 +131,13 @@ test-all:
 # Quick Test Suite (for development)
 test-quick:
 	@echo "Running quick test suite..."
+	python3 -m pytest tests/unit/ tests/documentation/ -v --tb=short
 	python tests/run_comprehensive_tests.py --categories e2e regression
 
 # CI/CD Optimized Test Suite
 test-ci:
 	@echo "Running CI/CD test suite..."
-	python -m pytest tests/unit/ tests/integration/ -v --tb=short --durations=10
+	python3 -m pytest tests/unit/ tests/integration/ tests/documentation/ -v --tb=short --durations=10
 	python tests/run_comprehensive_tests.py --categories e2e security regression --save-report
 
 # Standard test target (runs comprehensive suite)
@@ -166,6 +182,46 @@ serve-docs:
 build-docs:
 	@echo "Building static documentation..."
 	mkdocs build
+
+# Documentation health checks
+docs-health:
+	@echo "Running documentation health check..."
+	python3 tools/documentation/health_check.py --quick
+
+docs-health-full:
+	@echo "Running full documentation health check..."
+	python3 tools/documentation/health_check.py
+
+docs-health-html:
+	@echo "Generating HTML documentation health report..."
+	python3 tools/documentation/health_check.py --format html --output docs_health_report.html
+	@echo "✅ HTML report generated: docs_health_report.html"
+
+docs-health-ci:
+	@echo "Running CI documentation health check..."
+	python3 tools/documentation/ci_health_check.py
+
+# Documentation Quality & CI Targets
+
+docs-check:
+	@echo "Running documentation quality checks..."
+	python3 tools/check_docs_quality.py --verbose
+
+docs-check-ci:
+	@echo "Running CI-style documentation checks..."
+	python3 tools/test_docs_ci.py
+
+docs-fix:
+	@echo "Auto-fixing minor documentation issues..."
+	python3 tools/check_docs_quality.py --fix-minor --verbose
+
+docs-links:
+	@echo "Checking documentation links..."
+	python3 tools/audit_links.py
+
+docs-install-hook:
+	@echo "Installing pre-commit hook for documentation..."
+	python3 tools/setup_pre_commit_hook.py --install
 
 # Application Targets
 
