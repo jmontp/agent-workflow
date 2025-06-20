@@ -2,26 +2,64 @@
 
 Configure the AI Agent TDD-Scrum workflow system for your development environment.
 
+## Quick Setup
+
+### Automated Configuration
+
+The fastest way to get started is using our setup script:
+
+```bash
+# Run the interactive setup script
+./setup-config.sh
+```
+
+This will create your `.env` and `config.yml` files with sensible defaults.
+
+### Manual Configuration
+
+If you prefer manual setup:
+
+```bash
+# Copy template files
+cp .env.example .env
+cp config.example.yml config.yml
+
+# Edit with your actual values
+nano .env
+nano config.yml
+```
+
 ## Environment Variables
+
+### Configuration Templates
+
+We provide template files to get you started:
+
+- **`.env.example`** - Environment variables template
+- **`config.example.yml`** - Main configuration template  
+- **`discord-bot.config.example`** - Discord bot settings template
 
 ### Required Configuration
 
 **`DISCORD_BOT_TOKEN`**
 Your Discord bot token for the HITL interface.
 ```bash
-export DISCORD_BOT_TOKEN="your_discord_bot_token_here"
+# In .env file
+DISCORD_BOT_TOKEN=your_discord_bot_token_here
 ```
 
 ### Optional Configuration
 
 **`ANTHROPIC_API_KEY`** (for Claude integration)
 ```bash
-export ANTHROPIC_API_KEY="your_anthropic_api_key"
+# In .env file
+ANTHROPIC_API_KEY=your_anthropic_api_key
 ```
 
 **`GITHUB_TOKEN`** (for enhanced GitHub integration)
 ```bash
-export GITHUB_TOKEN="your_github_personal_access_token"
+# In .env file
+GITHUB_TOKEN=your_github_personal_access_token
 ```
 
 ## Project Configuration

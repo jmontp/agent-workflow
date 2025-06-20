@@ -61,6 +61,12 @@ Thumbs.db
 config/projects.yaml
 config/secrets.yaml
 
+# Configuration Files (Use .example templates instead)
+config.yml
+discord-bot.config
+*.env
+!.env.example
+
 # Documentation Build Output
 site/
 
