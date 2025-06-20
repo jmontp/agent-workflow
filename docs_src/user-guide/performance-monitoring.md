@@ -9,14 +9,14 @@ The Performance Monitoring system provides comprehensive insights into system pe
 Access performance monitoring through multiple interfaces:
 
 ```bash
-# Launch web interface with performance dashboard
-agent-orch web --performance-mode
-
 # Direct performance monitoring tool
-python tools/monitoring/performance_monitor.py --dashboard
+python tools/monitoring/performance_monitor.py
 
-# API access to metrics
-curl http://localhost:5000/metrics
+# Generate performance report
+python tools/monitoring/performance_monitor.py --report-only
+
+# Custom monitoring configuration
+python tools/monitoring/performance_monitor.py --interval 60 --storage-path ./monitoring
 ```
 
 ## 📈 Performance Dashboard
@@ -227,51 +227,45 @@ performance_optimization:
 
 ### Performance Testing Framework
 
-Run comprehensive performance tests:
+**Note**: Comprehensive performance testing framework is planned but not yet implemented.
+
+Currently available testing:
 
 ```bash
-# Run performance benchmark suite
-python tools/monitoring/performance_monitor.py --benchmark
+# Run basic performance monitoring
+python tools/monitoring/performance_monitor.py --interval 10
 
-# Test specific scenarios
-curl -X POST http://localhost:5000/api/context/test \
-  -H "Content-Type: application/json" \
-  -d '{
-    "test_scenarios": [
-      "small_project_simple_mode",
-      "large_project_fancy_mode", 
-      "interface_switching_overhead",
-      "concurrent_context_preparation"
-    ],
-    "iterations": 10,
-    "detailed_metrics": true
-  }'
+# Generate performance summary
+python tools/monitoring/performance_monitor.py --report-only
+
+# Test monitoring functionality
+python -m pytest tests/unit/test_performance_monitor.py -v
 ```
 
-Performance test results:
+Sample performance report output:
 
 ```json
 {
-  "benchmark_results": {
-    "small_project_simple_mode": {
-      "avg_time": 0.15,
-      "p95_time": 0.23,
-      "p99_time": 0.35,
-      "memory_peak": 25,
-      "success_rate": 0.998
+  "status": "monitoring",
+  "latest_snapshot": {
+    "timestamp": "2024-01-01T12:00:00Z",
+    "cpu_usage": 25.5,
+    "memory_usage": 45.2,
+    "disk_usage": 60.0,
+    "active_processes": 150
+  },
+  "snapshots_collected": 120,
+  "monitoring_duration_minutes": 60.0,
+  "summary": {
+    "cpu_usage": {
+      "avg": 30.0,
+      "max": 50.0,
+      "min": 10.0
     },
-    "large_project_fancy_mode": {
-      "avg_time": 4.2,
-      "p95_time": 8.1,
-      "p99_time": 12.4,
-      "memory_peak": 450,
-      "success_rate": 0.987
-    },
-    "interface_switching_overhead": {
-      "claude_to_api": 0.12,
-      "api_to_mock": 0.08,
-      "mock_to_claude": 0.15,
-      "state_preservation": "100%"
+    "memory_usage": {
+      "avg": 40.0,
+      "max": 70.0,
+      "min": 20.0
     }
   }
 }
@@ -279,93 +273,55 @@ Performance test results:
 
 ## 📊 Monitoring Tools & Endpoints
 
-### Prometheus Integration
+### Metrics Export
 
-Export metrics for external monitoring:
+**Note**: Prometheus integration is planned but not yet implemented.
 
-```bash
-# Access Prometheus-compatible metrics
-curl http://localhost:5000/metrics
-
-# Sample metrics output
-# HELP workflow_current_state Current workflow state
-# TYPE workflow_current_state gauge
-workflow_current_state 3
-
-# HELP context_preparation_time Context preparation time in seconds
-# TYPE context_preparation_time histogram
-context_preparation_time_bucket{le="1.0"} 234
-context_preparation_time_bucket{le="2.5"} 567
-context_preparation_time_bucket{le="5.0"} 890
-context_preparation_time_bucket{le="+Inf"} 1000
-
-# HELP interface_response_time Interface response time in seconds
-# TYPE interface_response_time gauge
-interface_response_time{interface="claude_code"} 1.2
-interface_response_time{interface="anthropic_api"} 0.8
-interface_response_time{interface="mock"} 0.1
-```
-
-### Health Check Endpoints
-
-Monitor system health programmatically:
+Currently available metrics are stored as JSON reports:
 
 ```bash
-# Basic health check
-curl http://localhost:5000/health
-{
-  "status": "healthy",
-  "timestamp": "2024-01-01T12:00:00Z",
-  "connected_clients": 3,
-  "active_tdd_cycles": 2,
-  "interface_status": "claude_code",
-  "context_mode": "fancy"
-}
+# View stored performance reports
+ls -la .orch-monitoring/performance_report_*.json
 
-# Detailed system diagnostics
-curl http://localhost:5000/debug
-{
-  "memory_usage": {
-    "total": 6442450944,
-    "available": 4294967296,
-    "used_percent": 33.3
-  },
-  "cpu_usage": {
-    "cores": 8,
-    "usage_percent": 23.4,
-    "load_average": [1.2, 1.4, 1.1]
-  },
-  "performance_metrics": {
-    "avg_response_time": 1.2,
-    "cache_hit_rate": 0.78,
-    "success_rate": 0.991
-  }
-}
+# View latest performance data
+python tools/monitoring/performance_monitor.py --report-only | jq .
+
+# Monitor in real-time (basic)
+watch -n 30 'python tools/monitoring/performance_monitor.py --report-only'
 ```
 
-### Real-Time Monitoring API
+### System Health Monitoring
 
-Subscribe to live performance updates:
+**Note**: REST API health endpoints are planned but not yet implemented.
 
-```javascript
-// WebSocket connection for real-time metrics
-const ws = new WebSocket('ws://localhost:5000/ws/metrics');
+Currently available system monitoring:
 
-ws.onmessage = (event) => {
-  const metrics = JSON.parse(event.data);
-  
-  if (metrics.type === 'performance_update') {
-    updateDashboard(metrics.data);
-  } else if (metrics.type === 'alert') {
-    showAlert(metrics.data);
-  }
-};
+```bash
+# Check system health using performance monitor
+python tools/monitoring/performance_monitor.py --report-only
 
-// Request specific metric streams
-ws.send(JSON.stringify({
-  action: 'subscribe',
-  metrics: ['response_time', 'memory_usage', 'interface_status']
-}));
+# Basic system resource check
+python -c "import psutil; print(f'CPU: {psutil.cpu_percent()}%, Memory: {psutil.virtual_memory().percent}%')"
+
+# Check for running processes
+ps aux | grep -E "(orchestrator|discord|agent)" | grep -v grep
+```
+
+### Real-Time Monitoring
+
+**Note**: WebSocket-based real-time monitoring API is planned but not yet implemented.
+
+Currently available monitoring options:
+
+```bash
+# Start continuous monitoring (console output)
+python tools/monitoring/performance_monitor.py --interval 10
+
+# Watch performance reports update
+watch -n 30 'ls -la .orch-monitoring/ | tail -5'
+
+# Simple real-time system monitoring
+watch -n 5 'python -c "import psutil; print(f\"CPU: {psutil.cpu_percent()}%, Memory: {psutil.virtual_memory().percent}%\")"'
 ```
 
 ## 🚨 Alerting & Notifications
@@ -502,55 +458,49 @@ Performance Trends:
 
 ### Common Performance Problems
 
-**Slow Context Preparation**:
+**Slow Operation Response**:
 ```bash
-# Diagnose slow context processing
-curl -X POST http://localhost:5000/api/context/test \
-  -H "Content-Type: application/json" \
-  -d '{
-    "agent_type": "CodeAgent",
-    "task": "Debug slow context preparation",
-    "debug_mode": true
-  }'
+# Check system performance during operations
+python tools/monitoring/performance_monitor.py --report-only
 
-# Check context mode and file counts
-curl http://localhost:5000/api/context/status
+# Monitor resource usage during operations
+watch -n 5 'python -c "import psutil; print(f\"CPU: {psutil.cpu_percent()}%, Memory: {psutil.virtual_memory().percent}%\")"'
 
 # Solutions:
-# 1. Switch to SIMPLE mode for faster processing
-# 2. Reduce file filtering scope
-# 3. Increase cache size
-# 4. Enable background processing
+# 1. Monitor system resources for bottlenecks
+# 2. Check for high memory or CPU usage
+# 3. Review application logs for errors
+# 4. Consider system resource limits
 ```
 
 **High Memory Usage**:
 ```bash
 # Monitor memory usage patterns
-curl http://localhost:5000/debug
+python tools/monitoring/performance_monitor.py --report-only
 
-# Check for memory leaks
-python tools/monitoring/performance_monitor.py --memory-profile
+# Check current memory usage
+python -c "import psutil; mem=psutil.virtual_memory(); print(f'Memory: {mem.percent}% ({mem.used//1024//1024}MB used)')"
 
 # Solutions:
-# 1. Force SIMPLE mode under high memory conditions
-# 2. Reduce cache size
-# 3. Restart service to clear memory
-# 4. Adjust garbage collection settings
+# 1. Monitor memory usage with performance monitor
+# 2. Restart services if memory usage is consistently high
+# 3. Check for memory leaks in application logs
+# 4. Consider increasing system memory
 ```
 
-**Interface Connection Issues**:
+**System Performance Issues**:
 ```bash
-# Test all interfaces
-curl -X POST http://localhost:5000/api/interfaces/test-all
+# Check overall system performance
+python tools/monitoring/performance_monitor.py --report-only
 
-# Check interface status
-curl http://localhost:5000/api/interfaces
+# Check for running processes
+ps aux | grep -E "(python|orchestrator)" | grep -v grep
 
 # Solutions:
-# 1. Verify API keys and credentials
-# 2. Check network connectivity
-# 3. Switch to backup interface
-# 4. Restart interface manager
+# 1. Monitor system resources regularly
+# 2. Check application logs for errors
+# 3. Restart services if needed
+# 4. Review system configuration
 ```
 
 ### Debug Mode
@@ -575,56 +525,59 @@ export INTERFACE_MANAGER_PROFILE=true
 
 ### Performance Profiling
 
-Deep dive into performance bottlenecks:
+**Note**: Advanced performance profiling tools are planned but not yet implemented.
+
+Currently available profiling:
 
 ```python
-# Enable performance profiling
-from tools.monitoring.performance_monitor import PerformanceProfiler
+# Basic performance monitoring
+from tools.monitoring.performance_monitor import PerformanceMonitor
 
-profiler = PerformanceProfiler()
-await profiler.start_profiling()
+monitor = PerformanceMonitor()
+status = monitor.get_current_status()
+print(f"Performance status: {status}")
 
-# Run operations to profile
-result = await context_manager.prepare_context(agent_type, task)
-
-# Get detailed profile report
-profile_report = await profiler.stop_profiling()
-print(profile_report.get_detailed_breakdown())
+# Python's built-in profiling can be used for detailed analysis
+import cProfile
+cProfile.run('your_function_here()')
 ```
 
 ### Load Testing
 
-Test system performance under load:
+**Note**: Dedicated load testing tools are planned but not yet implemented.
+
+Currently available testing:
 
 ```bash
-# Run load test with multiple concurrent operations
-python tools/monitoring/load_tester.py \
-  --concurrent-users 10 \
-  --operations-per-user 20 \
-  --test-duration 300s \
-  --report-interval 30s
+# Run unit tests for performance monitor
+python -m pytest tests/unit/test_performance_monitor.py -v
+
+# Monitor system under normal load
+python tools/monitoring/performance_monitor.py --interval 5
 ```
 
 ### Custom Metrics
 
-Implement custom performance tracking:
+**Note**: Custom metrics framework is planned but not yet implemented.
+
+Currently available customization:
 
 ```python
-from tools.monitoring.performance_monitor import CustomMetric
+# Extend the existing PerformanceMonitor class
+from tools.monitoring.performance_monitor import PerformanceMonitor
 
-# Define custom metric
-response_quality = CustomMetric(
-    name="response_quality",
-    description="AI response quality score",
-    metric_type="gauge"
-)
-
-# Record custom metric
-response_quality.record(0.89, {
-    "agent_type": "CodeAgent",
-    "interface": "claude_code",
-    "context_mode": "fancy"
-})
+class CustomPerformanceMonitor(PerformanceMonitor):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.custom_metrics = {}
+    
+    def record_custom_metric(self, name, value, tags=None):
+        """Record a custom metric"""
+        self.custom_metrics[name] = {
+            "value": value,
+            "tags": tags or {},
+            "timestamp": datetime.utcnow()
+        }
 ```
 
 ---

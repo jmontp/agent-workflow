@@ -44,17 +44,23 @@ python -m lib.orchestrator --help</code></pre>
 <div class="quick-start-grid">
   <div class="quick-start-card">
     <h3>🐍 Python</h3>
-    <pre><code class="language-python">from lib.orchestrator import Orchestrator
+    <pre><code class="language-python">import asyncio
+from lib.orchestrator import Orchestrator
 from lib.agents import create_agent
 
-# Initialize
-orchestrator = Orchestrator()
+async def main():
+    # Initialize
+    orchestrator = Orchestrator()
+    
+    # Create epic
+    epic = await orchestrator.create_epic(
+        "Build authentication system",
+        priority="high"
+    )
+    return epic
 
-# Create epic
-epic = await orchestrator.create_epic(
-    "Build authentication system",
-    priority="high"
-)</code></pre>
+# Run async function
+epic = asyncio.run(main())</code></pre>
   </div>
   
   <div class="quick-start-card">
@@ -214,11 +220,13 @@ orchestrator = Orchestrator(config_path="config.yml")
 orchestrator = Orchestrator()
 
 # 📝 Create your first epic
-epic = await orchestrator.create_epic(
-    "Build authentication system",
-    priority="high"
-)
-print(f"✅ Created epic: {epic.id}")
+async def create_first_epic():
+    epic = await orchestrator.create_epic(
+        "Build authentication system",
+        priority="high"
+    )
+    print(f"✅ Created epic: {epic.id}")
+    return epic
 ```
 
 </div>
@@ -367,14 +375,24 @@ Create a new epic with the given description and optional TDD requirements. Epic
   <div class="tab-content active" id="basic-epic">
   
 ```python title="🎯 Basic Epic Creation"
-# ✨ Simple epic
-epic = await orchestrator.create_epic(
-    "Build authentication system", 
-    priority="high"
-)
-print(f"✅ Created epic: {epic.id}")
-print(f"📋 Title: {epic.title}")
-print(f"🎯 Priority: {epic.priority}")
+import asyncio
+from lib.orchestrator import Orchestrator
+
+async def create_basic_epic():
+    orchestrator = Orchestrator()
+    
+    # ✨ Simple epic
+    epic = await orchestrator.create_epic(
+        "Build authentication system", 
+        priority="high"
+    )
+    print(f"✅ Created epic: {epic.id}")
+    print(f"📋 Title: {epic.title}")
+    print(f"🎯 Priority: {epic.priority}")
+    return epic
+
+# Run the function
+epic = asyncio.run(create_basic_epic())
 ```
 
   </div>
@@ -382,16 +400,25 @@ print(f"🎯 Priority: {epic.priority}")
   <div class="tab-content" id="tdd-epic">
   
 ```python title="🔴🟢🔄 Epic with TDD Requirements"
-epic = await orchestrator.create_epic(
-    "Implement payment processing",
-    priority="high",
-    tdd_requirements=[
-        "All payment flows must have 100% test coverage",
-        "Integration tests required for external APIs", 
-        "Performance tests for transaction processing",
-        "Security tests for PCI compliance"
-    ]
-)
+import asyncio
+from lib.orchestrator import Orchestrator
+
+async def create_tdd_epic():
+    orchestrator = Orchestrator()
+    
+    epic = await orchestrator.create_epic(
+        "Implement payment processing",
+        priority="high",
+        tdd_requirements=[
+            "All payment flows must have 100% test coverage",
+            "Integration tests required for external APIs", 
+            "Performance tests for transaction processing",
+            "Security tests for PCI compliance"
+        ]
+    )
+    return epic
+
+epic = asyncio.run(create_tdd_epic())
 
 # 📊 Access TDD requirements
 for req in epic.tdd_requirements:
@@ -490,18 +517,27 @@ Epic(
     <summary>⚠️ Error Handling</summary>
     
 ```python title="Robust Error Handling"
-try:
-    epic = await orchestrator.create_epic(
-        description="",  # ❌ Empty description
-        priority="critical"  # ❌ Invalid priority
-    )
-except ValueError as e:
-    print(f"❌ Validation Error: {e}")
-    # Handle validation errors
+import asyncio
+from lib.orchestrator import Orchestrator
+from lib.state_machine import StateError
+
+async def handle_epic_errors():
+    orchestrator = Orchestrator()
     
-except StateError as e:
-    print(f"🚫 State Error: {e}")
-    print(f"💡 Current state: {e.current_state}")
+    try:
+        epic = await orchestrator.create_epic(
+            description="",  # ❌ Empty description
+            priority="critical"  # ❌ Invalid priority
+        )
+    except ValueError as e:
+        print(f"❌ Validation Error: {e}")
+        # Handle validation errors
+        
+    except StateError as e:
+        print(f"🚫 State Error: {e}")
+        print(f"💡 Current state: {e.current_state}")
+
+asyncio.run(handle_epic_errors())
     print(f"✅ Allowed commands: {e.allowed_commands}")
     # Guide user to valid next actions
     
@@ -3036,11 +3072,11 @@ function copyToClipboard(elementId) {
     });
 }
 
-// ▶️ Run Example (placeholder)
+// ▶️ Run Example 
 function runExample(exampleId) {
     console.log(`Running example: ${exampleId}`);
-    // Placeholder for running examples in browser
-    alert('🚧 Example execution coming soon! For now, copy the code and run locally.');
+    // Note: In-browser execution is not currently supported
+    alert('💡 To run this example, copy the code and execute it in your local environment with agent-workflow installed.');
 }
 
 // 📮 Postman Integration

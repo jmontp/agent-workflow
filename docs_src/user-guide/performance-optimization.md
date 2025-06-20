@@ -58,29 +58,26 @@ storage:
 
 #### Memory Monitoring
 ```python
-# Monitor memory usage
+# Monitor memory usage (basic example)
 import psutil
 import gc
-from lib.monitoring import MemoryMonitor
 
-monitor = MemoryMonitor()
+# Basic memory monitoring - can be extended with custom implementation
+def check_memory_usage():
+    """Check current memory usage"""
+    memory = psutil.virtual_memory()
+    return memory.percent
 
-# Set up memory alerts
-monitor.configure_alerts(
-    warning_threshold=0.75,     # 75% memory usage
-    critical_threshold=0.90,    # 90% memory usage
-    cleanup_threshold=0.85      # Trigger cleanup at 85%
-)
-
-# Automatic cleanup
-async def memory_cleanup():
-    """Automatic memory management"""
+# Manual memory cleanup
+def cleanup_memory():
+    """Manual memory cleanup"""
     memory_percent = psutil.virtual_memory().percent
     
     if memory_percent > 85:
-        gc.collect()                    # Force garbage collection
-        await cleanup_agent_caches()   # Clear agent caches
-        await compress_state_data()    # Compress stored data
+        gc.collect()  # Force garbage collection
+        print(f"Cleaned up memory. Usage: {memory_percent}%")
+        
+# Note: For advanced memory monitoring, consider implementing a MemoryMonitor class
 ```
 
 ### CPU Optimization
@@ -488,66 +485,29 @@ class OptimizedTDDStateMachine:
 
 #### Metrics Collection
 ```python
-# Comprehensive performance monitoring
-from prometheus_client import Counter, Histogram, Gauge, start_http_server
-import time
-import psutil
+# Basic performance monitoring (using existing tools/monitoring/performance_monitor.py)
+from tools.monitoring.performance_monitor import PerformanceMonitor, PerformanceSnapshot
+import asyncio
 
-class PerformanceMonitor:
-    def __init__(self):
-        # Define metrics
-        self.command_duration = Histogram(
-            'discord_command_duration_seconds',
-            'Discord command execution time',
-            ['command_type', 'status']
-        )
-        
-        self.agent_execution_time = Histogram(
-            'agent_execution_seconds',
-            'Agent task execution time',
-            ['agent_type', 'task_type']
-        )
-        
-        self.memory_usage = Gauge(
-            'system_memory_usage_bytes',
-            'System memory usage'
-        )
-        
-        self.active_projects = Gauge(
-            'active_projects_total',
-            'Number of active projects'
-        )
-        
-        self.tdd_cycle_time = Histogram(
-            'tdd_cycle_duration_seconds',
-            'TDD cycle completion time',
-            ['phase']
-        )
-        
-    async def monitor_performance(self):
-        """Continuous performance monitoring"""
-        while True:
-            # Update system metrics
-            self.memory_usage.set(psutil.virtual_memory().used)
-            
-            # Update application metrics
-            self.active_projects.set(len(self.get_active_projects()))
-            
-            await asyncio.sleep(10)  # Update every 10 seconds
-            
-    def record_command_execution(self, command, duration, status):
-        """Record Discord command performance"""
-        self.command_duration.labels(
-            command_type=command,
-            status=status
-        ).observe(duration)
-        
-    def record_agent_execution(self, agent_type, task_type, duration):
-        """Record agent performance"""
-        self.agent_execution_time.labels(
-            agent_type=agent_type,
-            task_type=task_type
-        ).observe(duration)
+# Initialize the performance monitor
+monitor = PerformanceMonitor(
+    collection_interval=30,  # Collect metrics every 30 seconds
+    storage_path=".orch-monitoring",
+    visualizer_url="http://localhost:5000"
+)
+
+# Start monitoring
+async def start_performance_monitoring():
+    """Start performance monitoring"""
+    await monitor.start_monitoring()
+
+# Get current status
+def get_performance_status():
+    """Get current performance status"""
+    return monitor.get_current_status()
+
+# Note: Prometheus integration is not included in the current version
+# The system currently uses JSON reports and basic alerting mechanisms
 ```
 
 #### Performance Alerts
@@ -714,61 +674,70 @@ logging:
 ```bash
 # Check system resources
 top -p $(pgrep -f orchestrator)
-iostat -x 1 5
 
-# Check Discord API latency
-curl -w "@curl-format.txt" -o /dev/null -s "https://discord.com/api/v10/gateway"
+# Check Discord API latency (basic test)
+curl -w "%{time_total}" -o /dev/null -s "https://discord.com/api/v10/gateway"
 
-# Review logs for bottlenecks
-grep -E "(took|duration|elapsed)" logs/orchestrator.log | tail -20
+# Check performance monitoring data
+python tools/monitoring/performance_monitor.py --report-only
+
+# Review application logs
+find . -name "*.log" -exec grep -E "(took|duration|elapsed)" {} \; | tail -20
 ```
 
 **Solutions:**
-- Increase agent pool size
-- Enable request batching
-- Optimize message compression
-- Check network connectivity
+- Check system resource usage with performance monitor
+- Review Discord bot configuration
+- Monitor network connectivity
+- Consider reducing command complexity
 
 #### High Memory Usage
 **Symptoms:** Memory usage >90%, frequent garbage collection
 **Diagnosis:**
 ```python
 import psutil
-import tracemalloc
+import gc
 
-# Enable memory tracing
-tracemalloc.start()
+# Check current memory usage
+memory = psutil.virtual_memory()
+print(f"Memory usage: {memory.percent}%")
+print(f"Available: {memory.available / (1024**3):.1f} GB")
 
-# Run system for period, then check top consumers
-current, peak = tracemalloc.get_traced_memory()
-snapshot = tracemalloc.take_snapshot()
-top_stats = snapshot.statistics('lineno')
+# Force garbage collection
+gc.collect()
+print("Garbage collection completed")
 
-for stat in top_stats[:10]:
-    print(stat)
+# Use performance monitor for detailed tracking
+from tools.monitoring.performance_monitor import PerformanceMonitor
+monitor = PerformanceMonitor()
+status = monitor.get_current_status()
+print(f"Performance status: {status}")
 ```
 
 **Solutions:**
-- Enable memory compression
-- Reduce cache sizes
-- Implement memory cleanup
+- Monitor memory usage with performance monitor
+- Reduce cache sizes if applicable
+- Restart services if memory leaks detected
 - Limit concurrent operations
 
 #### Agent Timeout Issues
 **Symptoms:** Frequent agent timeouts, blocked TDD cycles
 **Diagnosis:**
 ```bash
-# Check agent execution times
-grep "agent_execution_time" logs/metrics.log | awk '{print $4}' | sort -n | tail -20
+# Check for stuck processes
+ps aux | grep -E "(python|orchestrator)" | grep -v grep
 
-# Check for stuck operations
-ps aux | grep -E "(claude|agent)" | grep -v grep
+# Monitor system performance
+python tools/monitoring/performance_monitor.py --report-only
+
+# Check system resources
+top -n 1 | head -20
 ```
 
 **Solutions:**
-- Reduce task complexity
-- Implement task splitting
-- Increase timeout values
-- Optimize AI API calls
+- Monitor system resources regularly
+- Check for resource bottlenecks
+- Review task complexity
+- Consider system resource limits
 
-This performance optimization guide provides comprehensive strategies for maximizing system efficiency and scalability.
+This performance optimization guide provides strategies for monitoring and improving system efficiency using available tools.

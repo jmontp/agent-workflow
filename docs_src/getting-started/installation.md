@@ -276,8 +276,8 @@ sudo pacman -S python python-pip git curl base-devel</code></pre>
   <div class="tab-content" id="docker">
     <div class="docker-note">
       <div class="note-box">
-        <h4>🚧 Docker Support Coming Soon</h4>
-        <p>We're working on official Docker images. For now, you can create your own:</p>
+        <h4>🐳 Docker Deployment</h4>
+        <p>Docker support is not officially provided, but you can containerize Agent Workflow using the example below:</p>
       </div>
     </div>
 
@@ -297,13 +297,19 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Install agent-workflow
-RUN pip install agent-workflow[web]
+RUN pip install agent-workflow
 
-# Expose ports
+# Create config directory
+RUN mkdir -p /root/.agent-workflow
+
+# Copy your configuration (if you have one)
+# COPY agent-config.yaml /root/.agent-workflow/
+
+# Expose ports (adjust as needed)
 EXPOSE 8080
 
-# Start command
-CMD ["agent-orch", "start", "--web", "--port", "8080"]</code></pre>
+# Start command - customize based on your needs
+CMD ["agent-orch", "start"]</code></pre>
           </div>
         </div>
       </div>
@@ -316,13 +322,27 @@ CMD ["agent-orch", "start", "--web", "--port", "8080"]</code></pre>
             <pre><code># Build image
 docker build -t agent-workflow .
 
-# Run container
+# Run container with mounted config
 docker run -d \
   --name agent-workflow \
-  -p 8080:8080 \
   -v ~/.agent-workflow:/root/.agent-workflow \
   -e DISCORD_BOT_TOKEN=your_token \
   agent-workflow</code></pre>
+          </div>
+          <p><strong>Note:</strong> This is a community example. Official Docker images and compose files are not currently provided.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <span class="step-number">3</span>
+        <div class="step-content">
+          <h4>Alternative: Direct Installation</h4>
+          <p>For production deployment, we recommend using the native installation methods above rather than Docker, as they provide better integration with the host system for git operations and file access.</p>
+          <div class="code-block">
+            <pre><code># Recommended for production
+pip install agent-workflow
+agent-orch init
+agent-orch start</code></pre>
           </div>
         </div>
       </div>

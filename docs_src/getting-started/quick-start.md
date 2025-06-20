@@ -61,6 +61,10 @@ agent-orch status --watch
 
 **🎉 Speed Run Complete!** You just orchestrated AI agents in under 2 minutes!
 
+!!! warning "⚠️ For Production Use"
+    
+    Speed run uses mock agents. For real AI, review [Essential Best Practices](#essential-best-practices) for API key security and testing patterns.
+
 **Step 3 of 3 Complete!** ✅ *Witnessed AI agent collaboration*
 
 ---
@@ -163,6 +167,10 @@ $ agent-orch init --profile solo-engineer --interactive
 ```
 
 **Step 2 of 5 Complete!** ✅ *Environment configured for learning*
+
+!!! tip "💡 First Time with AI Agents?"
+    
+    Before working with real code, review the [Essential Best Practices](#essential-best-practices) section below for security and testing guidance.
 
 ```bash
 # Register current directory as your first project
@@ -335,6 +343,95 @@ $ agent-orch setup-api --provider openai --interactive
 ```
 
 **Step 1 of 7 Complete!** ✅ *Real AI agents configured*
+
+---
+
+## 🛡️ Essential Best Practices
+
+!!! warning "Critical Security & Development Practices"
+    
+    Before proceeding with production AI agents, follow these essential practices:
+
+### 🔐 API Key Security
+
+**Never commit API keys to repositories:**
+
+```bash
+# ❌ WRONG - Don't do this
+echo "ANTHROPIC_API_KEY=sk-ant-api03-..." >> config.yml
+
+# ✅ CORRECT - Use environment variables
+export ANTHROPIC_API_KEY="sk-ant-api03-..."
+echo "ANTHROPIC_API_KEY" >> .gitignore
+```
+
+**Use secure environment management:**
+
+```bash
+# Create .env file (never commit)
+echo "ANTHROPIC_API_KEY=your-key-here" > .env
+echo "DISCORD_BOT_TOKEN=your-token-here" >> .env
+echo ".env" >> .gitignore
+
+# Load in your shell
+source .env
+```
+
+### 🧪 Testing Best Practices
+
+**Always run tests before AI agent changes:**
+
+```bash
+# Before starting AI agents on real code
+pytest tests/ -v
+make test  # If Makefile exists
+
+# Check test coverage
+pytest --cov=src tests/
+```
+
+**Basic test structure example:**
+
+```python
+def test_api_endpoint():
+    """Test basic API functionality"""
+    try:
+        response = app.test_client().get('/api/health')
+        assert response.status_code == 200
+        assert 'status' in response.json
+    except Exception as e:
+        pytest.fail(f"API test failed: {e}")
+```
+
+### 🚨 Error Handling Patterns
+
+**Always use try-catch for AI operations:**
+
+```python
+# In your code when working with AI agents
+try:
+    result = risky_operation()
+    return result
+except APIError as e:
+    logger.error(f"API error: {e}")
+    return fallback_value()
+except Exception as e:
+    logger.error(f"Unexpected error: {e}")
+    raise  # Re-raise for debugging
+```
+
+### 📋 Quick Safety Checklist
+
+Before using AI agents in production:
+
+- [ ] API keys stored as environment variables
+- [ ] `.env` and sensitive files in `.gitignore`
+- [ ] Tests pass locally (`pytest` or `make test`)
+- [ ] Code backed up or in version control
+- [ ] Start with `--mode blocking` for human approval
+- [ ] Review agent changes before approval
+
+---
 
 ### Step 2 of 7: Discord Bot Integration ⚡
 

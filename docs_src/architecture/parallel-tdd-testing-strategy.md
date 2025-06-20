@@ -40,7 +40,7 @@ class ParallelTDDTestFramework:
         self.test_environments = TestEnvironmentManager()
         self.mock_factory = MockFactory()
         self.data_factory = TestDataFactory()
-        self.performance_profiler = PerformanceProfiler()
+        self.performance_profiler = None  # PerformanceProfiler planned but not yet implemented
         self.chaos_engine = ChaosTestingEngine()
         
     async def setup_test_environment(self, test_type: TestType) -> TestEnvironment:
