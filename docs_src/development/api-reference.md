@@ -2619,6 +2619,334 @@ async def test_full_workflow():
 
 ---
 
+## 🆕 Modern CLI Package (agent_workflow)
+
+The modern `agent_workflow` package provides a clean, standards-compliant CLI interface for the orchestration system with professional command structure and PyPI distribution.
+
+### 🎯 CLI Entry Points
+
+The package provides two main command-line interfaces:
+
+**Primary Commands:**
+- `agent-orch` - Full command name for formal usage
+- `aw` - Short alias for quick operations
+
+```bash
+# Full command syntax
+agent-orch [COMMAND] [OPTIONS]
+
+# Short alias syntax  
+aw [COMMAND] [OPTIONS]
+```
+
+### 📋 Available Commands
+
+#### Global Management
+- `init` - Initialize orchestration environment
+- `migrate` - Migration from git-clone installations
+- `version` - Display version information
+- `health` - System health diagnostics
+
+#### Project Operations
+- `register-project <path> [name]` - Register project repository
+- `projects` - List and manage registered projects
+
+#### Orchestration Control
+- `start [project]` - Start orchestration engine
+- `stop` - Stop orchestration gracefully
+- `status` - Check system status
+
+#### Configuration & Setup
+- `setup-discord` - Configure Discord integration
+- `setup-api` - Configure AI API integration
+- `configure` - Interactive configuration wizard
+
+#### Web Interface
+- `web start` - Launch web dashboard
+- `web stop` - Stop web server
+
+### 🏗️ Core Module APIs
+
+#### Main Package Exports (`agent_workflow/__init__.py`)
+
+```python
+# Primary classes
+from agent_workflow import Orchestrator, StateMachine, ProjectStorage
+
+# Data models
+from agent_workflow import Epic, Story, Sprint
+
+# Configuration
+from agent_workflow.config import Config, SecurityConfig
+
+# Core orchestration
+orchestrator = Orchestrator()
+epic = await orchestrator.create_epic("New Feature")
+```
+
+**Key Exports:**
+- `Orchestrator` - Main coordination engine
+- `StateMachine` - Workflow state management
+- `ProjectStorage` - Data persistence layer
+- `Epic`, `Story`, `Sprint` - Core data models
+- `Config` - Configuration management
+
+#### CLI Main Entry (`agent_workflow/cli/main.py`)
+
+```python
+# CLI command functions (for programmatic access)
+from agent_workflow.cli.main import (
+    init_environment,
+    register_project, 
+    start_orchestration,
+    setup_integrations
+)
+
+# Example programmatic usage
+await init_environment()
+await register_project("/path/to/project", "MyProject")
+await start_orchestration(project_name="MyProject")
+```
+
+**Public Functions:**
+- `init_environment()` - Initialize orchestration setup
+- `register_project(path, name)` - Register new project
+- `start_orchestration(project_name)` - Begin orchestration
+- `stop_orchestration()` - Graceful shutdown
+- `get_system_status()` - Health and status information
+- `setup_integrations()` - Configure external services
+
+#### Simple Orchestrator (`agent_workflow/orchestrator.py`)
+
+```python
+from agent_workflow.orchestrator import run_orchestrator
+
+# Simplified orchestrator runner
+await run_orchestrator(
+    project_path="/path/to/project",
+    config_file="config.yaml",
+    daemon=False
+)
+```
+
+**Public Interface:**
+- `run_orchestrator(project_path, config_file, daemon)` - Main runner
+- `OrchestratorConfig` - Configuration data class
+- `validate_project_structure(path)` - Project validation
+
+### ⚙️ Configuration System (`agent_workflow/config/`)
+
+#### Configuration Management
+
+```python
+from agent_workflow.config import Config, load_config
+
+# Load configuration
+config = load_config("config.yaml")
+
+# Access settings
+print(config.orchestrator.mode)  # blocking|partial|autonomous
+print(config.agents.timeout_minutes)
+print(config.discord.bot_token)
+```
+
+**Configuration Schema:**
+- `Config` - Main configuration container
+- `OrchestratorConfig` - Orchestration settings
+- `AgentConfig` - Agent-specific settings
+- `DiscordConfig` - Discord bot configuration
+- `SecurityConfig` - Security policies
+- `StorageConfig` - Data persistence settings
+
+#### Environment Configuration
+
+```python
+from agent_workflow.config import EnvironmentConfig
+
+env_config = EnvironmentConfig()
+env_config.load_from_env()  # Load from environment variables
+env_config.validate()       # Validate required settings
+```
+
+### 🔒 Security Framework (`agent_workflow/security/`)
+
+#### Agent Security Profiles
+
+```python
+from agent_workflow.security import (
+    get_security_profile,
+    validate_agent_access,
+    SecurityPolicy
+)
+
+# Get security profile for agent type
+profile = get_security_profile("CodeAgent")
+print(profile.allowed_tools)   # List of allowed tools
+print(profile.blocked_tools)   # List of blocked tools
+
+# Validate access
+if validate_agent_access("QAAgent", "edit_file"):
+    print("Access granted")
+else:
+    print("Access denied")
+```
+
+**Security Components:**
+- `SecurityPolicy` - Policy definition class
+- `AgentSecurityProfile` - Per-agent security settings
+- `get_security_profile(agent_type)` - Get agent security config
+- `validate_agent_access(agent, tool)` - Access validation
+- `audit_security_event(event)` - Security event logging
+
+#### Access Control
+
+```python
+from agent_workflow.security import AccessControl
+
+access_control = AccessControl()
+access_control.set_agent_policy("CodeAgent", {
+    "allowed_tools": ["edit_file", "git_add", "run_tests"],
+    "blocked_tools": ["git_push", "rm", "sudo"],
+    "max_file_size": "10MB",
+    "restricted_paths": ["/etc", "/usr", "/var"]
+})
+```
+
+### 🔌 Integration Points (`agent_workflow/integrations/`)
+
+#### External Service Integration
+
+```python
+from agent_workflow.integrations import (
+    DiscordIntegration,
+    GitHubIntegration,
+    ClaudeIntegration
+)
+
+# Discord bot setup
+discord = DiscordIntegration(token="bot_token")
+await discord.start()
+
+# GitHub integration
+github = GitHubIntegration(token="github_token")
+repos = await github.list_repositories()
+
+# Claude API integration
+claude = ClaudeIntegration(api_key="claude_key")
+response = await claude.send_message("Hello")
+```
+
+### 📂 Project Templates (`agent_workflow/templates/`)
+
+#### Template Management
+
+```python
+from agent_workflow.templates import (
+    ProjectTemplate,
+    create_from_template,
+    list_templates
+)
+
+# List available templates
+templates = list_templates()
+print(templates)  # ['python-web', 'react-app', 'data-science']
+
+# Create project from template
+await create_from_template(
+    template_name="python-web",
+    project_path="/path/to/new/project",
+    project_name="MyWebApp"
+)
+```
+
+**Template Features:**
+- `ProjectTemplate` - Template definition class
+- `create_from_template()` - Generate project from template
+- `list_templates()` - Get available templates
+- `register_template()` - Add custom template
+- Template validation and customization
+
+### 🚀 Usage Examples
+
+#### Complete Setup Example
+
+```python
+import asyncio
+from agent_workflow import Orchestrator
+from agent_workflow.config import load_config
+from agent_workflow.cli.main import init_environment, register_project
+
+async def setup_new_project():
+    """Complete setup of new project with modern package."""
+    
+    # Initialize environment
+    await init_environment()
+    
+    # Load configuration
+    config = load_config("orch-config.yaml")
+    
+    # Register project
+    await register_project(
+        path="/path/to/project",
+        name="MyProject"
+    )
+    
+    # Create orchestrator with config
+    orchestrator = Orchestrator(config=config)
+    
+    # Create epic and start workflow
+    epic = await orchestrator.create_epic(
+        "Modern workflow setup",
+        priority="high"
+    )
+    
+    return orchestrator, epic
+
+# Run setup
+orchestrator, epic = asyncio.run(setup_new_project())
+```
+
+#### CLI Command Integration
+
+```bash
+# Initialize environment
+aw init
+
+# Register project
+aw register-project /path/to/project "My Project"
+
+# Start orchestration
+aw start "My Project"
+
+# Check status
+aw status
+
+# Configure integrations
+aw setup-discord
+aw setup-api
+
+# Launch web interface
+aw web start
+```
+
+### 🎯 Key Differences from Legacy Library
+
+The modern package provides:
+
+- **Standardized CLI**: Professional command structure with help and validation
+- **Clean Imports**: Simple, predictable import paths  
+- **Configuration Management**: YAML-based configuration with validation
+- **Security Framework**: Comprehensive agent access control
+- **Integration Points**: Structured external service integration
+- **Template System**: Project scaffolding and templates
+- **Package Distribution**: PyPI-compatible packaging and installation
+- **Type Safety**: Full type hints and mypy compatibility
+- **Documentation**: Comprehensive API documentation and examples
+
+The legacy `lib/` directory provides the complete feature implementation, while the modern package provides a clean, professional interface layer optimized for production use and distribution.
+
+---
+
 ## 🎨 Interactive JavaScript Components
 
 <script>

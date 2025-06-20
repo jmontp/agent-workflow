@@ -41,7 +41,7 @@ graph LR
 |---------------|-------------|------------------|-------------------|---------------|------------|
 | **File Operations** |
 | Read files | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Write new files | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Write new files | ✅ | ✅ | ✅ | ✅ (tests only) | ✅ |
 | Edit existing code | ✅ | ✅ | ❌ | ❌ | ❌ |
 | Delete files | ✅ | ❌ | ❌ | ❌ | ❌ |
 | **TDD-Specific File Operations** |
@@ -69,6 +69,10 @@ graph LR
 | Package management | ✅ | ✅ (limited) | ❌ | ❌ | ❌ |
 | Process management | ✅ | ❌ | ❌ | ❌ | ❌ |
 | Network access | ✅ | ❌ | ✅ (research) | ❌ | ❌ |
+| **Testing Commands** |
+| pytest execution | ✅ | ✅ | ❌ | ✅ | ❌ |
+| coverage analysis | ✅ | ✅ | ❌ | ✅ | ✅ (reporting) |
+| pytest with options | ✅ | ✅ | ❌ | ✅ | ❌ |
 
 ## Security Implementation
 
@@ -99,11 +103,19 @@ claude --allowedTools "Read Write Glob" --disallowedTools "Bash(rm) Edit"
 #### Elevated Commands (Orchestrator Only)
 - `rm`, `rmdir` - File deletion
 - `git push` - Publishing changes
+- Most bash commands (broad access with specific restrictions)
 
 #### Code Management Commands (Orchestrator + Code Agent)
 - `git commit` - Version control commits
 - `git add` - Stage changes
 - `git reset` - Reset changes
+
+#### TDD Testing Commands (Orchestrator, Code Agent, QA Agent)
+- `pytest` - Test execution (various options)
+- `coverage run` - Code coverage measurement
+- `coverage report` - Coverage analysis
+- `pytest --tb=short` - Concise test output
+- `pytest -v` - Verbose test execution
 
 ### 3. Security Validation
 

@@ -24,6 +24,14 @@ Welcome to the development documentation for the AI Agent TDD-Scrum Workflow sys
     
     [:octicons-arrow-right-24: API Docs](api-reference.md)
 
+-   :material-tools:{ .lg .middle } **Development Tools**
+
+    ---
+    
+    Suite of utilities for testing, monitoring, and documentation
+    
+    [:octicons-arrow-right-24: Dev Tools](development-tools.md)
+
 </div>
 
 ## Development Environment

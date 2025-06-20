@@ -8,24 +8,29 @@ Each agent type has specific tool access restrictions based on their function:
 
 ### Agent Access Levels
 
+**Orchestrator Agent**
+- **Allowed**: Full bash access including file operations, git operations (including push), system management
+- **Restricted**: Only the most dangerous commands (sudo, format, dd, shred)
+- **Purpose**: System coordination and workflow management
+
 **DesignAgent**
-- **Allowed**: File reading, documentation creation, web research
-- **Restricted**: Code editing, version control, system commands
+- **Allowed**: File reading, documentation creation, web research, basic file operations
+- **Restricted**: Code editing, version control, system administration
 - **Purpose**: Architecture design and specifications
 
 **CodeAgent**
-- **Allowed**: File editing, git add/commit, testing tools, package management
+- **Allowed**: File editing, git add/commit, pytest/coverage commands, package management, code quality tools
 - **Restricted**: File deletion, git push, system administration
 - **Purpose**: Feature implementation and code changes
 
 **QAAgent**
-- **Allowed**: Test execution, code quality tools, coverage analysis
-- **Restricted**: Code modification, version control, file creation
-- **Purpose**: Quality validation and testing
+- **Allowed**: Test file creation, test execution, pytest/coverage commands, code quality analysis
+- **Restricted**: Code modification (except test files), git commit/push operations
+- **Purpose**: Test creation and quality validation
 
 **DataAgent**
-- **Allowed**: Data file access, notebook creation, visualization tools
-- **Restricted**: Source code modification, version control
+- **Allowed**: Data file access, notebook creation, visualization tools, data processing commands
+- **Restricted**: Source code modification, version control, testing commands
 - **Purpose**: Data analysis and reporting
 
 ## Security Boundaries
@@ -39,10 +44,11 @@ The system enforces tool restrictions through:
 
 ### TDD Workflow Security
 During TDD cycles, additional security controls apply:
-- Test file modifications are isolated to the current story
-- Code agents cannot modify tests written by other agents
-- Red-Green-Refactor phases enforce sequential tool access
-- Story-level isolation prevents cross-contamination of test suites
+- **QA Agents**: Can create and modify test files during TEST_RED phase, execute pytest commands
+- **Code Agents**: Can execute pytest/coverage commands for validation, cannot modify test files
+- **Test Command Access**: Both QA and Code agents have access to pytest, coverage, and related testing tools
+- **Phase-based Restrictions**: Tool access varies by TDD phase (TEST_RED, CODE_GREEN, REFACTOR)
+- **Story-level Isolation**: TDD cycles isolated per story to prevent cross-contamination
 
 ### Human Approval Gates
 Critical operations require explicit approval:
