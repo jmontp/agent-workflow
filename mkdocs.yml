@@ -301,6 +301,9 @@ nav:
     - 🔗 Workflow Sequences: user-guide/workflow-sequences.md
     - 💻 CLI Reference: user-guide/cli-reference.md
     - ✅ Testing: user-guide/testing.md
+    - 🤖 Agent Interface Management: user-guide/agent-interface-management.md
+    - 🧠 Context Management: user-guide/context-management.md
+    - 📊 Performance Monitoring: user-guide/performance-monitoring.md
     - ⚡ Performance Optimization: user-guide/performance-optimization.md
     - 🔌 Integration Examples: user-guide/integration-examples.md
     - 🎨 UI Portal Guide: user-guide/ui-portal-guide.md
