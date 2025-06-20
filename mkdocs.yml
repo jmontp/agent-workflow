@@ -362,6 +362,7 @@ nav:
     - Discord Setup: deployment/discord-setup.md
     - Discord Setup Summary: deployment/DISCORD_SETUP_SUMMARY.md
     - Production Deployment: deployment/production.md
+    - Operations Guide: deployment/operations.md
     - GitHub Pages: deployment/github-pages.md
   - 📋 Templates:
     - templates/index.md

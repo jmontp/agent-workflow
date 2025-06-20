@@ -219,6 +219,9 @@ agent-orch status --watch --verbose
 
 # Health check with auto-fix
 agent-orch health --check-all --fix-issues
+
+# 📋 See comprehensive health monitoring guide
+# docs_src/user-guide/health-monitoring.md
 ```
 </details>
 

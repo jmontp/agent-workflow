@@ -170,8 +170,8 @@ Solution: Optimization steps
 
 ### Diagnostic Commands
 ```bash
-# Check feature health
-/health feature-name
+# Check system health (CLI command)
+agent-orch health --check-all
 
 # View logs
 /logs feature-name --level debug

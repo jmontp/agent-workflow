@@ -508,7 +508,7 @@ classDiagram
 1. **Custom Agents**: Implement new agent types for specialized tasks
 2. **Storage Backends**: Add database or cloud storage options
 3. **Integration Services**: Connect to Jira, Slack, Teams, etc.
-4. **Metrics Exporters**: Send metrics to Prometheus, Grafana
+4. **Metrics Exporters**: Export metrics to monitoring systems (basic Prometheus format available)
 5. **Security Providers**: Custom authentication and authorization
 
 ## Security Architecture

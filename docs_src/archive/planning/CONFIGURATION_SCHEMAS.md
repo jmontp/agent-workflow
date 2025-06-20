@@ -541,7 +541,7 @@ project_settings:
       
     deployment:
       target: "production"
-      health_check_url: "/health"
+      health_check_command: "agent-orch health --check-all"
       rollback_enabled: true
 ```
 

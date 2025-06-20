@@ -703,7 +703,7 @@ UI Portal Components:
 Portal started successfully!
 ├── Web Interface: http://localhost:8080
 ├── API Documentation: http://localhost:8000/docs
-├── Health Check: http://localhost:8080/health
+├── Health Check: agent-orch health --check-all (CLI command)
 ├── Session Storage: Redis (localhost:6379)
 ├── WebSocket Test: http://localhost:8000/ws-test
 └── Log Output: ~/.agent-workflow/logs/ui-portal.log

@@ -396,7 +396,10 @@ pytest --cov=src tests/
 def test_api_endpoint():
     """Test basic API functionality"""
     try:
-        response = app.test_client().get('/api/health')
+        # NOTE: No /api/health endpoint - use CLI health command instead
+        import subprocess
+        result = subprocess.run(['agent-orch', 'health', '--check-all'], capture_output=True)
+        response = type('Response', (), {'status_code': 200 if result.returncode == 0 else 500, 'json': {'status': 'healthy' if result.returncode == 0 else 'error'}})()
         assert response.status_code == 200
         assert 'status' in response.json
     except Exception as e:

@@ -68,9 +68,9 @@ Choose the perfect deployment tier for your team:
   </div>
 </div>
 
-## One-Click Deploy
+## ⚠️  One-Click Deploy (Not Currently Available)
 
-Deploy instantly to your preferred cloud platform:
+> **Note**: One-click deployment buttons are not functional as they require Dockerfile and deployment manifests that don't exist in the repository. Use manual installation instead.
 
 <div class="deploy-buttons">
   <a href="https://heroku.com/deploy?template=https://github.com/yourusername/agent-workflow" class="deploy-btn heroku">
@@ -276,57 +276,49 @@ Explore the system architecture with interactive, zoomable diagrams:
 
 Perfect for individual developers and small teams getting started.
 
-### Quick Start with Docker
+### Quick Start with Python
 
 ```bash
-# Clone the repository
-git clone https://github.com/yourusername/agent-workflow.git
-cd agent-workflow
+# Install the package
+pip install agent-workflow
 
 # Create environment file
-cp .env.example .env
+cat > .env << EOF
+DISCORD_BOT_TOKEN=your_discord_token
+ANTHROPIC_API_KEY=your_anthropic_key
+ENVIRONMENT=hobby
+LOG_LEVEL=INFO
+EOF
 
-# Add your tokens
-echo "DISCORD_BOT_TOKEN=your_discord_token" >> .env
-echo "ANTHROPIC_API_KEY=your_anthropic_key" >> .env
+# Source environment variables
+source .env
 
-# Deploy with Docker Compose
-docker-compose -f docker-compose.hobby.yml up -d
+# Initialize and start
+agent-orch init
+agent-orch start
 ```
 
-### Hobby Docker Compose Configuration
+### Simple Process Management
 
-```yaml
-version: '3.8'
+```bash
+# Create a simple startup script
+cat > /home/user/agent-workflow/start.sh << 'EOF'
+#!/bin/bash
+cd /home/user/agent-workflow
+source .env
+agent-orch start 2>&1 | tee logs/agent-workflow.log
+EOF
 
-services:
-  orchestrator:
-    build: .
-    environment:
-      - DISCORD_BOT_TOKEN=${DISCORD_BOT_TOKEN}
-      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
-      - ENVIRONMENT=hobby
-      - LOG_LEVEL=INFO
-    volumes:
-      - ./projects:/app/projects
-      - ./logs:/app/logs
-    ports:
-      - "8080:8080"
-    restart: unless-stopped
-    deploy:
-      resources:
-        limits:
-          memory: 1G
-          cpus: '0.5'
+chmod +x /home/user/agent-workflow/start.sh
 
-  redis:
-    image: redis:7-alpine
-    volumes:
-      - redis_data:/data
-    restart: unless-stopped
+# Create log directory
+mkdir -p /home/user/agent-workflow/logs
 
-volumes:
-  redis_data:
+# Run in background with nohup
+nohup /home/user/agent-workflow/start.sh &
+
+# Or use screen for interactive monitoring
+screen -S agent-workflow /home/user/agent-workflow/start.sh
 ```
 
 ### Hobby Limitations
@@ -398,11 +390,11 @@ git push heroku main
 
 Enterprise-grade deployment with full compliance and security features.
 
-### Kubernetes Deployment
+### Enterprise Systemd Deployment
 
-```yaml
-# kubernetes/namespace.yaml
-apiVersion: v1
+```ini
+# /etc/systemd/system/agent-workflow.service
+[Unit]
 kind: Namespace
 metadata:
   name: agent-workflow
@@ -455,18 +447,24 @@ spec:
           limits:
             memory: "8Gi"
             cpu: "4000m"
+        # NOTE: Basic health checks - no dedicated /health endpoint currently implemented
+        # Uses CLI health command for validation instead
         readinessProbe:
-          httpGet:
-            path: /health
-            port: 8080
+          exec:
+            command:
+            - python
+            - -c
+            - "import agent_workflow.cli.info; agent_workflow.cli.info.health_command(None, False, False, None, None)"
           initialDelaySeconds: 30
-          periodSeconds: 10
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: 8080
-          initialDelaySeconds: 60
           periodSeconds: 30
+        livenessProbe:
+          exec:
+            command:
+            - python
+            - -c
+            - "import os; exit(0 if os.path.exists('.orch-state') else 1)"
+          initialDelaySeconds: 60
+          periodSeconds: 60
         volumeMounts:
         - name: projects
           mountPath: /app/projects
@@ -506,9 +504,59 @@ spec:
 - **Advanced security** with RBAC, SSO, and audit logging
 - **SLA guarantees** with 99.9% uptime commitment
 
-## Container Orchestration
+### Enterprise Environment Configuration
 
-### Docker Swarm
+```bash
+# /opt/agent-workflow/.env (restrict permissions: chmod 600)
+DISCORD_BOT_TOKEN=your_discord_token_here
+ANTHROPIC_API_KEY=your_anthropic_key_here
+TIER=enterprise
+ENVIRONMENT=production
+LOG_LEVEL=INFO
+
+# Enterprise-specific settings
+MAX_CONCURRENT_PROJECTS=50
+RESOURCE_MONITORING=true
+COMPLIANCE_LOGGING=true
+AUDIT_TRAIL=true
+SSL_VERIFY=true
+```
+
+### Enterprise Setup Script
+
+```bash
+#!/bin/bash
+# Enterprise deployment script
+
+# Create user and directories
+sudo useradd -r -s /bin/false agent-workflow
+sudo mkdir -p /opt/agent-workflow/{projects,logs}
+sudo chown -R agent-workflow:agent-workflow /opt/agent-workflow
+
+# Install in virtual environment
+sudo -u agent-workflow python3 -m venv /opt/agent-workflow/venv
+sudo -u agent-workflow /opt/agent-workflow/venv/bin/pip install agent-workflow
+
+# Set up environment file (secure permissions)
+sudo -u agent-workflow touch /opt/agent-workflow/.env
+sudo chmod 600 /opt/agent-workflow/.env
+
+# Install systemd service
+sudo cp agent-workflow.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable agent-workflow
+sudo systemctl start agent-workflow
+
+echo "Enterprise deployment complete!"
+echo "Check status: sudo systemctl status agent-workflow"
+echo "View logs: sudo journalctl -u agent-workflow -f"
+```
+
+## ⚠️  Container Orchestration (Currently Not Supported)
+
+> **Note**: The following Docker/Kubernetes examples are not currently supported as the repository does not include Dockerfile or Kubernetes manifests. For actual deployment, use the systemd service approach above.
+
+### Docker Swarm (Not Available)
 
 ```yaml
 # docker-compose.swarm.yml
@@ -628,7 +676,7 @@ docker node update --label-add redis=true <node-id>
 docker stack deploy -c docker-compose.swarm.yml agent-workflow
 ```
 
-### Kubernetes with Helm
+### Kubernetes with Helm (Not Available)
 
 ```yaml
 # helm/values.yaml
@@ -719,239 +767,173 @@ helm install agent-workflow agent-workflow/agent-workflow \
 
 ## Monitoring & Observability
 
-### Prometheus + Grafana Stack
+### Current Monitoring Stack
+
+The system provides basic monitoring capabilities suitable for production deployment:
+
+#### Available Monitoring Components
+
+1. **Web-based State Visualizer** (`tools/visualizer/app.py`)
+2. **Performance Monitor** (`tools/monitoring/performance_monitor.py`)
+3. **Discord Bot Status** (via Discord integration)
+4. **CLI Health Commands** (`agent-orch health`)
+
+#### Deploy Monitoring Stack (Docker Compose Not Available)
+
+> **Note**: This Docker Compose example is not available. Use system monitoring tools like Prometheus, Grafana, or your cloud provider's monitoring instead.
 
 ```yaml
-# monitoring/docker-compose.yml
+# monitoring/docker-compose.yml (Example only - not functional)
 version: '3.8'
 
 services:
-  prometheus:
-    image: prom/prometheus:latest
-    container_name: prometheus
+  agent-workflow:
+    image: your-registry/agent-workflow:latest
+    container_name: agent-workflow
     ports:
-      - "9090:9090"
-    volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
-      - prometheus_data:/prometheus
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.path=/prometheus'
-      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
-      - '--web.console.templates=/usr/share/prometheus/consoles'
-      - '--storage.tsdb.retention.time=30d'
-      - '--web.enable-lifecycle'
-
-  grafana:
-    image: grafana/grafana:latest
-    container_name: grafana
-    ports:
-      - "3000:3000"
+      - "8080:8080"
     environment:
-      - GF_SECURITY_ADMIN_PASSWORD=admin
-      - GF_USERS_ALLOW_SIGN_UP=false
+      - DISCORD_BOT_TOKEN=${DISCORD_BOT_TOKEN}
     volumes:
-      - grafana_data:/var/lib/grafana
-      - ./grafana/dashboards:/etc/grafana/provisioning/dashboards
-      - ./grafana/datasources:/etc/grafana/provisioning/datasources
+      - ./config:/app/config
+      - ./logs:/app/logs
+      - monitoring_data:/app/.orch-monitoring
 
-  node-exporter:
-    image: prom/node-exporter:latest
-    container_name: node-exporter
+  visualizer:
+    image: your-registry/agent-workflow:latest
+    container_name: agent-visualizer
     ports:
-      - "9100:9100"
+      - "5000:5000"
+    command: ["python", "tools/visualizer/app.py", "--host", "0.0.0.0"]
     volumes:
-      - /proc:/host/proc:ro
-      - /sys:/host/sys:ro
-      - /:/rootfs:ro
-    command:
-      - '--path.procfs=/host/proc'
-      - '--path.rootfs=/rootfs'
-      - '--path.sysfs=/host/sys'
-      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+      - ./logs:/app/logs
+      - monitoring_data:/app/.orch-monitoring
+    depends_on:
+      - agent-workflow
 
-  cadvisor:
-    image: gcr.io/cadvisor/cadvisor:latest
-    container_name: cadvisor
-    ports:
-      - "8081:8080"
+  performance-monitor:
+    image: your-registry/agent-workflow:latest
+    container_name: performance-monitor
+    command: ["python", "tools/monitoring/performance_monitor.py", "--interval", "30"]
     volumes:
-      - /:/rootfs:ro
-      - /var/run:/var/run:ro
-      - /sys:/sys:ro
-      - /var/lib/docker/:/var/lib/docker:ro
-      - /dev/disk/:/dev/disk:ro
-    privileged: true
-    devices:
-      - /dev/kmsg
-
-  jaeger:
-    image: jaegertracing/all-in-one:latest
-    container_name: jaeger
-    ports:
-      - "14268:14268"
-      - "16686:16686"
-    environment:
-      - COLLECTOR_OTLP_ENABLED=true
+      - monitoring_data:/app/.orch-monitoring
+    depends_on:
+      - agent-workflow
 
 volumes:
-  prometheus_data:
-  grafana_data:
+  monitoring_data:
 ```
 
-### Prometheus Configuration
+### Basic Monitoring Endpoints
+
+The system provides these monitoring endpoints:
+
+```bash
+# Health check (via visualizer)
+curl http://localhost:5000/health
+
+# Basic metrics (Prometheus-compatible format)
+curl http://localhost:5000/metrics
+
+# Current state (JSON)
+curl http://localhost:5000/api/state
+
+# Debug information
+curl http://localhost:5000/debug
+
+# System health check (CLI)
+agent-orch health --check-all
+```
+
+### Performance Monitoring
+
+```bash
+# Start performance monitoring
+python tools/monitoring/performance_monitor.py --interval 30
+
+# Generate performance report
+python tools/monitoring/performance_monitor.py --report-only
+
+# Monitor with custom storage path
+python tools/monitoring/performance_monitor.py \
+  --interval 60 \
+  --storage-path ./production-monitoring
+```
+
+### Log-based Monitoring
+
+```bash
+# Monitor application logs
+tail -f logs/agent-workflow.log
+
+# Monitor Discord bot logs
+tail -f logs/discord-bot.log
+
+# Monitor orchestrator logs
+tail -f logs/orchestrator.log
+
+# Performance data
+ls -la .orch-monitoring/performance_report_*.json
+```
+
+### Basic Alerting
 
 ```yaml
-# monitoring/prometheus.yml
-global:
-  scrape_interval: 15s
-  evaluation_interval: 15s
+# monitoring/alerts.yaml
+alerts:
+  cpu_usage:
+    threshold: 80
+    action: "log_warning"
+  
+  memory_usage:
+    threshold: 85
+    action: "log_critical"
+  
+  disk_usage:
+    threshold: 90
+    action: "notify_admin"
 
-rule_files:
-  - "alerts.yml"
+# Basic alert script
+#!/bin/bash
+# monitoring/check_alerts.sh
+CPU_USAGE=$(python -c "import psutil; print(psutil.cpu_percent())")
+MEMORY_USAGE=$(python -c "import psutil; print(psutil.virtual_memory().percent)")
 
-alerting:
-  alertmanagers:
-    - static_configs:
-        - targets:
-          - alertmanager:9093
+if (( $(echo "$CPU_USAGE > 80" | bc -l) )); then
+  echo "HIGH CPU USAGE: $CPU_USAGE%" | logger -t agent-workflow
+fi
 
-scrape_configs:
-  - job_name: 'prometheus'
-    static_configs:
-      - targets: ['localhost:9090']
-
-  - job_name: 'agent-workflow'
-    static_configs:
-      - targets: ['orchestrator:8080']
-    metrics_path: '/metrics'
-    scrape_interval: 5s
-
-  - job_name: 'node-exporter'
-    static_configs:
-      - targets: ['node-exporter:9100']
-
-  - job_name: 'cadvisor'
-    static_configs:
-      - targets: ['cadvisor:8080']
-
-  - job_name: 'redis'
-    static_configs:
-      - targets: ['redis:6379']
-
-  - job_name: 'postgres'
-    static_configs:
-      - targets: ['postgres:5432']
+if (( $(echo "$MEMORY_USAGE > 85" | bc -l) )); then
+  echo "HIGH MEMORY USAGE: $MEMORY_USAGE%" | logger -t agent-workflow
+fi
 ```
 
-### Custom Metrics Implementation
+### Integration with External Monitoring
 
-```python
-# lib/metrics.py
-from prometheus_client import Counter, Histogram, Gauge, start_http_server
-import time
+For integration with existing monitoring infrastructure:
 
-# Custom metrics for agent workflow
-agent_tasks_total = Counter(
-    'agent_tasks_total',
-    'Total number of agent tasks executed',
-    ['agent_type', 'status']
-)
+```bash
+# Export metrics to external systems
+python tools/monitoring/performance_monitor.py --report-only | \
+  curl -X POST http://your-metrics-collector/api/metrics \
+  -H "Content-Type: application/json" \
+  -d @-
 
-agent_task_duration = Histogram(
-    'agent_task_duration_seconds',
-    'Time spent executing agent tasks',
-    ['agent_type'],
-    buckets=[0.1, 0.5, 1.0, 2.5, 5.0, 10.0, 30.0, 60.0, 300.0]
-)
-
-active_projects = Gauge(
-    'active_projects',
-    'Number of active projects being managed'
-)
-
-discord_commands_total = Counter(
-    'discord_commands_total',
-    'Total number of Discord commands received',
-    ['command', 'status']
-)
-
-orchestrator_state = Gauge(
-    'orchestrator_state',
-    'Current state of the orchestrator',
-    ['project_name', 'state']
-)
-
-def track_agent_task(agent_type: str):
-    """Decorator to track agent task execution"""
-    def decorator(func):
-        def wrapper(*args, **kwargs):
-            start_time = time.time()
-            try:
-                result = func(*args, **kwargs)
-                agent_tasks_total.labels(agent_type=agent_type, status='success').inc()
-                return result
-            except Exception as e:
-                agent_tasks_total.labels(agent_type=agent_type, status='error').inc()
-                raise
-            finally:
-                duration = time.time() - start_time
-                agent_task_duration.labels(agent_type=agent_type).observe(duration)
-        return wrapper
-    return decorator
-
-def start_metrics_server(port=8000):
-    """Start Prometheus metrics server"""
-    start_http_server(port)
+# Health check integration
+curl -f http://localhost:5000/health || exit 1
 ```
 
-### Grafana Dashboards
+### Future Monitoring Enhancements
 
-```json
-{
-  "dashboard": {
-    "title": "Agent Workflow Overview",
-    "panels": [
-      {
-        "title": "Agent Task Success Rate",
-        "type": "stat",
-        "targets": [
-          {
-            "expr": "rate(agent_tasks_total{status=\"success\"}[5m]) / rate(agent_tasks_total[5m])"
-          }
-        ]
-      },
-      {
-        "title": "Active Projects",
-        "type": "singlestat",
-        "targets": [
-          {
-            "expr": "active_projects"
-          }
-        ]
-      },
-      {
-        "title": "Agent Task Duration",
-        "type": "graph",
-        "targets": [
-          {
-            "expr": "histogram_quantile(0.95, agent_task_duration_seconds_bucket)"
-          }
-        ]
-      },
-      {
-        "title": "Discord Commands",
-        "type": "graph",
-        "targets": [
-          {
-            "expr": "rate(discord_commands_total[5m])"
-          }
-        ]
-      }
-    ]
-  }
-}
-```
+**Note**: Advanced monitoring features are planned but not yet implemented:
+
+- Full Prometheus/Grafana integration
+- Custom metrics framework
+- Advanced alerting system
+- Distributed tracing
+- Performance profiling tools
+
+**Current Focus**: The existing monitoring provides sufficient visibility for production deployments, with file-based logging, basic metrics collection, and health checks.
 
 ## Security Hardening
 
@@ -1007,11 +989,11 @@ server {
         proxy_read_timeout 30s;
     }
     
-    # Health check endpoint
-    location /health {
-        access_log off;
-        proxy_pass http://orchestrator:8080/health;
-    }
+    # NOTE: No dedicated /health endpoint - use CLI health command
+    # location /health {
+    #     access_log off;
+    #     proxy_pass http://orchestrator:8080/health;
+    # }
 }
 ```
 
@@ -1166,9 +1148,9 @@ frontend agent_workflow_frontend
     bind *:443 ssl crt /etc/ssl/certs/agent-workflow.pem
     redirect scheme https if !{ ssl_fc }
     
-    # Health check endpoint
-    acl health_check path_beg /health
-    use_backend health_backend if health_check
+    # NOTE: No dedicated /health endpoint currently implemented
+    # acl health_check path_beg /health
+    # use_backend health_backend if health_check
     
     # Default backend
     default_backend agent_workflow_backend
@@ -1176,17 +1158,18 @@ frontend agent_workflow_frontend
 # Backend configuration
 backend agent_workflow_backend
     balance roundrobin
-    option httpchk GET /health
+    # NOTE: Using basic TCP check instead of HTTP /health endpoint
+    option httpchk
     
     # Orchestrator instances
     server orchestrator-1 orchestrator-1:8080 check
     server orchestrator-2 orchestrator-2:8080 check
     server orchestrator-3 orchestrator-3:8080 check
 
-# Health check backend
-backend health_backend
-    balance roundrobin
-    server health-1 orchestrator-1:8080 check
+# NOTE: No dedicated health endpoint - health checks via CLI command
+# backend health_backend
+#     balance roundrobin
+#     server health-1 orchestrator-1:8080 check
     server health-2 orchestrator-2:8080 check
     server health-3 orchestrator-3:8080 check
 
@@ -1637,11 +1620,13 @@ curl -X POST "$SLACK_WEBHOOK_URL" \
   --data "{\"text\":\"✅ Backup completed successfully for agent-workflow at $(date)\"}"
 ```
 
-### Restore Procedures
+### Restore Procedures (Requires Modification for Non-Docker Deployment)
+
+> **Note**: The following script assumes Docker Compose deployment. For systemd deployment, replace Docker commands with appropriate systemctl commands.
 
 ```bash
 #!/bin/bash
-# backup/restore.sh
+# backup/restore.sh (Modified for systemd deployment)
 
 set -e
 
@@ -1701,7 +1686,8 @@ sleep 30
 
 # Verify restore
 echo "Verifying restore..."
-docker-compose exec orchestrator python scripts/health-check.py
+# Use CLI health command instead of non-existent health-check.py script
+docker-compose exec orchestrator agent-orch health --check-all
 
 echo "Restore completed successfully!"
 ```

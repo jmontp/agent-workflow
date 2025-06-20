@@ -748,14 +748,28 @@ interface CommandBridge {
 def detect_ui_server() -> Optional[UIServerInfo]:
     """Detect if UI portal is running and return connection info"""
     try:
-        response = requests.get("http://localhost:8080/health", timeout=2)
+        # NOTE: Currently using visualizer /health endpoint, not main orchestrator
+        # Main orchestrator uses CLI health command: agent-orch health
+        response = requests.get("http://localhost:5000/health", timeout=2)  # Visualizer app
         if response.status_code == 200:
             return UIServerInfo(
-                url="http://localhost:8080",
-                version=response.json().get("version"),
+                url="http://localhost:5000",
+                version=response.json().get("version", "unknown"),
                 status="healthy"
             )
     except requests.RequestException:
+        # Fallback: check if visualizer process is running
+        try:
+            import psutil
+            for proc in psutil.process_iter(['pid', 'name', 'cmdline']):
+                if any('visualizer/app.py' in str(cmd) for cmd in proc.info.get('cmdline', [])):
+                    return UIServerInfo(
+                        url="http://localhost:5000",
+                        version="unknown",
+                        status="detected"
+                    )
+        except ImportError:
+            pass
         return None
 ```
 

@@ -227,20 +227,25 @@ performance_optimization:
 
 ### Performance Testing Framework
 
-**Note**: Comprehensive performance testing framework is planned but not yet implemented.
-
-Currently available testing:
+**Current Implementation**: Basic performance monitoring and validation:
 
 ```bash
-# Run basic performance monitoring
+# Run performance monitoring with custom intervals
 python tools/monitoring/performance_monitor.py --interval 10
 
-# Generate performance summary
+# Generate performance summary report
 python tools/monitoring/performance_monitor.py --report-only
 
-# Test monitoring functionality
+# Test monitoring functionality (if tests exist)
 python -m pytest tests/unit/test_performance_monitor.py -v
+
+# Test visualizer endpoints
+curl http://localhost:5000/health
+curl http://localhost:5000/metrics
+curl http://localhost:5000/debug
 ```
+
+**Note**: Comprehensive load testing and performance benchmarking frameworks are not currently implemented. The system provides basic monitoring suitable for development and operational visibility.
 
 Sample performance report output:
 
@@ -275,9 +280,11 @@ Sample performance report output:
 
 ### Metrics Export
 
-**Note**: Prometheus integration is planned but not yet implemented.
+**Current Implementation**: The system provides basic metrics collection and export through:
 
-Currently available metrics are stored as JSON reports:
+1. **JSON Reports**: Performance data stored as structured JSON files
+2. **Prometheus-compatible endpoint**: Basic metrics in Prometheus format (via visualizer)
+3. **File-based logging**: System performance logged to `.orch-monitoring/` directory
 
 ```bash
 # View stored performance reports
@@ -286,17 +293,27 @@ ls -la .orch-monitoring/performance_report_*.json
 # View latest performance data
 python tools/monitoring/performance_monitor.py --report-only | jq .
 
-# Monitor in real-time (basic)
+# Get Prometheus-compatible metrics (if visualizer is running)
+curl http://localhost:5000/metrics
+
+# Monitor in real-time (basic console output)
 watch -n 30 'python tools/monitoring/performance_monitor.py --report-only'
 ```
 
+**Note**: Full Prometheus/Grafana integration is not currently implemented. The system provides basic metrics collection suitable for development and basic production monitoring.
+
 ### System Health Monitoring
 
-**Note**: REST API health endpoints are planned but not yet implemented.
+**Current Implementation**: The system provides health monitoring through:
 
-Currently available system monitoring:
+1. **Visualizer Health Endpoint**: Basic health check via web interface
+2. **Discord Bot Status**: Monitor bot connectivity and responsiveness
+3. **File-based Performance Reports**: System resource monitoring via performance monitor
 
 ```bash
+# Check system health via visualizer (if running)
+curl http://localhost:5000/health
+
 # Check system health using performance monitor
 python tools/monitoring/performance_monitor.py --report-only
 
@@ -305,16 +322,27 @@ python -c "import psutil; print(f'CPU: {psutil.cpu_percent()}%, Memory: {psutil.
 
 # Check for running processes
 ps aux | grep -E "(orchestrator|discord|agent)" | grep -v grep
+
+# Discord bot status (if configured)
+# Bot reports connectivity status in Discord channels
 ```
+
+**Note**: Dedicated health check REST API endpoints beyond the visualizer are not currently implemented.
 
 ### Real-Time Monitoring
 
-**Note**: WebSocket-based real-time monitoring API is planned but not yet implemented.
+**Current Implementation**: The system provides real-time monitoring through:
 
-Currently available monitoring options:
+1. **Web Visualizer**: Real-time state visualization via WebSocket
+2. **Performance Monitor**: Continuous system resource monitoring
+3. **Discord Integration**: Real-time status updates via Discord bot
 
 ```bash
-# Start continuous monitoring (console output)
+# Start web-based real-time visualizer
+cd tools/visualizer && python app.py
+# Then visit http://localhost:5000 for real-time state monitoring
+
+# Start continuous performance monitoring (console output)
 python tools/monitoring/performance_monitor.py --interval 10
 
 # Watch performance reports update
@@ -322,7 +350,17 @@ watch -n 30 'ls -la .orch-monitoring/ | tail -5'
 
 # Simple real-time system monitoring
 watch -n 5 'python -c "import psutil; print(f\"CPU: {psutil.cpu_percent()}%, Memory: {psutil.virtual_memory().percent}%\")"'
+
+# Real-time state via API (if visualizer running)
+watch -n 5 'curl -s http://localhost:5000/api/state | jq .'
 ```
+
+**Available Real-time Data**:
+- Workflow state transitions
+- TDD cycle progress
+- System resource usage
+- Connected client count
+- Discord bot status
 
 ## 🚨 Alerting & Notifications
 
@@ -525,46 +563,76 @@ export INTERFACE_MANAGER_PROFILE=true
 
 ### Performance Profiling
 
-**Note**: Advanced performance profiling tools are planned but not yet implemented.
-
-Currently available profiling:
+**Current Implementation**: Basic performance monitoring and Python profiling:
 
 ```python
-# Basic performance monitoring
-from tools.monitoring.performance_monitor import PerformanceMonitor
+# Performance monitoring via our tool
+import sys
+sys.path.append('tools/monitoring')
+from performance_monitor import PerformanceMonitor
 
 monitor = PerformanceMonitor()
 status = monitor.get_current_status()
 print(f"Performance status: {status}")
 
-# Python's built-in profiling can be used for detailed analysis
+# Python's built-in profiling for detailed analysis
 import cProfile
-cProfile.run('your_function_here()')
+import pstats
+
+# Profile a function
+cProfile.run('your_function_here()', 'profile_output.prof')
+stats = pstats.Stats('profile_output.prof')
+stats.sort_stats('cumulative').print_stats(10)
 ```
+
+**Available Profiling Data**:
+- CPU and memory usage over time
+- System resource consumption
+- Application response times (via visualizer)
+- State transition performance
+
+**Note**: Advanced profiling tools and performance analysis frameworks are not currently integrated.
 
 ### Load Testing
 
-**Note**: Dedicated load testing tools are planned but not yet implemented.
-
-Currently available testing:
+**Current Implementation**: Basic system monitoring under load:
 
 ```bash
-# Run unit tests for performance monitor
-python -m pytest tests/unit/test_performance_monitor.py -v
+# Monitor system performance during operations
+python tools/monitoring/performance_monitor.py --interval 5 &
 
-# Monitor system under normal load
-python tools/monitoring/performance_monitor.py --interval 5
+# Run normal workflow operations while monitoring
+# (Start orchestrator, Discord bot, visualizer simultaneously)
+
+# Monitor resource usage during operations
+watch -n 5 'ps aux | grep -E "(python|orchestrator|discord)" | grep -v grep'
+
+# Test visualizer under load (basic)
+for i in {1..10}; do
+  curl -s http://localhost:5000/api/state > /dev/null &
+done
+wait
 ```
+
+**Manual Load Testing Steps**:
+1. Start performance monitor with short interval
+2. Launch multiple system components (orchestrator, bot, visualizer)
+3. Generate typical workflow activity via Discord commands
+4. Monitor resource usage and response times
+5. Review performance reports in `.orch-monitoring/`
+
+**Note**: Automated load testing tools and stress testing frameworks are not currently implemented.
 
 ### Custom Metrics
 
-**Note**: Custom metrics framework is planned but not yet implemented.
-
-Currently available customization:
+**Current Implementation**: Extensible monitoring via class inheritance and custom endpoints:
 
 ```python
 # Extend the existing PerformanceMonitor class
-from tools.monitoring.performance_monitor import PerformanceMonitor
+import sys
+sys.path.append('tools/monitoring')
+from performance_monitor import PerformanceMonitor
+from datetime import datetime
 
 class CustomPerformanceMonitor(PerformanceMonitor):
     def __init__(self, *args, **kwargs):
@@ -576,9 +644,26 @@ class CustomPerformanceMonitor(PerformanceMonitor):
         self.custom_metrics[name] = {
             "value": value,
             "tags": tags or {},
-            "timestamp": datetime.utcnow()
+            "timestamp": datetime.utcnow().isoformat()
         }
+    
+    def get_custom_metrics(self):
+        """Get all custom metrics"""
+        return self.custom_metrics
+
+# Usage example
+custom_monitor = CustomPerformanceMonitor()
+custom_monitor.record_custom_metric("workflow_completion_time", 45.2, {"project": "myapp"})
+custom_monitor.record_custom_metric("discord_command_count", 23)
 ```
+
+**Custom Metric Storage Options**:
+- Extend PerformanceMonitor class for application-specific metrics
+- Add custom endpoints to visualizer app.py
+- Store metrics in JSON reports alongside system metrics
+- Log custom metrics via Python logging
+
+**Note**: A dedicated custom metrics framework with time-series storage is not currently implemented.
 
 ---
 

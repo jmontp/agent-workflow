@@ -2373,11 +2373,12 @@ class MonitoringMiddleware:
         else:
             await self.app(scope, receive, send)
 
-# Health check endpoint
-@app.get("/health")
-async def health_check():
-    health_status = {
-        "status": "healthy",
+# NOTE: Health check endpoint not yet implemented for main orchestrator
+# Currently using CLI: agent-orch health --check-all
+# @app.get("/health")  # Planned for future implementation
+# async def health_check():
+#     health_status = {
+#         "status": "healthy",
         "timestamp": datetime.utcnow().isoformat(),
         "version": os.getenv("VERSION", "unknown"),
         "services": {
@@ -2459,7 +2460,8 @@ jobs:
       
       - name: Verify deployment
         run: |
-          curl -f https://portal.example.com/health || exit 1
+          # Use CLI health command instead of HTTP endpoint
+          agent-orch health --check-all || exit 1
 ```
 
 **Backup Strategy:**

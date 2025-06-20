@@ -351,12 +351,15 @@ pip install psutil websockets
 </div>
 
 <div id="visualization" class="tab-content">
-<h4>📈 Full Visualization Stack (Complete)</h4>
+<h4>📈 Full Visualization Stack (Current)</h4>
 ```bash
-# All dependencies + advanced visualization
+# All dependencies + available visualization
 pip install discord.py pygithub pyyaml pytest pytest-asyncio mkdocs-material
-pip install psutil websockets
-pip install prometheus_client grafana_api aiohttp
+pip install psutil websockets flask flask-socketio
+pip install aiohttp requests
+
+# Note: Advanced monitoring (Prometheus/Grafana) not yet implemented
+# Current monitoring: web visualizer + performance monitor + Discord status
 ```
 </div>
 </div>

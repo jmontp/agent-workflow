@@ -2910,252 +2910,184 @@ class PubSubTDDHandler:
 
 ## Monitoring & Observability Integration
 
-### Prometheus & Grafana
+### Current Monitoring Integration
 
-#### Prometheus Configuration
-```yaml
-# prometheus/prometheus.yml
-global:
-  scrape_interval: 15s
-  
-scrape_configs:
-  - job_name: 'agent-workflow'
-    static_configs:
-      - targets: ['localhost:8000']
-    metrics_path: '/metrics'
-    scrape_interval: 10s
-    
-  - job_name: 'tdd-metrics'
-    static_configs:
-      - targets: ['localhost:8001']
-    metrics_path: '/tdd/metrics'
-    scrape_interval: 30s
+The system provides basic monitoring capabilities that can be integrated with external systems:
 
-rule_files:
-  - "alert_rules.yml"
-  
-alerting:
-  alertmanagers:
-    - static_configs:
-        - targets:
-          - alertmanager:9093
-```
+#### Available Monitoring Endpoints
 
-#### Custom Metrics Export
 ```python
-# monitoring/prometheus_exporter.py
-from prometheus_client import Counter, Histogram, Gauge, start_http_server
-import asyncio
-import time
+# integration/monitoring_client.py
+import requests
+import json
+from datetime import datetime
 
-class TDDPrometheusExporter:
+class MonitoringIntegration:
+    def __init__(self, visualizer_url="http://localhost:5000"):
+        self.visualizer_url = visualizer_url
+    
+    def get_system_health(self):
+        """Get system health status"""
+        try:
+            response = requests.get(f"{self.visualizer_url}/health")
+            return response.json()
+        except Exception as e:
+            return {"status": "error", "message": str(e)}
+    
+    def get_current_metrics(self):
+        """Get current system metrics"""
+        try:
+            response = requests.get(f"{self.visualizer_url}/metrics")
+            return response.text  # Prometheus format
+        except Exception as e:
+            return None
+    
+    def get_workflow_state(self):
+        """Get current workflow state"""
+        try:
+            response = requests.get(f"{self.visualizer_url}/api/state")
+            return response.json()
+        except Exception as e:
+            return None
+
+# Usage example
+monitor = MonitoringIntegration()
+health = monitor.get_system_health()
+metrics = monitor.get_current_metrics()
+state = monitor.get_workflow_state()
+```
+
+#### Performance Data Export
+
+```python
+# monitoring/export_performance_data.py
+import json
+import sys
+sys.path.append('tools/monitoring')
+from performance_monitor import PerformanceMonitor
+
+class PerformanceDataExporter:
     def __init__(self):
-        # Define TDD-specific metrics
-        self.tdd_cycles_total = Counter(
-            'tdd_cycles_total',
-            'Total number of TDD cycles',
-            ['status', 'project']
-        )
+        self.monitor = PerformanceMonitor()
+    
+    def export_to_json(self, output_file=None):
+        """Export performance data as JSON"""
+        status = self.monitor.get_current_status()
         
-        self.tdd_phase_duration = Histogram(
-            'tdd_phase_duration_seconds',
-            'Duration of TDD phases',
-            ['phase', 'project']
-        )
+        if output_file:
+            with open(output_file, 'w') as f:
+                json.dump(status, f, indent=2, default=str)
+        else:
+            print(json.dumps(status, indent=2, default=str))
+    
+    def export_prometheus_format(self):
+        """Export basic metrics in Prometheus format"""
+        status = self.monitor.get_current_status()
         
-        self.active_tdd_cycles = Gauge(
-            'active_tdd_cycles',
-            'Number of active TDD cycles',
-            ['project']
-        )
-        
-        self.test_coverage = Gauge(
-            'test_coverage_percentage',
-            'Test coverage percentage',
-            ['project', 'story_id']
-        )
-        
-    async def export_metrics(self):
-        """Export TDD metrics to Prometheus"""
-        while True:
-            # Update active cycles count
-            active_cycles = await self.get_active_cycles()
-            for project, count in active_cycles.items():
-                self.active_tdd_cycles.labels(project=project).set(count)
-                
-            # Update coverage metrics
-            coverage_data = await self.get_coverage_metrics()
-            for project, stories in coverage_data.items():
-                for story_id, coverage in stories.items():
-                    self.test_coverage.labels(
-                        project=project,
-                        story_id=story_id
-                    ).set(coverage)
-                    
-            await asyncio.sleep(30)  # Export every 30 seconds
+        if status.get("status") == "monitoring":
+            latest = status["latest_snapshot"]
             
-    def record_cycle_completion(self, project, status):
-        """Record TDD cycle completion"""
-        self.tdd_cycles_total.labels(
-            status=status,
-            project=project
-        ).inc()
+            metrics = [
+                f"agent_workflow_cpu_usage {latest['cpu_usage']}",
+                f"agent_workflow_memory_usage {latest['memory_usage']}",
+                f"agent_workflow_disk_usage {latest['disk_usage']}",
+                f"agent_workflow_active_processes {latest['active_processes']}",
+                f"agent_workflow_monitoring_duration_minutes {status['monitoring_duration_minutes']}"
+            ]
+            
+            return "\n".join(metrics)
         
-    def record_phase_duration(self, phase, project, duration):
-        """Record TDD phase duration"""
-        self.tdd_phase_duration.labels(
-            phase=phase,
-            project=project
-        ).observe(duration)
+        return ""
 
-# Start Prometheus metrics server
-if __name__ == "__main__":
-    exporter = TDDPrometheusExporter()
-    start_http_server(8001)
-    asyncio.run(exporter.export_metrics())
+# Usage
+exporter = PerformanceDataExporter()
+exporter.export_to_json("performance_data.json")
+print(exporter.export_prometheus_format())
 ```
 
-#### Grafana Dashboard Configuration
-```json
-{
-  "dashboard": {
-    "title": "AI Agent TDD Workflow",
-    "panels": [
-      {
-        "title": "Active TDD Cycles",
-        "type": "stat",
-        "targets": [
-          {
-            "expr": "sum(active_tdd_cycles)",
-            "legendFormat": "Active Cycles"
-          }
-        ]
-      },
-      {
-        "title": "TDD Phase Duration",
-        "type": "graph",
-        "targets": [
-          {
-            "expr": "tdd_phase_duration_seconds",
-            "legendFormat": "{{phase}} - {{project}}"
-          }
-        ]
-      },
-      {
-        "title": "Test Coverage by Project",
-        "type": "heatmap",
-        "targets": [
-          {
-            "expr": "test_coverage_percentage",
-            "legendFormat": "{{project}} - {{story_id}}"
-          }
-        ]
-      },
-      {
-        "title": "TDD Cycle Success Rate",
-        "type": "stat",
-        "targets": [
-          {
-            "expr": "rate(tdd_cycles_total{status=\"completed\"}[1h]) / rate(tdd_cycles_total[1h]) * 100",
-            "legendFormat": "Success Rate %"
-          }
-        ]
-      }
-    ]
-  }
-}
-```
+#### Log-based Monitoring Integration
 
-### ELK Stack Integration
+```python
+# monitoring/log_parser.py
+import re
+import json
+from pathlib import Path
+from datetime import datetime
 
-#### Logstash Configuration
-```ruby
-# logstash/pipeline/agent-workflow.conf
-input {
-  file {
-    path => "/opt/agent-workflow/logs/*.log"
-    start_position => "beginning"
-    codec => "json"
-  }
-  
-  beats {
-    port => 5044
-  }
-}
-
-filter {
-  if [logger_name] == "tdd_state_machine" {
-    mutate {
-      add_tag => ["tdd"]
-    }
+class LogMonitoringIntegration:
+    def __init__(self, log_directory=".orch-monitoring"):
+        self.log_dir = Path(log_directory)
     
-    if [message] =~ /transition/ {
-      grok {
-        match => { 
-          "message" => "TDD transition: %{WORD:old_state} → %{WORD:new_state} for %{WORD:story_id}"
-        }
-      }
-    }
-  }
-  
-  if [logger_name] == "agent_execution" {
-    mutate {
-      add_tag => ["agent"]
-    }
+    def parse_performance_reports(self):
+        """Parse performance report files"""
+        reports = []
+        
+        for report_file in self.log_dir.glob("performance_report_*.json"):
+            try:
+                with open(report_file, 'r') as f:
+                    data = json.load(f)
+                    reports.append(data)
+            except Exception as e:
+                print(f"Error parsing {report_file}: {e}")
+        
+        return sorted(reports, key=lambda x: x.get("generated_at", ""))
     
-    if [duration] {
-      mutate {
-        convert => { "duration" => "float" }
-      }
-    }
-  }
-}
-
-output {
-  elasticsearch {
-    hosts => ["elasticsearch:9200"]
-    index => "agent-workflow-%{+YYYY.MM.dd}"
-  }
-  
-  if "tdd" in [tags] {
-    elasticsearch {
-      hosts => ["elasticsearch:9200"]
-      index => "tdd-cycles-%{+YYYY.MM.dd}"
-    }
-  }
-}
-```
-
-#### Kibana Dashboard Export
-```json
-{
-  "objects": [
-    {
-      "type": "visualization",
-      "id": "tdd-state-transitions",
-      "attributes": {
-        "title": "TDD State Transitions",
-        "visState": {
-          "type": "line",
-          "params": {
-            "grid": {"categoryLines": false, "style": {"color": "#eee"}}
-          }
-        },
-        "kibanaSavedObjectMeta": {
-          "searchSourceJSON": {
-            "index": "tdd-cycles-*",
-            "query": {
-              "match": {
-                "logger_name": "tdd_state_machine"
-              }
-            }
-          }
+    def extract_metrics_summary(self):
+        """Extract key metrics from reports"""
+        reports = self.parse_performance_reports()
+        
+        if not reports:
+            return None
+        
+        latest = reports[-1]
+        summary = latest.get("summary", {})
+        
+        return {
+            "timestamp": latest.get("generated_at"),
+            "cpu_avg": summary.get("cpu_usage", {}).get("avg", 0),
+            "memory_avg": summary.get("memory_usage", {}).get("avg", 0),
+            "alerts_triggered": summary.get("alerts_triggered", 0),
+            "snapshots_count": latest.get("snapshots_count", 0)
         }
-      }
-    }
-  ]
-}
+
+# Usage
+log_monitor = LogMonitoringIntegration()
+metrics = log_monitor.extract_metrics_summary()
 ```
+
+#### External System Integration
+
+```bash
+# scripts/export_metrics.sh
+#!/bin/bash
+
+# Export to external monitoring system
+python tools/monitoring/performance_monitor.py --report-only | \
+  curl -X POST "http://your-metrics-endpoint/api/metrics" \
+  -H "Content-Type: application/json" \
+  -d @-
+
+# Health check for external monitoring
+curl -f http://localhost:5000/health && echo "OK" || echo "FAIL"
+
+# Export logs to external log aggregator
+tail -n 100 logs/agent-workflow.log | \
+  curl -X POST "http://your-log-endpoint/api/logs" \
+  -H "Content-Type: text/plain" \
+  -d @-
+```
+
+### Future Advanced Monitoring
+
+**Note**: Advanced monitoring integrations are planned but not yet implemented:
+
+- **Prometheus/Grafana Stack**: Full metrics collection and visualization
+- **ELK Stack Integration**: Advanced log analysis and dashboards
+- **Custom Dashboard Framework**: Real-time monitoring web interface
+- **Alert Management System**: Comprehensive alerting with multiple channels
+- **Distributed Tracing**: Request tracing across system components
+
+**Current Recommendation**: Use the available basic monitoring for development and basic production monitoring. Integrate with existing monitoring infrastructure using the provided endpoints and export capabilities.
 
 ## Notification Integration
 

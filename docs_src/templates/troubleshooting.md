@@ -101,8 +101,10 @@ iotop
 netstat -an | grep ESTABLISHED | wc -l
 
 # Application-specific metrics
-curl http://localhost:8080/health
-curl http://localhost:8080/metrics
+# NOTE: No main orchestrator /health endpoint - use CLI instead
+agent-orch health --check-all  # CLI health check
+curl http://localhost:5000/health  # Visualizer health endpoint (if running)
+# curl http://localhost:8080/metrics  # Metrics endpoint not implemented
 
 # Database performance
 SHOW PROCESSLIST;  # MySQL
@@ -307,8 +309,10 @@ EXPLAIN ANALYZE SELECT * FROM slow_table;
 SHOW ENGINE INNODB STATUS;
 
 # Web server diagnostics
-curl -I http://localhost:8080/health
-ab -n 100 -c 10 http://localhost:8080/api/test
+# NOTE: Use CLI health command instead of /health endpoint
+agent-orch health --check-all --verbose
+# curl -I http://localhost:8080/health  # Not implemented
+# ab -n 100 -c 10 http://localhost:8080/api/test  # No /api endpoints
 ```
 
 ### 📊 Monitoring and Alerting
@@ -335,8 +339,8 @@ if [ $DISK_USAGE -gt 85 ]; then
     echo "WARNING: Disk usage at ${DISK_USAGE}%"
 fi
 
-# Application health
-curl -f http://localhost:8080/health || echo "ERROR: Application health check failed"
+# Application health - use CLI health command
+agent-orch health --check-all || echo "ERROR: Application health check failed"
 ```
 
 #### Log Analysis

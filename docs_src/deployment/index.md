@@ -32,6 +32,14 @@ The system supports multiple deployment strategies for different use cases and e
     
     [:octicons-arrow-right-24: GitHub Pages](github-pages.md)
 
+-   :material-wrench:{ .lg .middle } **Operations Guide**
+
+    ---
+    
+    System operations and troubleshooting procedures
+    
+    [:octicons-arrow-right-24: Operations](operations.md)
+
 </div>
 
 ## Quick Deployment Overview
@@ -50,24 +58,27 @@ make run
 ### Production Server
 
 ```bash
-# Production deployment
-docker build -t agent-workflow .
-docker run -d \
-  --name agent-workflow \
-  -e DISCORD_BOT_TOKEN="your_token" \
-  -e ENVIRONMENT="production" \
-  -v /data/agent-workflow:/app/data \
-  agent-workflow
+# Production deployment with virtual environment
+python3 -m venv /opt/agent-workflow/venv
+source /opt/agent-workflow/venv/bin/activate
+pip install agent-workflow
+
+# Set environment variables
+export DISCORD_BOT_TOKEN="your_token"
+export ENVIRONMENT="production"
+
+# Start the orchestrator
+agent-orch start
 ```
 
 ### Cloud Deployment
 
-Supports deployment on major cloud platforms:
+Supports deployment on major cloud platforms using standard Python deployment methods:
 
-- **AWS**: ECS/EKS with RDS
-- **Google Cloud**: GKE with Cloud SQL
-- **Azure**: AKS with Azure Database
-- **DigitalOcean**: Droplets with Managed Databases
+- **AWS**: EC2 instances with systemd services
+- **Google Cloud**: Compute Engine with process management
+- **Azure**: Virtual Machines with standard Python deployment
+- **DigitalOcean**: Droplets with virtual environments and systemd
 
 ## Configuration Management
 
@@ -172,19 +183,33 @@ ALLOWED_GUILDS = [
 The system provides health check endpoints:
 
 ```bash
-# Application health
-curl http://localhost:8080/health
+# Application health - use CLI command instead of HTTP endpoints
+agent-orch health --check-all
 
-# Database health
-curl http://localhost:8080/health/db
+# System health (includes configuration, dependencies, integrations)
+agent-orch health --check-all --verbose
 
-# Discord bot health
-curl http://localhost:8080/health/discord
+# Export health report for monitoring
+agent-orch health --check-all --export-report health-report.json
+
+# NOTE: No HTTP health endpoints (/health, /health/db, /health/discord) are currently implemented
+# Health checking is done via the CLI command which validates:
+# - System requirements (Python version, platform)
+# - Configuration files and settings
+# - Dependencies availability
+# - Integration status (Discord, AI provider)
+# - File system permissions
+# - Performance metrics (when --check-all flag is used)
 ```
 
 ### Metrics
 
-Prometheus metrics available at `/metrics`:
+**NOTE**: The main orchestrator does not currently expose `/metrics` endpoints. However, the visualizer app (`tools/visualizer/app.py`) does provide metrics:
+
+- `/metrics` endpoint in visualizer app (port 5000) - Prometheus-compatible metrics
+- Metrics include workflow state, TDD cycles, connected clients
+
+Prometheus metrics available at `http://localhost:5000/metrics` (when visualizer is running):
 
 - **Agent Execution Time**: Time spent executing agents
 - **Command Success Rate**: Success/failure rate of commands
@@ -233,33 +258,32 @@ cp -r config/ backups/config_$(date +%Y%m%d)/
 
 ### Horizontal Scaling
 
-```yaml
-# Kubernetes deployment example
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: agent-workflow
-spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: agent-workflow
-  template:
-    metadata:
-      labels:
-        app: agent-workflow
-    spec:
-      containers:
-      - name: agent-workflow
-        image: agent-workflow:latest
-        ports:
-        - containerPort: 8080
-        env:
-        - name: DISCORD_BOT_TOKEN
-          valueFrom:
-            secretKeyRef:
-              name: agent-workflow-secrets
-              key: discord-token
+```ini
+# Multiple systemd services for horizontal scaling
+# /etc/systemd/system/agent-workflow@.service
+[Unit]
+Description=AI Agent Workflow Orchestrator (Instance %i)
+After=network.target
+
+[Service]
+Type=simple
+User=agent-workflow
+WorkingDirectory=/opt/agent-workflow
+Environment=PATH=/opt/agent-workflow/venv/bin
+Environment=DISCORD_BOT_TOKEN=your_token_here
+Environment=ENVIRONMENT=production
+Environment=INSTANCE_ID=%i
+ExecStart=/opt/agent-workflow/venv/bin/agent-orch start --instance %i
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+
+# Enable multiple instances:
+# systemctl enable agent-workflow@1.service
+# systemctl enable agent-workflow@2.service
+# systemctl enable agent-workflow@3.service
 ```
 
 ### Performance Optimization
@@ -297,16 +321,16 @@ spec:
 
 ```bash
 # Check application logs
-docker logs agent-workflow
+journalctl -u agent-workflow -f
 
 # Monitor resource usage
-docker stats agent-workflow
+htop -p $(pgrep -f agent-orch)
 
 # Test Discord connectivity
 python -c "import discord; print('Discord connection OK')"
 
-# Database connectivity test
-python -c "import psycopg2; print('Database connection OK')"
+# Check system health
+agent-orch health
 ```
 
 ## Next Steps
