@@ -1,18 +1,24 @@
-# 💬 HITL Commands
+# 💬 HITL Commands - Discord Bot Reference
 
-Complete command reference for the AI Agent TDD-Scrum workflow system. These commands provide Human-In-The-Loop control over the dual state machine orchestration process with integrated TDD workflows.
+> **Complete Discord slash command reference for AI agent control, workflow management, and human-in-the-loop operations**
+
+**Discord command guide** for controlling AI agents, managing sprints, approving tasks, and orchestrating TDD workflows. All commands work in Discord channels with slash command interface. These commands provide Human-In-The-Loop control over the dual state machine orchestration process with integrated TDD workflows.
 
 !!! tip "Quick Command Discovery"
     Use `/state` in Discord at any time to see available commands for your current workflow state.
 
-## ⚡ Command Quick-Reference
+## ⚡ Command Quick-Reference | Discord Slash Commands
+
+### Syntax Guide | Parameter Types | Command Format | Usage Examples
 
 !!! info "Command Format"
     - **Required parameters:** `<parameter>`
     - **Optional parameters:** `[parameter]`
     - **Multiple values:** `ID ...` (space-separated list)
 
-## 🎯 Core Workflow Commands
+## 🎯 Core Workflow Commands | Project Management
+
+### Epic Creation | Story Management | Sprint Control | Approval Workflow
 
 ### 📋 Project Management
 

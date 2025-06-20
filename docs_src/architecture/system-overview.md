@@ -1,8 +1,12 @@
-# System Overview - C4 Architecture
+# System Architecture Overview - Complete Technical Design
+
+> **Comprehensive C4 architecture diagrams, component specifications, and system design for AI agent orchestration framework**
 
 The AI Agent TDD-Scrum Workflow system is designed as a sophisticated multi-layered architecture that orchestrates AI agents through Test-Driven Development cycles within a Scrum framework. This document provides a comprehensive view using the C4 model (Context, Container, Component, Code).
 
 ## Level 1: System Context Diagram
+
+### High-Level Architecture | System Boundaries | External Integrations | User Interactions
 
 The system operates as a central orchestration hub between engineers, AI agents, and project repositories:
 
@@ -42,7 +46,9 @@ graph TB
 - **System → GitHub**: Automated PR creation, code commits, issue management
 - **System → File System**: Persistent storage of project state and configuration
 
-## Level 2: Container Diagram
+## Level 2: Container Architecture
+
+### Application Containers | Service Components | Data Flow | Technology Stack
 
 The system is composed of multiple containers working in concert:
 
@@ -125,7 +131,9 @@ graph TB
 - **State Storage**: Runtime state management and recovery
 - **Configuration Manager**: YAML-based system and project configuration
 
-## Level 3: Component Diagram - Orchestration Core
+## Level 3: Core Components - Orchestration Engine
+
+### Internal Architecture | Component Interactions | State Management | Resource Allocation
 
 Deep dive into the orchestration system components:
 
@@ -199,7 +207,9 @@ graph TB
 - **Health Monitor**: Tracks system health and agent status
 - **Alert Manager**: Escalates issues to human operators
 
-## Level 4: Code Diagram - State Machine Implementation
+## Level 4: Implementation Details - State Machine Code
+
+### Class Diagrams | Code Structure | Implementation Patterns | Technical Specifications
 
 Detailed view of the state machine implementation:
 
@@ -302,7 +312,9 @@ classDiagram
 - **Completion Handling**: Updates workflow when stories complete
 - **Failure Recovery**: Handles TDD failures gracefully
 
-## Technology Decisions
+## Technology Stack & Architectural Decisions
+
+### Framework Choices | Design Patterns | Trade-offs | Performance Considerations
 
 ### Architecture Style: Microkernel + Pipes and Filters
 

@@ -1,15 +1,21 @@
-# 🤖 AI Agent TDD-Scrum Workflow
+# 🤖 AI Agent TDD-Scrum Workflow - Complete Guide
 
-A sophisticated **Human-In-The-Loop (HITL)** orchestration framework that coordinates multiple specialized AI agents through a Discord interface, following a research-mode Scrum methodology optimized for solo engineers working with AI assistance.
+> **AI-powered development framework with Discord integration, automated testing, and human-in-the-loop control for software projects**
+
+A comprehensive **AI agent development framework** with **Human-In-The-Loop (HITL)** orchestration that coordinates multiple specialized AI agents through a Discord interface, following a research-mode Scrum methodology optimized for solo engineers working with AI assistance.
 
 !!! success "What You Get"
     **Complete AI-powered development team** that handles design, testing, implementation, and quality assurance while keeping you in control of strategic decisions.
 
-## Overview
+## System Overview - How It Works
+
+### AI Agent Orchestration | Test-Driven Development | Scrum Workflow | Discord Integration
 
 This system implements a sophisticated dual state machine architecture for AI-assisted software development with integrated Test-Driven Development and human oversight. It coordinates multiple TDD cycles in parallel while maintaining proper Scrum methodology, optimized for solo engineers working with AI assistance.
 
-## How It Works
+## Simple Workflow - From Idea to Code
+
+### Step-by-Step Process | User Interaction | AI Collaboration | Code Generation
 
 ```mermaid
 flowchart LR
@@ -33,7 +39,7 @@ flowchart LR
 
 ---
 
-### Detailed System Architecture
+### Complete System Architecture | Technical Design | Component Overview
 
 
 ```mermaid

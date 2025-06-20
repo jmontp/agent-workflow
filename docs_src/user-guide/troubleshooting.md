@@ -1,10 +1,18 @@
-# Troubleshooting Guide
+# Troubleshooting Guide - Fix Common Issues
+
+> **Complete problem-solving guide for AI agent setup, Discord bot issues, installation errors, and workflow problems. Includes error codes, step-by-step fixes, and diagnostic commands.**
+
+**Common Issues**: installation failed, Discord bot offline, commands not working, permission denied, environment variables, API errors, Python dependencies, configuration problems
 
 ## 🧙‍♂️ Interactive Diagnostic Wizard
 
+### System Health Check | Error Diagnosis | Step-by-Step Solutions | Quick Fixes
+
 **Start Here**: Follow this interactive wizard to diagnose and fix issues quickly.
 
-### Step 1: Quick System Check
+### Step 1: Quick System Health Check
+
+#### System Diagnostics | Environment Validation | Dependency Check | Connection Test
 
 Run this diagnostic command to get an instant health report:
 
@@ -35,7 +43,9 @@ ls -la .orch-state/ 2>/dev/null || echo "No .orch-state directory"
 python -c "import discord; print(f'Discord.py version: {discord.__version__}')"
 ```
 
-### Step 2: Choose Your Issue Category
+### Step 2: Common Issue Categories
+
+#### Problem Classification | Error Types | Quick Solutions | Troubleshooting Steps
 
 <details>
 <summary>🤖 <strong>Discord Bot Issues</strong> - Bot offline, commands not working</summary>
@@ -184,9 +194,13 @@ For comprehensive diagnosis:
 # 4. Check project structure: ls -la .orch-state/
 ```
 
-## 🔍 Searchable Error Database
+## 🔍 Error Database - Quick Solutions
 
-### Quick Search
+### Common Errors | Stack Overflow Style | Copy-Paste Fixes | Error Codes
+
+### Error Lookup Table
+
+#### Find Your Error | Instant Solutions | Command Fixes | Environment Issues
 
 | Error Pattern | Category | Quick Fix | Stack Overflow Style |
 |---------------|----------|-----------|---------------------|
@@ -3320,3 +3334,17 @@ graph TD
 ```
 
 Remember: **95% of issues can be self-resolved** using this enhanced troubleshooting system. The key is to follow the systematic approach and use the right diagnostic tools for each situation.
+
+## Next Steps
+
+### After Resolving Issues
+
+- **Get back to work**: Return to [CLI Reference](cli-reference.md) for your daily commands
+- **Learn from examples**: See working setups in [Integration Examples](integration-examples.md)
+- **Prevent future issues**: Set up [Performance Monitoring](performance-monitoring.md) for early warnings
+
+### See Also
+
+- **New installation?** Follow [Installation Guide](../getting-started/installation.md) for proper setup
+- **Need help understanding workflows?** Check the [State Machine](state-machine.md) documentation
+- **Want to contribute fixes?** See the [Development Guide](../development/contributing.md)

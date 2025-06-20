@@ -1,6 +1,8 @@
-# 🎛️ CLI Command Palette
+# 🎛️ CLI Command Reference - Complete Guide
 
-> **Your interactive command center for the AI Agent TDD-Scrum workflow system**
+> **Comprehensive command reference for agent-orch CLI, Discord bot commands, and interactive workflows**
+
+> **Command-line interface documentation | CLI commands | Terminal reference | Discord bot integration**
 
 <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; border-radius: 10px; color: white; margin: 20px 0;">
   <h2 style="margin: 0; color: white;">⚡ Command Palette Design</h2>
@@ -9,6 +11,8 @@
 
 ## 🔍 Command Search & Discovery
 
+### Finding Commands | CLI Help | Command Completion | Usage Examples
+
 ### Quick Search Box
 ```bash
 # Type to search commands, descriptions, and examples
@@ -16,14 +20,18 @@
 ```
 
 **Popular searches:**
-- `init` - Initialize environment
-- `start discord` - Start with Discord bot
-- `register project` - Add new project
-- `status` - Check system status
+- `init` - Initialize environment | setup | configure | first time
+- `start discord` - Start with Discord bot | launch | run | activate
+- `register project` - Add new project | create | setup project | repository
+- `status` - Check system status | health | running | active | state
+- `help` - Command help | usage | documentation | reference
+- `version` - Version info | update | current version | changelog
 
 ---
 
-## ⭐ Most Used Commands
+## ⭐ Essential Commands - Getting Started
+
+### Quick Start Commands | Daily Usage | Common Operations | First-Time Setup
 
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; margin: 20px 0;">
 
@@ -106,7 +114,11 @@ agent-orch status --watch
 
 ---
 
-## 📋 Table of Contents
+## 📋 Command Categories - Navigation Guide
+
+*Jump to specific command types and usage patterns*
+
+> **First time here?** Start with [Quick Start](../getting-started/quick-start.md) for guided setup, then return here for detailed command reference.
 
 - [Command Palette Navigation](#command-palette-navigation)
 - [Core Command Categories](#core-command-categories)
@@ -130,6 +142,8 @@ agent-orch search "project management"
 agent-orch suggest setup
 ```
 
+> **Need examples?** See these commands in action with [Integration Examples](integration-examples.md) showing complete project workflows.
+
 ### Quick Command Launcher
 <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; border-left: 4px solid #007bff;">
 
@@ -151,7 +165,9 @@ agent-orch suggest setup
 
 ---
 
-## 📚 Core Command Categories
+## 📚 Core Command Categories - Organized Reference
+
+### Setup Commands | Project Management | Orchestration Control | Configuration Options
 
 ### 🏗️ **Setup & Initialization**
 <details>
@@ -732,3 +748,17 @@ AGENT_WORKFLOW_TRACE=1 agent-orch start --log-level DEBUG
     Progressive disclosure from beginner to power user workflows
   </p>
 </div>
+
+## Next Steps
+
+### Put Commands into Practice
+
+- **See real examples**: Browse [Integration Examples](integration-examples.md) with complete project walkthroughs
+- **Understand the workflow**: Learn how the [State Machine](state-machine.md) orchestrates agent collaboration
+- **Troubleshoot issues**: Keep the [Troubleshooting Guide](troubleshooting.md) handy for common problems
+
+### See Also
+
+- **Just getting started?** Go back to [Quick Start](../getting-started/quick-start.md) for guided setup
+- **Advanced workflows**: Explore [Multi-project Orchestration](multi-project-orchestration.md) for scaling
+- **Performance tuning**: Check out [Performance Monitoring](performance-monitoring.md) for optimization tips

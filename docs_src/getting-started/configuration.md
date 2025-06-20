@@ -553,7 +553,12 @@ tdd:
 ## Next Steps
 
 After configuration:
-1. [Run the quick start guide](quick-start.md)
-2. [Set up your first project](../user-guide/project-setup.md)
-3. [Learn the HITL commands](../user-guide/hitl-commands.md)
-4. [Explore TDD workflows](../user-guide/tdd-workflow.md)
+1. [Run the quick start guide](quick-start.md) to test your setup
+2. [Set up your first project](../user-guide/project-setup.md) for orchestration
+3. [Learn the CLI commands](../user-guide/cli-reference.md) for daily operations
+4. [Explore real examples](../user-guide/integration-examples.md) with complete workflows
+
+### See Also
+
+- **Having trouble?** Check the [Troubleshooting Guide](../user-guide/troubleshooting.md) for configuration issues
+- **Want to understand the workflow?** Learn about the [State Machine](../user-guide/state-machine.md) that powers orchestration

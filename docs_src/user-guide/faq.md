@@ -1,8 +1,12 @@
-# Frequently Asked Questions
+# FAQ - Frequently Asked Questions & Common Issues
 
-Common questions about the AI Agent TDD-Scrum workflow system.
+> **Quick answers to common questions about setup, usage, troubleshooting, and AI agent configuration**
 
-## General Questions
+**Quick answers and solutions** for common setup questions, troubleshooting issues, configuration problems, and usage guidance.
+
+**Popular topics**: installation help, Discord setup, AI integration, commands not working, permission errors, getting started guide
+
+## General Questions | System Overview | Getting Started
 
 ### What is the AI Agent TDD-Scrum workflow system?
 
@@ -16,7 +20,7 @@ No, the system works without AI integration for testing and learning the workflo
 
 Yes, the orchestrator supports multi-project management. Each project gets its own Discord channel and independent state machine.
 
-## Setup and Installation
+## Setup & Installation Help | Common Issues | Requirements
 
 ### What are the minimum requirements?
 

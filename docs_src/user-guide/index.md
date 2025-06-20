@@ -1,6 +1,10 @@
-# 📖 User Guide
+# 📖 User Guide - Complete Reference Documentation
 
-Comprehensive guide to using the AI Agent TDD-Scrum Workflow system for daily development tasks.
+> **Comprehensive user documentation for AI agent workflow system: commands, setup, troubleshooting, and daily usage patterns**
+
+**Complete user documentation** covering daily workflows, Discord commands, CLI operations, troubleshooting, and advanced features for AI-assisted software development.
+
+**Find what you need**: commands reference, setup guides, troubleshooting solutions, workflow examples, integration patterns, performance optimization
 
 ## Core Guides
 

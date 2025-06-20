@@ -1,4 +1,6 @@
-# 🚀 Quick Start - Choose Your Adventure
+# 🚀 Quick Start Guide - AI Agent Setup & Getting Started
+
+> **Complete beginner-friendly guide to setting up AI agents, Discord integration, and automated TDD workflows in minutes**
 
 ```ascii
     ╔═══════════════════════════════════════════════════════════════╗
@@ -7,7 +9,11 @@
     ╚═══════════════════════════════════════════════════════════════╝
 ```
 
-## 🎯 Choose Your Path
+## 🎯 Choose Your Learning Path - Setup Options
+
+*Get started with AI agent orchestration using your preferred approach: speed demo, guided tutorial, or full production setup. Supports Windows, macOS, Linux, Docker deployment.*
+
+**Keywords**: installation, setup, getting started, first time, beginner guide, tutorial, demo, CLI commands, Discord bot, AI agents
 
 <div align="center">
 
@@ -21,7 +27,9 @@
 
 </div>
 
-## 🏃 Speed Run (2 minutes) {#speed-run}
+## 🏃 Speed Run Demo - 2 Minute Setup {#speed-run}
+
+### Instant AI Agent Demo | Mock Setup | First Time Users
 
 > **Goal**: Get AI agents working in 2 minutes flat - perfect for demos and first impressions!
 
@@ -67,9 +75,17 @@ agent-orch status --watch
 
 **Step 3 of 3 Complete!** ✅ *Witnessed AI agent collaboration*
 
+#### Next Steps for Speed Run
+
+- **Learn the concepts**: Try the [Guided Tour](#guided-tour) to understand what happened
+- **Enable real AI**: Follow [Full Setup](#full-setup) to replace mock agents with Claude/OpenAI
+- **See all commands**: Check the [CLI Reference](../user-guide/cli-reference.md) for complete options
+
 ---
 
-## 🎓 Guided Tour (10 minutes) {#guided-tour}
+## 🎓 Guided Tutorial - Learn Core Concepts {#guided-tour}
+
+### Step-by-Step Learning | Real AI Integration | Discord Bot Setup
 
 > **Goal**: Learn the core concepts while building a real project with AI assistance
 
@@ -298,7 +314,9 @@ $ agent-orch sprint start
 
 ---
 
-## 🏗️ Full Setup (20 minutes) {#full-setup}
+## 🏗️ Production Setup - Complete Installation {#full-setup}
+
+### Enterprise Ready | Multi-Project | Team Collaboration | Claude/OpenAI Integration
 
 > **Goal**: Production-ready setup with real AI, Discord integration, and multi-project orchestration
 
@@ -346,7 +364,9 @@ $ agent-orch setup-api --provider openai --interactive
 
 ---
 
-## 🛡️ Essential Best Practices
+## 🛡️ Security & Development Best Practices
+
+### API Key Safety | Testing Patterns | Error Handling | Production Guidelines
 
 !!! warning "Critical Security & Development Practices"
     
@@ -612,10 +632,22 @@ Congratulations on completing your chosen adventure! Here are your next steps ba
 - **Advanced features**: Continue with [Full Setup](#full-setup) 
 - **Build something real**: Create your first production project!
 
+#### Next Steps for Guided Tour
+
+- **Master the commands**: Review the [CLI Reference](../user-guide/cli-reference.md) for all available options
+- **Understand workflows**: Learn about the [State Machine](../user-guide/state-machine.md) that powers orchestration
+- **See real examples**: Explore [Integration Examples](../user-guide/integration-examples.md) with complete projects
+
 ### 🏗️ If you completed Full Setup:
 - **Master advanced workflows**: [Multi-project orchestration guide](../user-guide/multi-project-orchestration.md)
 - **Customize agents**: [Agent configuration reference](../user-guide/cli-reference.md#agent-configuration)
 - **Enterprise features**: [Production deployment guide](../deployment/production.md)
+
+#### Next Steps for Full Setup
+
+- **Explore real projects**: Check out [Integration Examples](../user-guide/integration-examples.md) with production code
+- **Troubleshoot issues**: Keep the [Troubleshooting Guide](../user-guide/troubleshooting.md) handy
+- **Advanced monitoring**: Set up [Performance Monitoring](../user-guide/performance-monitoring.md) dashboards
 
 ---
 

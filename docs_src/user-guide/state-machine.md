@@ -540,4 +540,18 @@ emit_workflow_transition(old_state, new_state, project_name)
 state_machine.register_tdd_cycle("AUTH-1", "cycle-abc123")
 ```
 
-_The enhanced state machine provides predictable user interactions, real-time monitoring, intelligent context validation, and comprehensive audit trails for robust workflow management._ 
+_The enhanced state machine provides predictable user interactions, real-time monitoring, intelligent context validation, and comprehensive audit trails for robust workflow management._
+
+## Next Steps
+
+### Use the State Machine
+
+- **Start orchestrating**: Apply these concepts with [CLI Reference](cli-reference.md) commands
+- **See it in action**: Try [Integration Examples](integration-examples.md) with real projects
+- **Handle issues**: Use the [Troubleshooting Guide](troubleshooting.md) when workflows get stuck
+
+### See Also
+
+- **New to the system?** Start with [Quick Start](../getting-started/quick-start.md) for setup guidance
+- **Advanced orchestration**: Learn [Multi-project Orchestration](multi-project-orchestration.md) for complex workflows
+- **Monitor performance**: Set up [Performance Monitoring](performance-monitoring.md) to track state transitions 

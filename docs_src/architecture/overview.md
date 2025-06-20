@@ -1,11 +1,17 @@
-# Architecture Overview
+# Architecture Overview - System Design Guide
+
+> **Complete technical architecture documentation: multi-project orchestration, TDD cycles, component design, and technology stack**
 
 The AI Agent TDD-Scrum Workflow system implements a sophisticated multi-layered architecture that coordinates Test-Driven Development (TDD) cycles within a broader Scrum workflow management framework. The system supports both single-project workflows and advanced multi-project orchestration with intelligent resource allocation, context management, and cross-project intelligence.
 
-## System Architecture Layers
+## System Architecture Layers | Component Hierarchy
+
+### Layered Design | Service Architecture | Component Organization | System Boundaries
 
 ### 1. Multi-Project Orchestration Layer
-The top-level orchestration system manages multiple projects simultaneously:
+
+#### Enterprise Coordination | Resource Management | Cross-Project Intelligence | Scalable Architecture
+**Enterprise-scale coordination system** managing multiple software projects with intelligent resource allocation and cross-project knowledge sharing:
 
 ```mermaid
 graph TB

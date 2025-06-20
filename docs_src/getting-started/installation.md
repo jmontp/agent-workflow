@@ -1,14 +1,16 @@
-# Installation Guide
+# Installation Guide - Setup AI Agent Workflow
+
+> **Complete installation instructions for all platforms: pip install, Docker, Windows, macOS, Linux setup guides**
 
 <div class="hero-banner">
-  <h2>⚡ The Fastest Path to AI Development</h2>
+  <h2>⚡ Quick Install - AI Agent Development Setup</h2>
   <p>Get your AI agent team running in under 60 seconds</p>
 </div>
 
 <!-- Platform Switcher (Stripe-style tabs) -->
 <div class="platform-switcher">
   <div class="switcher-tabs">
-    <button class="tab-button active" data-platform="quick">🚀 Quick Start</button>
+    <button class="tab-button active" data-platform="quick">🚀 Pip Install</button>
     <button class="tab-button" data-platform="macos">🍎 macOS</button>  
     <button class="tab-button" data-platform="windows">🪟 Windows</button>
     <button class="tab-button" data-platform="linux">🐧 Linux</button>
@@ -18,7 +20,7 @@
   <!-- Quick Start Tab -->
   <div class="tab-content active" id="quick">
     <div class="one-line-wonder">
-      <h3>One-Line Installation</h3>
+      <h3>One-Line Installation | Pip Command | Python Package</h3>
       <div class="install-command">
         <code>pip install agent-workflow</code>
         <button class="copy-btn" onclick="copyToClipboard('pip install agent-workflow')">📋 Copy</button>
@@ -27,7 +29,7 @@
     </div>
 
     <div class="quick-verify">
-      <h4>Verify Installation</h4>
+      <h4>Verify Setup | Test Installation | Check Dependencies</h4>
       <div class="code-block">
         <pre><code># Test your installation
 agent-orch version
@@ -38,7 +40,7 @@ agent-orch init --interactive</code></pre>
     </div>
 
     <div class="alternative-methods">
-      <h4>Alternative Quick Methods</h4>
+      <h4>Alternative Install Methods | Script Install | Source Install</h4>
       <div class="method-grid">
         <div class="method-card">
           <h5>🔧 Install Script</h5>
@@ -690,9 +692,15 @@ Expected output for a successful installation:
   <div class="next-step-card">
     <h4>📚 User Guide</h4>
     <p>Learn all commands and workflows</p>
-    <a href="../user-guide/hitl-commands.md" class="step-link">Learn →</a>
+    <a href="../user-guide/cli-reference.md" class="step-link">Learn →</a>
   </div>
 </div>
+
+### See Also
+
+- **Having issues?** Check the [Troubleshooting Guide](../user-guide/troubleshooting.md) for common solutions
+- **Ready to dive deeper?** Explore [Integration Examples](../user-guide/integration-examples.md) with real projects
+- **Security considerations?** Review [Security Best Practices](../concepts/security.md) before production use
 
 ---
 

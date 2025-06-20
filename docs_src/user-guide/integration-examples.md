@@ -130,6 +130,8 @@ integrations:
 
 ##### Step-by-Step Project Walkthrough
 
+> **New to Discord commands?** See the [CLI Reference](cli-reference.md) for all available commands and their usage patterns.
+
 ###### 1. Project Initialization
 
 **Discord Commands:**
@@ -146,6 +148,12 @@ integrations:
 /backlog add_story "USER-003: Add user profile management endpoints (GET, PUT, DELETE)"
 /backlog add_story "USER-004: Implement role-based access control (RBAC)"
 /backlog add_story "USER-005: Add rate limiting and security headers"
+
+# Check the created stories and their state
+/state
+```
+
+> **Understanding the workflow?** These commands follow the [State Machine](state-machine.md) transitions from IDLE → BACKLOG_READY → SPRINT_PLANNED.
 
 # Prioritize the backlog
 /backlog prioritize
@@ -3571,3 +3579,17 @@ This comprehensive integration guide provides practical examples for connecting 
 - ✅ Complete CI/CD pipeline examples
 
 All examples are designed to be minimal working implementations that can be extended based on specific project requirements.
+
+## Next Steps
+
+### Apply What You've Learned
+
+- **Start your project**: Use [CLI Reference](cli-reference.md) to set up your own integration
+- **Get help when stuck**: Check the [Troubleshooting Guide](troubleshooting.md) for common solutions
+- **Scale your workflow**: Explore [Multi-project Orchestration](multi-project-orchestration.md) for complex setups
+
+### See Also
+
+- **Need the basics first?** Go back to [Quick Start](../getting-started/quick-start.md) for setup guidance
+- **Understand the workflow**: Learn about the [State Machine](state-machine.md) powering these examples
+- **Monitor performance**: Set up [Performance Monitoring](performance-monitoring.md) for production use

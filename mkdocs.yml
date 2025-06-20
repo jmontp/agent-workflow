@@ -1,5 +1,5 @@
-site_name: AI Agent TDD-Scrum Workflow
-site_description: Human-In-The-Loop orchestration framework for AI-assisted software development
+site_name: AI Agent TDD-Scrum Workflow - Complete Guide
+site_description: Complete AI agent orchestration framework with Discord integration, Test-Driven Development, and human-in-the-loop control for automated software development
 site_author: AI Agent Workflow Team
 site_url: https://jmontp.github.io/agent-workflow/
 
@@ -291,89 +291,107 @@ nav:
     - 🚀 Quick Start: getting-started/quick-start.md
     - 📦 Installation: getting-started/installation.md
     - ⚙️ Configuration: getting-started/configuration.md
-  - 📊 User Guide:
+  - 📚 User Guide:
     - user-guide/index.md
-    - 🎮 HITL Commands: user-guide/hitl-commands.md
-    - 🔄 State Machine: user-guide/state-machine.md
-    - 🧪 TDD Workflow: user-guide/tdd-workflow.md
-    - 🎯 Multi-Project Orchestration: user-guide/multi-project-orchestration.md
-    - 📂 Project Setup: user-guide/project-setup.md
-    - 🔗 Workflow Sequences: user-guide/workflow-sequences.md
-    - 💻 CLI Reference: user-guide/cli-reference.md
-    - ✅ Testing: user-guide/testing.md
-    - 🤖 Agent Interface Management: user-guide/agent-interface-management.md
-    - 🧠 Context Management: user-guide/context-management.md
-    - 📊 Performance Monitoring: user-guide/performance-monitoring.md
-    - ⚡ Performance Optimization: user-guide/performance-optimization.md
-    - 🔌 Integration Examples: user-guide/integration-examples.md
-    - 🎨 UI Portal Guide: user-guide/ui-portal-guide.md
-    - 👤 User Profile: user-guide/user-profile.md
-    - 🔧 Troubleshooting: user-guide/troubleshooting.md
-    - ❓ FAQ: user-guide/faq.md
+    - 🚀 Core Workflows:
+      - 🎮 HITL Commands: user-guide/hitl-commands.md
+      - 🔄 State Machine: user-guide/state-machine.md
+      - 🧪 TDD Workflow: user-guide/tdd-workflow.md
+      - 🔗 Workflow Sequences: user-guide/workflow-sequences.md
+    - 🛠️ System Management:
+      - 💻 CLI Reference: user-guide/cli-reference.md
+      - 📂 Project Setup: user-guide/project-setup.md
+      - 🎯 Multi-Project Orchestration: user-guide/multi-project-orchestration.md
+      - 🤖 Agent Interface Management: user-guide/agent-interface-management.md
+    - 🔧 Advanced Features:
+      - 🧠 Context Management: user-guide/context-management.md
+      - ✅ Testing: user-guide/testing.md
+      - 📊 Performance Monitoring: user-guide/performance-monitoring.md
+      - ⚡ Performance Optimization: user-guide/performance-optimization.md
+      - 🏥 Health Monitoring: user-guide/health-monitoring.md
+      - 🔌 Integration Examples: user-guide/integration-examples.md
+    - 🎨 Interface & Support:
+      - 🎨 UI Portal Guide: user-guide/ui-portal-guide.md
+      - 👤 User Profile: user-guide/user-profile.md
+      - 🔧 Troubleshooting: user-guide/troubleshooting.md
+      - ❓ FAQ: user-guide/faq.md
   - 🎯 Core Concepts:
     - concepts/index.md
     - 📋 System Overview: concepts/overview.md
     - 🔒 Security Model: concepts/security.md
-  - 🔥 Architecture:
+  - 🏗️ Architecture:
     - architecture/index.md
-    - 🏗️ System Overview: architecture/system-overview.md
-    - 🔧 Component Architecture: architecture/component-architecture.md
-    - 🧠 Context Management: architecture/context-management-system.md
-    - Context API Specification: architecture/context-api-specification.md
-    - Context Algorithms: architecture/context-algorithms.md
-    - Context Evaluation Framework: architecture/context-evaluation-framework.md
-    - Context Implementation Plan: architecture/context-implementation-plan.md
-    - Parallel TDD Design: architecture/parallel-tdd-architecture.md
-    - Parallel TDD Implementation: architecture/parallel-tdd-technical-specification.md
-    - Parallel TDD Implementation Strategy: architecture/parallel-tdd-implementation-strategy.md
-    - Parallel TDD Comprehensive Plan: architecture/parallel-tdd-comprehensive-implementation-plan.md
-    - Parallel TDD Testing Strategy: architecture/parallel-tdd-testing-strategy.md
-    - Parallel Context Integration: architecture/parallel-context-integration.md
-    - Parallel Agent Pool Management: architecture/parallel-agent-pool-management.md
-    - Parallel Conflict Resolution: architecture/parallel-conflict-algorithms.md
-  - ⚡ Advanced Topics:
+    - 🏠 System Design:
+      - 🏗️ System Overview: architecture/system-overview.md
+      - 🔧 Component Architecture: architecture/component-architecture.md
+    - 🧠 Context Management:
+      - 📊 Context System: architecture/context-management-system.md
+      - 🔌 Context API Specification: architecture/context-api-specification.md
+      - ⚙️ Context Algorithms: architecture/context-algorithms.md
+      - 📋 Context Evaluation Framework: architecture/context-evaluation-framework.md
+      - 🛠️ Context Implementation Plan: architecture/context-implementation-plan.md
+    - 🔄 Parallel TDD System:
+      - 📐 Design Overview: architecture/parallel-tdd-architecture.md
+      - 🔧 Technical Specification: architecture/parallel-tdd-technical-specification.md
+      - 📋 Implementation Strategy: architecture/parallel-tdd-implementation-strategy.md
+      - 📊 Comprehensive Plan: architecture/parallel-tdd-comprehensive-implementation-plan.md
+      - 🧪 Testing Strategy: architecture/parallel-tdd-testing-strategy.md
+      - 🔗 Context Integration: architecture/parallel-context-integration.md
+      - 🤖 Agent Pool Management: architecture/parallel-agent-pool-management.md
+      - ⚔️ Conflict Resolution: architecture/parallel-conflict-algorithms.md
+  - 🔬 Advanced Topics:
     - advanced/index.md
-    - Context Diagram: advanced/context.md
-    - Detailed Architecture: advanced/architecture-detailed.md
-    - Container Architecture: advanced/container.md
-    - System Components: advanced/component.md
-    - Data Flow: advanced/data-flow.md
-    - Orchestration Repository: advanced/orchestration-repo.md
-    - Project Repository: advanced/project-repo.md
-    - Security Implementation: advanced/security-implementation.md
-    - Testing Strategy: advanced/testing.md
-    - Code Structure: advanced/code.md
+    - 🔧 Deep Architecture:
+      - 🌐 Context Diagram: advanced/context.md
+      - 🏗️ Detailed Architecture: advanced/architecture-detailed.md
+      - 📦 Container Architecture: advanced/container.md
+      - 🔗 System Components: advanced/component.md
+      - 🌊 Data Flow: advanced/data-flow.md
+    - 📁 Repository Design:
+      - 🎯 Orchestration Repository: advanced/orchestration-repo.md
+      - 📂 Project Repository: advanced/project-repo.md
+      - 💻 Code Structure: advanced/code.md
+    - 🛡️ Implementation Details:
+      - 🔒 Security Implementation: advanced/security-implementation.md
+      - 🧪 Testing Strategy: advanced/testing.md
   - 🎨 Planning & Design:
     - planning/index.md
-    - Component Specifications: planning/component-specifications.md
-    - Implementation Roadmap: planning/implementation-roadmap.md
-    - UI Portal Architecture: planning/ui-portal-architecture.md
-    - UI/UX Wireframes: planning/ui-ux-wireframes.md
-    - User Journey & Personas: planning/user-journey-personas.md
-    - WebSocket API Specification: planning/websocket-api-specification.md
-  - 📊 Development:
+    - 🔧 System Specifications:
+      - 📋 Component Specifications: planning/component-specifications.md
+      - 🗺️ Implementation Roadmap: planning/implementation-roadmap.md
+      - 🏗️ UI Portal Architecture: planning/ui-portal-architecture.md
+      - 🌐 WebSocket API Specification: planning/websocket-api-specification.md
+    - 🎯 User Experience:
+      - 🖼️ UI/UX Wireframes: planning/ui-ux-wireframes.md
+      - 👥 User Journey & Personas: planning/user-journey-personas.md
+  - 🛠️ Development:
     - development/index.md
-    - Contributing: development/contributing.md
-    - API Reference: development/api-reference.md
-    - Testing Guide: development/testing-guide.md
-    - 🛠️ Development Tools: development/development-tools.md
-  - 🔥 Deployment:
+    - 🤝 Contributing: development/contributing.md
+    - 📖 API Reference: development/api-reference.md
+    - 🧪 Testing Guide: development/testing-guide.md
+    - 🔧 Development Tools: development/development-tools.md
+    - 🎯 Enhancement Guides:
+      - ⚙️ TDD Orchestration Implementation: development/TDD_ORCHESTRATION_ENHANCEMENTS.md
+      - 🎨 UX Enhancement Guide: development/ux-enhancement-guide.md
+  - 🚀 Deployment:
     - deployment/index.md
-    - Discord Setup: deployment/discord-setup.md
-    - Discord Setup Summary: deployment/DISCORD_SETUP_SUMMARY.md
-    - Production Deployment: deployment/production.md
-    - Operations Guide: deployment/operations.md
-    - GitHub Pages: deployment/github-pages.md
+    - 🤖 Discord Integration:
+      - 🔧 Discord Setup: deployment/discord-setup.md
+      - 📋 Discord Setup Summary: deployment/DISCORD_SETUP_SUMMARY.md
+    - 🏭 Production:
+      - 🚀 Production Deployment: deployment/production.md
+      - ⚙️ Operations Guide: deployment/operations.md
+      - 📄 GitHub Pages: deployment/github-pages.md
   - 📋 Templates:
     - templates/index.md
-    - Architecture Template: templates/architecture.md
-    - Command Reference Template: templates/command-reference.md
-    - Feature Overview Template: templates/feature-overview.md
-    - Troubleshooting Template: templates/troubleshooting.md
-    - Tutorial Template: templates/tutorial.md
+    - 🏗️ Architecture Template: templates/architecture.md
+    - 💻 Command Reference Template: templates/command-reference.md
+    - ⭐ Feature Overview Template: templates/feature-overview.md
+    - 🔧 Troubleshooting Template: templates/troubleshooting.md
+    - 📚 Tutorial Template: templates/tutorial.md
   - 🎨 Theme Integration:
-    - Theme Integration Guide: theme-integration-guide.md
-    - Theme Preview: theme-preview.md
-    - Style Guide: STYLE_GUIDE.md
+    - 🔧 Theme Integration Guide: theme-integration-guide.md
+    - 👀 Theme Preview: theme-preview.md
+    - 📝 Style Guide: STYLE_GUIDE.md
   - 📁 Archive:
     - 🏛️ Compliance Documents: archive/compliance/README.md

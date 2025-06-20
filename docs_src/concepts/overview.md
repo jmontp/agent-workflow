@@ -1,10 +1,16 @@
-# System Overview
+# Core Concepts - System Overview & Architecture
+
+> **Fundamental concepts: dual state machines, AI agent coordination, human-in-the-loop control, and TDD workflow management**
 
 The AI Agent TDD-Scrum Workflow system is a Human-In-The-Loop orchestration framework that coordinates specialized AI agents through a sophisticated dual state machine architecture for Test-Driven Development and Scrum workflow management.
 
-## Core Concepts
+## Core Concepts | System Architecture | Design Principles
 
-### Dual State Machine Architecture
+### State Machines | Agent Coordination | Workflow Management | TDD Integration
+
+### Dual State Machine Architecture | Workflow States | TDD Cycles
+
+**State machine design pattern** with separate workflow and TDD state management:
 The system operates two coordinated state machines:
 
 **Primary Workflow State Machine:**
@@ -19,7 +25,9 @@ The system operates two coordinated state machines:
 - Multiple instances run in parallel during active sprints
 - Ensures proper RED-GREEN-REFACTOR methodology for each story
 
-### Ephemeral Multi-Agent Coordination
+### AI Agent Coordination | Multi-Agent Systems | Dynamic Agent Creation
+
+**On-demand agent orchestration** with specialized roles and ephemeral lifecycle:
 The system creates agents on-demand based on workload:
 - **Orchestrator Agent**: Spun up for sprint coordination and multi-task management
 - **Design Agents**: Architecture and technical specifications per story
@@ -27,7 +35,7 @@ The system creates agents on-demand based on workload:
 - **Code Agents**: Feature implementation and refactoring per story
 - **Analytics Agent**: Cross-story metrics and progress reporting
 
-### Human-In-The-Loop Control
+### Human-In-The-Loop Control | HITL Workflow | Approval Gates | Manual Override
 Strategic decisions require human approval while TDD cycles can run autonomously:
 - Epic and story creation (workflow level)
 - Sprint planning and execution (workflow level)
@@ -127,3 +135,17 @@ This approach balances automation benefits with human control:
 - **Continuous Improvement**: TDD metrics drive both technical and process improvements
 
 The dual state machine architecture ensures both proper Scrum methodology at the project level and rigorous TDD practices at the story level, maximizing both velocity and quality.
+
+## Next Steps
+
+### Apply These Concepts
+
+- **Get hands-on experience**: Follow the [Quick Start](../getting-started/quick-start.md) to see these concepts in action
+- **Understand the mechanics**: Learn about the [State Machine](../user-guide/state-machine.md) that implements this architecture
+- **See real examples**: Explore [Integration Examples](../user-guide/integration-examples.md) demonstrating these patterns
+
+### See Also
+
+- **Security considerations**: Review [Security](security.md) concepts for production use
+- **Day-to-day operations**: Master the [CLI Reference](../user-guide/cli-reference.md) for practical usage
+- **Troubleshooting**: Keep the [Troubleshooting Guide](../user-guide/troubleshooting.md) handy when learning
