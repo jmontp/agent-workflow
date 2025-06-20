@@ -47,14 +47,19 @@
                             stateDiagram-v2
                                 [*] --> IDLE
                                 IDLE --> BACKLOG_READY : /epic
+                                BACKLOG_READY --> BACKLOG_READY : /approve
                                 BACKLOG_READY --> SPRINT_PLANNED : /sprint plan
                                 SPRINT_PLANNED --> SPRINT_ACTIVE : /sprint start
-                                SPRINT_ACTIVE --> SPRINT_REVIEW : tasks complete
-                                SPRINT_REVIEW --> IDLE : /feedback
                                 SPRINT_ACTIVE --> SPRINT_PAUSED : /sprint pause
                                 SPRINT_PAUSED --> SPRINT_ACTIVE : /sprint resume
                                 SPRINT_ACTIVE --> BLOCKED : CI fails 3×
-                                BLOCKED --> SPRINT_ACTIVE : /suggest_fix
+                                BLOCKED --> SPRINT_ACTIVE : /suggest_fix | /skip_task
+                                SPRINT_ACTIVE --> SPRINT_REVIEW : all tasks done (TDD complete)
+                                SPRINT_REVIEW --> BACKLOG_READY : /request_changes
+                                SPRINT_REVIEW --> IDLE : /feedback
+                                
+                                note right of SPRINT_ACTIVE : TDD cycles coordination
+                                note right of SPRINT_REVIEW : Requires TDD completion
                                 
                                 classDef current fill:#4CAF50,stroke:#333,stroke-width:3px,color:#fff
                                 classDef inactive fill:#f9f9f9,stroke:#ddd,stroke-width:1px
@@ -69,15 +74,21 @@
                         <div id="tdd-diagram" class="mermaid">
                             stateDiagram-v2
                                 [*] --> DESIGN
-                                DESIGN --> TEST_RED : specs complete
-                                TEST_RED --> CODE_GREEN : tests failing
-                                CODE_GREEN --> REFACTOR : tests passing
+                                DESIGN --> TEST_RED : design complete
+                                TEST_RED --> CODE_GREEN : tests failing properly
+                                CODE_GREEN --> REFACTOR : all tests passing
                                 REFACTOR --> COMMIT : quality gates met
                                 COMMIT --> [*] : story complete
 
                                 REFACTOR --> CODE_GREEN : tests broken
                                 CODE_GREEN --> TEST_RED : need more tests
                                 TEST_RED --> DESIGN : requirements unclear
+                                
+                                note right of DESIGN : Design Agent creates specs
+                                note right of TEST_RED : QA Agent writes failing tests
+                                note right of CODE_GREEN : Code Agent makes tests pass
+                                note right of REFACTOR : Code Agent improves quality
+                                note right of COMMIT : Code Agent commits changes
                                 
                                 classDef current fill:#FF5722,stroke:#333,stroke-width:3px,color:#fff
                                 classDef inactive fill:#f9f9f9,stroke:#ddd,stroke-width:1px

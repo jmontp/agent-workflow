@@ -350,12 +350,44 @@ class StateVisualizer {
     }
 
     /**
-     * Update workflow state display
+     * Update workflow state display with TDD cycle indicators
      */
     updateWorkflowState(state) {
+        this.currentWorkflowState = state;
         const stateElement = document.getElementById('workflow-state');
         if (stateElement) {
+            const activeCycles = this.activeTDDCycles.size;
             stateElement.textContent = state;
+            
+            // Add TDD cycle indicator for SPRINT_ACTIVE state
+            if (state === 'SPRINT_ACTIVE' && activeCycles > 0) {
+                stateElement.textContent += ` (${activeCycles} TDD cycles)`;
+                stateElement.style.color = '#FF5722'; // Orange for active with cycles
+            } else if (state === 'SPRINT_REVIEW' && activeCycles > 0) {
+                stateElement.style.color = '#F44336'; // Red for review with blocking cycles
+            } else {
+                stateElement.style.color = ''; // Default color
+            }
+        }
+        
+        this.highlightWorkflowState(state);
+        this.updateTDDConstraintIndicators(state);
+    }
+    
+    /**
+     * Update TDD constraint visual indicators
+     */
+    updateTDDConstraintIndicators(state) {
+        const activeCycles = this.activeTDDCycles.size;
+        
+        // Update status bar with constraint information
+        const lastUpdateElement = document.getElementById('last-update');
+        if (lastUpdateElement && state === 'SPRINT_REVIEW' && activeCycles > 0) {
+            lastUpdateElement.style.color = '#F44336';
+            lastUpdateElement.title = `Cannot complete review: ${activeCycles} TDD cycles still active`;
+        } else if (lastUpdateElement) {
+            lastUpdateElement.style.color = '';
+            lastUpdateElement.title = '';
         }
     }
 
