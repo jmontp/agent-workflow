@@ -104,4 +104,4 @@ To effectively use this system, it's helpful to understand:
 
 - **[System Overview](overview.md)** - Detailed architecture and components
 - **[Security Model](security.md)** - Understanding access control and boundaries
-- **[Architecture](../architecture/overview.md)** - Technical implementation details
+- **[Architecture](../architecture/system-overview.md)** - Technical implementation details

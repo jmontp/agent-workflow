@@ -14,7 +14,7 @@ pip install agent-workflow
 pip install agent-workflow[dev,docs]
 
 # Development installation
-pip install -e git+https://github.com/agent-workflow/agent-workflow.git#egg=agent-workflow
+pip install -e git+https://github.com/jmontp/agent-workflow.git#egg=agent-workflow
 
 # Specific version
 pip install agent-workflow==1.2.3
@@ -23,7 +23,7 @@ pip install agent-workflow==1.2.3
 ### 1.2 Alternative Installation Methods
 ```bash
 # From GitHub releases
-pip install https://github.com/agent-workflow/agent-workflow/releases/download/v1.2.3/agent_workflow-1.2.3-py3-none-any.whl
+pip install https://github.com/jmontp/agent-workflow/releases/download/v1.2.3/agent_workflow-1.2.3-py3-none-any.whl
 
 # Using pipx for isolated installation
 pipx install agent-workflow
@@ -215,7 +215,7 @@ Next Steps:
 └─────────────────────────────────────────────────────┘
 
 Documentation: https://agent-workflow.readthedocs.io
-Support: https://github.com/agent-workflow/agent-workflow/issues
+Support: https://github.com/jmontp/agent-workflow/issues
 
 Press Enter to continue...
 ```

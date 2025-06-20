@@ -42,7 +42,7 @@ agent-orch init --interactive</code></pre>
       <div class="method-grid">
         <div class="method-card">
           <h5>🔧 Install Script</h5>
-          <code>curl -sSL https://raw.githubusercontent.com/jmontp/agent-workflow/main/scripts/install.sh | bash</code>
+          <code>curl -sSL https://raw.githubusercontent.com/jmontp/agent-workflow/main/install.sh | bash</code>
         </div>
         <div class="method-card">
           <h5>📦 From Source</h5>

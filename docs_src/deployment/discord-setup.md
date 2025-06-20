@@ -76,7 +76,9 @@ Before starting, ensure you have:
 2. Navigate to **Advanced**
 3. Toggle **Developer Mode** ON
 
-![Developer Mode Toggle](../images/discord-setup/developer-mode.png)
+> **Note**: Screenshot needed: Discord Settings > Advanced tab showing the Developer Mode toggle switch being enabled
+
+<!-- ![Developer Mode Toggle](../images/discord-setup/developer-mode.png) -->
 
 ---
 
@@ -88,7 +90,9 @@ Before starting, ensure you have:
 2. Sign in with your Discord account
 3. Click the **New Application** button
 
-![Developer Portal](../images/discord-setup/developer-portal.png)
+> **Note**: Screenshot needed: Discord Developer Portal homepage showing the "New Application" button
+
+<!-- ![Developer Portal](../images/discord-setup/developer-portal.png) -->
 
 ### 1.2 Name Your Application
 
@@ -96,7 +100,9 @@ Before starting, ensure you have:
 2. Read and accept the Developer Terms of Service
 3. Click **Create**
 
-![Create Application](../images/discord-setup/create-application.png)
+> **Note**: Screenshot needed: New Application dialog with "AI Agent Workflow" name entered and Create button
+
+<!-- ![Create Application](../images/discord-setup/create-application.png) -->
 
 ### 1.3 Configure Application Details
 
@@ -118,7 +124,9 @@ On the **General Information** page:
 
 4. **Save Changes**
 
-![Application Settings](../images/discord-setup/application-settings.png)
+> **Note**: Screenshot needed: General Information page showing description field, tags, and Save Changes button
+
+<!-- ![Application Settings](../images/discord-setup/application-settings.png) -->
 
 ---
 
@@ -130,7 +138,9 @@ On the **General Information** page:
 2. Click **Add Bot**
 3. Confirm by clicking **Yes, do it!**
 
-![Add Bot](../images/discord-setup/add-bot.png)
+> **Note**: Screenshot needed: Bot section showing the "Add Bot" button and confirmation dialog
+
+<!-- ![Add Bot](../images/discord-setup/add-bot.png) -->
 
 ### 2.2 Bot Configuration
 
@@ -154,7 +164,9 @@ Never commit it to version control!
 Store it as an environment variable!
 ```
 
-![Bot Token](../images/discord-setup/bot-token.png)
+> **Note**: Screenshot needed: Bot configuration page showing the Token section with Reset Token and Copy buttons (token should be partially obscured for security)
+
+<!-- ![Bot Token](../images/discord-setup/bot-token.png) -->
 
 ### 2.3 Privileged Gateway Intents
 
@@ -166,7 +178,9 @@ Enable these intents for full functionality:
 | **Server Members Intent** | ✅ Yes | Access member lists |
 | **Message Content Intent** | ✅ Yes | Read message content |
 
-![Bot Intents](../images/discord-setup/bot-intents.png)
+> **Note**: Screenshot needed: Privileged Gateway Intents section with all three intents (Presence, Server Members, Message Content) enabled
+
+<!-- ![Bot Intents](../images/discord-setup/bot-intents.png) -->
 
 ### 2.4 Bot Permissions Settings
 
@@ -216,7 +230,9 @@ Use the visual permission calculator:
 
 3. Select **Bot Permissions**:
    
-   ![Permission Selection](../images/discord-setup/permissions.png)
+   > **Note**: Screenshot needed: OAuth2 URL Generator showing bot permissions checkboxes for text, channel management, and thread permissions
+
+<!-- ![Permission Selection](../images/discord-setup/permissions.png) -->
 
 ---
 
@@ -247,7 +263,9 @@ https://discord.com/api/oauth2/authorize?client_id=YOUR_CLIENT_ID&permissions=21
 5. Click **Authorize**
 6. Complete CAPTCHA if prompted
 
-![Bot Authorization](../images/discord-setup/bot-authorization.png)
+> **Note**: Screenshot needed: Discord OAuth2 authorization page in browser showing server selection dropdown and permission summary
+
+<!-- ![Bot Authorization](../images/discord-setup/bot-authorization.png) -->
 
 ### 4.4 Verify Bot Joined
 
@@ -366,7 +384,9 @@ In your Discord server, test these commands:
 /state
 ```
 
-![State Command](../images/discord-setup/state-command.png)
+> **Note**: Screenshot needed: Discord chat showing /state command execution with the bot's response displaying current workflow state
+
+<!-- ![State Command](../images/discord-setup/state-command.png) -->
 
 #### Create Your First Epic
 
@@ -374,7 +394,9 @@ In your Discord server, test these commands:
 /epic "Build a task management API with user authentication"
 ```
 
-![Epic Command](../images/discord-setup/epic-command.png)
+> **Note**: Screenshot needed: Discord chat showing /epic command with example epic description and bot's response with proposed user stories
+
+<!-- ![Epic Command](../images/discord-setup/epic-command.png) -->
 
 ### 6.4 Troubleshooting Connection Issues
 
@@ -459,7 +481,9 @@ Register a new project repository for orchestration.
 ```
 
 **Response:**
-![Project Register Response](../images/discord-setup/project-register.png)
+> **Note**: Screenshot needed: Discord chat showing successful /project register command with project path and confirmation message
+
+<!-- ![Project Register Response](../images/discord-setup/project-register.png) -->
 
 #### `/epic "<description>"`
 Define a new high-level initiative.
@@ -519,7 +543,9 @@ Control sprint lifecycle.
 ```
 
 **Sprint Status Display:**
-![Sprint Status](../images/discord-setup/sprint-status.png)
+> **Note**: Screenshot needed: Discord embed showing sprint status with progress bars, story list, and metrics
+
+<!-- ![Sprint Status](../images/discord-setup/sprint-status.png) -->
 
 ### 🔬 Test-Driven Development
 
@@ -552,7 +578,9 @@ Manage TDD cycles for story implementation.
 ```
 
 **TDD Status Display:**
-![TDD Status](../images/discord-setup/tdd-status.png)
+> **Note**: Screenshot needed: Discord embed showing TDD cycle status with current phase, test results, and next steps
+
+<!-- ![TDD Status](../images/discord-setup/tdd-status.png) -->
 
 ### ✅ Approval Commands
 
@@ -586,7 +614,9 @@ View current workflow state with interactive controls.
 - **State Diagram** button: Visual state machine
 - **Project Status** button: Detailed metrics
 
-![State Interactive View](../images/discord-setup/state-interactive.png)
+> **Note**: Screenshot needed: Discord message showing /state command response with interactive buttons (Allowed Commands, State Diagram, Project Status)
+
+<!-- ![State Interactive View](../images/discord-setup/state-interactive.png) -->
 
 ### 🔧 Workflow Control
 

@@ -41,7 +41,7 @@ pip install agent-workflow
 ### From Source
 
 ```bash
-git clone https://github.com/agent-workflow/agent-workflow.git
+git clone https://github.com/jmontp/agent-workflow.git
 cd agent-workflow
 pip install -e .
 ```

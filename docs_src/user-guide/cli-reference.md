@@ -277,6 +277,31 @@ agent-orch web --team-mode --network-detect --qr-code
 ```
 </details>
 
+#### Advanced Web Interface Options
+
+`--interface-manager` - Enable agent interface management panel
+Example: `agent-orch web --interface-manager --port 8080`
+
+`--context-manager` - Enable context management UI for monitoring agent context usage
+Example: `agent-orch web --context-manager --host localhost`
+
+`--performance-mode` - Enable performance monitoring dashboard with real-time metrics
+Example: `agent-orch web --performance-mode --port 8081`
+
+`--dev-mode` - Enable development mode with hot reload and debugging features
+Example: `agent-orch web --dev-mode --debug`
+
+`--team-mode` - Enable team collaboration features with shared state visualization
+Example: `agent-orch web --team-mode --port 8080`
+
+`--network-detect` - Automatically detect network interfaces for remote access
+Example: `agent-orch web --network-detect --team-mode`
+
+`--qr-code` - Generate QR code for easy mobile access to web interface
+Example: `agent-orch web --qr-code --network-detect`
+
+</details>
+
 ---
 
 ## 🤖 Discord Bot Commands

@@ -87,11 +87,11 @@ ai = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/agent-workflow/agent-workflow"
+Homepage = "https://github.com/jmontp/agent-workflow"
 Documentation = "https://agent-workflow.readthedocs.io"
-Repository = "https://github.com/agent-workflow/agent-workflow"
-"Bug Reports" = "https://github.com/agent-workflow/agent-workflow/issues"
-Changelog = "https://github.com/agent-workflow/agent-workflow/blob/main/CHANGELOG.md"
+Repository = "https://github.com/jmontp/agent-workflow"
+"Bug Reports" = "https://github.com/jmontp/agent-workflow/issues"
+Changelog = "https://github.com/jmontp/agent-workflow/blob/main/CHANGELOG.md"
 
 [project.scripts]
 agent-orch = "agent_workflow.cli.main:main"

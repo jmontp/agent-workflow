@@ -49,7 +49,7 @@ python -c "import discord; print(f'Discord.py version: {discord.__version__}')"
 **Quick Fixes:**
 1. **Check bot status**: Look for red/green indicator in Discord
 2. **Verify token**: `echo $DISCORD_BOT_TOKEN | wc -c` (should be ~72 characters)
-3. **Test connection**: `python scripts/test_discord.py`
+3. **Test connection**: Use Discord bot connection test
 4. **Restart bot**: `pkill -f discord_bot.py && python lib/discord_bot.py`
 
 **Deep Dive**: [Discord Connection Problems](#discord-connection-problems)
@@ -86,7 +86,7 @@ python -c "import discord; print(f'Discord.py version: {discord.__version__}')"
 1. **Environment setup**: Copy `.env.example` to `.env` and fill in values
 2. **YAML validation**: `python -c "import yaml; yaml.safe_load(open('config.yml'))"`
 3. **Path check**: `ls -la $(pwd)` and verify you're in the right directory
-4. **Config test**: `python scripts/validate_config.py`
+4. **Config test**: Validate configuration manually
 
 **Deep Dive**: [Configuration Errors](#2-configuration-errors)
 </details>
@@ -168,13 +168,8 @@ python -c "import discord; print(f'Discord.py version: {discord.__version__}')"
 **Paste your error message here and get instant solutions:**
 
 ```bash
-# Use the error decoder tool
-python scripts/error_decoder.py "your error message here"
-
-# Examples:
-python scripts/error_decoder.py "DISCORD_BOT_TOKEN not set"
-python scripts/error_decoder.py "ModuleNotFoundError: No module named 'discord'"
-python scripts/error_decoder.py "Command not allowed in current state"
+# Use manual error diagnosis for now
+# Check the error database below for common solutions
 ```
 
 ### Step 4: Run Health Check
@@ -182,14 +177,11 @@ python scripts/error_decoder.py "Command not allowed in current state"
 For comprehensive diagnosis:
 
 ```bash
-# Full system health check
-python scripts/health_check.py
-
-# Quick health check
-python scripts/health_check.py --quick
-
-# With performance profiling
-python scripts/health_check.py --profile
+# Run manual health checks:
+# 1. Check Python version: python --version
+# 2. Check dependencies: pip list
+# 3. Check Discord connection: echo $DISCORD_BOT_TOKEN
+# 4. Check project structure: ls -la .orch-state/
 ```
 
 ## 🔍 Searchable Error Database

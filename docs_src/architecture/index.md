@@ -14,7 +14,7 @@ The system implements a sophisticated dual state machine architecture with ephem
     
     High-level architecture and component relationships
     
-    [:octicons-arrow-right-24: Overview](overview.md)
+    [:octicons-arrow-right-24: Overview](system-overview.md)
 
 -   :material-brain:{ .lg .middle } **Context Management**
 
@@ -149,7 +149,7 @@ System optimization strategies:
 
 For detailed technical information:
 
-- **[Overview](overview.md)** - Complete system architecture
+- **[Overview](system-overview.md)** - Complete system architecture
 - **[Context Management](context-management-system.md)** - Agent communication system
 - **[Parallel TDD](parallel-tdd-architecture.md)** - Advanced TDD implementation
 - **[Advanced Topics](../advanced/architecture-detailed.md)** - Deep technical dive

@@ -407,10 +407,10 @@ docs = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/agent-workflow/agent-workflow"
+Homepage = "https://github.com/jmontp/agent-workflow"
 Documentation = "https://agent-workflow.readthedocs.io"
-Repository = "https://github.com/agent-workflow/agent-workflow"
-"Bug Reports" = "https://github.com/agent-workflow/agent-workflow/issues"
+Repository = "https://github.com/jmontp/agent-workflow"
+"Bug Reports" = "https://github.com/jmontp/agent-workflow/issues"
 
 [project.scripts]
 agent-orch = "agent_workflow.cli.main:main"
