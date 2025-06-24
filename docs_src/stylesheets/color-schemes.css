@@ -386,10 +386,12 @@
   font-weight: 700 !important;
   border-left: 4px solid var(--md-accent-fg-color) !important;
   padding: 0.8rem 1rem !important;
-  margin: 2rem -1rem 1rem -1rem !important;
-  background: var(--gradient-neutral) !important;
-  border-radius: 0 8px 8px 0 !important;
-  box-shadow: var(--shadow-sm) !important;
+  margin: 2rem 0 1rem 0 !important;
+  background: transparent !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  position: relative !important;
+  padding-left: 1rem !important;
 }
 
 .md-typeset h3 {
