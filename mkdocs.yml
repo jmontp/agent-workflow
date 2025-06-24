@@ -124,10 +124,6 @@ extra:
     Scrum: scrum
     Discord: discord
     API: api
-  alternate:
-    - name: English
-      link: ./
-      lang: en
 
 extra_css:
   - stylesheets/extra.css

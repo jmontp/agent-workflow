@@ -1,0 +1,349 @@
+/* ==========================================================================
+   AI Agent TDD-Scrum Workflow - Professional Color Scheme Options
+   Multiple themes for user selection
+   ========================================================================== */
+
+/* ========================================================================== 
+   OPTION 1: DEVELOPER DARK - VSCode/GitHub inspired
+   Professional dark theme with excellent contrast
+   ========================================================================== */
+.theme-developer-dark {
+  /* Primary Colors - Deep indigo with purple accents */
+  --md-primary-fg-color: #1e1e1e !important;
+  --md-primary-fg-color--light: #2d2d30 !important;
+  --md-primary-fg-color--dark: #191919 !important;
+  
+  /* Accent Colors - Electric blue for actions */
+  --md-accent-fg-color: #007acc !important;
+  --md-accent-fg-color--transparent: #007acc66 !important;
+  
+  /* Background and Text */
+  --md-default-bg-color: #1e1e1e !important;
+  --md-default-fg-color: #d4d4d4 !important;
+  --md-default-fg-color--light: #808080 !important;
+  --md-default-fg-color--lighter: #666666 !important;
+  --md-default-fg-color--lightest: #3e3e42 !important;
+  
+  /* Code Blocks */
+  --md-code-bg-color: #2d2d30 !important;
+  --md-code-fg-color: #ce9178 !important;
+  --md-code-hl-color: #264f78 !important;
+  
+  /* Status Colors */
+  --color-success: #4ec9b0 !important;
+  --color-warning: #ce9178 !important;
+  --color-error: #f48771 !important;
+  --color-info: #569cd6 !important;
+}
+
+/* ========================================================================== 
+   OPTION 2: ENTERPRISE BLUE - Corporate Professional
+   Clean, trustworthy, business-focused
+   ========================================================================== */
+.theme-enterprise-blue {
+  /* Primary Colors - Navy and steel blue */
+  --md-primary-fg-color: #003366 !important;
+  --md-primary-fg-color--light: #004080 !important;
+  --md-primary-fg-color--dark: #002244 !important;
+  
+  /* Accent Colors - Teal for contrast */
+  --md-accent-fg-color: #008B8B !important;
+  --md-accent-fg-color--transparent: #008B8B66 !important;
+  
+  /* Background and Text */
+  --md-default-bg-color: #f5f7fa !important;
+  --md-default-fg-color: #2c3e50 !important;
+  --md-default-fg-color--light: #546e7a !important;
+  --md-default-fg-color--lighter: #78909c !important;
+  --md-default-fg-color--lightest: #cfd8dc !important;
+  
+  /* Code Blocks */
+  --md-code-bg-color: #eceff1 !important;
+  --md-code-fg-color: #37474f !important;
+  --md-code-hl-color: #b0bec5 !important;
+  
+  /* Status Colors */
+  --color-success: #00897b !important;
+  --color-warning: #fb8c00 !important;
+  --color-error: #e53935 !important;
+  --color-info: #1976d2 !important;
+}
+
+/* ========================================================================== 
+   OPTION 3: NEUTRAL PROFESSIONAL - Minimal and Clean
+   Grayscale with subtle color accents
+   ========================================================================== */
+.theme-neutral-professional {
+  /* Primary Colors - Charcoal gray */
+  --md-primary-fg-color: #37474f !important;
+  --md-primary-fg-color--light: #455a64 !important;
+  --md-primary-fg-color--dark: #263238 !important;
+  
+  /* Accent Colors - Subtle purple */
+  --md-accent-fg-color: #7c4dff !important;
+  --md-accent-fg-color--transparent: #7c4dff66 !important;
+  
+  /* Background and Text */
+  --md-default-bg-color: #fafafa !important;
+  --md-default-fg-color: #212121 !important;
+  --md-default-fg-color--light: #616161 !important;
+  --md-default-fg-color--lighter: #9e9e9e !important;
+  --md-default-fg-color--lightest: #e0e0e0 !important;
+  
+  /* Code Blocks */
+  --md-code-bg-color: #f5f5f5 !important;
+  --md-code-fg-color: #424242 !important;
+  --md-code-hl-color: #eeeeee !important;
+  
+  /* Status Colors */
+  --color-success: #00c853 !important;
+  --color-warning: #ffab00 !important;
+  --color-error: #ff5252 !important;
+  --color-info: #448aff !important;
+}
+
+/* ========================================================================== 
+   OPTION 4: MODERN GRADIENT - Contemporary Tech
+   Subtle gradients with modern aesthetics
+   ========================================================================== */
+.theme-modern-gradient {
+  /* Primary Colors - Deep purple to blue gradient */
+  --md-primary-fg-color: #5e35b1 !important;
+  --md-primary-fg-color--light: #7e57c2 !important;
+  --md-primary-fg-color--dark: #4527a0 !important;
+  
+  /* Accent Colors - Coral pink */
+  --md-accent-fg-color: #ff6b6b !important;
+  --md-accent-fg-color--transparent: #ff6b6b66 !important;
+  
+  /* Background and Text */
+  --md-default-bg-color: #ffffff !important;
+  --md-default-fg-color: #2e3440 !important;
+  --md-default-fg-color--light: #4c566a !important;
+  --md-default-fg-color--lighter: #d8dee9 !important;
+  --md-default-fg-color--lightest: #eceff4 !important;
+  
+  /* Code Blocks */
+  --md-code-bg-color: #f8f9fb !important;
+  --md-code-fg-color: #3b4252 !important;
+  --md-code-hl-color: #e5e9f0 !important;
+  
+  /* Status Colors */
+  --color-success: #26d0ce !important;
+  --color-warning: #ffa726 !important;
+  --color-error: #ef5350 !important;
+  --color-info: #42a5f5 !important;
+  
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  --gradient-accent: linear-gradient(135deg, #f093fb 0%, #f5576c 100%) !important;
+}
+
+/* ========================================================================== 
+   OPTION 5: OCEAN DEPTHS - Marine Professional
+   Deep sea blues and aqua tones
+   ========================================================================== */
+.theme-ocean-depths {
+  /* Primary Colors - Deep ocean blue */
+  --md-primary-fg-color: #0d47a1 !important;
+  --md-primary-fg-color--light: #1565c0 !important;
+  --md-primary-fg-color--dark: #0a3d91 !important;
+  
+  /* Accent Colors - Aqua marine */
+  --md-accent-fg-color: #00bcd4 !important;
+  --md-accent-fg-color--transparent: #00bcd466 !important;
+  
+  /* Background and Text */
+  --md-default-bg-color: #f8fbff !important;
+  --md-default-fg-color: #1a237e !important;
+  --md-default-fg-color--light: #3949ab !important;
+  --md-default-fg-color--lighter: #7986cb !important;
+  --md-default-fg-color--lightest: #c5cae9 !important;
+  
+  /* Code Blocks */
+  --md-code-bg-color: #e8eaf6 !important;
+  --md-code-fg-color: #283593 !important;
+  --md-code-hl-color: #c5cae9 !important;
+  
+  /* Status Colors */
+  --color-success: #00e676 !important;
+  --color-warning: #ff9100 !important;
+  --color-error: #ff1744 !important;
+  --color-info: #00b0ff !important;
+}
+
+/* ========================================================================== 
+   OPTION 6: FOREST PROFESSIONAL - Natural Green
+   Calming greens with earth tones
+   ========================================================================== */
+.theme-forest-professional {
+  /* Primary Colors - Forest green */
+  --md-primary-fg-color: #1b5e20 !important;
+  --md-primary-fg-color--light: #2e7d32 !important;
+  --md-primary-fg-color--dark: #0d3e10 !important;
+  
+  /* Accent Colors - Amber highlights */
+  --md-accent-fg-color: #ff8f00 !important;
+  --md-accent-fg-color--transparent: #ff8f0066 !important;
+  
+  /* Background and Text */
+  --md-default-bg-color: #fafff5 !important;
+  --md-default-fg-color: #1b5e20 !important;
+  --md-default-fg-color--light: #388e3c !important;
+  --md-default-fg-color--lighter: #689f38 !important;
+  --md-default-fg-color--lightest: #c5e1a5 !important;
+  
+  /* Code Blocks */
+  --md-code-bg-color: #f1f8e9 !important;
+  --md-code-fg-color: #33691e !important;
+  --md-code-hl-color: #dcedc8 !important;
+  
+  /* Status Colors */
+  --color-success: #43a047 !important;
+  --color-warning: #ffa000 !important;
+  --color-error: #e53935 !important;
+  --color-info: #039be5 !important;
+}
+
+/* ========================================================================== 
+   OPTION 7: SUNSET WARMTH - Warm Professional
+   Warm oranges and purples
+   ========================================================================== */
+.theme-sunset-warmth {
+  /* Primary Colors - Deep orange */
+  --md-primary-fg-color: #e65100 !important;
+  --md-primary-fg-color--light: #ff6d00 !important;
+  --md-primary-fg-color--dark: #bf360c !important;
+  
+  /* Accent Colors - Purple sunset */
+  --md-accent-fg-color: #8e24aa !important;
+  --md-accent-fg-color--transparent: #8e24aa66 !important;
+  
+  /* Background and Text */
+  --md-default-bg-color: #fffbf5 !important;
+  --md-default-fg-color: #3e2723 !important;
+  --md-default-fg-color--light: #5d4037 !important;
+  --md-default-fg-color--lighter: #8d6e63 !important;
+  --md-default-fg-color--lightest: #d7ccc8 !important;
+  
+  /* Code Blocks */
+  --md-code-bg-color: #fbe9e7 !important;
+  --md-code-fg-color: #4e342e !important;
+  --md-code-hl-color: #ffccbc !important;
+  
+  /* Status Colors */
+  --color-success: #689f38 !important;
+  --color-warning: #ffc107 !important;
+  --color-error: #d32f2f !important;
+  --color-info: #0288d1 !important;
+}
+
+/* ========================================================================== 
+   OPTION 8: MONOCHROME ELEGANT - Pure Black/White
+   Ultra-minimalist with sharp contrasts
+   ========================================================================== */
+.theme-monochrome-elegant {
+  /* Primary Colors - Pure black */
+  --md-primary-fg-color: #000000 !important;
+  --md-primary-fg-color--light: #212121 !important;
+  --md-primary-fg-color--dark: #000000 !important;
+  
+  /* Accent Colors - Single color accent */
+  --md-accent-fg-color: #ff4081 !important;
+  --md-accent-fg-color--transparent: #ff408166 !important;
+  
+  /* Background and Text */
+  --md-default-bg-color: #ffffff !important;
+  --md-default-fg-color: #000000 !important;
+  --md-default-fg-color--light: #424242 !important;
+  --md-default-fg-color--lighter: #757575 !important;
+  --md-default-fg-color--lightest: #bdbdbd !important;
+  
+  /* Code Blocks */
+  --md-code-bg-color: #f5f5f5 !important;
+  --md-code-fg-color: #212121 !important;
+  --md-code-hl-color: #e0e0e0 !important;
+  
+  /* Status Colors - Grayscale with single accent */
+  --color-success: #000000 !important;
+  --color-warning: #616161 !important;
+  --color-error: #ff4081 !important;
+  --color-info: #424242 !important;
+}
+
+/* ========================================================================== 
+   OPTION 9: TERMINAL GREEN - Classic Developer
+   Classic terminal aesthetic
+   ========================================================================== */
+.theme-terminal-green {
+  /* Primary Colors - Terminal black */
+  --md-primary-fg-color: #0c0c0c !important;
+  --md-primary-fg-color--light: #1a1a1a !important;
+  --md-primary-fg-color--dark: #000000 !important;
+  
+  /* Accent Colors - Phosphor green */
+  --md-accent-fg-color: #33ff00 !important;
+  --md-accent-fg-color--transparent: #33ff0066 !important;
+  
+  /* Background and Text */
+  --md-default-bg-color: #0c0c0c !important;
+  --md-default-fg-color: #33ff00 !important;
+  --md-default-fg-color--light: #66ff33 !important;
+  --md-default-fg-color--lighter: #99ff66 !important;
+  --md-default-fg-color--lightest: #1a1a1a !important;
+  
+  /* Code Blocks */
+  --md-code-bg-color: #1a1a1a !important;
+  --md-code-fg-color: #33ff00 !important;
+  --md-code-hl-color: #003300 !important;
+  
+  /* Status Colors */
+  --color-success: #00ff00 !important;
+  --color-warning: #ffff00 !important;
+  --color-error: #ff0000 !important;
+  --color-info: #00ffff !important;
+}
+
+/* ========================================================================== 
+   OPTION 10: MATERIAL DESIGN 3 - Google's Latest
+   Modern Material You inspired
+   ========================================================================== */
+.theme-material-design-3 {
+  /* Primary Colors - Dynamic blue */
+  --md-primary-fg-color: #0061a4 !important;
+  --md-primary-fg-color--light: #006495 !important;
+  --md-primary-fg-color--dark: #00497d !important;
+  
+  /* Accent Colors - Complementary orange */
+  --md-accent-fg-color: #9a4521 !important;
+  --md-accent-fg-color--transparent: #9a452166 !important;
+  
+  /* Background and Text */
+  --md-default-bg-color: #fdfcff !important;
+  --md-default-fg-color: #1a1c1e !important;
+  --md-default-fg-color--light: #43474e !important;
+  --md-default-fg-color--lighter: #73777f !important;
+  --md-default-fg-color--lightest: #e2e2e5 !important;
+  
+  /* Code Blocks */
+  --md-code-bg-color: #e3f2ff !important;
+  --md-code-fg-color: #001d36 !important;
+  --md-code-hl-color: #c1e8ff !important;
+  
+  /* Status Colors */
+  --color-success: #006e26 !important;
+  --color-warning: #7a5900 !important;
+  --color-error: #ba1a1a !important;
+  --color-info: #0061a4 !important;
+}
+
+/* Apply common styling improvements to all themes */
+[class*="theme-"] {
+  /* Enhanced transitions */
+  --theme-transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Professional shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
+}
