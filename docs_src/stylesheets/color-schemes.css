@@ -881,28 +881,53 @@
   font-style: italic !important;
 }
 
-/* Fix faint text in light mode - increase contrast */
+/* Fix faint text in light mode - increase contrast for all light text */
 :root {
-  --md-default-fg-color--light: #334155 !important; /* Darker in light mode */
+  --md-default-fg-color--light: #334155 !important; /* Much darker in light mode */
+  --md-default-fg-color--lighter: #475569 !important; /* Darker for light mode */
 }
 
 [data-md-color-scheme="slate"] {
   --md-default-fg-color--light: #94a3b8 !important; /* Keep lighter in dark mode */
+  --md-default-fg-color--lighter: #64748b !important; /* Standard for dark mode */
 }
 
-/* Fix for pipe-separated descriptive text that appears after h2 */
-.md-typeset h2 + h3,
-.md-typeset h1 + h3 {
+/* Fix ALL h3 elements to have better contrast - especially descriptive text */
+.md-typeset h3 {
   color: var(--md-default-fg-color) !important; /* Use full color, not light */
   font-weight: 500 !important;
-  font-size: 1.1rem !important;
-  opacity: 0.9 !important;
-  margin-top: -0.5rem !important;
-  margin-bottom: 1.5rem !important;
+  font-size: 1.15rem !important;
+  opacity: 1 !important; /* Full opacity */
   border: none !important;
   padding: 0 !important;
+  letter-spacing: 0.3px !important;
+  margin-top: 0.5rem !important;
+  margin-bottom: 1rem !important;
+}
+
+/* Restore the previous h3 styling we had */
+.md-typeset h3 {
+  color: var(--md-primary-fg-color--dark) !important;
+  font-weight: 600 !important;
+  border-bottom: 2px solid var(--md-accent-fg-color) !important;
+  padding-bottom: 0.5rem !important;
+  display: inline-block !important;
+  margin-top: 1.5rem !important;
+  margin-bottom: 0.8rem !important;
+}
+
+/* But for h3 elements that come right after h2 (descriptive text), make them darker */
+.md-typeset h2 + h3,
+.md-typeset hr + h3 {
+  color: var(--md-default-fg-color) !important; /* Full black/dark color */
+  font-weight: 400 !important;
+  font-size: 1.05rem !important;
+  border: none !important;
   display: block !important;
-  letter-spacing: 0.5px !important;
+  margin-top: -0.8rem !important;
+  margin-bottom: 1.5rem !important;
+  padding: 0 !important;
+  opacity: 0.9 !important;
 }
 
 /* Professional Focus States for Accessibility - Universal */
