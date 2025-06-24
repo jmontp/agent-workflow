@@ -881,6 +881,30 @@
   font-style: italic !important;
 }
 
+/* Fix faint text in light mode - increase contrast */
+:root {
+  --md-default-fg-color--light: #334155 !important; /* Darker in light mode */
+}
+
+[data-md-color-scheme="slate"] {
+  --md-default-fg-color--light: #94a3b8 !important; /* Keep lighter in dark mode */
+}
+
+/* Fix for pipe-separated descriptive text that appears after h2 */
+.md-typeset h2 + h3,
+.md-typeset h1 + h3 {
+  color: var(--md-default-fg-color) !important; /* Use full color, not light */
+  font-weight: 500 !important;
+  font-size: 1.1rem !important;
+  opacity: 0.9 !important;
+  margin-top: -0.5rem !important;
+  margin-bottom: 1.5rem !important;
+  border: none !important;
+  padding: 0 !important;
+  display: block !important;
+  letter-spacing: 0.5px !important;
+}
+
 /* Professional Focus States for Accessibility - Universal */
 .md-typeset a:focus,
 .md-button:focus,
