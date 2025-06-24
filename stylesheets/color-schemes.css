@@ -17,8 +17,8 @@
   /* Background and Text */
   --md-default-bg-color: #ffffff !important;
   --md-default-fg-color: #0f172a !important;
-  --md-default-fg-color--light: #475569 !important;
-  --md-default-fg-color--lighter: #64748b !important;
+  --md-default-fg-color--light: #1e293b !important;
+  --md-default-fg-color--lighter: #334155 !important;
   --md-default-fg-color--lightest: #e2e8f0 !important;
   
   /* Code and Syntax Highlighting */
@@ -35,7 +35,7 @@
   --md-footer-bg-color: #f1f5f9 !important;
   --md-footer-bg-color--dark: #e2e8f0 !important;
   --md-nav-bg-color: #ffffff !important;
-  --md-nav-fg-color: #475569 !important;
+  --md-nav-fg-color: #1e293b !important;
   
   /* Status and State Colors */
   --color-success: #10b981 !important;
@@ -120,6 +120,62 @@
   /* Borders */
   --md-typeset-border-color: #3e3e42 !important;
   --md-typeset-border-color--light: #2d2d30 !important;
+  
+  /* Comprehensive Material Theme Overrides for Dark Mode */
+  --md-hue: 210 !important;
+  --md-text-color: #d4d4d4 !important;
+  --md-text-color--light: #808080 !important;
+  --md-text-color--lighter: #666666 !important;
+  --md-text-color--lightest: #3e3e42 !important;
+  
+  /* Card and Content Backgrounds */
+  --md-default-bg-color--light: #2d2d30 !important;
+  --md-default-bg-color--lighter: #252526 !important;
+  --md-default-bg-color--lightest: #3e3e42 !important;
+  
+  /* Form Elements */
+  --md-form-bg-color: #2d2d30 !important;
+  --md-form-fg-color: #d4d4d4 !important;
+  --md-form-border-color: #3e3e42 !important;
+  --md-form-border-color--focus: #007acc !important;
+  
+  /* Sidebar and Navigation */
+  --md-sidebar-bg-color: #1e1e1e !important;
+  --md-sidebar-fg-color: #808080 !important;
+  --md-sidebar-border-color: #3e3e42 !important;
+  
+  /* Header Override */
+  --md-header-bg-color: #1e1e1e !important;
+  --md-header-fg-color: #d4d4d4 !important;
+  
+  /* Tab Colors */
+  --md-tabs-bg-color: #1e1e1e !important;
+  --md-tabs-fg-color: rgba(212, 212, 212, 0.7) !important;
+  --md-tabs-fg-color--active: #d4d4d4 !important;
+}
+
+/* Dark mode specific tab overrides */
+[data-md-color-scheme="slate"] .md-tabs {
+  background: var(--md-primary-fg-color) !important;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5) !important;
+}
+
+[data-md-color-scheme="slate"] .md-tabs__link {
+  color: rgba(212, 212, 212, 0.7) !important;
+}
+
+[data-md-color-scheme="slate"] .md-tabs__link:hover {
+  color: #d4d4d4 !important;
+  background: rgba(212, 212, 212, 0.05) !important;
+}
+
+[data-md-color-scheme="slate"] .md-tabs__link--active {
+  color: #d4d4d4 !important;
+}
+
+[data-md-color-scheme="slate"] .md-tabs__link--active::after {
+  background: var(--md-accent-fg-color) !important;
+  box-shadow: 0 -2px 4px rgba(0, 122, 204, 0.3) !important;
 }
 
 /* Force override Material theme defaults for light mode */
@@ -128,6 +184,29 @@
   --md-accent-fg-color: #f59e0b !important;
   --md-default-bg-color: #ffffff !important;
   --md-default-fg-color: #0f172a !important;
+  
+  /* Additional Material overrides for default scheme */
+  --md-text-color: #0f172a !important;
+  --md-text-color--light: #475569 !important;
+  --md-text-color--lighter: #64748b !important;
+  --md-text-color--lightest: #e2e8f0 !important;
+  
+  /* Comprehensive Material component overrides */
+  --md-form-bg-color: #ffffff !important;
+  --md-form-fg-color: #0f172a !important;
+  --md-form-border-color: #e2e8f0 !important;
+  --md-form-border-color--focus: #f59e0b !important;
+  
+  --md-sidebar-bg-color: #ffffff !important;
+  --md-sidebar-fg-color: #475569 !important;
+  --md-sidebar-border-color: #e2e8f0 !important;
+  
+  --md-header-bg-color: #1e293b !important;
+  --md-header-fg-color: #ffffff !important;
+  
+  --md-tabs-bg-color: #1e293b !important;
+  --md-tabs-fg-color: rgba(255, 255, 255, 0.7) !important;
+  --md-tabs-fg-color--active: #ffffff !important;
 }
 
 /* Modern Header with Gradient - Works in both light and dark */
@@ -176,26 +255,66 @@
 
 /* Modern Tabs with Enhanced Styling - Universal */
 .md-tabs {
-  background: var(--gradient-neutral) !important;
-  border-bottom: 1px solid var(--md-typeset-border-color) !important;
-  backdrop-filter: blur(10px) !important;
+  background: var(--md-primary-fg-color) !important;
+  border-bottom: none !important;
+  box-shadow: var(--shadow-md) !important;
 }
 
 .md-tabs__link {
-  color: var(--md-default-fg-color--light) !important;
+  color: rgba(255, 255, 255, 0.7) !important;
   font-weight: 500 !important;
   transition: var(--theme-transition) !important;
   padding: 0.8rem 1.2rem !important;
-  border-radius: 6px 6px 0 0 !important;
+  border-radius: 0 !important;
+  position: relative !important;
+  text-transform: none !important;
+  opacity: 0.8 !important;
 }
 
-.md-tabs__link--active,
 .md-tabs__link:hover {
-  color: var(--md-accent-fg-color) !important;
+  color: #ffffff !important;
+  opacity: 1 !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+
+.md-tabs__link--active {
+  color: #ffffff !important;
   font-weight: 600 !important;
-  background: var(--md-default-bg-color) !important;
-  border-bottom: 3px solid var(--md-accent-fg-color) !important;
-  box-shadow: var(--shadow-sm) !important;
+  background: transparent !important;
+  opacity: 1 !important;
+}
+
+.md-tabs__link--active::after {
+  content: '' !important;
+  position: absolute !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: 3px !important;
+  background: var(--md-accent-fg-color) !important;
+  border-radius: 3px 3px 0 0 !important;
+  box-shadow: 0 -2px 4px rgba(245, 158, 11, 0.3) !important;
+}
+
+/* Tab container adjustments for better integration */
+.md-tabs__list {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.md-tabs__item {
+  margin: 0 !important;
+  height: 100% !important;
+}
+
+/* Content area below tabs */
+.md-content {
+  margin-top: 0 !important;
+}
+
+/* Ensure smooth transition between tabs and content */
+.md-tabs + .md-content .md-typeset {
+  padding-top: 1.5rem !important;
 }
 
 /* Enhanced Navigation - Universal */
@@ -402,6 +521,8 @@
   display: inline-block !important;
   margin-top: 1.5rem !important;
   margin-bottom: 0.8rem !important;
+  font-size: 1.15rem !important;
+  opacity: 1 !important;
 }
 
 .md-typeset h4,
@@ -413,7 +534,8 @@
   margin-bottom: 0.6rem !important;
 }
 
-/* Enhanced Admonitions with Color Coding - Universal */
+
+/* Enhanced Admonitions with Color Coding - Consolidated and Optimized */
 .md-typeset .admonition {
   border-radius: 12px !important;
   overflow: hidden !important;
@@ -423,11 +545,59 @@
   backdrop-filter: blur(5px) !important;
 }
 
-.md-typeset .admonition-title {
+.md-typeset .admonition.note {
+  background: linear-gradient(135deg, #dbeafe 0%, #eff6ff 100%) !important;
+  border-left: 4px solid var(--color-info) !important;
+}
+
+.md-typeset .admonition.note .admonition-title {
+  background: var(--color-info) !important;
+  color: #ffffff !important;
   font-weight: 700 !important;
   padding: 1rem 1.2rem !important;
   margin: 0 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+}
+
+.md-typeset .admonition.tip {
+  background: linear-gradient(135deg, #dcfce7 0%, #f0fdf4 100%) !important;
+  border-left: 4px solid var(--color-success) !important;
+}
+
+.md-typeset .admonition.tip .admonition-title {
+  background: var(--gradient-success) !important;
   color: #ffffff !important;
+  font-weight: 700 !important;
+  padding: 1rem 1.2rem !important;
+  margin: 0 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+}
+
+.md-typeset .admonition.warning {
+  background: linear-gradient(135deg, #fef3c7 0%, #fffbeb 100%) !important;
+  border-left: 4px solid var(--color-warning) !important;
+}
+
+.md-typeset .admonition.warning .admonition-title {
+  background: var(--color-warning) !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  padding: 1rem 1.2rem !important;
+  margin: 0 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+}
+
+.md-typeset .admonition.danger {
+  background: linear-gradient(135deg, #fecaca 0%, #fef2f2 100%) !important;
+  border-left: 4px solid var(--color-error) !important;
+}
+
+.md-typeset .admonition.danger .admonition-title {
+  background: var(--gradient-error) !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  padding: 1rem 1.2rem !important;
+  margin: 0 !important;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important;
 }
 
@@ -438,71 +608,6 @@
 
 .md-typeset .admonition > :not(.admonition-title) {
   padding: 1rem 1.2rem !important;
-}
-
-.md-typeset .admonition.note {
-  background: var(--gradient-neutral) !important;
-  border-left: 4px solid var(--color-info) !important;
-}
-
-.md-typeset .admonition.note .admonition-title {
-  background: var(--color-info) !important;
-}
-
-.md-typeset .admonition.tip {
-  background: var(--gradient-neutral) !important;
-  border-left: 4px solid var(--color-success) !important;
-}
-
-.md-typeset .admonition.tip .admonition-title {
-  background: var(--gradient-success) !important;
-}
-
-.md-typeset .admonition.warning {
-  background: var(--gradient-neutral) !important;
-  border-left: 4px solid var(--color-warning) !important;
-}
-
-.md-typeset .admonition.warning .admonition-title {
-  background: var(--color-warning) !important;
-}
-
-.md-typeset .admonition.danger {
-  background: var(--gradient-neutral) !important;
-  border-left: 4px solid var(--color-error) !important;
-}
-
-.md-typeset .admonition.danger .admonition-title {
-  background: var(--gradient-error) !important;
-}
-
-/* Enhanced Admonitions with Color Coding */
-.md-typeset .admonition {
-  border-radius: 12px !important;
-  overflow: hidden !important;
-  box-shadow: var(--shadow-md) !important;
-  border: none !important;
-  margin: 1.5rem 0 !important;
-}
-
-.md-typeset .admonition.note {
-  background: linear-gradient(135deg, #dbeafe 0%, #eff6ff 100%) !important;
-  border-left: 4px solid var(--color-info) !important;
-}
-
-.md-typeset .admonition.tip {
-  background: linear-gradient(135deg, #dcfce7 0%, #f0fdf4 100%) !important;
-  border-left: 4px solid var(--color-success) !important;
-}
-
-.md-typeset .admonition.warning {
-  background: linear-gradient(135deg, #fef3c7 0%, #fffbeb 100%) !important;
-  border-left: 4px solid var(--color-warning) !important;
-}
-
-.md-typeset .admonition.danger {
-  background: linear-gradient(135deg, #fecaca 0%, #fef2f2 100%) !important;
-  border-left: 4px solid var(--color-error) !important;
 }
 
 /* Enhanced Code Styling - Universal */
@@ -603,40 +708,109 @@
   border-bottom: none !important;
 }
 
-/* Clean navigation styling */
-.md-nav__item .md-nav__link {
-  color: var(--md-default-fg-color--light);
-  font-weight: 400;
-}
-
-.md-nav__item .md-nav__link:hover,
-.md-nav__item .md-nav__link--active {
-  color: var(--md-default-fg-color);
-  font-weight: 500;
-}
-
-/* Footer styling */
-.md-footer {
-  background: var(--md-footer-bg-color);
-  color: var(--md-default-fg-color--light);
-  border-top: 1px solid var(--md-default-fg-color--lightest);
-}
-
-/* Search styling */
-.md-search__input {
-  background: var(--md-default-bg-color);
-  border: 1px solid var(--md-default-fg-color--lightest);
-  border-radius: 6px;
-}
-
-.md-search__input:focus {
-  border-color: var(--md-accent-fg-color);
-  box-shadow: 0 0 0 2px var(--md-accent-fg-color--transparent);
-}
 
 /* Mermaid diagram styling */
 .mermaid {
   background: transparent;
+  border-radius: 8px !important;
+  padding: 1rem !important;
+  margin: 1.5rem 0 !important;
+}
+
+/* Enhanced Form Elements for Theme Consistency */
+.md-typeset input[type="text"],
+.md-typeset input[type="email"],
+.md-typeset input[type="search"],
+.md-typeset textarea,
+.md-typeset select {
+  background: var(--md-default-bg-color) !important;
+  border: 2px solid var(--md-typeset-border-color) !important;
+  border-radius: 8px !important;
+  color: var(--md-default-fg-color) !important;
+  padding: 0.8rem 1rem !important;
+  font-size: 0.9rem !important;
+  transition: var(--theme-transition) !important;
+  box-shadow: var(--shadow-sm) !important;
+}
+
+.md-typeset input[type="text"]:focus,
+.md-typeset input[type="email"]:focus,
+.md-typeset input[type="search"]:focus,
+.md-typeset textarea:focus,
+.md-typeset select:focus {
+  border-color: var(--md-accent-fg-color) !important;
+  box-shadow: 0 0 0 3px var(--md-accent-fg-color--transparent) !important;
+  outline: none !important;
+}
+
+/* Enhanced Badges and Labels */
+.md-typeset .badge,
+.md-typeset .label {
+  background: var(--gradient-accent) !important;
+  color: #ffffff !important;
+  padding: 0.3rem 0.8rem !important;
+  border-radius: 16px !important;
+  font-size: 0.8rem !important;
+  font-weight: 600 !important;
+  display: inline-block !important;
+  margin: 0 0.2rem !important;
+  box-shadow: var(--shadow-sm) !important;
+}
+
+/* Enhanced Progress Bars */
+.md-typeset progress {
+  appearance: none !important;
+  border: none !important;
+  border-radius: 8px !important;
+  background: var(--md-typeset-border-color--light) !important;
+  height: 8px !important;
+  overflow: hidden !important;
+  box-shadow: var(--shadow-sm) !important;
+}
+
+.md-typeset progress::-webkit-progress-bar {
+  background: var(--md-typeset-border-color--light) !important;
+  border-radius: 8px !important;
+}
+
+.md-typeset progress::-webkit-progress-value {
+  background: var(--gradient-accent) !important;
+  border-radius: 8px !important;
+  transition: var(--theme-transition) !important;
+}
+
+.md-typeset progress::-moz-progress-bar {
+  background: var(--gradient-accent) !important;
+  border-radius: 8px !important;
+}
+
+/* Enhanced Menu and Dropdown Styling */
+.md-typeset .dropdown,
+.md-typeset .menu {
+  background: var(--md-default-bg-color) !important;
+  border: 1px solid var(--md-typeset-border-color) !important;
+  border-radius: 12px !important;
+  box-shadow: var(--shadow-lg) !important;
+  overflow: hidden !important;
+}
+
+.md-typeset .dropdown-item,
+.md-typeset .menu-item {
+  color: var(--md-default-fg-color) !important;
+  padding: 0.8rem 1rem !important;
+  transition: var(--theme-transition) !important;
+  border-bottom: 1px solid var(--md-typeset-border-color--light) !important;
+}
+
+.md-typeset .dropdown-item:hover,
+.md-typeset .menu-item:hover {
+  background: var(--gradient-neutral) !important;
+  color: var(--md-primary-fg-color) !important;
+}
+
+.md-typeset .dropdown-item:last-child,
+.md-typeset .menu-item:last-child {
+  border-bottom: none !important;
 }
 
 /* Smooth transitions for all elements */
@@ -691,8 +865,9 @@
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
 }
 
-/* Enhanced Status Badges */
+/* Enhanced Status Badges - Consolidated Universal Styling */
 .status-badge {
+  display: inline-block !important;
   background: var(--gradient-accent) !important;
   color: #ffffff !important;
   border-radius: 20px !important;
@@ -703,18 +878,25 @@
   letter-spacing: 1px !important;
   box-shadow: var(--shadow-sm) !important;
   border: none !important;
+  margin: 0 0.3rem !important;
+  transition: var(--theme-transition) !important;
+}
+
+.status-badge:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: var(--shadow-md) !important;
 }
 
 .status-badge.success {
-  background: var(--gradient-accent) !important;
+  background: var(--gradient-success) !important;
 }
 
 .status-badge.warning {
-  background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%) !important;
+  background: var(--color-warning) !important;
 }
 
 .status-badge.error {
-  background: linear-gradient(135deg, #ef4444 0%, #f87171 100%) !important;
+  background: var(--gradient-error) !important;
 }
 
 .status-badge.info {
@@ -830,39 +1012,6 @@
   color: var(--md-default-fg-color--light) !important;
 }
 
-/* Enhanced Status Badges - Universal */
-.status-badge {
-  display: inline-block !important;
-  padding: 0.4rem 1rem !important;
-  border-radius: 20px !important;
-  font-weight: 700 !important;
-  font-size: 0.75rem !important;
-  text-transform: uppercase !important;
-  letter-spacing: 1px !important;
-  box-shadow: var(--shadow-sm) !important;
-  border: none !important;
-  margin: 0 0.3rem !important;
-}
-
-.status-badge.success {
-  background: var(--gradient-success) !important;
-  color: #ffffff !important;
-}
-
-.status-badge.warning {
-  background: var(--color-warning) !important;
-  color: #ffffff !important;
-}
-
-.status-badge.error {
-  background: var(--gradient-error) !important;
-  color: #ffffff !important;
-}
-
-.status-badge.info {
-  background: var(--gradient-primary) !important;
-  color: #ffffff !important;
-}
 
 /* Enhanced Blockquotes - Universal */
 .md-typeset blockquote {
@@ -883,8 +1032,9 @@
 
 /* Fix faint text in light mode - increase contrast for all light text */
 :root {
-  --md-default-fg-color--light: #334155 !important; /* Much darker in light mode */
-  --md-default-fg-color--lighter: #475569 !important; /* Darker for light mode */
+  --md-default-fg-color--light: #1e293b !important; /* Very dark for excellent contrast */
+  --md-default-fg-color--lighter: #334155 !important; /* Much darker for light mode */
+  --md-default-fg-color--lightest: #64748b !important; /* Improved contrast for subtle elements */
 }
 
 [data-md-color-scheme="slate"] {
@@ -892,42 +1042,66 @@
   --md-default-fg-color--lighter: #64748b !important; /* Standard for dark mode */
 }
 
-/* Fix ALL h3 elements to have better contrast - especially descriptive text */
-.md-typeset h3 {
-  color: var(--md-default-fg-color) !important; /* Use full color, not light */
-  font-weight: 500 !important;
-  font-size: 1.15rem !important;
-  opacity: 1 !important; /* Full opacity */
-  border: none !important;
-  padding: 0 !important;
-  letter-spacing: 0.3px !important;
-  margin-top: 0.5rem !important;
-  margin-bottom: 1rem !important;
-}
 
-/* Restore the previous h3 styling we had */
-.md-typeset h3 {
-  color: var(--md-primary-fg-color--dark) !important;
-  font-weight: 600 !important;
-  border-bottom: 2px solid var(--md-accent-fg-color) !important;
-  padding-bottom: 0.5rem !important;
-  display: inline-block !important;
-  margin-top: 1.5rem !important;
-  margin-bottom: 0.8rem !important;
-}
-
-/* But for h3 elements that come right after h2 (descriptive text), make them darker */
+/* Enhanced styling for h3 descriptive text (pipe-separated content after h2/hr) */
 .md-typeset h2 + h3,
 .md-typeset hr + h3 {
-  color: var(--md-default-fg-color) !important; /* Full black/dark color */
-  font-weight: 400 !important;
+  color: var(--md-default-fg-color) !important; /* Full contrast - no light variants */
+  font-weight: 600 !important; /* Bold for maximum readability */
   font-size: 1.05rem !important;
-  border: none !important;
+  border: none !important; /* Remove underline for descriptive text */
   display: block !important;
   margin-top: -0.8rem !important;
   margin-bottom: 1.5rem !important;
   padding: 0 !important;
-  opacity: 0.9 !important;
+  opacity: 1 !important; /* Full opacity - no transparency */
+  letter-spacing: 0.3px !important;
+  text-rendering: optimizeLegibility !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+}
+
+/* Fix paragraph text contrast - ensure all text is readable */
+.md-typeset p {
+  color: var(--md-default-fg-color) !important;
+  line-height: 1.6 !important;
+  font-weight: 400 !important;
+}
+
+/* Fix metadata and secondary text elements */
+.md-typeset .md-meta,
+.md-source__repository,
+.md-source__facts,
+.md-footer__direction,
+.md-copyright {
+  color: var(--md-default-fg-color--light) !important;
+}
+
+/* Ensure list items have proper contrast */
+.md-typeset li,
+.md-typeset dt,
+.md-typeset dd {
+  color: var(--md-default-fg-color) !important;
+}
+
+/* Navigation title and items */
+.md-nav__title {
+  color: var(--md-default-fg-color) !important;
+  font-weight: 600 !important;
+}
+
+.md-nav__item--nested > .md-nav__link {
+  color: var(--md-default-fg-color--light) !important;
+}
+
+/* Search result text improvements */
+.md-search-result__teaser {
+  color: var(--md-default-fg-color--light) !important;
+}
+
+/* Table cell text improvements */
+.md-typeset table:not([class]) td {
+  color: var(--md-default-fg-color) !important;
 }
 
 /* Professional Focus States for Accessibility - Universal */
@@ -1008,4 +1182,293 @@
   .md-typeset table:not([class]) {
     page-break-inside: avoid !important;
   }
+}
+
+/* ========================================================================== */
+/* COMPREHENSIVE MATERIAL THEME COMPONENT OVERRIDES                           */
+/* Force all Material theme defaults to use our color scheme                  */
+/* ========================================================================== */
+
+/* Cards and Containers - Universal Override */
+.md-card,
+.md-typeset .md-card {
+  background: var(--md-default-bg-color) !important;
+  color: var(--md-default-fg-color) !important;
+  border: 1px solid var(--md-typeset-border-color) !important;
+  border-radius: 8px !important;
+  box-shadow: var(--shadow-sm) !important;
+}
+
+/* Form Elements - Comprehensive Override */
+input[type="text"],
+input[type="email"],
+input[type="search"],
+input[type="password"],
+textarea,
+select,
+.md-form-control {
+  background: var(--md-form-bg-color) !important;
+  color: var(--md-form-fg-color) !important;
+  border: 1px solid var(--md-form-border-color) !important;
+  border-radius: 6px !important;
+  transition: var(--theme-transition) !important;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="search"]:focus,
+input[type="password"]:focus,
+textarea:focus,
+select:focus,
+.md-form-control:focus {
+  border-color: var(--md-form-border-color--focus) !important;
+  box-shadow: 0 0 0 2px var(--md-accent-fg-color--transparent) !important;
+  outline: none !important;
+}
+
+/* Dropdown and Select Elements */
+.md-select,
+.md-select__inner {
+  background: var(--md-form-bg-color) !important;
+  color: var(--md-form-fg-color) !important;
+  border: 1px solid var(--md-form-border-color) !important;
+}
+
+.md-select__option {
+  background: var(--md-default-bg-color) !important;
+  color: var(--md-default-fg-color) !important;
+}
+
+.md-select__option:hover {
+  background: var(--gradient-neutral) !important;
+}
+
+/* Tooltips and Overlays */
+.md-tooltip,
+.md-tooltip__inner {
+  background: var(--md-primary-fg-color) !important;
+  color: #ffffff !important;
+  border-radius: 6px !important;
+  box-shadow: var(--shadow-lg) !important;
+}
+
+/* Modal and Dialog Overrides */
+.md-dialog,
+.md-modal {
+  background: var(--md-default-bg-color) !important;
+  color: var(--md-default-fg-color) !important;
+  border: 1px solid var(--md-typeset-border-color) !important;
+  border-radius: 12px !important;
+  box-shadow: var(--shadow-xl) !important;
+}
+
+.md-dialog__overlay,
+.md-modal__overlay {
+  background: rgba(30, 41, 59, 0.8) !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+/* Tab Panel Content */
+.md-tabs__panel {
+  background: var(--md-default-bg-color) !important;
+  color: var(--md-default-fg-color) !important;
+}
+
+/* Sidebar Secondary Elements */
+.md-nav__title,
+.md-nav__item,
+.md-nav__link {
+  color: var(--md-sidebar-fg-color) !important;
+  transition: var(--theme-transition) !important;
+}
+
+.md-nav__item--active > .md-nav__link {
+  color: var(--md-accent-fg-color) !important;
+  background: var(--gradient-neutral) !important;
+}
+
+/* Footer Links and Elements */
+.md-footer__link {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.md-footer__link:hover {
+  color: #ffffff !important;
+}
+
+/* Search Results Styling */
+.md-search-result__item {
+  background: var(--md-default-bg-color) !important;
+  border-bottom: 1px solid var(--md-typeset-border-color) !important;
+}
+
+.md-search-result__item:hover {
+  background: var(--gradient-neutral) !important;
+}
+
+.md-search-result__meta {
+  color: var(--md-default-fg-color--light) !important;
+}
+
+/* Version Selector */
+.md-version {
+  background: var(--md-default-bg-color) !important;
+  color: var(--md-default-fg-color) !important;
+  border: 1px solid var(--md-typeset-border-color) !important;
+}
+
+.md-version__current {
+  background: var(--gradient-primary) !important;
+  color: #ffffff !important;
+}
+
+.md-version__list {
+  background: var(--md-default-bg-color) !important;
+  border: 1px solid var(--md-typeset-border-color) !important;
+  box-shadow: var(--shadow-lg) !important;
+}
+
+.md-version__item {
+  color: var(--md-default-fg-color) !important;
+}
+
+.md-version__item:hover {
+  background: var(--gradient-neutral) !important;
+}
+
+/* Announcement Bar */
+.md-banner {
+  background: var(--gradient-accent) !important;
+  color: #ffffff !important;
+}
+
+.md-banner__inner {
+  color: #ffffff !important;
+}
+
+.md-banner__button {
+  color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.2) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+.md-banner__button:hover {
+  background: rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Progress Bars and Loading States */
+.md-progress {
+  background: var(--md-typeset-border-color) !important;
+}
+
+.md-progress__bar {
+  background: var(--gradient-accent) !important;
+}
+
+/* Toggle Switches */
+.md-toggle {
+  background: var(--md-typeset-border-color) !important;
+}
+
+.md-toggle--checked {
+  background: var(--md-accent-fg-color) !important;
+}
+
+.md-toggle__thumb {
+  background: var(--md-default-bg-color) !important;
+  box-shadow: var(--shadow-sm) !important;
+}
+
+/* Ensure all Material icons use proper colors */
+.md-icon,
+.material-icons {
+  color: inherit !important;
+}
+
+/* Override any remaining Material default styles */
+.md-typeset .md-button:not([class*="md-button--"]) {
+  background: var(--gradient-accent) !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+.md-typeset .md-button:not([class*="md-button--"]):hover {
+  background: var(--md-accent-fg-color) !important;
+  color: #ffffff !important;
+}
+
+/* Override Material's default link colors in content */
+.md-content a {
+  color: var(--md-accent-fg-color) !important;
+}
+
+.md-content a:hover {
+  color: var(--md-primary-fg-color) !important;
+}
+
+/* Force override for any remaining Material defaults */
+.md-typeset {
+  color: var(--md-default-fg-color) !important;
+}
+
+.md-typeset code {
+  background: var(--md-code-bg-color) !important;
+  color: var(--md-code-fg-color) !important;
+}
+
+.md-typeset pre {
+  background: var(--md-code-bg-color) !important;
+}
+
+.md-typeset pre code {
+  background: transparent !important;
+}
+
+/* High specificity overrides for stubborn Material defaults */
+body[data-md-color-scheme="default"] .md-header,
+body[data-md-color-scheme="slate"] .md-header {
+  background: var(--gradient-primary) !important;
+  color: #ffffff !important;
+}
+
+body[data-md-color-scheme="default"] .md-tabs,
+body[data-md-color-scheme="slate"] .md-tabs {
+  background: var(--md-primary-fg-color) !important;
+}
+
+body[data-md-color-scheme="default"] .md-footer,
+body[data-md-color-scheme="slate"] .md-footer {
+  background: var(--gradient-primary) !important;
+  color: #ffffff !important;
+}
+
+body[data-md-color-scheme="default"] .md-main,
+body[data-md-color-scheme="slate"] .md-main {
+  background: var(--md-default-bg-color) !important;
+}
+
+body[data-md-color-scheme="default"] .md-sidebar,
+body[data-md-color-scheme="slate"] .md-sidebar {
+  background: var(--md-sidebar-bg-color) !important;
+}
+
+/* Final catch-all for any missed Material elements */
+[class*="md-"] {
+  transition: var(--theme-transition) !important;
+}
+
+/* Ensure proper color inheritance */
+* {
+  color: inherit;
+}
+
+/* Root level color enforcement */
+html {
+  background: var(--md-default-bg-color) !important;
+  color: var(--md-default-fg-color) !important;
+}
+
+body {
+  background: var(--md-default-bg-color) !important;
+  color: var(--md-default-fg-color) !important;
 }
