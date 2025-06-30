@@ -23,7 +23,8 @@
       "Bash(gh run list:*)",
       "Bash(gh run watch:*)",
       "Bash(sed:*)",
-      "WebFetch(domain:jmontp.github.io)"
+      "WebFetch(domain:jmontp.github.io)",
+      "Bash(curl:*)"
     ],
     "deny": []
   }

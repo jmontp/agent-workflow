@@ -22,10 +22,23 @@ class StateVisualizer {
         this.interfaceTypes = [];
         this.agentTypes = [];
         
+        // Initialize components with error isolation
         this.initializeSocketIO();
         this.initializeEventHandlers();
-        this.initializeInterfaceManagement();
-        this.initializeMermaid();
+        
+        // Non-critical initializations (don't fail constructor)
+        try {
+            this.initializeInterfaceManagement();
+        } catch (e) {
+            console.warn('Interface management initialization failed:', e);
+        }
+        
+        try {
+            this.initializeMermaid();
+        } catch (e) {
+            console.warn('Mermaid initialization failed:', e);
+        }
+        
         this.updateConnectionStatus(false);
     }
 
@@ -1609,7 +1622,7 @@ function setupKeyboardShortcuts() {
             switch (event.key) {
                 case 'l': // Ctrl+L - Focus chat input
                     event.preventDefault();
-                    const messageInput = document.getElementById('message-input');
+                    const messageInput = document.getElementById('chat-input-field');
                     if (messageInput) {
                         messageInput.focus();
                     }
@@ -1727,7 +1740,7 @@ window.VisualizerUtils = {
      */
     sendCommand: function(command) {
         if (discordChat) {
-            const messageInput = document.getElementById('message-input');
+            const messageInput = document.getElementById('chat-input-field');
             if (messageInput) {
                 messageInput.value = command;
                 discordChat.sendMessage();
@@ -1739,7 +1752,7 @@ window.VisualizerUtils = {
      * Focus the chat input
      */
     focusChat: function() {
-        const messageInput = document.getElementById('message-input');
+        const messageInput = document.getElementById('chat-input-field');
         if (messageInput) {
             messageInput.focus();
         }
