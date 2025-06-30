@@ -42,7 +42,27 @@ WEB_PID_FILE = ".web-interface.pid"
               default="INFO", help="Set logging level")
 @click.pass_context
 def web_command(ctx, port, host, daemon, debug, no_browser, log_level):
-    """Start the web visualization interface."""
+    """
+    Start the Discord-style web visualization interface.
+    
+    Features:
+    - Real-time Discord-style chat interface with slash commands
+    - State machine visualization with Mermaid diagrams
+    - Multi-user collaboration with permission management
+    - Live workflow and TDD cycle monitoring
+    - Contextual command autocomplete
+    - Agent interface management (Claude Code, Anthropic API, Mock)
+    - Responsive design for desktop and mobile
+    
+    Common Commands:
+    /epic "description"    - Create a new epic
+    /approve              - Approve proposed stories
+    /sprint start         - Start planned sprint
+    /state               - Show current workflow state
+    /help                - Show all available commands
+    
+    Access the interface at http://localhost:5000 (or specified host:port)
+    """
     try:
         config_dir = get_config_dir()
         
@@ -329,16 +349,53 @@ def _show_web_status(status_data: dict, verbose: bool) -> None:
         web_info.append(f"PID: {web['pid']}")
         if web["url"]:
             web_info.append(f"URL: {web['url']}")
+        web_info.append("[blue]Interface: Discord-style Chat + Visualization[/blue]")
     else:
         web_info.append("[red]Status: Stopped ✗[/red]")
     
     web_info.append(f"Version: {web['version']}")
     
-    console.print(Panel("\n".join(web_info), title="Web Interface Status", border_style="blue"))
+    console.print(Panel("\n".join(web_info), title="Discord-Style Web Interface", border_style="blue"))
     
-    if not web["running"]:
+    if web["running"]:
+        # Show interface features when running
+        features_info = [
+            "💬 Real-time Discord-style chat with slash commands",
+            "🔄 Live state machine visualization",
+            "👥 Multi-user collaboration support",
+            "🤖 Agent interface management",
+            "📱 Responsive design (desktop + mobile)",
+            "⚡ Contextual command autocomplete"
+        ]
+        
         console.print(Panel(
-            "Start the web interface with: [bold]aw web[/bold]",
+            "\n".join(features_info),
+            title="Active Features",
+            border_style="green"
+        ))
+        
+        # Show quick commands
+        command_info = [
+            "/epic \"description\"  - Create new epic",
+            "/approve             - Approve stories",  
+            "/sprint start        - Start sprint",
+            "/state              - Show current state",
+            "/help               - Show all commands"
+        ]
+        
+        console.print(Panel(
+            "\n".join(command_info),
+            title="Quick Commands",
+            border_style="cyan"
+        ))
+    else:
+        console.print(Panel(
+            "Start the Discord-style interface with: [bold]aw web[/bold]\n\n"
+            "Features include:\n"
+            "• Real-time chat with Discord-style commands\n"
+            "• Multi-user collaboration\n" 
+            "• Live state visualization\n"
+            "• Agent management interface",
             title="Quick Start",
             border_style="green"
         ))

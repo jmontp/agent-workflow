@@ -7,9 +7,22 @@
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mermaid@10.4.0/dist/mermaid.min.js"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/discord-chat.css') }}">
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="{{ url_for('static', filename='js/ui-enhancements.js') }}" as="script">
+    
+    <!-- Meta tags for better mobile experience -->
+    <meta name="theme-color" content="#4CAF50">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="TDD Visualizer">
 </head>
 <body>
-    <div class="container">
+    <div class="app-layout">
+        <div id="main-content" class="main-content">
+            <div class="container">
         <header>
             <h1>🔄 TDD State Machine Visualizer</h1>
             <div class="status-bar">
@@ -33,6 +46,9 @@
                 <div class="status-item">
                     <span class="label">Last Update:</span>
                     <span id="last-update" class="timestamp">Never</span>
+                </div>
+                <div class="status-item">
+                    <button id="panel-toggle-btn" class="btn btn-small" title="Toggle Chat Panel">💬</button>
                 </div>
             </div>
         </header>
@@ -184,7 +200,13 @@
                 <div id="activity-log" class="activity-log"></div>
             </div>
         </main>
-    </div>
+        </div> <!-- .container -->
+    </div> <!-- .main-content -->
+    
+    <!-- Chat Interface -->
+    {% include 'partials/chat.html' %}
+    
+    </div> <!-- .app-layout -->
 
     <!-- Interface Configuration Modal -->
     <div id="interface-config-modal" class="modal">
@@ -291,6 +313,123 @@
         </div>
     </div>
 
+    <!-- Load UI enhancements first -->
+    <script src="{{ url_for('static', filename='js/ui-enhancements.js') }}"></script>
     <script src="{{ url_for('static', filename='visualizer.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/discord-chat.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/chat-components.js') }}"></script>
+    
+    <!-- Initialize enhanced UI after all scripts load -->
+    <script>
+        // Wait for all components to be ready
+        document.addEventListener('DOMContentLoaded', () => {
+            // Integrate UI enhancements with existing visualizer
+            if (window.visualizer && window.UI) {
+                // Add enhanced state change animations
+                const originalUpdateWorkflowState = window.visualizer.updateWorkflowState;
+                window.visualizer.updateWorkflowState = function(state) {
+                    const stateElement = document.getElementById('workflow-state');
+                    if (stateElement) {
+                        stateElement.classList.add('transitioning');
+                        setTimeout(() => stateElement.classList.remove('transitioning'), 1000);
+                    }
+                    
+                    originalUpdateWorkflowState.call(this, state);
+                    window.UI.announce(`Workflow state changed to ${state}`);
+                };
+                
+                // Add enhanced TDD cycle updates
+                const originalUpdateTDDCycles = window.visualizer.updateTDDCycles;
+                window.visualizer.updateTDDCycles = function() {
+                    originalUpdateTDDCycles.call(this);
+                    
+                    // Add animation to new cycle cards
+                    const cards = document.querySelectorAll('.tdd-cycle-card');
+                    cards.forEach((card, index) => {
+                        card.style.animationDelay = `${index * 100}ms`;
+                        card.classList.add('animate');
+                    });
+                };
+                
+                // Enhanced connection status
+                const originalUpdateConnectionStatus = window.visualizer.updateConnectionStatus;
+                window.visualizer.updateConnectionStatus = function(connected) {
+                    originalUpdateConnectionStatus.call(this, connected);
+                    
+                    const message = connected ? 'Connected to server' : 'Disconnected from server';
+                    const type = connected ? 'success' : 'error';
+                    
+                    window.UI.showToast('Connection Status', message, type, 3000);
+                    window.UI.announce(message);
+                };
+                
+                // Enhanced error handling
+                const originalHandleConnectionFailure = window.visualizer.handleConnectionFailure;
+                window.visualizer.handleConnectionFailure = function() {
+                    originalHandleConnectionFailure.call(this);
+                    window.UI.showToast('Connection Error', 'Failed to connect to server. Running in offline mode.', 'error', 0);
+                };
+                
+                console.log('UI enhancements integrated with visualizer');
+            }
+            
+            // Add keyboard shortcuts info to help
+            const helpContent = `
+                <div style="max-width: 400px; text-align: left;">
+                    <h3>🚀 Enhanced Features</h3>
+                    <p><strong>Keyboard Shortcuts:</strong></p>
+                    <ul style="margin: 10px 0 20px 20px;">
+                        <li><kbd style="background: #f0f0f0; padding: 2px 6px; border-radius: 3px;">Alt+T</kbd> Toggle dark/light theme</li>
+                        <li><kbd style="background: #f0f0f0; padding: 2px 6px; border-radius: 3px;">Alt+H</kbd> Show/hide keyboard help</li>
+                        <li><kbd style="background: #f0f0f0; padding: 2px 6px; border-radius: 3px;">Alt+K/J</kbd> Navigate between elements</li>
+                        <li><kbd style="background: #f0f0f0; padding: 2px 6px; border-radius: 3px;">Tab</kbd> Standard navigation</li>
+                        <li><kbd style="background: #f0f0f0; padding: 2px 6px; border-radius: 3px;">Esc</kbd> Close dialogs</li>
+                    </ul>
+                    <p><strong>Accessibility:</strong></p>
+                    <ul style="margin: 10px 0 20px 20px;">
+                        <li>Screen reader support</li>
+                        <li>High contrast mode</li>
+                        <li>Reduced motion support</li>
+                        <li>Touch-friendly interface</li>
+                    </ul>
+                    <p><strong>Features:</strong></p>
+                    <ul style="margin: 10px 0 0 20px;">
+                        <li>Responsive design for all devices</li>
+                        <li>Smooth animations and transitions</li>
+                        <li>Toast notifications</li>
+                        <li>Theme persistence</li>
+                    </ul>
+                </div>
+            `;
+            
+            // Add enhanced features info button to header
+            const statusBar = document.querySelector('.status-bar');
+            if (statusBar) {
+                const infoBtn = document.createElement('button');
+                infoBtn.className = 'btn btn-small';
+                infoBtn.innerHTML = 'ℹ️';
+                infoBtn.title = 'Show enhanced features info';
+                infoBtn.style.marginLeft = '10px';
+                infoBtn.addEventListener('click', () => {
+                    if (window.UI) {
+                        window.UI.showToast('Enhanced Features', helpContent, 'info', 0);
+                    }
+                });
+                statusBar.appendChild(infoBtn);
+            }
+        });
+        
+        // Performance optimization: preload theme preference
+        (function() {
+            const savedTheme = localStorage.getItem('theme-preference');
+            const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const theme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
+            
+            if (theme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                document.body.classList.add('dark-theme');
+            }
+        })();
+    </script>
 </body>
 </html>

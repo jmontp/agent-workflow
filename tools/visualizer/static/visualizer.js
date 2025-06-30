@@ -1369,8 +1369,10 @@ class StateVisualizer {
     }
 }
 
-// Global visualizer instance
+// Global instances
 let visualizer;
+let discordChat;
+let chatComponents;
 
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
@@ -1379,8 +1381,23 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
         visualizer = new StateVisualizer();
         
+        // Initialize chat system if available
+        if (typeof DiscordChat !== 'undefined' && typeof ChatComponents !== 'undefined') {
+            chatComponents = new ChatComponents();
+            discordChat = new DiscordChat(visualizer.socket, visualizer);
+            
+            // Integrate chat with visualizer
+            integrateChatWithVisualizer();
+            
+            console.log('Discord chat system initialized');
+        } else {
+            console.warn('Chat system not available - running in visualizer-only mode');
+        }
+        
         // Expose to global scope for debugging
         window.visualizer = visualizer;
+        window.discordChat = discordChat;
+        window.chatComponents = chatComponents;
         
         console.log('TDD State Visualizer initialized successfully');
     } catch (error) {
@@ -1410,6 +1427,258 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+/**
+ * Integrate chat system with state visualizer
+ */
+function integrateChatWithVisualizer() {
+    if (!visualizer || !discordChat) return;
+    
+    // Sync state changes from visualizer to chat
+    const originalHandleWorkflowTransition = visualizer.handleWorkflowTransition;
+    visualizer.handleWorkflowTransition = function(data) {
+        originalHandleWorkflowTransition.call(this, data);
+        
+        // Notify chat of state change
+        if (discordChat) {
+            const stateChangeMessage = {
+                id: 'state_change_' + Date.now(),
+                user_id: 'system',
+                username: 'State Machine',
+                message: `Workflow transitioned: ${data.old_state} → ${data.new_state}`,
+                timestamp: new Date().toISOString(),
+                type: 'system',
+                state_change: {
+                    type: 'workflow',
+                    old_state: data.old_state,
+                    new_state: data.new_state,
+                    project: data.project
+                }
+            };
+            
+            // Add to chat if chat panel is visible
+            const chatPanel = document.querySelector('.right-panel');
+            if (chatPanel && !chatPanel.classList.contains('hidden')) {
+                discordChat.addMessageToChat(stateChangeMessage);
+            }
+        }
+    };
+    
+    // Sync TDD transitions
+    const originalHandleTDDTransition = visualizer.handleTDDTransition;
+    visualizer.handleTDDTransition = function(data) {
+        originalHandleTDDTransition.call(this, data);
+        
+        // Notify chat of TDD state change
+        if (discordChat) {
+            const tddChangeMessage = {
+                id: 'tdd_change_' + Date.now(),
+                user_id: 'system',
+                username: 'TDD Engine',
+                message: `Story ${data.story_id}: ${data.old_state} → ${data.new_state}`,
+                timestamp: new Date().toISOString(),
+                type: 'system',
+                state_change: {
+                    type: 'tdd',
+                    story_id: data.story_id,
+                    old_state: data.old_state,
+                    new_state: data.new_state,
+                    project: data.project
+                }
+            };
+            
+            // Add to chat if chat panel is visible
+            const chatPanel = document.querySelector('.right-panel');
+            if (chatPanel && !chatPanel.classList.contains('hidden')) {
+                discordChat.addMessageToChat(tddChangeMessage);
+            }
+        }
+    };
+    
+    // Add command execution feedback
+    visualizer.addCommandExecutionHandler = function(command, result) {
+        if (discordChat && result) {
+            // Highlight state elements when commands execute
+            if (result.workflow_state) {
+                this.highlightWorkflowState(result.workflow_state);
+                
+                // Flash highlight effect
+                const stateElement = document.getElementById('workflow-state');
+                if (stateElement) {
+                    stateElement.classList.add('command-highlight');
+                    setTimeout(() => {
+                        stateElement.classList.remove('command-highlight');
+                    }, 2000);
+                }
+            }
+            
+            if (result.tdd_state) {
+                this.highlightTDDState(result.tdd_state);
+            }
+            
+            // Update visualizer after command execution
+            setTimeout(() => {
+                this.requestStateUpdate();
+            }, 500);
+        }
+    };
+    
+    // Add panel management
+    setupPanelManagement();
+    
+    // Add keyboard shortcuts
+    setupKeyboardShortcuts();
+    
+    console.log('Chat and visualizer integration complete');
+}
+
+/**
+ * Setup panel management for responsive layout
+ */
+function setupPanelManagement() {
+    const leftPanel = document.querySelector('.left-panel');
+    const rightPanel = document.querySelector('.right-panel');
+    const resizeHandle = document.querySelector('.resize-handle');
+    
+    if (!leftPanel || !rightPanel) return;
+    
+    // Panel toggle functionality
+    window.toggleChatPanel = function() {
+        rightPanel.classList.toggle('hidden');
+        
+        if (rightPanel.classList.contains('hidden')) {
+            leftPanel.style.width = '100%';
+        } else {
+            leftPanel.style.width = '60%';
+            rightPanel.style.width = '40%';
+        }
+    };
+    
+    window.toggleVisualizerPanel = function() {
+        leftPanel.classList.toggle('hidden');
+        
+        if (leftPanel.classList.contains('hidden')) {
+            rightPanel.style.width = '100%';
+        } else {
+            leftPanel.style.width = '60%';
+            rightPanel.style.width = '40%';
+        }
+    };
+    
+    // Add toggle buttons to header if they don't exist
+    const header = document.querySelector('header .status-bar');
+    if (header && !document.getElementById('panel-toggles')) {
+        const togglesDiv = document.createElement('div');
+        togglesDiv.id = 'panel-toggles';
+        togglesDiv.className = 'status-item';
+        togglesDiv.innerHTML = `
+            <button id="toggle-chat" class="btn btn-small" onclick="toggleChatPanel()" title="Toggle Chat Panel">
+                💬
+            </button>
+            <button id="toggle-visualizer" class="btn btn-small" onclick="toggleVisualizerPanel()" title="Toggle Visualizer Panel">
+                📊
+            </button>
+        `;
+        header.appendChild(togglesDiv);
+    }
+}
+
+/**
+ * Setup keyboard shortcuts
+ */
+function setupKeyboardShortcuts() {
+    document.addEventListener('keydown', (event) => {
+        // Only handle shortcuts when not typing in inputs
+        if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA') {
+            return;
+        }
+        
+        if (event.ctrlKey || event.metaKey) {
+            switch (event.key) {
+                case 'l': // Ctrl+L - Focus chat input
+                    event.preventDefault();
+                    const messageInput = document.getElementById('message-input');
+                    if (messageInput) {
+                        messageInput.focus();
+                    }
+                    break;
+                    
+                case 'k': // Ctrl+K - Toggle chat panel
+                    event.preventDefault();
+                    if (typeof toggleChatPanel === 'function') {
+                        toggleChatPanel();
+                    }
+                    break;
+                    
+                case 'm': // Ctrl+M - Toggle visualizer panel
+                    event.preventDefault();
+                    if (typeof toggleVisualizerPanel === 'function') {
+                        toggleVisualizerPanel();
+                    }
+                    break;
+                    
+                case '/': // Ctrl+/ - Show help
+                    event.preventDefault();
+                    showKeyboardShortcuts();
+                    break;
+            }
+        }
+    });
+}
+
+/**
+ * Show keyboard shortcuts help
+ */
+function showKeyboardShortcuts() {
+    const helpMessage = {
+        id: 'help_' + Date.now(),
+        user_id: 'system',
+        username: 'System',
+        message: `**Keyboard Shortcuts:**
+• \`Ctrl+L\` - Focus chat input
+• \`Ctrl+K\` - Toggle chat panel
+• \`Ctrl+M\` - Toggle visualizer panel
+• \`Ctrl+R\` - Refresh state
+• \`Ctrl+/\` - Show this help
+• \`↑/↓\` - Navigate command history (in chat)
+• \`Tab\` - Accept autocomplete suggestion`,
+        timestamp: new Date().toISOString(),
+        type: 'system'
+    };
+    
+    if (discordChat) {
+        discordChat.addMessageToChat(helpMessage);
+    }
+}
+
+/**
+ * Enhanced state highlighting with command feedback
+ */
+function addCommandHighlighting() {
+    // Add CSS for command highlighting
+    const style = document.createElement('style');
+    style.textContent = `
+        .command-highlight {
+            animation: commandPulse 2s ease-in-out;
+        }
+        
+        @keyframes commandPulse {
+            0%, 100% { background-color: transparent; }
+            50% { background-color: rgba(76, 175, 80, 0.3); }
+        }
+        
+        .state-transition {
+            animation: stateTransition 1s ease-in-out;
+        }
+        
+        @keyframes stateTransition {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    `;
+    document.head.appendChild(style);
+}
+
 // Handle page visibility changes to manage connection
 document.addEventListener('visibilitychange', () => {
     if (visualizer) {
@@ -1427,4 +1696,67 @@ window.addEventListener('beforeunload', () => {
     if (visualizer) {
         visualizer.disconnect();
     }
+    
+    if (discordChat) {
+        discordChat.leaveChat();
+    }
 });
+
+// Initialize command highlighting after DOM load
+document.addEventListener('DOMContentLoaded', () => {
+    addCommandHighlighting();
+});
+
+// Add utility functions for external access
+window.VisualizerUtils = {
+    /**
+     * Send a command to the chat interface
+     */
+    sendCommand: function(command) {
+        if (discordChat) {
+            const messageInput = document.getElementById('message-input');
+            if (messageInput) {
+                messageInput.value = command;
+                discordChat.sendMessage();
+            }
+        }
+    },
+    
+    /**
+     * Focus the chat input
+     */
+    focusChat: function() {
+        const messageInput = document.getElementById('message-input');
+        if (messageInput) {
+            messageInput.focus();
+        }
+    },
+    
+    /**
+     * Get current state from visualizer
+     */
+    getCurrentState: function() {
+        return visualizer ? {
+            workflow_state: visualizer.currentWorkflowState,
+            tdd_cycles: Array.from(visualizer.activeTDDCycles.values()),
+            connected: visualizer.connected
+        } : null;
+    },
+    
+    /**
+     * Manually trigger state update
+     */
+    refreshState: function() {
+        if (visualizer) {
+            visualizer.requestStateUpdate();
+        }
+    },
+    
+    /**
+     * Toggle panel visibility
+     */
+    togglePanels: {
+        chat: function() { if (typeof toggleChatPanel === 'function') toggleChatPanel(); },
+        visualizer: function() { if (typeof toggleVisualizerPanel === 'function') toggleVisualizerPanel(); }
+    }
+};

@@ -7,6 +7,59 @@
 !!! tip "Quick Command Discovery"
     Use `/state` in Discord at any time to see available commands for your current workflow state.
 
+## 🌐 Web Interface Integration
+
+!!! info "Multi-Platform Command Access"
+    **All Discord commands are now available in the web interface!** Use them in the Discord-style chat interface for a seamless experience across platforms.
+
+### Command Availability Across Platforms
+
+| Platform | Access Method | Features |
+|----------|---------------|----------|
+| **Discord Bot** | `/command` syntax | Original slash commands, Discord notifications |
+| **Web Chat Interface** | `/command` syntax | Rich interactive responses, visual feedback |
+| **Web Dashboard** | Click interactions | Visual command triggers, drag-and-drop |
+
+### Enhanced Web Experience
+
+**All Discord commands work identically in the web interface, plus:**
+
+- **🎨 Rich Visual Responses**: Commands show interactive widgets and progress bars
+- **📊 Automatic Dashboard Updates**: Command results instantly update visual panels  
+- **🔄 Real-time Synchronization**: Changes sync across Discord and web in real-time
+- **📱 Mobile Optimized**: Touch-friendly command interface on mobile devices
+- **⌨️ Keyboard Shortcuts**: Quick access via `Ctrl/Cmd + K` command palette
+
+**Example: Sprint Start in Web Interface**
+```
+Discord Bot Response:           Web Interface Response:
+✅ Sprint started!              ✅ Sprint "Auth System" started!
+                               
+📊 Interactive Dashboard Widget:
+┌─ Sprint Progress ─────────────────────┐
+│ 📅 Feb 1-14, 2024 | Day 1 of 14     │
+│ 📋 Stories: 6 total, 0 completed     │  
+│ 🎯 Points: 24 total, 0 completed     │
+│ 📈 Velocity: On track (22 avg)       │
+│ [View Board] [Burndown] [Team]       │
+└───────────────────────────────────────┘
+```
+
+!!! tip "Cross-Platform Workflow"
+    Start commands in Discord, monitor progress in the web dashboard, and approve tasks from your mobile phone - all synchronized in real-time!
+
+### Web-Exclusive Enhancements
+
+**Commands gain additional capabilities in the web interface:**
+
+- **📊 `/state diagram --interactive`**: Clickable state machine visualization
+- **📋 `/board view`**: Full kanban interface with drag-and-drop
+- **🤖 `@agent status`**: Live performance charts and metrics
+- **📈 `/sprint status`**: Interactive burndown and velocity charts
+- **⚙️ `/configure`**: Visual settings panels instead of text-only responses
+
+**Access via:** [Complete Chat Interface Guide](chat-interface.md) | [Chat Commands Reference](chat-commands-reference.md)
+
 ## ⚡ Command Quick-Reference | Discord Slash Commands
 
 ### Syntax Guide | Parameter Types | Command Format | Usage Examples

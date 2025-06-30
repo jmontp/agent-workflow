@@ -59,11 +59,173 @@ The interface mirrors Discord's intuitive design but supercharges it for develop
 **[Animated GIF Placeholder: Dashboard Overview]**
 *Shows smooth transitions between project cards, real-time updates flowing in, and the TDD cycle visualization morphing through RED → GREEN → REFACTOR phases*
 
+## 💬 Discord-Style Chat Interface Integration
+
+### Unified Communication Hub
+
+The Agent Workflow portal now features a fully integrated Discord-style chat interface that seamlessly combines with the visual dashboard for the ultimate development experience. Switch between visual project management and conversational AI interaction without missing a beat.
+
+!!! tip "Chat Interface Deep Dive"
+    For comprehensive chat functionality details, see the **[Complete Chat Interface Guide](chat-interface.md)** which covers advanced features, commands, shortcuts, and mobile experience.
+
+### Chat + Dashboard: Perfect Harmony
+
+**Dual-Panel Experience**:
+```
+┌─────────────────────────────────────────────────────────────────┐
+│ 🎯 Agent Workflow - Unified Interface    [🔔 3] [👤] [⚙️]       │
+├─────────────────────────────────────────────────────────────────┤
+│ │ SIDEBAR          │ DASHBOARD PANEL   │ CHAT PANEL           │ │
+│ │                  │                   │                      │ │
+│ │ 🏠 Dashboard     │ ┌─ Project Cards ─┐│ ┌─ #main-project ──┐ │ │
+│ │ 💬 Chat Focus    │ │ 📊 Sprint: 60%  ││ │ 👤 You  /sprint  │ │ │
+│ │ 📋 Projects      │ │ ⏱️ 3 days left   ││ │     status       │ │ │
+│ │ 🤖 Agents        │ │ 🧪 15/20 tests ✅││ │                  │ │ │
+│ │                  │ └─────────────────┘│ │ 🤖 System       │ │ │
+│ │ 🏷️ CHANNELS      │ ┌─ Agent Status ──┐│ │ ✅ Sprint 60%    │ │ │
+│ │ # main-project   │ │ 🟢 CodeAgent    ││ │ ⏱️ 3 days left   │ │ │
+│ │ # testing        │ │ 🟡 QAAgent      ││ │ 🧪 15/20 pass    │ │ │
+│ │ # notifications  │ │ 🔴 DataAgent    ││ │ [View Board]     │ │ │
+│ │                  │ └─────────────────┘│ └──────────────────┘ │ │
+│ │ 🤖 AI AGENTS     │ ┌─ TDD Cycle ─────┐│ ┌─ Input ─────────┐ │ │
+│ │ 🟢 CodeAgent     │ │ 🔴 RED Phase    ││ │ Type command...  │ │ │
+│ │ 🟢 DesignAgent   │ │ Writing tests   ││ │ /help for help   │ │ │
+│ │ 🟡 QAAgent       │ │ ETA: 5 min      ││ └──────────────────┘ │ │
+│ └──────────────────┴──│ [View Details]  │┴──────────────────────┘ │
+│                        └─────────────────┘                        │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**Seamless Context Sharing**:
+- **🔄 Real-time Sync**: Dashboard updates instantly reflect in chat messages
+- **📊 Visual Commands**: Chat commands automatically update dashboard widgets
+- **🎯 Unified State**: Both interfaces share the same real-time state management
+- **📱 Responsive Design**: Perfect experience on any screen size
+
+### Enhanced Workflow Integration
+
+**Chat Commands with Visual Feedback**:
+
+When you run commands in chat, the dashboard updates automatically:
+
+```
+Chat Panel:                          Dashboard Panel:
+┌─────────────────────────────────┐  ┌─────────────────────────────────┐
+│ 👤 You          [3:45 PM]       │  │ ┌─ Sprint Board ───────────────┐ │
+│ /sprint start                   │  │ │ TO DO  │ PROGRESS │ DONE    │ │
+│                                 │  │ ├────────┼──────────┼─────────┤ │
+│ 🤖 System                       │  │ │ Story3 │ Story1   │ Story2  │ │
+│ ✅ Sprint "Auth System" started │  │ │ Story4 │ Story5   │         │ │
+│ 📊 Board updated with 5 stories │  │ └─────────────────────────────┘ │
+│ ⏱️ Sprint ends: Jan 25, 2024    │  │                                 │
+│                                 │  │ Status: 🟢 SPRINT_ACTIVE        │
+│ [View Sprint Board] [Dashboard] │  │ Updated: just now               │
+└─────────────────────────────────┘  └─────────────────────────────────┘
+```
+
+**Interactive Dashboard Elements in Chat**:
+
+Dashboard widgets can be embedded directly in chat messages:
+
+```
+🤖 CodeAgent                                        [4:20 PM]
+✅ User authentication module completed!
+
+📊 Live Progress Widget:
+┌─ Implementation Status ─────────────────────────────────────┐
+│ ✅ Login form component      [100%] 🎯 2h estimated        │
+│ ✅ JWT token management      [100%] 🎯 3h estimated        │
+│ ⏳ Session persistence       [ 75%] 🎯 1h remaining        │
+│ ⏳ Logout flow              [ 25%] 🎯 2h remaining        │
+└─────────────────────────────────────────────────────────────┘
+
+🧪 Test Results: 23/25 passing ✅ (92% coverage)
+📈 Performance: 1.2s average response time
+
+[🔍 View Code] [📋 Review Tests] [🚀 Deploy] [📊 Full Dashboard]
+```
+
+### View Switching & Navigation
+
+**Seamless Interface Switching**:
+
+Switch between chat-focused and dashboard-focused views instantly:
+
+```bash
+# Chat-focused mode (chat takes center stage)
+agent-orch ui --chat-focus
+
+# Dashboard-focused mode (visual panels prioritized)  
+agent-orch ui --dashboard-focus
+
+# Split-screen mode (equal space for both)
+agent-orch ui --split-mode
+
+# Adaptive mode (switches based on activity)
+agent-orch ui --adaptive-layout
+```
+
+**Quick View Shortcuts**:
+- **`Ctrl/Cmd + /`**: Toggle to chat focus
+- **`Ctrl/Cmd + D`**: Toggle to dashboard focus  
+- **`Ctrl/Cmd + =`**: Split view (50/50)
+- **`Ctrl/Cmd + Shift + V`**: Adaptive layout toggle
+
+### Cross-Panel Actions
+
+**Dashboard-to-Chat Actions**:
+- Click any project card → Opens project channel in chat
+- Click agent status → Direct message agent in chat
+- Click sprint progress → `/sprint status` command in chat
+- Click error notification → Opens debug session in chat
+
+**Chat-to-Dashboard Actions**:
+- Send `/dashboard` command → Switches to dashboard view
+- Send `/sprint board` → Opens sprint board widget
+- Send `/state diagram` → Shows state visualization
+- Agent responses automatically update dashboard widgets
+
+### Real-Time Synchronization Examples
+
+**Example 1: Epic Creation Flow**
+```
+Step 1: Chat Command
+👤 You: /epic "Add user authentication system"
+
+Step 2: Automatic Dashboard Update  
+📊 Dashboard instantly shows:
+- New epic card in projects panel
+- Updated project roadmap
+- Agent assignment indicators
+- Estimated timeline visualization
+
+Step 3: Interactive Approval
+🤖 System: Epic analysis complete!
+📋 Click [Approve Stories] in chat
+→ Dashboard sprint board populates with new stories
+→ Agent status updates show assignment
+→ TDD cycle indicator shows planning phase
+```
+
+**Example 2: Sprint Management**
+```
+Chat Action:                    Dashboard Response:
+/sprint start                 → Sprint board switches to "ACTIVE"
+                               → Progress bars animate to show 0%
+                               → Timer starts in real-time
+                               → Agent status updates to "WORKING"
+
+Agent Progress Updates:        → Live progress bars update
+🤖 CodeAgent: "50% complete"   → ETA calculations refresh
+                               → Test coverage meters update
+                               → Code quality indicators change
+```
+
 ## 💬 Chat Like a Pro, Code Like a Wizard
 
 ### Command Interface with Superpowers
 
-The chat interface isn't just messaging - it's your direct line to AI agents with intelligence baked in:
+The integrated chat interface isn't just messaging - it's your direct line to AI agents with intelligence baked in:
 
 ```
 ┌─── Message Thread ──────────────────────────────────────────────┐

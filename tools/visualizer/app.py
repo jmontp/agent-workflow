@@ -11,13 +11,16 @@ import json
 import logging
 import os
 import sys
+import time
 from pathlib import Path
 from datetime import datetime
-from typing import Dict, Any
+from typing import Dict, Any, List
 
-from flask import Flask, render_template, jsonify, request
-from flask_socketio import SocketIO, emit
+from flask import Flask, render_template, jsonify, request, session
+from flask_socketio import SocketIO, emit, join_room, leave_room
 import websockets
+import re
+import uuid
 
 # Add lib directory to path  
 lib_path = Path(__file__).parent.parent.parent / "lib"
@@ -29,8 +32,30 @@ from security import (
     validate_configuration, sanitize_prompt, sanitize_code,
     audit_operation, SecurityLevel, mask_api_key
 )
-from context_manager_factory import get_context_manager_factory, ContextMode
-from context_config import ContextConfig
+
+# Try to import additional components with graceful fallback
+try:
+    from context_manager_factory import get_context_manager_factory, ContextMode
+    from context_config import ContextConfig
+    CONTEXT_MANAGEMENT_AVAILABLE = True
+except ImportError:
+    logger.warning("Context management not available - some features disabled")
+    CONTEXT_MANAGEMENT_AVAILABLE = False
+
+# Import chat and collaboration components
+try:
+    from lib.chat_state_sync import get_synchronizer, process_chat_command
+    CHAT_SYNC_AVAILABLE = True
+except ImportError:
+    logger.warning("Chat synchronization not available - using basic chat")
+    CHAT_SYNC_AVAILABLE = False
+
+try:
+    from lib.collaboration_manager import get_collaboration_manager, UserPermission
+    COLLABORATION_AVAILABLE = True
+except ImportError:
+    logger.warning("Collaboration features not available")
+    COLLABORATION_AVAILABLE = False
 
 # Configure logging
 logging.basicConfig(
@@ -51,6 +76,11 @@ current_state = {
     "last_updated": datetime.now().isoformat(),
     "transition_history": []
 }
+
+# Chat history for the Discord-style interface
+chat_history = []
+typing_users = set()
+active_users = set()
 
 
 @app.route('/')
@@ -145,12 +175,16 @@ def debug_info():
 @app.route('/api/context/status')
 def get_context_status():
     """Get current context management status"""
+    if not CONTEXT_MANAGEMENT_AVAILABLE:
+        return jsonify({"context_management_available": False, "reason": "Context management not available"}), 200
+    
     try:
         factory = get_context_manager_factory()
         current_mode = factory.get_current_mode()
         current_manager = factory.get_current_manager()
         
         status = {
+            "context_management_available": True,
             "current_mode": current_mode.value if current_mode else None,
             "factory_status": factory.get_detection_status(),
             "mode_info": factory.get_mode_info(),
@@ -171,6 +205,9 @@ def get_context_status():
 @app.route('/api/context/modes')
 def get_context_modes():
     """Get available context modes and their information"""
+    if not CONTEXT_MANAGEMENT_AVAILABLE:
+        return jsonify({"context_management_available": False, "modes": {}}), 200
+    
     try:
         factory = get_context_manager_factory()
         
@@ -179,6 +216,7 @@ def get_context_modes():
             modes_info[mode.value] = factory.get_mode_info(mode)
         
         return jsonify({
+            "context_management_available": True,
             "modes": modes_info,
             "current_mode": factory.get_current_mode().value if factory.get_current_mode() else None
         })
@@ -815,6 +853,384 @@ def get_interface_types():
     })
 
 
+# =====================================================
+# Discord-Style Chat API Endpoints
+# =====================================================
+
+@app.route('/api/chat/send', methods=['POST'])
+def send_chat_message():
+    """Handle incoming chat commands with collaboration support"""
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({"error": "No data provided"}), 400
+        
+        message = data.get('message', '').strip()
+        user_id = data.get('user_id', 'anonymous')
+        username = data.get('username', 'User')
+        session_id = data.get('session_id')
+        project_name = data.get('project_name', 'default')
+        
+        if not message:
+            return jsonify({"error": "Message cannot be empty"}), 400
+        
+        # Create message object
+        chat_message = {
+            "id": str(uuid.uuid4()),
+            "user_id": user_id,
+            "username": username,
+            "message": message,
+            "timestamp": datetime.now().isoformat(),
+            "type": "user",
+            "session_id": session_id,
+            "project_name": project_name
+        }
+        
+        # Add to chat history
+        chat_history.append(chat_message)
+        
+        # Keep only last 100 messages
+        if len(chat_history) > 100:
+            chat_history.pop(0)
+        
+        # Emit to all connected clients
+        socketio.emit('new_chat_message', chat_message)
+        
+        # Check if this is a command (starts with /)
+        if message.startswith('/'):
+            # Show typing indicator
+            socketio.emit('bot_typing', {"typing": True})
+            
+            # Process command asynchronously with collaboration support
+            def process_async():
+                try:
+                    # Try collaborative processing first
+                    if COLLABORATION_AVAILABLE and session_id:
+                        try:
+                            collaboration_manager = get_collaboration_manager()
+                            
+                            async def async_wrapper():
+                                from command_processor import get_processor
+                                processor = get_processor()
+                                return await processor.process_collaborative_command(
+                                    message, user_id, project_name, session_id
+                                )
+                            
+                            # Run async in event loop
+                            import asyncio
+                            try:
+                                loop = asyncio.new_event_loop()
+                                asyncio.set_event_loop(loop)
+                                result = loop.run_until_complete(async_wrapper())
+                                loop.close()
+                            except Exception as e:
+                                logger.error(f"Error in collaborative processing: {e}")
+                                # Fall back to regular processing
+                                from command_processor import process_command
+                                result = process_command(message, user_id)
+                                result["collaboration_fallback"] = True
+                                
+                        except Exception as e:
+                            logger.error(f"Collaboration manager error: {e}")
+                            # Fall back to regular processing
+                            from command_processor import process_command
+                            result = process_command(message, user_id)
+                            result["collaboration_error"] = str(e)
+                    else:
+                        # Regular command processing
+                        from command_processor import process_command
+                        result = process_command(message, user_id)
+                    
+                    # Create bot response
+                    bot_response = {
+                        "id": str(uuid.uuid4()),
+                        "user_id": "bot",
+                        "username": "Agent Bot",
+                        "message": result.get('response', 'Command processed'),
+                        "timestamp": datetime.now().isoformat(),
+                        "type": "bot",
+                        "command_result": result,
+                        "collaboration_enabled": COLLABORATION_AVAILABLE and session_id is not None
+                    }
+                    
+                    # Add to chat history
+                    chat_history.append(bot_response)
+                    
+                    # Stop typing and send response
+                    socketio.emit('bot_typing', {"typing": False})
+                    socketio.emit('command_response', bot_response)
+                    
+                    # Emit state change if applicable
+                    if result.get('new_state'):
+                        socketio.emit('workflow_state_change', {
+                            'old_state': result.get('old_state'),
+                            'new_state': result.get('new_state'),
+                            'user_id': user_id,
+                            'command': message,
+                            'timestamp': datetime.now().isoformat()
+                        })
+                    
+                except Exception as e:
+                    logger.error(f"Error processing command: {e}")
+                    error_response = {
+                        "id": str(uuid.uuid4()),
+                        "user_id": "bot",
+                        "username": "Agent Bot",
+                        "message": f"Error processing command: {str(e)}",
+                        "timestamp": datetime.now().isoformat(),
+                        "type": "bot",
+                        "error": True
+                    }
+                    chat_history.append(error_response)
+                    socketio.emit('bot_typing', {"typing": False})
+                    socketio.emit('command_response', error_response)
+            
+            # Run in background thread
+            import threading
+            threading.Thread(target=process_async, daemon=True).start()
+        
+        return jsonify({
+            "success": True,
+            "message_id": chat_message["id"],
+            "collaboration_enabled": COLLABORATION_AVAILABLE and session_id is not None
+        })
+        
+    except Exception as e:
+        logger.error(f"Error sending chat message: {e}")
+        return jsonify({"error": "Failed to send message"}), 500
+
+
+@app.route('/api/chat/history')
+def get_chat_history():
+    """Retrieve chat message history"""
+    try:
+        limit = request.args.get('limit', 50, type=int)
+        limit = min(limit, 100)  # Max 100 messages
+        
+        # Return most recent messages
+        recent_messages = chat_history[-limit:] if chat_history else []
+        
+        return jsonify({
+            "messages": recent_messages,
+            "total_count": len(chat_history)
+        })
+        
+    except Exception as e:
+        logger.error(f"Error getting chat history: {e}")
+        return jsonify({"error": "Failed to get chat history"}), 500
+
+
+@app.route('/api/chat/autocomplete')
+def get_command_autocomplete():
+    """Provide command autocomplete suggestions with contextual awareness"""
+    try:
+        query = request.args.get('query', '').strip().lower()
+        current_state = request.args.get('state', 'IDLE')
+        user_id = request.args.get('user_id', 'default')
+        project_name = request.args.get('project_name', 'default')
+        
+        # Try to get contextual suggestions
+        if CHAT_SYNC_AVAILABLE:
+            try:
+                from lib.chat_state_sync import get_contextual_commands
+                contextual_commands = get_contextual_commands(current_state, user_id, project_name)
+                
+                # Convert to autocomplete format
+                suggestions = [
+                    {
+                        "command": cmd["command"],
+                        "description": cmd["description"],
+                        "usage": cmd.get("usage", cmd["command"]),
+                        "priority": cmd.get("priority", 0),
+                        "category": cmd.get("category", "general")
+                    }
+                    for cmd in contextual_commands
+                ]
+            except Exception as e:
+                logger.error(f"Error getting contextual commands: {e}")
+                suggestions = []
+        else:
+            suggestions = []
+        
+        # Fallback to basic commands if contextual not available
+        if not suggestions:
+            suggestions = [
+                {"command": "/epic", "description": "Define a new high-level initiative", "category": "workflow"},
+                {"command": "/approve", "description": "Approve proposed stories or tasks", "category": "approval"},
+                {"command": "/sprint plan", "description": "Plan a new sprint", "category": "planning"},
+                {"command": "/sprint start", "description": "Start the current sprint", "category": "execution"},
+                {"command": "/sprint status", "description": "Show sprint status", "category": "monitoring"},
+                {"command": "/sprint pause", "description": "Pause the current sprint", "category": "control"},
+                {"command": "/sprint resume", "description": "Resume a paused sprint", "category": "control"},
+                {"command": "/backlog view", "description": "View the product backlog", "category": "management"},
+                {"command": "/backlog add_story", "description": "Add a new story to backlog", "category": "management"},
+                {"command": "/backlog prioritize", "description": "Prioritize backlog items", "category": "management"},
+                {"command": "/state", "description": "Show current workflow state", "category": "information"},
+                {"command": "/project register", "description": "Register a new project", "category": "setup"},
+                {"command": "/request_changes", "description": "Request changes to a PR", "category": "review"},
+                {"command": "/help", "description": "Show available commands", "category": "help"}
+            ]
+        
+        # Filter based on query
+        if query:
+            filtered_commands = [
+                cmd for cmd in suggestions 
+                if query in cmd["command"].lower() or query in cmd["description"].lower()
+            ]
+        else:
+            filtered_commands = suggestions[:10]  # Show first 10 if no query
+        
+        return jsonify({
+            "suggestions": filtered_commands[:10],  # Limit to 10 suggestions
+            "contextual": CHAT_SYNC_AVAILABLE,
+            "current_state": current_state
+        })
+        
+    except Exception as e:
+        logger.error(f"Error getting autocomplete suggestions: {e}")
+        return jsonify({"error": "Failed to get suggestions"}), 500
+
+
+# =====================================================
+# Collaboration API Endpoints
+# =====================================================
+
+@app.route('/api/collaboration/join', methods=['POST'])
+def join_collaboration():
+    """Join a collaboration session"""
+    if not COLLABORATION_AVAILABLE:
+        return jsonify({"error": "Collaboration features not available"}), 503
+    
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({"error": "No data provided"}), 400
+        
+        user_id = data.get('user_id')
+        project_name = data.get('project_name', 'default')
+        permission_level = data.get('permission_level', 'contributor')
+        
+        if not user_id:
+            return jsonify({"error": "User ID is required"}), 400
+        
+        # Convert permission level string to enum
+        try:
+            if permission_level == "admin":
+                perm_enum = UserPermission.ADMIN
+            elif permission_level == "maintainer":
+                perm_enum = UserPermission.MAINTAINER
+            elif permission_level == "viewer":
+                perm_enum = UserPermission.VIEWER
+            else:
+                perm_enum = UserPermission.CONTRIBUTOR
+        except Exception:
+            perm_enum = UserPermission.CONTRIBUTOR
+        
+        # Join session
+        async def join_async():
+            collaboration_manager = get_collaboration_manager()
+            return await collaboration_manager.join_session(user_id, project_name, perm_enum)
+        
+        import asyncio
+        try:
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            session_id = loop.run_until_complete(join_async())
+            loop.close()
+        except Exception as e:
+            return jsonify({"error": f"Failed to join session: {str(e)}"}), 500
+        
+        # Emit collaboration event
+        socketio.emit('collaboration_user_joined', {
+            'user_id': user_id,
+            'project_name': project_name,
+            'session_id': session_id,
+            'permission_level': permission_level,
+            'timestamp': datetime.now().isoformat()
+        })
+        
+        return jsonify({
+            "success": True,
+            "session_id": session_id,
+            "user_id": user_id,
+            "project_name": project_name,
+            "permission_level": permission_level
+        })
+        
+    except Exception as e:
+        logger.error(f"Error joining collaboration: {e}")
+        return jsonify({"error": "Failed to join collaboration"}), 500
+
+
+@app.route('/api/collaboration/leave', methods=['POST'])
+def leave_collaboration():
+    """Leave a collaboration session"""
+    if not COLLABORATION_AVAILABLE:
+        return jsonify({"error": "Collaboration features not available"}), 503
+    
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({"error": "No data provided"}), 400
+        
+        session_id = data.get('session_id')
+        if not session_id:
+            return jsonify({"error": "Session ID is required"}), 400
+        
+        # Leave session
+        async def leave_async():
+            collaboration_manager = get_collaboration_manager()
+            await collaboration_manager.leave_session(session_id)
+        
+        import asyncio
+        try:
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            loop.run_until_complete(leave_async())
+            loop.close()
+        except Exception as e:
+            logger.error(f"Error leaving session: {e}")
+        
+        # Emit collaboration event
+        socketio.emit('collaboration_user_left', {
+            'session_id': session_id,
+            'timestamp': datetime.now().isoformat()
+        })
+        
+        return jsonify({"success": True})
+        
+    except Exception as e:
+        logger.error(f"Error leaving collaboration: {e}")
+        return jsonify({"error": "Failed to leave collaboration"}), 500
+
+
+@app.route('/api/collaboration/status/<project_name>')
+def get_collaboration_status(project_name):
+    """Get collaboration status for a project"""
+    if not COLLABORATION_AVAILABLE:
+        return jsonify({"collaboration_enabled": False, "reason": "Not available"}), 200
+    
+    try:
+        async def get_status_async():
+            collaboration_manager = get_collaboration_manager()
+            return await collaboration_manager.get_collaboration_status(project_name)
+        
+        import asyncio
+        try:
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            status = loop.run_until_complete(get_status_async())
+            loop.close()
+            return jsonify(status)
+        except Exception as e:
+            logger.error(f"Error getting collaboration status: {e}")
+            return jsonify({"collaboration_enabled": False, "error": str(e)}), 500
+        
+    except Exception as e:
+        logger.error(f"Error in collaboration status endpoint: {e}")
+        return jsonify({"collaboration_enabled": False, "error": str(e)}), 500
+
+
 @socketio.on('connect')
 def handle_connect():
     """Handle new SocketIO client connection"""
@@ -1029,6 +1445,242 @@ def handle_context_test(data):
     except Exception as e:
         logger.error(f"Error in WebSocket context test: {e}")
         emit('context_error', {"error": str(e)})
+
+
+# =====================================================
+# Discord-Style Chat WebSocket Handlers
+# =====================================================
+
+@socketio.on('chat_command')
+def handle_chat_command(data):
+    """Handle incoming chat command from WebSocket"""
+    try:
+        message = data.get('message', '').strip()
+        user_id = data.get('user_id', 'anonymous')
+        username = data.get('username', 'User')
+        
+        if not message:
+            emit('command_error', {"error": "Message cannot be empty"})
+            return
+        
+        # Create message object
+        chat_message = {
+            "id": str(uuid.uuid4()),
+            "user_id": user_id,
+            "username": username,
+            "message": message,
+            "timestamp": datetime.now().isoformat(),
+            "type": "user"
+        }
+        
+        # Add to chat history
+        chat_history.append(chat_message)
+        
+        # Keep only last 100 messages
+        if len(chat_history) > 100:
+            chat_history.pop(0)
+        
+        # Broadcast message to all clients
+        socketio.emit('new_chat_message', chat_message)
+        
+        # If it's a command, process it
+        if message.startswith('/'):
+            # Show typing indicator
+            socketio.emit('typing_indicator', {
+                "user_id": "bot",
+                "username": "Agent Bot",
+                "typing": True
+            })
+            
+            # Process command asynchronously
+            def process_command_async():
+                try:
+                    from command_processor import process_command
+                    result = process_command(message, user_id)
+                    
+                    # Create bot response
+                    bot_response = {
+                        "id": str(uuid.uuid4()),
+                        "user_id": "bot",
+                        "username": "Agent Bot",
+                        "message": result.get('response', 'Command processed'),
+                        "timestamp": datetime.now().isoformat(),
+                        "type": "bot",
+                        "command_result": result
+                    }
+                    
+                    # Add to chat history
+                    chat_history.append(bot_response)
+                    
+                    # Stop typing and send response
+                    socketio.emit('typing_indicator', {
+                        "user_id": "bot",
+                        "username": "Agent Bot", 
+                        "typing": False
+                    })
+                    socketio.emit('command_response', bot_response)
+                    
+                except Exception as e:
+                    logger.error(f"Error processing command via WebSocket: {e}")
+                    error_response = {
+                        "id": str(uuid.uuid4()),
+                        "user_id": "bot",
+                        "username": "Agent Bot",
+                        "message": f"Error processing command: {str(e)}",
+                        "timestamp": datetime.now().isoformat(),
+                        "type": "bot",
+                        "error": True
+                    }
+                    chat_history.append(error_response)
+                    socketio.emit('typing_indicator', {
+                        "user_id": "bot",
+                        "username": "Agent Bot",
+                        "typing": False
+                    })
+                    socketio.emit('command_response', error_response)
+            
+            # Run in background thread
+            import threading
+            threading.Thread(target=process_command_async, daemon=True).start()
+        
+    except Exception as e:
+        logger.error(f"Error handling chat command: {e}")
+        emit('command_error', {"error": str(e)})
+
+
+@socketio.on('request_chat_history')
+def handle_chat_history_request(data):
+    """Handle request for chat history"""
+    try:
+        limit = data.get('limit', 50) if data else 50
+        limit = min(limit, 100)  # Max 100 messages
+        
+        # Return most recent messages
+        recent_messages = chat_history[-limit:] if chat_history else []
+        
+        emit('chat_history', {
+            "messages": recent_messages,
+            "total_count": len(chat_history)
+        })
+        
+    except Exception as e:
+        logger.error(f"Error getting chat history via WebSocket: {e}")
+        emit('chat_error', {"error": "Failed to get chat history"})
+
+
+@socketio.on('start_typing')
+def handle_start_typing(data):
+    """Handle user start typing event"""
+    try:
+        user_id = data.get('user_id', 'anonymous')
+        username = data.get('username', 'User')
+        
+        typing_users.add(user_id)
+        
+        # Broadcast typing indicator to other clients
+        socketio.emit('typing_indicator', {
+            "user_id": user_id,
+            "username": username,
+            "typing": True
+        }, broadcast=True, include_self=False)
+        
+    except Exception as e:
+        logger.error(f"Error handling start typing: {e}")
+
+
+@socketio.on('stop_typing')
+def handle_stop_typing(data):
+    """Handle user stop typing event"""
+    try:
+        user_id = data.get('user_id', 'anonymous')
+        username = data.get('username', 'User')
+        
+        typing_users.discard(user_id)
+        
+        # Broadcast stop typing indicator to other clients
+        socketio.emit('typing_indicator', {
+            "user_id": user_id,
+            "username": username,
+            "typing": False
+        }, broadcast=True, include_self=False)
+        
+    except Exception as e:
+        logger.error(f"Error handling stop typing: {e}")
+
+
+@socketio.on('join_chat')
+def handle_join_chat(data):
+    """Handle user joining chat"""
+    try:
+        user_id = data.get('user_id', 'anonymous')
+        username = data.get('username', 'User')
+        
+        active_users.add(user_id)
+        
+        # Send welcome message
+        welcome_message = {
+            "id": str(uuid.uuid4()),
+            "user_id": "system",
+            "username": "System",
+            "message": f"{username} joined the chat",
+            "timestamp": datetime.now().isoformat(),
+            "type": "system"
+        }
+        
+        socketio.emit('user_joined', {
+            "user_id": user_id,
+            "username": username,
+            "message": welcome_message
+        }, broadcast=True)
+        
+        # Send current active users to the new user
+        emit('active_users', {
+            "users": list(active_users),
+            "count": len(active_users)
+        })
+        
+    except Exception as e:
+        logger.error(f"Error handling join chat: {e}")
+
+
+@socketio.on('leave_chat')
+def handle_leave_chat(data):
+    """Handle user leaving chat"""
+    try:
+        user_id = data.get('user_id', 'anonymous')
+        username = data.get('username', 'User')
+        
+        active_users.discard(user_id)
+        typing_users.discard(user_id)
+        
+        # Send goodbye message
+        goodbye_message = {
+            "id": str(uuid.uuid4()),
+            "user_id": "system",
+            "username": "System",
+            "message": f"{username} left the chat",
+            "timestamp": datetime.now().isoformat(),
+            "type": "system"
+        }
+        
+        socketio.emit('user_left', {
+            "user_id": user_id,
+            "username": username,
+            "message": goodbye_message
+        }, broadcast=True)
+        
+    except Exception as e:
+        logger.error(f"Error handling leave chat: {e}")
+
+
+@socketio.on('disconnect')
+def handle_disconnect():
+    """Handle client disconnection - updated to include chat cleanup"""
+    logger.info(f"SocketIO client disconnected: {request.sid}")
+    
+    # Clean up any typing indicators for this session
+    # Note: In a real implementation, you'd want to track user_id by session_id
+    # For now, we'll just clear typing indicators periodically
 
 
 class StateMonitor:

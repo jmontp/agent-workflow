@@ -22,7 +22,8 @@
       "Bash(gh workflow run:*)",
       "Bash(gh run list:*)",
       "Bash(gh run watch:*)",
-      "Bash(sed:*)"
+      "Bash(sed:*)",
+      "WebFetch(domain:jmontp.github.io)"
     ],
     "deny": []
   }

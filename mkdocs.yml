@@ -308,6 +308,8 @@ nav:
       - 🔌 Integration Examples: user-guide/integration-examples.md
     - 🎨 Interface & Support:
       - 🎨 UI Portal Guide: user-guide/ui-portal-guide.md
+      - 💬 Chat Interface: user-guide/chat-interface.md
+      - 📋 Chat Commands Reference: user-guide/chat-commands-reference.md
       - 👤 User Profile: user-guide/user-profile.md
       - 🔧 Troubleshooting: user-guide/troubleshooting.md
       - ❓ FAQ: user-guide/faq.md
@@ -320,6 +322,7 @@ nav:
     - 🏠 System Design:
       - 🏗️ System Overview: architecture/system-overview.md
       - 🔧 Component Architecture: architecture/component-architecture.md
+      - 🌐 Web Architecture: architecture/web-architecture.md
     - 🧠 Context Management:
       - 📊 Context System: architecture/context-management-system.md
       - 🔌 Context API Specification: architecture/context-api-specification.md
