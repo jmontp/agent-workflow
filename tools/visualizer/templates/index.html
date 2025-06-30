@@ -313,11 +313,13 @@
         </div>
     </div>
 
-    <!-- Load UI enhancements first -->
-    <script src="{{ url_for('static', filename='js/ui-enhancements.js') }}"></script>
-    <script src="{{ url_for('static', filename='visualizer.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/discord-chat.js') }}"></script>
+    <!-- Scripts - Fixed loading order to prevent dependency issues -->
+    <!-- Load chat components before discord-chat.js to ensure ChatComponents is available -->
     <script src="{{ url_for('static', filename='js/chat-components.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/discord-chat.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/ui-enhancements.js') }}"></script>
+    <!-- Load visualizer.js last so it can integrate with all other components -->
+    <script src="{{ url_for('static', filename='visualizer.js') }}"></script>
     
     <!-- Initialize enhanced UI after all scripts load -->
     <script>

@@ -34,10 +34,16 @@ class StateVisualizer {
      */
     initializeSocketIO() {
         try {
+            // Check if Socket.IO is available
+            if (typeof io === 'undefined') {
+                throw new Error('Socket.IO library not loaded - check CDN connectivity');
+            }
+            
             this.socket = io({
                 transports: ['websocket', 'polling'],
                 upgrade: true,
-                rememberUpgrade: true
+                rememberUpgrade: true,
+                timeout: 10000
             });
 
             this.socket.on('connect', () => {
@@ -159,6 +165,13 @@ class StateVisualizer {
      */
     initializeMermaid() {
         try {
+            // Check if Mermaid is available
+            if (typeof mermaid === 'undefined') {
+                console.warn('Mermaid library not loaded - diagrams will not be available');
+                this.addActivityLog('System', 'Mermaid diagrams unavailable - check CDN connectivity', 'warning');
+                return;
+            }
+            
             mermaid.initialize({
                 startOnLoad: true,
                 theme: 'default',

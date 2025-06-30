@@ -410,9 +410,10 @@ class DiscordChat {
         
         if (!this.isTyping) {
             this.isTyping = true;
-            this.socket.emit('typing_start', {
+            this.socket.emit('start_typing', {
                 user_id: this.userId,
-                username: this.username
+                username: this.username,
+                project_name: this.projectName
             });
         }
         
@@ -435,9 +436,10 @@ class DiscordChat {
     stopTypingIndicator() {
         if (this.isTyping) {
             this.isTyping = false;
-            this.socket.emit('typing_stop', {
+            this.socket.emit('stop_typing', {
                 user_id: this.userId,
-                username: this.username
+                username: this.username,
+                project_name: this.projectName
             });
         }
         
