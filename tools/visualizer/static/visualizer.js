@@ -1760,3 +1760,15 @@ window.VisualizerUtils = {
         visualizer: function() { if (typeof toggleVisualizerPanel === 'function') toggleVisualizerPanel(); }
     }
 };
+
+// Initialize chat panel visibility on page load
+document.addEventListener('DOMContentLoaded', function() {
+    // Show chat panel by default
+    const chatPanel = document.getElementById('chat-panel');
+    if (chatPanel) {
+        console.log('Showing chat panel');
+        chatPanel.classList.add('show', 'open');
+    } else {
+        console.warn('Chat panel element not found');
+    }
+});

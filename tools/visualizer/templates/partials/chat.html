@@ -157,13 +157,16 @@
 
 <!-- Chat Styles for Integration -->
 <style>
-    /* Chat panel visibility states */
+    /* Chat panel visibility states - Fixed CSS conflict */
     .chat-panel {
-        display: none;
+        display: flex;
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
     }
     
-    .chat-panel.show {
-        display: flex;
+    .chat-panel.show,
+    .chat-panel.open {
+        transform: translateX(0);
     }
     
     /* Message content formatting */

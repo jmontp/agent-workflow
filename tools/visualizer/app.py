@@ -33,6 +33,13 @@ from security import (
     audit_operation, SecurityLevel, mask_api_key
 )
 
+# Configure logging first
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
+
 # Try to import additional components with graceful fallback
 try:
     from context_manager_factory import get_context_manager_factory, ContextMode
@@ -43,6 +50,13 @@ except ImportError:
     CONTEXT_MANAGEMENT_AVAILABLE = False
 
 # Import chat and collaboration components
+try:
+    from command_processor import CommandProcessor
+    COMMAND_PROCESSOR_AVAILABLE = True
+except ImportError:
+    logger.warning("Command processor not available - basic chat only")
+    COMMAND_PROCESSOR_AVAILABLE = False
+
 try:
     from lib.chat_state_sync import get_synchronizer, process_chat_command
     CHAT_SYNC_AVAILABLE = True
@@ -56,13 +70,6 @@ try:
 except ImportError:
     logger.warning("Collaboration features not available")
     COLLABORATION_AVAILABLE = False
-
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
-logger = logging.getLogger(__name__)
 
 # Flask app setup
 app = Flask(__name__)

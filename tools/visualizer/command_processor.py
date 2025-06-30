@@ -1047,3 +1047,31 @@ if __name__ == "__main__":
         if result.get('error'):
             print(f"Error: {result['error']}")
         print("-" * 30)
+
+# =====================================================
+# Module Interface Functions  
+# =====================================================
+
+# Global processor instance
+_processor_instance = None
+
+def get_processor():
+    """Get or create the global command processor instance"""
+    global _processor_instance
+    if _processor_instance is None:
+        _processor_instance = CommandProcessor()
+    return _processor_instance
+
+def process_command(message: str, user_id: str = "anonymous") -> Dict[str, Any]:
+    """Process a command using the global processor instance"""
+    processor = get_processor()
+    return processor.process_command(message, user_id)
+
+async def process_collaborative_command(message: str, user_id: str = "anonymous", 
+                                      project_name: str = "default", session_id: str = None,
+                                      permission_level: str = "contributor") -> Dict[str, Any]:
+    """Process a command with collaboration support using the global processor instance"""
+    processor = get_processor()
+    return await processor.process_collaborative_command(
+        message, user_id, project_name, session_id, permission_level
+    )
