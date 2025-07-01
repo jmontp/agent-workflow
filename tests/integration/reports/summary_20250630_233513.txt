@@ -1,0 +1,39 @@
+Multi-Project Integration Test Summary
+==================================================
+
+Test Run: 2025-06-30 23:35:13
+Total Duration: 6.53s
+Modules Tested: 3
+
+Overall Results:
+  Passed: 0
+  Failed: 0
+  Errors: 0
+  Skipped: 0
+
+Module Results:
+------------------------------
+
+test_multi_project_backend:
+  Status: error
+  Duration: 2.60s
+  Passed: 0, Failed: 0
+  Errors: 0, Skipped: 0
+  Output Preview:
+    Error running test: invalid literal for int() with base 10: '==================='
+
+test_project_switching:
+  Status: error
+  Duration: 2.08s
+  Passed: 0, Failed: 0
+  Errors: 0, Skipped: 0
+  Output Preview:
+    Error running test: invalid literal for int() with base 10: '==================='
+
+test_chat_isolation:
+  Status: error
+  Duration: 1.85s
+  Passed: 0, Failed: 0
+  Errors: 0, Skipped: 0
+  Output Preview:
+    Error running test: invalid literal for int() with base 10: '=============='

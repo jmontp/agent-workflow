@@ -16,9 +16,9 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, asdict
 from enum import Enum
 from pathlib import Path
-from typing import Dict, Any, Optional, List
+from utils.types import Dict, Any, Optional, List
 import threading
-import time
+from utils.common import get_timestamp
 
 try:
     import anthropic
@@ -141,7 +141,7 @@ class BaseAgentInterface(ABC):
             "connection_time": self.connection_time,
             "request_count": self.request_count,
             "error_count": self.error_count,
-            "uptime": time.time() - self.connection_time if self.connection_time else None
+            "uptime": get_timestamp() - self.connection_time if self.connection_time else None
         }
 
 
@@ -167,7 +167,7 @@ class ClaudeCodeInterface(BaseAgentInterface):
                 raise RuntimeError("Claude Code CLI not available or not working")
             
             self.status = InterfaceStatus.CONNECTED
-            self.connection_time = time.time()
+            self.connection_time = get_timestamp()
             self.last_error = None
             
             logger.info("Claude Code interface initialized successfully")
@@ -289,7 +289,7 @@ class AnthropicAPIInterface(BaseAgentInterface):
             )
             
             self.status = InterfaceStatus.CONNECTED
-            self.connection_time = time.time()
+            self.connection_time = get_timestamp()
             self.last_error = None
             
             logger.info("Anthropic API interface initialized successfully")
@@ -489,7 +489,7 @@ class MockInterface(BaseAgentInterface):
             await asyncio.sleep(0.5)  # Simulate initialization time
             
             self.status = InterfaceStatus.CONNECTED
-            self.connection_time = time.time()
+            self.connection_time = get_timestamp()
             self.last_error = None
             
             logger.info("Mock interface initialized successfully")

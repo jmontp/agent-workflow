@@ -528,8 +528,10 @@ class MobileEnhancements {
             window.visualizer.refreshActivityLog();
         }
         
-        // Show success feedback
-        if (window.UI) {
+        // Show success feedback using unified system
+        if (window.domUtils) {
+            window.domUtils.showMessage('Activity Log refreshed', 'success');
+        } else if (window.UI) {
             window.UI.showToast('Activity Log', 'Refreshed', 'success', 2000);
         }
     }
@@ -671,7 +673,9 @@ class MobileEnhancements {
                 
             case 'react':
                 // Add reaction (simplified - would integrate with discord system)
-                if (window.UI) {
+                if (window.domUtils) {
+                    window.domUtils.showMessage('Reaction feature coming soon!', 'info');
+                } else if (window.UI) {
                     window.UI.showToast('Reaction', 'Feature coming soon!', 'info', 2000);
                 }
                 break;

@@ -6,22 +6,21 @@ Flask application with WebSocket support for real-time visualization
 of workflow and TDD state machine transitions.
 """
 
+# Standard library imports
 import asyncio
-import hashlib
-import json
 import logging
 import os
 import sys
-import time
-from pathlib import Path
 from datetime import datetime
-from typing import Dict, Any, List
+from pathlib import Path
 
-from flask import Flask, render_template, jsonify, request, session, make_response
+# Third-party imports
+from flask import Flask, render_template, jsonify, request, session
 from flask_socketio import SocketIO, emit, join_room, leave_room
 import websockets
-import re
-import uuid
+
+# Local utility imports
+from utils import generate_uuid, serialize_json, ConfigDict, StateDict, Dict, Any
 
 # Add lib directory to path  
 lib_path = Path(__file__).parent.parent.parent / "lib"
@@ -44,7 +43,6 @@ logger = logging.getLogger(__name__)
 # Try to import additional components with graceful fallback
 try:
     from context_manager_factory import get_context_manager_factory, ContextMode
-    from context_config import ContextConfig
     CONTEXT_MANAGEMENT_AVAILABLE = True
 except ImportError:
     logger.warning("Context management not available - some features disabled")
@@ -52,7 +50,7 @@ except ImportError:
 
 # Try to import multi-project components
 try:
-    from multi_project_config import MultiProjectConfigManager, ProjectStatus
+    from multi_project_config import MultiProjectConfigManager
     MULTI_PROJECT_AVAILABLE = True
 except ImportError:
     logger.warning("Multi-project management not available - using single project mode")
@@ -65,13 +63,6 @@ try:
 except ImportError:
     logger.warning("Command processor not available - basic chat only")
     COMMAND_PROCESSOR_AVAILABLE = False
-
-try:
-    from lib.chat_state_sync import get_synchronizer, process_chat_command
-    CHAT_SYNC_AVAILABLE = True
-except ImportError:
-    logger.warning("Chat synchronization not available - using basic chat")
-    CHAT_SYNC_AVAILABLE = False
 
 try:
     from lib.collaboration_manager import get_collaboration_manager, UserPermission
@@ -571,6 +562,7 @@ def load_project_state(project_name: str, project_path: str) -> Dict[str, Any]:
             }
         
         with open(status_file, 'r') as f:
+            import json
             state_data = json.load(f)
         
         return {
@@ -723,7 +715,6 @@ def switch_context_mode():
             logger.error(f"Error switching context mode: {e}")
             return {"success": False, "error": str(e)}
     
-    import asyncio
     try:
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
@@ -820,7 +811,6 @@ def get_context_performance():
             logger.error(f"Error getting context performance: {e}")
             return {"error": str(e)}
     
-    import asyncio
     try:
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
@@ -878,7 +868,6 @@ def test_context_preparation():
             logger.error(f"Error testing context preparation: {e}")
             return {"success": False, "error": str(e)}
     
-    import asyncio
     try:
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
@@ -919,7 +908,6 @@ def switch_interface(interface_type):
             return {"success": False, "error": str(e)}
     
     # Run async function in event loop
-    import asyncio
     try:
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
@@ -963,7 +951,6 @@ def test_interface(interface_type):
             logger.error(f"Error testing interface: {e}")
             return {"success": False, "error": str(e)}
     
-    import asyncio
     try:
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
@@ -1055,7 +1042,6 @@ def initialize_interface(interface_type):
             logger.error(f"Error initializing interface: {e}")
             return False
     
-    import asyncio
     try:
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
@@ -1151,7 +1137,6 @@ def generate_with_interface():
             logger.error(f"Error generating response: {e}")
             return {"success": False, "error": str(e)}
     
-    import asyncio
     try:
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
@@ -1243,7 +1228,6 @@ def analyze_with_interface():
             logger.error(f"Error analyzing code: {e}")
             return {"success": False, "error": str(e)}
     
-    import asyncio
     try:
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
@@ -1257,6 +1241,209 @@ def analyze_with_interface():
             
     except Exception as e:
         logger.error(f"Error in analyze_with_interface endpoint: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+# =====================================================
+# TDD Cycle REST API Endpoints
+# =====================================================
+
+@app.route('/api/tdd/cycles')
+def get_all_tdd_cycles():
+    """Get all active TDD cycles"""
+    try:
+        from state_broadcaster import get_all_tdd_cycles, get_tdd_metrics
+        
+        cycles = get_all_tdd_cycles()
+        metrics = get_tdd_metrics()
+        
+        return jsonify({
+            "success": True,
+            "cycles": cycles,
+            "metrics": metrics,
+            "timestamp": datetime.now().isoformat()
+        })
+        
+    except Exception as e:
+        logger.error(f"Error getting TDD cycles: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+@app.route('/api/tdd/cycles/<story_id>')
+def get_tdd_cycle(story_id):
+    """Get TDD cycle for specific story"""
+    try:
+        from state_broadcaster import get_tdd_cycle_status
+        
+        cycle = get_tdd_cycle_status(story_id)
+        if cycle:
+            return jsonify({
+                "success": True,
+                "cycle": cycle,
+                "timestamp": datetime.now().isoformat()
+            })
+        else:
+            return jsonify({
+                "success": False,
+                "error": f"No TDD cycle found for story {story_id}"
+            }), 404
+        
+    except Exception as e:
+        logger.error(f"Error getting TDD cycle for story {story_id}: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+@app.route('/api/tdd/cycles', methods=['POST'])
+def create_tdd_cycle():
+    """Create a new TDD cycle"""
+    try:
+        data = request.get_json()
+        story_id = data.get('story_id')
+        project = data.get('project', 'default')
+        
+        if not story_id:
+            return jsonify({"success": False, "error": "Story ID is required"}), 400
+        
+        # Import here to avoid circular imports
+        from state_machine import StateMachine
+        
+        # Create state machine instance
+        state_machine = StateMachine()
+        
+        # Start TDD cycle
+        cycle_id = state_machine.start_tdd_cycle(story_id, project_name=project)
+        
+        return jsonify({
+            "success": True,
+            "cycle_id": cycle_id,
+            "story_id": story_id,
+            "project": project,
+            "timestamp": datetime.now().isoformat()
+        })
+        
+    except Exception as e:
+        logger.error(f"Error creating TDD cycle: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+@app.route('/api/tdd/cycles/<cycle_id>/transition', methods=['POST'])
+def transition_tdd_cycle(cycle_id):
+    """Transition TDD cycle to new state"""
+    try:
+        data = request.get_json()
+        new_state = data.get('new_state')
+        project = data.get('project', 'default')
+        
+        if not new_state:
+            return jsonify({"success": False, "error": "New state is required"}), 400
+        
+        # Import here to avoid circular imports
+        from state_machine import StateMachine
+        
+        # Create state machine instance
+        state_machine = StateMachine()
+        
+        # Transition TDD cycle
+        success = state_machine.transition_tdd_cycle(cycle_id, new_state, project)
+        
+        if success:
+            return jsonify({
+                "success": True,
+                "cycle_id": cycle_id,
+                "new_state": new_state,
+                "timestamp": datetime.now().isoformat()
+            })
+        else:
+            return jsonify({
+                "success": False,
+                "error": f"Failed to transition cycle {cycle_id} to {new_state}"
+            }), 400
+        
+    except Exception as e:
+        logger.error(f"Error transitioning TDD cycle {cycle_id}: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+@app.route('/api/tdd/cycles/<cycle_id>/complete', methods=['POST'])
+def complete_tdd_cycle(cycle_id):
+    """Complete a TDD cycle"""
+    try:
+        data = request.get_json() or {}
+        project = data.get('project', 'default')
+        
+        # Import here to avoid circular imports
+        from state_machine import StateMachine
+        
+        # Create state machine instance
+        state_machine = StateMachine()
+        
+        # Complete TDD cycle
+        success = state_machine.complete_tdd_cycle(cycle_id, project)
+        
+        if success:
+            return jsonify({
+                "success": True,
+                "cycle_id": cycle_id,
+                "completed_at": datetime.now().isoformat()
+            })
+        else:
+            return jsonify({
+                "success": False,
+                "error": f"Failed to complete cycle {cycle_id}"
+            }), 400
+        
+    except Exception as e:
+        logger.error(f"Error completing TDD cycle {cycle_id}: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+@app.route('/api/tdd/cycles/<cycle_id>/progress', methods=['POST'])
+def update_tdd_progress(cycle_id):
+    """Update TDD cycle progress"""
+    try:
+        data = request.get_json()
+        progress_data = data.get('progress', {})
+        story_id = data.get('story_id')
+        project = data.get('project', 'default')
+        
+        if not story_id:
+            return jsonify({"success": False, "error": "Story ID is required"}), 400
+        
+        # Import here to avoid circular imports
+        from state_broadcaster import emit_tdd_progress_update
+        
+        # Emit progress update
+        emit_tdd_progress_update(story_id, cycle_id, progress_data, project)
+        
+        return jsonify({
+            "success": True,
+            "cycle_id": cycle_id,
+            "story_id": story_id,
+            "progress": progress_data,
+            "timestamp": datetime.now().isoformat()
+        })
+        
+    except Exception as e:
+        logger.error(f"Error updating TDD progress for cycle {cycle_id}: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+@app.route('/api/tdd/metrics')
+def get_tdd_metrics():
+    """Get TDD cycle metrics and statistics"""
+    try:
+        from state_broadcaster import get_tdd_metrics
+        
+        metrics = get_tdd_metrics()
+        
+        return jsonify({
+            "success": True,
+            "metrics": metrics,
+            "timestamp": datetime.now().isoformat()
+        })
+        
+    except Exception as e:
+        logger.error(f"Error getting TDD metrics: {e}")
         return jsonify({"success": False, "error": str(e)}), 500
 
 
@@ -1340,7 +1527,7 @@ def send_chat_message():
         
         # Create message object
         chat_message = {
-            "id": str(uuid.uuid4()),
+            "id": generate_uuid(),
             "user_id": user_id,
             "username": username,
             "message": message,
@@ -1381,7 +1568,6 @@ def send_chat_message():
                                 )
                             
                             # Run async in event loop
-                            import asyncio
                             try:
                                 loop = asyncio.new_event_loop()
                                 asyncio.set_event_loop(loop)
@@ -1407,7 +1593,7 @@ def send_chat_message():
                     
                     # Create bot response
                     bot_response = {
-                        "id": str(uuid.uuid4()),
+                        "id": generate_uuid(),
                         "user_id": "bot",
                         "username": "Agent Bot",
                         "message": result.get('response', 'Command processed'),
@@ -1437,7 +1623,7 @@ def send_chat_message():
                 except Exception as e:
                     logger.error(f"Error processing command: {e}")
                     error_response = {
-                        "id": str(uuid.uuid4()),
+                        "id": generate_uuid(),
                         "user_id": "bot",
                         "username": "Agent Bot",
                         "message": f"Error processing command: {str(e)}",
@@ -1595,7 +1781,6 @@ def join_collaboration():
             collaboration_manager = get_collaboration_manager()
             return await collaboration_manager.join_session(user_id, project_name, perm_enum)
         
-        import asyncio
         try:
             loop = asyncio.new_event_loop()
             asyncio.set_event_loop(loop)
@@ -1646,7 +1831,6 @@ def leave_collaboration():
             collaboration_manager = get_collaboration_manager()
             await collaboration_manager.leave_session(session_id)
         
-        import asyncio
         try:
             loop = asyncio.new_event_loop()
             asyncio.set_event_loop(loop)
@@ -1679,7 +1863,6 @@ def get_collaboration_status(project_name):
             collaboration_manager = get_collaboration_manager()
             return await collaboration_manager.get_collaboration_status(project_name)
         
-        import asyncio
         try:
             loop = asyncio.new_event_loop()
             asyncio.set_event_loop(loop)
@@ -2034,7 +2217,6 @@ def handle_interface_switch(data):
             logger.error(f"Error switching interface via WebSocket: {e}")
             return {"success": False, "error": str(e)}
     
-    import asyncio
     try:
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
@@ -2111,7 +2293,6 @@ def handle_context_mode_switch(data):
             logger.error(f"Error switching context mode via WebSocket: {e}")
             return {"success": False, "error": str(e)}
     
-    import asyncio
     try:
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
@@ -2178,7 +2359,6 @@ def handle_context_test(data):
             logger.error(f"Error testing context preparation: {e}")
             return {"success": False, "error": str(e)}
     
-    import asyncio
     try:
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
@@ -2212,7 +2392,7 @@ def handle_chat_command(data):
         
         # Create message object with project context
         chat_message = {
-            "id": str(uuid.uuid4()),
+            "id": generate_uuid(),
             "user_id": user_id,
             "username": username,
             "message": message,
@@ -2258,7 +2438,7 @@ def handle_chat_command(data):
                     
                     # Create bot response with project context
                     bot_response = {
-                        "id": str(uuid.uuid4()),
+                        "id": generate_uuid(),
                         "user_id": "bot",
                         "username": "Agent Bot",
                         "message": result.get('response', 'Command processed'),
@@ -2286,7 +2466,7 @@ def handle_chat_command(data):
                 except Exception as e:
                     logger.error(f"Error processing command via WebSocket: {e}")
                     error_response = {
-                        "id": str(uuid.uuid4()),
+                        "id": generate_uuid(),
                         "user_id": "bot",
                         "username": "Agent Bot",
                         "message": f"Error processing command: {str(e)}",
@@ -2559,7 +2739,7 @@ def handle_join_chat(data):
         
         # Send welcome message
         welcome_message = {
-            "id": str(uuid.uuid4()),
+            "id": generate_uuid(),
             "user_id": "system",
             "username": "System",
             "message": f"{username} joined the chat",
@@ -2595,7 +2775,7 @@ def handle_leave_chat(data):
         
         # Send goodbye message
         goodbye_message = {
-            "id": str(uuid.uuid4()),
+            "id": generate_uuid(),
             "user_id": "system",
             "username": "System",
             "message": f"{username} left the chat",
@@ -2611,6 +2791,164 @@ def handle_leave_chat(data):
         
     except Exception as e:
         logger.error(f"Error handling leave chat: {e}")
+
+
+# =====================================================
+# TDD Cycle WebSocket Handlers
+# =====================================================
+
+@socketio.on('start_tdd_cycle')
+def handle_start_tdd_cycle(data):
+    """Handle TDD cycle start request"""
+    try:
+        story_id = data.get('story_id')
+        project = data.get('project', 'default')
+        
+        if not story_id:
+            emit('error', {'message': 'Story ID is required'})
+            return
+        
+        # Import here to avoid circular imports
+        from state_machine import StateMachine
+        
+        # Get or create state machine instance
+        if not hasattr(handle_start_tdd_cycle, '_state_machine'):
+            handle_start_tdd_cycle._state_machine = StateMachine()
+        
+        state_machine = handle_start_tdd_cycle._state_machine
+        
+        # Start TDD cycle
+        cycle_id = state_machine.start_tdd_cycle(story_id, project_name=project)
+        
+        # Emit success event
+        emit('tdd_cycle_started', {
+            'story_id': story_id,
+            'cycle_id': cycle_id,
+            'project': project,
+            'timestamp': datetime.now().isoformat()
+        })
+        
+        logger.info(f"Started TDD cycle {cycle_id} for story {story_id}")
+        
+    except Exception as e:
+        logger.error(f"Error starting TDD cycle: {e}")
+        emit('error', {'message': f'Failed to start TDD cycle: {str(e)}'})
+
+
+@socketio.on('tdd_transition')
+def handle_tdd_transition(data):
+    """Handle TDD state transition request"""
+    try:
+        cycle_id = data.get('cycle_id')
+        new_state = data.get('new_state')
+        project = data.get('project', 'default')
+        
+        if not cycle_id or not new_state:
+            emit('error', {'message': 'Cycle ID and new state are required'})
+            return
+        
+        # Import here to avoid circular imports
+        from state_machine import StateMachine
+        
+        # Get or create state machine instance
+        if not hasattr(handle_tdd_transition, '_state_machine'):
+            handle_tdd_transition._state_machine = StateMachine()
+        
+        state_machine = handle_tdd_transition._state_machine
+        
+        # Transition TDD cycle
+        success = state_machine.transition_tdd_cycle(cycle_id, new_state, project)
+        
+        if success:
+            # The state machine will emit the transition event
+            logger.info(f"TDD cycle {cycle_id} transitioned to {new_state}")
+        else:
+            emit('error', {'message': f'Failed to transition TDD cycle {cycle_id} to {new_state}'})
+        
+    except Exception as e:
+        logger.error(f"Error transitioning TDD cycle: {e}")
+        emit('error', {'message': f'Failed to transition TDD cycle: {str(e)}'})
+
+
+@socketio.on('complete_tdd_cycle')
+def handle_complete_tdd_cycle(data):
+    """Handle TDD cycle completion request"""
+    try:
+        cycle_id = data.get('cycle_id')
+        project = data.get('project', 'default')
+        
+        if not cycle_id:
+            emit('error', {'message': 'Cycle ID is required'})
+            return
+        
+        # Import here to avoid circular imports
+        from state_machine import StateMachine
+        
+        # Get or create state machine instance
+        if not hasattr(handle_complete_tdd_cycle, '_state_machine'):
+            handle_complete_tdd_cycle._state_machine = StateMachine()
+        
+        state_machine = handle_complete_tdd_cycle._state_machine
+        
+        # Complete TDD cycle
+        success = state_machine.complete_tdd_cycle(cycle_id, project)
+        
+        if success:
+            # The state machine will emit the completion event
+            logger.info(f"Completed TDD cycle {cycle_id}")
+        else:
+            emit('error', {'message': f'Failed to complete TDD cycle {cycle_id}'})
+        
+    except Exception as e:
+        logger.error(f"Error completing TDD cycle: {e}")
+        emit('error', {'message': f'Failed to complete TDD cycle: {str(e)}'})
+
+
+@socketio.on('request_tdd_status')
+def handle_request_tdd_status():
+    """Handle request for TDD cycle status"""
+    try:
+        from state_broadcaster import get_all_tdd_cycles, get_tdd_metrics
+        
+        # Get TDD cycle data
+        all_cycles = get_all_tdd_cycles()
+        metrics = get_tdd_metrics()
+        
+        emit('tdd_status_update', {
+            'cycles': all_cycles,
+            'metrics': metrics,
+            'timestamp': datetime.now().isoformat()
+        })
+        
+    except Exception as e:
+        logger.error(f"Error getting TDD status: {e}")
+        emit('error', {'message': f'Failed to get TDD status: {str(e)}'})
+
+
+@socketio.on('update_tdd_progress')
+def handle_update_tdd_progress(data):
+    """Handle TDD cycle progress update"""
+    try:
+        story_id = data.get('story_id')
+        cycle_id = data.get('cycle_id')
+        progress_data = data.get('progress', {})
+        project = data.get('project', 'default')
+        
+        if not story_id or not cycle_id:
+            emit('error', {'message': 'Story ID and cycle ID are required'})
+            return
+        
+        # Import here to avoid circular imports
+        from state_broadcaster import emit_tdd_progress_update
+        
+        # Emit progress update
+        emit_tdd_progress_update(story_id, cycle_id, progress_data, project)
+        
+        logger.info(f"Updated TDD progress for cycle {cycle_id}: {progress_data}")
+        
+    except Exception as e:
+        logger.error(f"Error updating TDD progress: {e}")
+        emit('error', {'message': f'Failed to update TDD progress: {str(e)}'})
 
 
 @socketio.on('disconnect')
@@ -2648,6 +2986,7 @@ class StateMonitor:
                     # Listen for state updates
                     async for message in websocket:
                         try:
+                            import json
                             data = json.loads(message)
                             self.handle_state_update(data)
                         except json.JSONDecodeError as e:
@@ -2701,7 +3040,6 @@ def run_visualizer(host='localhost', port=5000, debug=False):
     
     # Start state monitoring in background
     import threading
-    import asyncio
     
     def monitor_thread():
         """Thread function for state monitoring"""
@@ -2961,70 +3299,6 @@ def invite_team_member(project_id):
         logger.error(f"Error inviting team member to {project_id}: {e}")
         return jsonify({"success": False, "error": str(e)}), 500
 
-
-@app.after_request
-def add_enhanced_cache_headers(response):
-    """Add enhanced headers to completely disable caching and ensure correct content types"""
-    # Determine if this is a static file request
-    is_static = (request.path.startswith('/static/') or 
-                request.path.endswith('.js') or 
-                request.path.endswith('.css') or
-                request.path.endswith('.html'))
-    
-    if is_static:
-        # Ultra-aggressive cache busting for static files
-        response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0'
-        response.headers['Pragma'] = 'no-cache'
-        response.headers['Expires'] = '0'
-        response.headers['Last-Modified'] = datetime.now().strftime('%a, %d %b %Y %H:%M:%S GMT')
-        response.headers['ETag'] = f'"{int(time.time())}"'
-        
-        # Add development timestamp to identify cache issues
-        response.headers['X-Dev-Timestamp'] = str(int(time.time() * 1000))
-        response.headers['X-Cache-Buster'] = hashlib.md5(str(time.time()).encode()).hexdigest()[:8]
-        
-    # Ensure correct content types for JavaScript and CSS
-    if request.path.endswith('.js'):
-        response.headers['Content-Type'] = 'application/javascript; charset=utf-8'
-    elif request.path.endswith('.css'):
-        response.headers['Content-Type'] = 'text/css; charset=utf-8'
-    elif request.path.endswith('.html'):
-        response.headers['Content-Type'] = 'text/html; charset=utf-8'
-    
-    return response
-
-
-
-@app.after_request
-def add_enhanced_cache_headers(response):
-    """Add enhanced headers to completely disable caching and ensure correct content types"""
-    # Determine if this is a static file request
-    is_static = (request.path.startswith('/static/') or 
-                request.path.endswith('.js') or 
-                request.path.endswith('.css') or
-                request.path.endswith('.html'))
-    
-    if is_static:
-        # Ultra-aggressive cache busting for static files
-        response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0'
-        response.headers['Pragma'] = 'no-cache'
-        response.headers['Expires'] = '0'
-        response.headers['Last-Modified'] = datetime.now().strftime('%a, %d %b %Y %H:%M:%S GMT')
-        response.headers['ETag'] = f'"{int(time.time())}"'
-        
-        # Add development timestamp to identify cache issues
-        response.headers['X-Dev-Timestamp'] = str(int(time.time() * 1000))
-        response.headers['X-Cache-Buster'] = hashlib.md5(str(time.time()).encode()).hexdigest()[:8]
-        
-    # Ensure correct content types for JavaScript and CSS
-    if request.path.endswith('.js'):
-        response.headers['Content-Type'] = 'application/javascript; charset=utf-8'
-    elif request.path.endswith('.css'):
-        response.headers['Content-Type'] = 'text/css; charset=utf-8'
-    elif request.path.endswith('.html'):
-        response.headers['Content-Type'] = 'text/html; charset=utf-8'
-    
-    return response
 
 if __name__ == '__main__':
     import argparse

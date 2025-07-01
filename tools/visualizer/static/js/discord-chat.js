@@ -3,11 +3,13 @@
  * 
  * WebSocket-powered real-time chat interface with Discord bot command support,
  * autocomplete, keyboard shortcuts, and typing indicators.
+ * Now uses unified WebSocket Manager and DOM utilities.
  */
 
 class DiscordChat {
     constructor(socketIO, visualizer) {
-        this.socket = socketIO;
+        // Use global WebSocket manager if available, fallback to provided socket
+        this.socket = window.wsManager || socketIO;
         this.visualizer = visualizer;
         this.userId = this.generateUserId();
         this.username = 'User';
@@ -33,14 +35,25 @@ class DiscordChat {
         this.currentProjectRoom = null;
         this.projectTypingUsers = new Map(); // project_name -> Set of typing users
         
-        // Initialize components
-        this.initializeEventHandlers();
-        this.setupWebSocketHandlers();
-        this.initializeProjectIsolation();
-        this.loadChatHistory();
-        this.initializeCollaboration();
-        
-        console.log('Discord chat initialized with user ID:', this.userId);
+        // Initialize components with error handling
+        try {
+            this.initializeEventHandlers();
+            this.setupWebSocketHandlers();
+            this.initializeProjectIsolation();
+            this.loadChatHistory();
+            this.initializeCollaboration();
+            
+            console.log('Discord chat initialized with user ID:', this.userId);
+        } catch (error) {
+            if (window.ErrorManager) {
+                window.ErrorManager.handleError(error, {
+                    component: 'DiscordChat',
+                    operation: 'initialization'
+                });
+            } else {
+                console.error('Failed to initialize Discord chat:', error);
+            }
+        }
     }
     
     /**
@@ -133,15 +146,15 @@ class DiscordChat {
     }
     
     /**
-     * Initialize DOM event handlers
+     * Initialize DOM event handlers using shared utilities
      */
     initializeEventHandlers() {
         console.log('🔧 Initializing DiscordChat event handlers...');
         
-        const messageInput = document.getElementById('chat-input-field');
-        const sendButton = document.getElementById('chat-send-btn');
-        const chatMessages = document.getElementById('chat-messages');
-        const autocompleteDropdown = document.getElementById('chat-autocomplete');
+        const messageInput = $('#chat-input-field');
+        const sendButton = $('#chat-send-btn');
+        const chatMessages = $('#chat-messages');
+        const autocompleteDropdown = $('#chat-autocomplete');
         
         console.log('Elements found:', {
             messageInput: !!messageInput,
@@ -160,10 +173,10 @@ class DiscordChat {
             return;
         }
         
-        // Message input handlers
-        messageInput.addEventListener('keydown', (e) => this.handleKeyDown(e));
-        messageInput.addEventListener('keyup', (e) => this.handleKeyUp(e));
-        messageInput.addEventListener('input', (e) => {
+        // Message input handlers using DOM utilities
+        DOMUtils.on(messageInput, 'keydown', (e) => this.handleKeyDown(e));
+        DOMUtils.on(messageInput, 'keyup', (e) => this.handleKeyUp(e));
+        DOMUtils.on(messageInput, 'input', (e) => {
             // Handle input for autocomplete
             this.handleInput(e);
             
@@ -172,13 +185,13 @@ class DiscordChat {
             sendButton.disabled = !hasContent;
             console.log('Input changed, has content:', hasContent, 'button disabled:', !hasContent);
         });
-        messageInput.addEventListener('blur', () => this.hideAutocomplete());
+        DOMUtils.on(messageInput, 'blur', () => this.hideAutocomplete());
         
         // Initial state - disable send button if input is empty
         sendButton.disabled = messageInput.value.trim().length === 0;
         
         // Send button
-        sendButton.addEventListener('click', () => {
+        DOMUtils.on(sendButton, 'click', () => {
             console.log('Send button clicked');
             this.sendMessage();
         });
@@ -281,34 +294,37 @@ class DiscordChat {
     }
     
     /**
-     * Setup WebSocket event handlers for chat
+     * Setup WebSocket event handlers for chat using unified manager
      */
     setupWebSocketHandlers() {
+        // Use WebSocket manager if available
+        const socketManager = this.socket;
+        
         // New chat message - now project-aware
-        this.socket.on('new_chat_message', (data) => {
+        socketManager.on('new_chat_message', (data) => {
             console.log('Received new_chat_message:', data);
             this.handleProjectMessage(data);
         });
         
         // Command response - now project-aware
-        this.socket.on('command_response', (data) => {
+        socketManager.on('command_response', (data) => {
             console.log('Received command_response:', data);
             this.handleProjectMessage(data);
             this.highlightStateChange(data);
         });
         
         // Project-specific typing indicators
-        this.socket.on('typing_indicator', (data) => {
+        socketManager.on('typing_indicator', (data) => {
             this.handleProjectTypingIndicator(data);
         });
         
         // Bot typing - project-aware
-        this.socket.on('bot_typing', (data) => {
+        socketManager.on('bot_typing', (data) => {
             this.handleProjectBotTyping(data);
         });
         
         // Project-specific chat history response
-        this.socket.on('chat_history', (data) => {
+        socketManager.on('chat_history', (data) => {
             this.loadProjectHistoryMessages(data.messages, data.project_name);
         });
         
@@ -449,14 +465,23 @@ class DiscordChat {
         console.log('Socket connected:', this.socket && this.socket.connected);
         
         try {
-            this.socket.emit('chat_command', {
-                message: message,
-                user_id: this.userId,
-                username: this.username,
-                session_id: this.sessionId,
-                project_name: this.projectName || 'default',
-                room: this.currentProjectRoom
-            });
+            // Use WebSocket manager's sendChatMessage method if available
+            if (this.socket.sendChatMessage) {
+                this.socket.sendChatMessage(message, {
+                    user_id: this.userId,
+                    username: this.username,
+                    session_id: this.sessionId
+                });
+            } else {
+                this.socket.emit('chat_command', {
+                    message: message,
+                    user_id: this.userId,
+                    username: this.username,
+                    session_id: this.sessionId,
+                    project_name: this.projectName || 'default',
+                    room: this.currentProjectRoom
+                });
+            }
             console.log('Message sent successfully for project:', this.projectName);
             
             // Save command to project-specific history
@@ -1240,9 +1265,15 @@ class DiscordChat {
     }
     
     /**
-     * Show error message
+     * Show error message using unified system
      */
     showError(errorMessage) {
+        // Use global message system first
+        if (window.domUtils) {
+            window.domUtils.showMessage(errorMessage, 'error');
+        }
+        
+        // Also add to chat
         const errorMsg = {
             id: 'error_' + Date.now(),
             user_id: 'system',

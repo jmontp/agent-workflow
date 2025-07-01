@@ -31,7 +31,14 @@ class ProjectManager {
             
             console.log('✅ ProjectManager initialized successfully');
         } catch (error) {
-            console.error('❌ Failed to initialize ProjectManager:', error);
+            if (window.ErrorManager) {
+                window.ErrorManager.handleError(error, {
+                    component: 'ProjectManager',
+                    operation: 'initialization'
+                });
+            } else {
+                console.error('❌ Failed to initialize ProjectManager:', error);
+            }
         }
     }
     
@@ -446,24 +453,23 @@ class ProjectManager {
     }
     
     /**
-     * Create a project tab element
+     * Create a project tab element using DOM utilities
      */
     createProjectTab(project) {
-        const tab = document.createElement('div');
-        tab.className = `project-tab ${project.id === this.activeProject ? 'active' : ''}`;
-        tab.setAttribute('data-project', project.id);
-        tab.title = `${project.name} (${project.status})`;
-        
-        tab.innerHTML = `
+        const tab = DOMUtils.createElement('div', {
+            class: `project-tab ${project.id === this.activeProject ? 'active' : ''}`,
+            'data-project': project.id,
+            title: `${project.name} (${project.status})`
+        }, `
             <span class="project-icon">${project.icon}</span>
             <span class="project-name">${project.name}</span>
             <span class="project-status-dot" data-status="${project.status}"></span>
-        `;
+        `);
         
         // Add entrance animation
-        tab.classList.add('tab-enter');
+        DOMUtils.addClass(tab, 'tab-enter');
         setTimeout(() => {
-            tab.classList.remove('tab-enter');
+            DOMUtils.removeClass(tab, 'tab-enter');
         }, 300);
         
         return tab;
@@ -1804,37 +1810,16 @@ class ProjectManager {
     }
     
     /**
-     * Show message to user
+     * Show message to user using unified system
      */
     showMessage(message, type = 'info') {
-        // Create message element
-        const messageDiv = document.createElement('div');
-        messageDiv.className = `message-toast ${type}`;
-        messageDiv.textContent = message;
-        messageDiv.style.cssText = `
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: ${type === 'success' ? 'var(--chat-success)' : type === 'error' ? 'var(--chat-error)' : 'var(--chat-info)'};
-            color: white;
-            padding: 12px 16px;
-            border-radius: var(--chat-border-radius);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            z-index: 10000;
-            animation: slideInRight 0.3s ease-out;
-        `;
-        
-        document.body.appendChild(messageDiv);
-        
-        // Remove after 4 seconds
-        setTimeout(() => {
-            if (messageDiv.parentNode) {
-                messageDiv.style.animation = 'slideOutRight 0.3s ease-in';
-                setTimeout(() => {
-                    messageDiv.remove();
-                }, 300);
-            }
-        }, 4000);
+        // Use global DOM utilities message system
+        if (window.domUtils) {
+            window.domUtils.showMessage(message, type);
+        } else {
+            // Fallback for compatibility
+            console.log(`[${type.toUpperCase()}] ${message}`);
+        }
         
         // Also log to activity log if available
         if (window.visualizer && window.visualizer.addActivityLog) {

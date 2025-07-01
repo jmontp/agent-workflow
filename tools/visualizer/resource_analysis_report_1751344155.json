@@ -1,0 +1,474 @@
+{
+  "timestamp": "2025-07-01T00:29:13.980021",
+  "server_status": {
+    "running": true,
+    "status_code": 200,
+    "response_time_ms": 2.94,
+    "server_header": "Werkzeug/3.0.1 Python/3.12.3",
+    "content_type": "text/html; charset=utf-8",
+    "content_length": 52570
+  },
+  "static_files": {
+    "visualizer.js": {
+      "status_code": 200,
+      "content_length": 72536,
+      "content_hash": "f0d3f6d93bf3db43",
+      "local_hash": "f0d3f6d93bf3db43",
+      "local_modified": 1751342325.010601,
+      "hash_match": true,
+      "content_type": "application/javascript; charset=utf-8",
+      "cache_control": "no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "etag": "\"1751342325.010601-72536-1816994810\"",
+      "last_modified": "Tue, 01 Jul 2025 03:58:45 GMT",
+      "cache_control_effective": true,
+      "cache_test_consistent": true
+    },
+    "css/discord-chat.css": {
+      "status_code": 200,
+      "content_length": 48876,
+      "content_hash": "e4d85dfada27d5bc",
+      "local_hash": "e4d85dfada27d5bc",
+      "local_modified": 1751342536.570485,
+      "hash_match": true,
+      "content_type": "text/css; charset=utf-8",
+      "cache_control": "no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "etag": "\"1751342536.570485-48876-1824335429\"",
+      "last_modified": "Tue, 01 Jul 2025 04:02:16 GMT",
+      "cache_control_effective": true,
+      "cache_test_consistent": true
+    },
+    "style.css": {
+      "status_code": 200,
+      "content_length": 47760,
+      "content_hash": "152c17495c55cdce",
+      "local_hash": "152c17495c55cdce",
+      "local_modified": 1751337757.9364712,
+      "hash_match": true,
+      "content_type": "text/css; charset=utf-8",
+      "cache_control": "no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "etag": "\"1751337757.9364712-47760-3723240009\"",
+      "last_modified": "Tue, 01 Jul 2025 02:42:37 GMT",
+      "cache_control_effective": true,
+      "cache_test_consistent": true
+    },
+    "js/chat-components.js": {
+      "status_code": 200,
+      "content_length": 29708,
+      "content_hash": "88f2512b87a25b53",
+      "local_hash": "88f2512b87a25b53",
+      "local_modified": 1751336941.8775797,
+      "hash_match": true,
+      "content_type": "application/javascript; charset=utf-8",
+      "cache_control": "no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "etag": "\"1751336941.8775797-29708-2467636939\"",
+      "last_modified": "Tue, 01 Jul 2025 02:29:01 GMT",
+      "cache_control_effective": true,
+      "cache_test_consistent": true
+    },
+    "js/discord-chat.js": {
+      "status_code": 200,
+      "content_length": 52663,
+      "content_hash": "756ef7aa0a9056ba",
+      "local_hash": "756ef7aa0a9056ba",
+      "local_modified": 1751340364.0799975,
+      "hash_match": true,
+      "content_type": "application/javascript; charset=utf-8",
+      "cache_control": "no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "etag": "\"1751340364.0799975-52663-535438701\"",
+      "last_modified": "Tue, 01 Jul 2025 03:26:04 GMT",
+      "cache_control_effective": true,
+      "cache_test_consistent": true
+    },
+    "js/project-manager.js": {
+      "status_code": 200,
+      "content_length": 84005,
+      "content_hash": "5c1e9d40e9c682ee",
+      "local_hash": "5c1e9d40e9c682ee",
+      "local_modified": 1751341844.4784808,
+      "hash_match": true,
+      "content_type": "application/javascript; charset=utf-8",
+      "cache_control": "no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "etag": "\"1751341844.4784808-84005-2488149687\"",
+      "last_modified": "Tue, 01 Jul 2025 03:50:44 GMT",
+      "cache_control_effective": true,
+      "cache_test_consistent": true
+    },
+    "js/mobile-enhancements.js": {
+      "status_code": 200,
+      "content_length": 49822,
+      "content_hash": "9ebbbb4244c84bf5",
+      "local_hash": "9ebbbb4244c84bf5",
+      "local_modified": 1751342330.4600627,
+      "hash_match": true,
+      "content_type": "application/javascript; charset=utf-8",
+      "cache_control": "no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "etag": "\"1751342330.4600627-49822-845162582\"",
+      "last_modified": "Tue, 01 Jul 2025 03:58:50 GMT",
+      "cache_control_effective": true,
+      "cache_test_consistent": true
+    },
+    "js/ui-enhancements.js": {
+      "status_code": 200,
+      "content_length": 24568,
+      "content_hash": "05bd17b8b0708c17",
+      "local_hash": "05bd17b8b0708c17",
+      "local_modified": 1751291102.4515517,
+      "hash_match": true,
+      "content_type": "application/javascript; charset=utf-8",
+      "cache_control": "no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "etag": "\"1751291102.4515517-24568-2459379388\"",
+      "last_modified": "Mon, 30 Jun 2025 13:45:02 GMT",
+      "cache_control_effective": true,
+      "cache_test_consistent": true
+    },
+    "js/accessibility-enhancements.js": {
+      "status_code": 200,
+      "content_length": 37134,
+      "content_hash": "188d0cc165c26e16",
+      "local_hash": "188d0cc165c26e16",
+      "local_modified": 1751342216.9594042,
+      "hash_match": true,
+      "content_type": "application/javascript; charset=utf-8",
+      "cache_control": "no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "etag": "\"1751342216.9594042-37134-1532767046\"",
+      "last_modified": "Tue, 01 Jul 2025 03:56:56 GMT",
+      "cache_control_effective": true,
+      "cache_test_consistent": true
+    },
+    "js/chat-init-failsafe.js": {
+      "status_code": 200,
+      "content_length": 5808,
+      "content_hash": "2fbf8ea55763f404",
+      "local_hash": "2fbf8ea55763f404",
+      "local_modified": 1751336672.6047187,
+      "hash_match": true,
+      "content_type": "application/javascript; charset=utf-8",
+      "cache_control": "no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "etag": "\"1751336672.6047187-5808-109324193\"",
+      "last_modified": "Tue, 01 Jul 2025 02:24:32 GMT",
+      "cache_control_effective": true,
+      "cache_test_consistent": true
+    },
+    "force-visualizer-mode.js": {
+      "status_code": 200,
+      "content_length": 12350,
+      "content_hash": "0110d99fec325665",
+      "local_hash": "0110d99fec325665",
+      "local_modified": 1751344041.5168147,
+      "hash_match": true,
+      "content_type": "application/javascript; charset=utf-8",
+      "cache_control": "no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "etag": "\"1751344041.5168147-12350-235939848\"",
+      "last_modified": "Tue, 01 Jul 2025 04:27:21 GMT",
+      "cache_control_effective": true,
+      "cache_test_consistent": true
+    },
+    "emergency-modal-fix.css": {
+      "status_code": 200,
+      "content_length": 523,
+      "content_hash": "d5d38e60f1991bb9",
+      "local_hash": "d5d38e60f1991bb9",
+      "local_modified": 1751342359.1882508,
+      "hash_match": true,
+      "content_type": "text/css; charset=utf-8",
+      "cache_control": "no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "etag": "\"1751342359.1882508-523-3832031109\"",
+      "last_modified": "Tue, 01 Jul 2025 03:59:19 GMT",
+      "cache_control_effective": true,
+      "cache_test_consistent": true
+    },
+    "layout-fix.css": {
+      "status_code": 200,
+      "content_length": 4735,
+      "content_hash": "dc8365cf9d12a9fc",
+      "local_hash": "dc8365cf9d12a9fc",
+      "local_modified": 1751343983.5713136,
+      "hash_match": true,
+      "content_type": "text/css; charset=utf-8",
+      "cache_control": "no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "etag": "\"1751343983.5713136-4735-2391876650\"",
+      "last_modified": "Tue, 01 Jul 2025 04:26:23 GMT",
+      "cache_control_effective": true,
+      "cache_test_consistent": true
+    }
+  },
+  "external_resources": {
+    "socket.io.min.js": {
+      "url": "https://cdn.socket.io/4.7.2/socket.io.min.js",
+      "status_code": 200,
+      "response_time_ms": 66.35,
+      "content_length": 49732,
+      "content_type": "application/javascript; charset=utf-8",
+      "cache_control": "public, max-age=31536000, immutable",
+      "cdn_headers": {
+        "cf-ray": null,
+        "cf-cache-status": null,
+        "x-cache": "Hit from cloudfront",
+        "server": "Vercel"
+      }
+    },
+    "mermaid.min.js": {
+      "url": "https://cdn.jsdelivr.net/npm/mermaid@10.4.0/dist/mermaid.min.js",
+      "status_code": 200,
+      "response_time_ms": 172.25,
+      "content_length": 2908475,
+      "content_type": "application/javascript; charset=utf-8",
+      "cache_control": "public, max-age=31536000, s-maxage=31536000, immutable",
+      "cdn_headers": {
+        "cf-ray": "9583294ebd00a93c-DTW",
+        "cf-cache-status": "HIT",
+        "x-cache": "HIT, HIT",
+        "server": "cloudflare"
+      }
+    }
+  },
+  "cache_headers": {},
+  "resource_integrity": {},
+  "loading_order": {
+    "external_scripts_first": [
+      "https://cdn.socket.io/4.7.2/socket.io.min.js",
+      "https://cdn.jsdelivr.net/npm/mermaid@10.4.0/dist/mermaid.min.js"
+    ],
+    "local_scripts": [
+      "/static/js/accessibility-enhancements.js",
+      "/static/force-visualizer-mode.js",
+      "/static/js/chat-components.js",
+      "/static/js/discord-chat.js",
+      "/static/js/project-manager.js",
+      "/static/js/project-management.js",
+      "/static/js/mobile-enhancements.js",
+      "/static/js/ui-enhancements.js",
+      "/static/visualizer.js",
+      "/static/js/chat-init-failsafe.js"
+    ],
+    "stylesheets": [
+      "/static/style.css",
+      "/static/css/discord-chat.css",
+      "/static/emergency-modal-fix.css",
+      "/static/layout-fix.css",
+      "/static/js/ui-enhancements.js",
+      "/static/manifest.json"
+    ],
+    "script_count": 12,
+    "stylesheet_count": 6
+  },
+  "potential_issues": [
+    {
+      "type": "ineffective_cache_control",
+      "file": "visualizer.js",
+      "cache_control": "no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0",
+      "severity": "medium"
+    },
+    {
+      "type": "ineffective_cache_control",
+      "file": "css/discord-chat.css",
+      "cache_control": "no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0",
+      "severity": "medium"
+    },
+    {
+      "type": "ineffective_cache_control",
+      "file": "style.css",
+      "cache_control": "no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0",
+      "severity": "medium"
+    },
+    {
+      "type": "ineffective_cache_control",
+      "file": "js/chat-components.js",
+      "cache_control": "no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0",
+      "severity": "medium"
+    },
+    {
+      "type": "ineffective_cache_control",
+      "file": "js/discord-chat.js",
+      "cache_control": "no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0",
+      "severity": "medium"
+    },
+    {
+      "type": "ineffective_cache_control",
+      "file": "js/project-manager.js",
+      "cache_control": "no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0",
+      "severity": "medium"
+    },
+    {
+      "type": "ineffective_cache_control",
+      "file": "js/mobile-enhancements.js",
+      "cache_control": "no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0",
+      "severity": "medium"
+    },
+    {
+      "type": "ineffective_cache_control",
+      "file": "js/ui-enhancements.js",
+      "cache_control": "no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0",
+      "severity": "medium"
+    },
+    {
+      "type": "ineffective_cache_control",
+      "file": "js/accessibility-enhancements.js",
+      "cache_control": "no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0",
+      "severity": "medium"
+    },
+    {
+      "type": "ineffective_cache_control",
+      "file": "js/chat-init-failsafe.js",
+      "cache_control": "no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0",
+      "severity": "medium"
+    },
+    {
+      "type": "ineffective_cache_control",
+      "file": "force-visualizer-mode.js",
+      "cache_control": "no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0",
+      "severity": "medium"
+    },
+    {
+      "type": "ineffective_cache_control",
+      "file": "emergency-modal-fix.css",
+      "cache_control": "no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0",
+      "severity": "medium"
+    },
+    {
+      "type": "ineffective_cache_control",
+      "file": "layout-fix.css",
+      "cache_control": "no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0",
+      "severity": "medium"
+    },
+    {
+      "type": "too_many_scripts",
+      "count": 10,
+      "recommendation": "Consider bundling scripts to reduce HTTP requests",
+      "severity": "low"
+    }
+  ],
+  "cache_test_results": {
+    "normal_request": {
+      "status_code": 200,
+      "content_length": 72536,
+      "response_headers": {
+        "Server": "Werkzeug/3.0.1 Python/3.12.3",
+        "Date": "Tue, 01 Jul 2025 04:29:15 GMT, Tue, 01 Jul 2025 04:29:15 GMT",
+        "Content-Disposition": "inline; filename=visualizer.js",
+        "Content-Type": "application/javascript; charset=utf-8",
+        "Content-Length": "72536",
+        "Last-Modified": "Tue, 01 Jul 2025 03:58:45 GMT",
+        "Cache-Control": "no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0",
+        "Expires": "-1",
+        "ETag": "\"1751342325.010601-72536-1816994810\"",
+        "Pragma": "no-cache",
+        "Connection": "close"
+      },
+      "content_hash": "f0d3f6d93bf3db43"
+    },
+    "cache_buster_timestamp": {
+      "status_code": 200,
+      "content_length": 72536,
+      "response_headers": {
+        "Server": "Werkzeug/3.0.1 Python/3.12.3",
+        "Date": "Tue, 01 Jul 2025 04:29:15 GMT, Tue, 01 Jul 2025 04:29:15 GMT",
+        "Content-Disposition": "inline; filename=visualizer.js",
+        "Content-Type": "application/javascript; charset=utf-8",
+        "Content-Length": "72536",
+        "Last-Modified": "Tue, 01 Jul 2025 03:58:45 GMT",
+        "Cache-Control": "no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0",
+        "Expires": "-1",
+        "ETag": "\"1751342325.010601-72536-1816994810\"",
+        "Pragma": "no-cache",
+        "Connection": "close"
+      },
+      "content_hash": "f0d3f6d93bf3db43"
+    },
+    "cache_buster_random": {
+      "status_code": 200,
+      "content_length": 72536,
+      "response_headers": {
+        "Server": "Werkzeug/3.0.1 Python/3.12.3",
+        "Date": "Tue, 01 Jul 2025 04:29:15 GMT, Tue, 01 Jul 2025 04:29:15 GMT",
+        "Content-Disposition": "inline; filename=visualizer.js",
+        "Content-Type": "application/javascript; charset=utf-8",
+        "Content-Length": "72536",
+        "Last-Modified": "Tue, 01 Jul 2025 03:58:45 GMT",
+        "Cache-Control": "no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0",
+        "Expires": "-1",
+        "ETag": "\"1751342325.010601-72536-1816994810\"",
+        "Pragma": "no-cache",
+        "Connection": "close"
+      },
+      "content_hash": "f0d3f6d93bf3db43"
+    },
+    "no_cache_header": {
+      "status_code": 200,
+      "content_length": 72536,
+      "response_headers": {
+        "Server": "Werkzeug/3.0.1 Python/3.12.3",
+        "Date": "Tue, 01 Jul 2025 04:29:15 GMT, Tue, 01 Jul 2025 04:29:15 GMT",
+        "Content-Disposition": "inline; filename=visualizer.js",
+        "Content-Type": "application/javascript; charset=utf-8",
+        "Content-Length": "72536",
+        "Last-Modified": "Tue, 01 Jul 2025 03:58:45 GMT",
+        "Cache-Control": "no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0",
+        "Expires": "-1",
+        "ETag": "\"1751342325.010601-72536-1816994810\"",
+        "Pragma": "no-cache",
+        "Connection": "close"
+      },
+      "content_hash": "f0d3f6d93bf3db43"
+    }
+  },
+  "service_worker": {
+    "error": "name 're' is not defined"
+  },
+  "cache_clearing_instructions": {
+    "immediate_actions": [],
+    "browser_specific": {
+      "chrome": [
+        "Press Ctrl+Shift+R (Windows/Linux) or Cmd+Shift+R (Mac) for hard refresh",
+        "Or press F12 -> Network tab -> check 'Disable cache' -> refresh",
+        "For deep clean: Settings -> Privacy and security -> Clear browsing data -> Cached images and files"
+      ],
+      "firefox": [
+        "Press Ctrl+F5 (Windows/Linux) or Cmd+Shift+R (Mac) for hard refresh",
+        "Or press F12 -> Network tab -> gear icon -> check 'Disable cache' -> refresh",
+        "For deep clean: Settings -> Privacy & Security -> Cookies and Site Data -> Clear Data"
+      ],
+      "edge": [
+        "Press Ctrl+Shift+R for hard refresh",
+        "Or press F12 -> Network tab -> check 'Disable cache' -> refresh"
+      ]
+    },
+    "developer_tools": [
+      "Enable 'Disable cache' in Network tab while dev tools are open",
+      "Use 'Empty Cache and Hard Reload' option (right-click refresh button with dev tools open)",
+      "Check Console tab for JavaScript errors during page load",
+      "Monitor Network tab for failed resource requests (red entries)",
+      "Use Application/Storage tab to clear all site data"
+    ],
+    "server_side": [
+      "Consider strengthening cache-busting headers"
+    ]
+  },
+  "automated_cleaner": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/tools/visualizer/automated_cache_cleaner.py"
+}

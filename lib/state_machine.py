@@ -14,11 +14,23 @@ from datetime import datetime
 
 # Import state broadcaster for real-time visualization
 try:
-    from .state_broadcaster import emit_workflow_transition
+    from .state_broadcaster import emit_workflow_transition, emit_tdd_transition
+    from .tdd_models import TDDState, TDDCycle, TDDTask
 except ImportError:
     # Graceful fallback if broadcaster is not available
     def emit_workflow_transition(old_state, new_state, project_name="default"):
         pass
+    
+    def emit_tdd_transition(story_id, old_state, new_state, project_name="default"):
+        pass
+    
+    # Create minimal TDD state enum for fallback
+    class TDDState:
+        DESIGN = "design"
+        TEST_RED = "test_red"
+        CODE_GREEN = "code_green"
+        REFACTOR = "refactor"
+        COMMIT = "commit"
 
 logger = logging.getLogger(__name__)
 
@@ -114,7 +126,9 @@ class StateMachine:
     def __init__(self, initial_state: State = State.IDLE):
         self.current_state = initial_state
         self.active_tdd_cycles: Dict[str, str] = {}  # story_id -> cycle_id mapping
+        self.tdd_cycles: Dict[str, Dict[str, Any]] = {}  # cycle_id -> cycle data
         self.tdd_transition_listeners: List[callable] = []
+        self.tdd_state_machine: Dict[str, str] = {}  # cycle_id -> current TDD state
         logger.info(f"StateMachine initialized in state: {initial_state.value}")
     
     def validate_command(self, command: str, context: Optional[Dict] = None) -> CommandResult:
@@ -397,16 +411,185 @@ class StateMachine:
     
     def get_tdd_workflow_status(self) -> Dict[str, Any]:
         """Get comprehensive TDD workflow status for the main state machine"""
+        tdd_cycle_details = {}
+        for cycle_id, cycle_data in self.tdd_cycles.items():
+            tdd_cycle_details[cycle_id] = {
+                "story_id": cycle_data.get("story_id", ""),
+                "current_state": cycle_data.get("current_state", TDDState.DESIGN),
+                "progress": cycle_data.get("progress", {}),
+                "last_updated": cycle_data.get("last_updated", datetime.now().isoformat())
+            }
+        
         return {
             "main_workflow_state": self.current_state.value,
             "active_tdd_cycles": len(self.active_tdd_cycles),
             "tdd_cycles_by_story": self.active_tdd_cycles,
+            "tdd_cycle_details": tdd_cycle_details,
             "can_transition_to_review": not self.has_active_tdd_cycles(),
             "sprint_tdd_coordination": {
                 "blocking_sprint_review": self.current_state == State.SPRINT_ACTIVE and self.has_active_tdd_cycles(),
                 "sprint_allows_tdd": self.current_state in [State.SPRINT_ACTIVE, State.SPRINT_PAUSED]
+            },
+            "tdd_constraints": self.get_tdd_constraints()
+        }
+    
+    # =============================================================================
+    # TDD Cycle Management Methods
+    # =============================================================================
+    
+    def start_tdd_cycle(self, story_id: str, cycle_id: Optional[str] = None, project_name: str = "default") -> str:
+        """Start a new TDD cycle for a story"""
+        if not cycle_id:
+            cycle_id = f"tdd-cycle-{story_id}-{datetime.now().strftime('%Y%m%d-%H%M%S')}"
+        
+        # Initialize TDD cycle data
+        cycle_data = {
+            "story_id": story_id,
+            "current_state": TDDState.DESIGN,
+            "tasks": [],
+            "current_task_id": None,
+            "started_at": datetime.now().isoformat(),
+            "last_updated": datetime.now().isoformat(),
+            "progress": {
+                "total_tasks": 0,
+                "completed_tasks": 0,
+                "test_runs": 0,
+                "commits": 0
             }
         }
+        
+        # Register the cycle
+        self.active_tdd_cycles[story_id] = cycle_id
+        self.tdd_cycles[cycle_id] = cycle_data
+        self.tdd_state_machine[cycle_id] = TDDState.DESIGN
+        
+        # Emit TDD transition event
+        emit_tdd_transition(story_id, None, TDDState.DESIGN, project_name)
+        
+        logger.info(f"Started TDD cycle {cycle_id} for story {story_id}")
+        return cycle_id
+    
+    def transition_tdd_cycle(self, cycle_id: str, new_state: str, project_name: str = "default") -> bool:
+        """Transition a TDD cycle to a new state"""
+        if cycle_id not in self.tdd_cycles:
+            logger.error(f"TDD cycle {cycle_id} not found")
+            return False
+        
+        # Validate TDD state transition
+        valid_transitions = {
+            TDDState.DESIGN: [TDDState.TEST_RED],
+            TDDState.TEST_RED: [TDDState.CODE_GREEN, TDDState.DESIGN],
+            TDDState.CODE_GREEN: [TDDState.REFACTOR, TDDState.COMMIT, TDDState.TEST_RED],
+            TDDState.REFACTOR: [TDDState.COMMIT, TDDState.TEST_RED],
+            TDDState.COMMIT: [TDDState.DESIGN]  # Can start next task or complete cycle
+        }
+        
+        current_state = self.tdd_state_machine.get(cycle_id, TDDState.DESIGN)
+        
+        # Allow transition if valid or if it's a string state
+        if isinstance(new_state, str):
+            # Convert string to TDD state if possible
+            try:
+                new_tdd_state = getattr(TDDState, new_state.upper())
+            except AttributeError:
+                # Try with exact value match
+                for state in [TDDState.DESIGN, TDDState.TEST_RED, TDDState.CODE_GREEN, TDDState.REFACTOR, TDDState.COMMIT]:
+                    if state == new_state:
+                        new_tdd_state = state
+                        break
+                else:
+                    logger.error(f"Invalid TDD state: {new_state}")
+                    return False
+        else:
+            new_tdd_state = new_state
+        
+        # Update cycle state
+        old_state = current_state
+        self.tdd_state_machine[cycle_id] = new_tdd_state
+        self.tdd_cycles[cycle_id]["current_state"] = new_tdd_state
+        self.tdd_cycles[cycle_id]["last_updated"] = datetime.now().isoformat()
+        
+        # Get story ID for emission
+        story_id = self.tdd_cycles[cycle_id]["story_id"]
+        
+        # Emit TDD transition event
+        emit_tdd_transition(story_id, old_state, new_tdd_state, project_name)
+        
+        # Notify listeners
+        self.notify_tdd_transition({
+            "cycle_id": cycle_id,
+            "story_id": story_id,
+            "old_state": old_state,
+            "new_state": new_tdd_state,
+            "timestamp": datetime.now().isoformat(),
+            "project": project_name
+        })
+        
+        logger.info(f"TDD cycle {cycle_id} transitioned: {old_state} → {new_tdd_state}")
+        return True
+    
+    def complete_tdd_cycle(self, cycle_id: str, project_name: str = "default") -> bool:
+        """Complete a TDD cycle and remove it from active cycles"""
+        if cycle_id not in self.tdd_cycles:
+            logger.error(f"TDD cycle {cycle_id} not found")
+            return False
+        
+        cycle_data = self.tdd_cycles[cycle_id]
+        story_id = cycle_data["story_id"]
+        
+        # Mark as completed
+        cycle_data["completed_at"] = datetime.now().isoformat()
+        cycle_data["current_state"] = TDDState.COMMIT
+        
+        # Remove from active cycles
+        if story_id in self.active_tdd_cycles:
+            del self.active_tdd_cycles[story_id]
+        
+        # Keep in tdd_cycles for history but remove from state machine
+        if cycle_id in self.tdd_state_machine:
+            del self.tdd_state_machine[cycle_id]
+        
+        # Emit completion event
+        emit_tdd_transition(story_id, TDDState.COMMIT, None, project_name)
+        
+        logger.info(f"Completed TDD cycle {cycle_id} for story {story_id}")
+        return True
+    
+    def get_tdd_cycle_data(self, cycle_id: str) -> Optional[Dict[str, Any]]:
+        """Get TDD cycle data by cycle ID"""
+        return self.tdd_cycles.get(cycle_id)
+    
+    def get_active_tdd_cycle_for_story(self, story_id: str) -> Optional[str]:
+        """Get active TDD cycle ID for a story"""
+        return self.active_tdd_cycles.get(story_id)
+    
+    def get_tdd_constraints(self) -> Dict[str, Any]:
+        """Get TDD-related constraints for workflow transitions"""
+        constraints = {
+            "has_active_cycles": self.has_active_tdd_cycles(),
+            "blocking_states": [],
+            "allowed_transitions": []
+        }
+        
+        if self.has_active_tdd_cycles():
+            if self.current_state == State.SPRINT_ACTIVE:
+                constraints["blocking_states"].append("SPRINT_REVIEW")
+                constraints["allowed_transitions"] = ["SPRINT_PAUSED", "BLOCKED"]
+            else:
+                constraints["allowed_transitions"] = ["SPRINT_ACTIVE"]
+        
+        return constraints
+    
+    def update_tdd_cycle_progress(self, cycle_id: str, progress_data: Dict[str, Any]) -> bool:
+        """Update progress data for a TDD cycle"""
+        if cycle_id not in self.tdd_cycles:
+            return False
+        
+        cycle_data = self.tdd_cycles[cycle_id]
+        cycle_data["progress"].update(progress_data)
+        cycle_data["last_updated"] = datetime.now().isoformat()
+        
+        return True
     
     def get_mermaid_diagram(self) -> str:
         """Generate Mermaid state diagram for visualization"""

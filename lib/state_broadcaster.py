@@ -186,11 +186,36 @@ class StatebroadCaster:
             pass
         logger.info(f"Workflow transition: {old_state} → {new_state}")
         
-    def emit_tdd_transition(self, story_id: str, old_state: Optional[TDDState], new_state: TDDState, project_name: str = "default"):
+    def emit_tdd_transition(self, story_id: str, old_state: Optional[TDDState], new_state: Optional[TDDState], project_name: str = "default", cycle_id: Optional[str] = None):
         """Emit TDD state transition"""
+        # Handle cycle completion (when new_state is None)
+        if new_state is None:
+            # Remove from active cycles
+            if story_id in self.tdd_cycles:
+                cycle_data = self.tdd_cycles[story_id].copy()
+                del self.tdd_cycles[story_id]
+                
+                # Emit completion event
+                completion_event = {
+                    "type": "tdd_cycle_completed",
+                    "timestamp": datetime.now().isoformat(),
+                    "project": project_name,
+                    "story_id": story_id,
+                    "cycle_id": cycle_id or cycle_data.get("cycle_id", f"cycle-{story_id}"),
+                    "completed_at": datetime.now().isoformat()
+                }
+                
+                self.transition_history.append(completion_event)
+                self._async_broadcast(completion_event)
+                logger.info(f"TDD cycle completed [{story_id}]")
+                return
+        
         # Update TDD cycle tracking
         if story_id not in self.tdd_cycles:
-            self.tdd_cycles[story_id] = {}
+            self.tdd_cycles[story_id] = {
+                "cycle_id": cycle_id or f"cycle-{story_id}",
+                "created_at": datetime.now().isoformat()
+            }
             
         self.tdd_cycles[story_id].update({
             "current_state": new_state.value if hasattr(new_state, 'value') else str(new_state),
@@ -198,11 +223,15 @@ class StatebroadCaster:
             "project": project_name
         })
         
+        if cycle_id:
+            self.tdd_cycles[story_id]["cycle_id"] = cycle_id
+        
         transition = {
             "type": "tdd_transition", 
             "timestamp": datetime.now().isoformat(),
             "project": project_name,
             "story_id": story_id,
+            "cycle_id": cycle_id or self.tdd_cycles[story_id].get("cycle_id"),
             "old_state": old_state.value if old_state and hasattr(old_state, 'value') else str(old_state) if old_state else None,
             "new_state": new_state.value if hasattr(new_state, 'value') else str(new_state)
         }
@@ -210,12 +239,7 @@ class StatebroadCaster:
         self.transition_history.append(transition)
         
         # Broadcast asynchronously
-        try:
-            loop = asyncio.get_running_loop()
-            asyncio.create_task(self.broadcast_to_all(transition))
-        except RuntimeError:
-            # No event loop running, skip broadcasting
-            pass
+        self._async_broadcast(transition)
         logger.info(f"TDD transition [{story_id}]: {old_state} → {new_state}")
         
     def emit_agent_activity(self, agent_type: str, story_id: str, action: str, status: str, project_name: str = "default"):
@@ -249,13 +273,114 @@ class StatebroadCaster:
         }
         
         # Broadcast asynchronously
-        try:
-            loop = asyncio.get_running_loop()
-            asyncio.create_task(self.broadcast_to_all(parallel_status))
-        except RuntimeError:
-            # No event loop running, skip broadcasting
-            pass
+        self._async_broadcast(parallel_status)
         logger.info(f"Parallel status update [{project_name}]: {status_data}")
+    
+    def emit_tdd_cycle_started(self, story_id: str, cycle_id: str, project_name: str = "default", initial_data: Dict[str, Any] = None):
+        """Emit TDD cycle started event"""
+        cycle_data = {
+            "story_id": story_id,
+            "cycle_id": cycle_id,
+            "current_state": "design",
+            "created_at": datetime.now().isoformat(),
+            "last_updated": datetime.now().isoformat(),
+            "project": project_name
+        }
+        
+        if initial_data:
+            cycle_data.update(initial_data)
+        
+        # Add to tracking
+        self.tdd_cycles[story_id] = cycle_data
+        
+        start_event = {
+            "type": "tdd_cycle_started",
+            "timestamp": datetime.now().isoformat(),
+            "project": project_name,
+            "story_id": story_id,
+            "cycle_id": cycle_id,
+            "progress": initial_data.get("progress", {}) if initial_data else {}
+        }
+        
+        self.transition_history.append(start_event)
+        self._async_broadcast(start_event)
+        logger.info(f"TDD cycle started [{story_id}]: {cycle_id}")
+    
+    def emit_tdd_progress_update(self, story_id: str, cycle_id: str, progress_data: Dict[str, Any], project_name: str = "default"):
+        """Emit TDD cycle progress update"""
+        # Update cycle data
+        if story_id in self.tdd_cycles:
+            self.tdd_cycles[story_id]["last_updated"] = datetime.now().isoformat()
+            
+            # Merge progress data
+            if "progress" not in self.tdd_cycles[story_id]:
+                self.tdd_cycles[story_id]["progress"] = {}
+            self.tdd_cycles[story_id]["progress"].update(progress_data)
+        
+        progress_event = {
+            "type": "tdd_progress_update",
+            "timestamp": datetime.now().isoformat(),
+            "project": project_name,
+            "story_id": story_id,
+            "cycle_id": cycle_id,
+            "progress": progress_data
+        }
+        
+        self._async_broadcast(progress_event)
+        logger.info(f"TDD progress update [{story_id}]: {progress_data}")
+    
+    def get_tdd_cycle_status(self, story_id: str) -> Optional[Dict[str, Any]]:
+        """Get current TDD cycle status for a story"""
+        return self.tdd_cycles.get(story_id)
+    
+    def get_all_tdd_cycles(self) -> Dict[str, Dict[str, Any]]:
+        """Get all active TDD cycles"""
+        return self.tdd_cycles.copy()
+    
+    def get_tdd_metrics(self) -> Dict[str, Any]:
+        """Get TDD cycle metrics and statistics"""
+        total_cycles = len(self.tdd_cycles)
+        state_distribution = {}
+        
+        for cycle_data in self.tdd_cycles.values():
+            state = cycle_data.get("current_state", "unknown")
+            state_distribution[state] = state_distribution.get(state, 0) + 1
+        
+        return {
+            "total_active_cycles": total_cycles,
+            "state_distribution": state_distribution,
+            "cycles_by_project": self._group_cycles_by_project(),
+            "average_cycle_duration": self._calculate_average_cycle_duration()
+        }
+    
+    def _group_cycles_by_project(self) -> Dict[str, int]:
+        """Group TDD cycles by project"""
+        project_counts = {}
+        for cycle_data in self.tdd_cycles.values():
+            project = cycle_data.get("project", "default")
+            project_counts[project] = project_counts.get(project, 0) + 1
+        return project_counts
+    
+    def _calculate_average_cycle_duration(self) -> float:
+        """Calculate average cycle duration in hours"""
+        if not self.tdd_cycles:
+            return 0.0
+        
+        total_duration = 0.0
+        cycle_count = 0
+        
+        for cycle_data in self.tdd_cycles.values():
+            created_at = cycle_data.get("created_at")
+            if created_at:
+                try:
+                    created_time = datetime.fromisoformat(created_at.replace('Z', '+00:00'))
+                    duration = (datetime.now() - created_time).total_seconds() / 3600  # hours
+                    total_duration += duration
+                    cycle_count += 1
+                except (ValueError, TypeError):
+                    continue
+        
+        return total_duration / cycle_count if cycle_count > 0 else 0.0
     
     # =====================================================
     # Chat Integration Methods
@@ -583,6 +708,31 @@ def emit_agent_activity(agent_type: str, story_id: str, action: str, status: str
 def emit_parallel_status(status_data: Dict[str, Any], project_name: str = "default"):
     """Convenience function for parallel status"""
     broadcaster.emit_parallel_status(status_data, project_name)
+
+
+def emit_tdd_cycle_started(story_id: str, cycle_id: str, project_name: str = "default", initial_data: Dict[str, Any] = None):
+    """Convenience function for TDD cycle started"""
+    broadcaster.emit_tdd_cycle_started(story_id, cycle_id, project_name, initial_data)
+
+
+def emit_tdd_progress_update(story_id: str, cycle_id: str, progress_data: Dict[str, Any], project_name: str = "default"):
+    """Convenience function for TDD progress update"""
+    broadcaster.emit_tdd_progress_update(story_id, cycle_id, progress_data, project_name)
+
+
+def get_tdd_cycle_status(story_id: str) -> Optional[Dict[str, Any]]:
+    """Convenience function for getting TDD cycle status"""
+    return broadcaster.get_tdd_cycle_status(story_id)
+
+
+def get_all_tdd_cycles() -> Dict[str, Dict[str, Any]]:
+    """Convenience function for getting all TDD cycles"""
+    return broadcaster.get_all_tdd_cycles()
+
+
+def get_tdd_metrics() -> Dict[str, Any]:
+    """Convenience function for getting TDD metrics"""
+    return broadcaster.get_tdd_metrics()
 
 
 # =====================================================

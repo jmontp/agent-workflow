@@ -1,0 +1,27 @@
+/* EMERGENCY FIX: Prevent modal auto-show */
+#interface-config-modal {
+    display: none !important;
+}
+
+#interface-config-modal.show {
+    display: block !important;
+}
+
+/* Emergency reset button */
+.emergency-reset {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 10000;
+    background: #f44336;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.emergency-reset:hover {
+    background: #d32f2f;
+}

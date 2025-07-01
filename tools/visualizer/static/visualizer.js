@@ -7,7 +7,8 @@
 
 class StateVisualizer {
     constructor() {
-        this.socket = null;
+        // Use global WebSocket manager if available
+        this.socket = window.wsManager || null;
         this.connected = false;
         this.autoScroll = true;
         this.currentWorkflowState = 'IDLE';
@@ -43,37 +44,68 @@ class StateVisualizer {
             console.warn('Mermaid initialization failed:', e);
         }
         
+        // Layout enforcement (consolidated from final-layout-enforcer.js)
+        this.enforceLayout();
+        
         this.updateConnectionStatus(false);
     }
 
     /**
-     * Initialize SocketIO connection
+     * Initialize SocketIO connection using WebSocket manager
      */
     initializeSocketIO() {
         try {
-            // Check if Socket.IO is available
-            if (typeof io === 'undefined') {
-                throw new Error('Socket.IO library not loaded - check CDN connectivity');
-            }
-            
-            this.socket = io({
-                transports: ['websocket', 'polling'],
-                upgrade: true,
-                rememberUpgrade: true,
-                timeout: 10000
-            });
-
-            this.socket.on('connect', () => {
-                console.log('Connected to server');
-                this.connected = true;
-                this.reconnectAttempts = 0;
-                this.updateConnectionStatus(true);
-                this.addActivityLog('System', 'Connected to state broadcaster', 'success');
+            // Use WebSocket manager if available
+            if (this.socket && this.socket.onConnectionStateChange) {
+                console.log('Using existing WebSocket manager');
                 
-                // Request current state and interface status
-                this.socket.emit('request_state');
-                this.socket.emit('request_interface_status');
-            });
+                // Monitor connection state
+                this.socket.onConnectionStateChange((connected) => {
+                    this.connected = connected;
+                    this.updateConnectionStatus(connected);
+                    
+                    if (connected) {
+                        this.addActivityLog('System', 'Connected to state broadcaster', 'success');
+                        // Request current state and interface status
+                        this.socket.requestStateUpdate();
+                        this.socket.requestInterfaceStatus();
+                    } else {
+                        this.addActivityLog('System', 'Disconnected from state broadcaster', 'error');
+                    }
+                });
+                
+                // Use current connection state
+                this.connected = this.socket.isConnected();
+                this.updateConnectionStatus(this.connected);
+                
+            } else {
+                // Fallback to direct Socket.IO initialization
+                console.log('Initializing new Socket.IO connection');
+                
+                // Check if Socket.IO is available
+                if (typeof io === 'undefined') {
+                    throw new Error('Socket.IO library not loaded - check CDN connectivity');
+                }
+                
+                this.socket = io({
+                    transports: ['websocket', 'polling'],
+                    upgrade: true,
+                    rememberUpgrade: true,
+                    timeout: 10000
+                });
+
+                this.socket.on('connect', () => {
+                    console.log('Connected to server');
+                    this.connected = true;
+                    this.reconnectAttempts = 0;
+                    this.updateConnectionStatus(true);
+                    this.addActivityLog('System', 'Connected to state broadcaster', 'success');
+                    
+                    // Request current state and interface status
+                    this.socket.emit('request_state');
+                    this.socket.emit('request_interface_status');
+                });
+            }
 
             this.socket.on('disconnect', (reason) => {
                 console.log('Disconnected from server:', reason);
@@ -128,6 +160,19 @@ class StateVisualizer {
 
             this.socket.on('interface_switch_result', (data) => {
                 this.handleInterfaceSwitchResult(data);
+            });
+
+            // TDD cycle event handlers
+            this.socket.on('tdd_cycle_started', (data) => {
+                this.handleTDDCycleStarted(data);
+            });
+
+            this.socket.on('tdd_cycle_completed', (data) => {
+                this.handleTDDCycleCompleted(data);
+            });
+
+            this.socket.on('tdd_progress_update', (data) => {
+                this.handleTDDProgressUpdate(data);
             });
 
         } catch (error) {
@@ -290,26 +335,44 @@ class StateVisualizer {
         const oldState = data.old_state;
         const newState = data.new_state;
         const project = data.project || 'default';
+        const cycleId = data.cycle_id;
         
-        // Update TDD cycle tracking
-        this.activeTDDCycles.set(storyId, {
-            storyId: storyId,
-            currentState: newState,
-            lastUpdated: new Date().toISOString(),
-            project: project
-        });
+        // Handle cycle completion (when newState is null)
+        if (newState === null || newState === undefined) {
+            this.activeTDDCycles.delete(storyId);
+            this.addActivityLog(
+                'TDD',
+                `Story ${storyId}: TDD cycle completed`,
+                'success'
+            );
+        } else {
+            // Update TDD cycle tracking
+            this.activeTDDCycles.set(storyId, {
+                storyId: storyId,
+                cycleId: cycleId || `cycle-${storyId}`,
+                currentState: newState,
+                lastUpdated: new Date().toISOString(),
+                project: project,
+                progress: data.progress || {}
+            });
+            
+            this.highlightTDDState(newState);
+            
+            const transition = oldState ? `${oldState} → ${newState}` : `Started: ${newState}`;
+            this.addActivityLog(
+                'TDD',
+                `Story ${storyId}: ${transition}`,
+                'tdd'
+            );
+        }
         
         this.updateTDDCycles();
-        this.highlightTDDState(newState);
         this.updateActiveCyclesCount();
         this.updateLastUpdateTime();
+        this.updateTDDConstraintIndicators(this.currentWorkflowState);
         
-        const transition = oldState ? `${oldState} → ${newState}` : `Started: ${newState}`;
-        this.addActivityLog(
-            'TDD',
-            `Story ${storyId}: ${transition}`,
-            'tdd'
-        );
+        // Update TDD cycle visualization
+        this.updateTDDCycleVisualization();
     }
 
     /**
@@ -528,21 +591,346 @@ class StateVisualizer {
         const card = document.createElement('div');
         card.className = 'tdd-cycle-card';
         card.setAttribute('data-story-id', cycle.storyId);
+        card.setAttribute('data-cycle-id', cycle.cycleId);
 
         const lastUpdated = new Date(cycle.lastUpdated).toLocaleTimeString();
+        const progress = cycle.progress || {};
+        
+        // State-specific styling and icons
+        const stateIcons = {
+            'design': '📋',
+            'test_red': '🔴',
+            'code_green': '🟢',
+            'refactor': '🔧',
+            'commit': '💾'
+        };
+        
+        const stateIcon = stateIcons[cycle.currentState] || '📝';
         
         card.innerHTML = `
             <div class="cycle-header">
                 <span class="story-id">Story ${cycle.storyId}</span>
-                <span class="cycle-state ${cycle.currentState}">${cycle.currentState}</span>
+                <span class="cycle-state ${cycle.currentState}">
+                    ${stateIcon} ${cycle.currentState.replace('_', ' ').toUpperCase()}
+                </span>
             </div>
             <div class="cycle-details">
                 <div>Project: ${cycle.project}</div>
                 <div>Updated: ${lastUpdated}</div>
+                ${progress.total_tasks ? `<div>Tasks: ${progress.completed_tasks || 0}/${progress.total_tasks}</div>` : ''}
+                ${progress.test_runs ? `<div>Test Runs: ${progress.test_runs}</div>` : ''}
+            </div>
+            <div class="cycle-controls">
+                <button class="btn btn-small tdd-next-state" onclick="visualizer.advanceTDDCycle('${cycle.cycleId}')">
+                    Next State
+                </button>
+                <button class="btn btn-small btn-danger tdd-complete" onclick="visualizer.completeTDDCycle('${cycle.cycleId}')">
+                    Complete
+                </button>
             </div>
         `;
 
         return card;
+    }
+    
+    /**
+     * Update TDD cycle visualization with state diagram
+     */
+    updateTDDCycleVisualization() {
+        // Add TDD state diagram if not present
+        this.ensureTDDStateDiagram();
+        
+        // Update TDD cycle progress indicators
+        this.updateTDDProgressIndicators();
+        
+        // Highlight active cycles in the diagram
+        this.highlightActiveTDDCycles();
+    }
+    
+    /**
+     * Ensure TDD state diagram is present in the interface
+     */
+    ensureTDDStateDiagram() {
+        const tddDiagram = document.getElementById('tdd-state-diagram');
+        if (!tddDiagram && typeof mermaid !== 'undefined') {
+            // Create TDD state diagram container
+            const diagramContainer = document.createElement('div');
+            diagramContainer.id = 'tdd-state-diagram';
+            diagramContainer.className = 'diagram-container';
+            
+            const diagramHTML = `
+                <h3>TDD Cycle States</h3>
+                <div class="mermaid" id="tdd-state-mermaid">
+                    stateDiagram-v2
+                        [*] --> design
+                        design --> test_red : Write tests
+                        test_red --> code_green : Implement code
+                        code_green --> refactor : Improve code
+                        code_green --> commit : Tests pass
+                        refactor --> commit : Refactoring complete
+                        refactor --> test_red : Tests broken
+                        commit --> design : Next task
+                        commit --> [*] : Cycle complete
+                        
+                        note right of test_red : Tests should fail
+                        note right of code_green : Minimal implementation
+                        note right of refactor : Keep tests green
+                </div>
+            `;
+            
+            diagramContainer.innerHTML = diagramHTML;
+            
+            // Insert after workflow diagram
+            const workflowContainer = document.querySelector('.diagram-container');
+            if (workflowContainer && workflowContainer.parentNode) {
+                workflowContainer.parentNode.insertBefore(diagramContainer, workflowContainer.nextSibling);
+                
+                // Initialize Mermaid for the new diagram
+                try {
+                    mermaid.init(undefined, '#tdd-state-mermaid');
+                } catch (error) {
+                    console.warn('Failed to initialize TDD state diagram:', error);
+                }
+            }
+        }
+    }
+    
+    /**
+     * Update TDD progress indicators
+     */
+    updateTDDProgressIndicators() {
+        const indicators = document.getElementById('tdd-progress-indicators');
+        if (!indicators) {
+            this.createTDDProgressIndicators();
+            return;
+        }
+        
+        const totalCycles = this.activeTDDCycles.size;
+        const stateCount = {};
+        
+        // Count cycles by state
+        this.activeTDDCycles.forEach(cycle => {
+            const state = cycle.currentState;
+            stateCount[state] = (stateCount[state] || 0) + 1;
+        });
+        
+        indicators.innerHTML = `
+            <div class="progress-summary">
+                <div class="progress-item">
+                    <span class="progress-label">Total Cycles:</span>
+                    <span class="progress-value">${totalCycles}</span>
+                </div>
+                ${Object.entries(stateCount).map(([state, count]) => `
+                    <div class="progress-item">
+                        <span class="progress-label">${state.replace('_', ' ')}:</span>
+                        <span class="progress-value">${count}</span>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    }
+    
+    /**
+     * Create TDD progress indicators container
+     */
+    createTDDProgressIndicators() {
+        const container = document.createElement('div');
+        container.id = 'tdd-progress-indicators';
+        container.className = 'tdd-progress-container';
+        
+        // Insert in status bar area
+        const statusBar = document.querySelector('.status-bar');
+        if (statusBar) {
+            statusBar.appendChild(container);
+        }
+        
+        this.updateTDDProgressIndicators();
+    }
+    
+    /**
+     * Highlight active TDD cycles in diagram
+     */
+    highlightActiveTDDCycles() {
+        // Remove existing highlights
+        const tddNodes = document.querySelectorAll('#tdd-state-mermaid .node');
+        tddNodes.forEach(node => {
+            node.classList.remove('active-cycle');
+        });
+        
+        // Add highlights for active states
+        const activeStates = new Set();
+        this.activeTDDCycles.forEach(cycle => {
+            activeStates.add(cycle.currentState);
+        });
+        
+        activeStates.forEach(state => {
+            const stateNode = document.querySelector(`#tdd-state-mermaid .node[id*="${state}"]`);
+            if (stateNode) {
+                stateNode.classList.add('active-cycle');
+            }
+        });
+    }
+    
+    /**
+     * Advance a TDD cycle to the next state
+     */
+    advanceTDDCycle(cycleId) {
+        const cycle = Array.from(this.activeTDDCycles.values()).find(c => c.cycleId === cycleId);
+        if (!cycle) {
+            console.error('TDD cycle not found:', cycleId);
+            return;
+        }
+        
+        // Determine next state based on current state
+        const stateTransitions = {
+            'design': 'test_red',
+            'test_red': 'code_green',
+            'code_green': 'refactor',
+            'refactor': 'commit',
+            'commit': 'design'
+        };
+        
+        const nextState = stateTransitions[cycle.currentState];
+        if (nextState) {
+            // Send TDD transition command
+            if (this.socket && this.connected) {
+                this.socket.emit('tdd_transition', {
+                    cycle_id: cycleId,
+                    story_id: cycle.storyId,
+                    new_state: nextState,
+                    project: cycle.project
+                });
+            }
+            
+            this.addActivityLog(
+                'TDD Control',
+                `Advancing cycle ${cycleId} to ${nextState}`,
+                'info'
+            );
+        }
+    }
+    
+    /**
+     * Complete a TDD cycle
+     */
+    completeTDDCycle(cycleId) {
+        const cycle = Array.from(this.activeTDDCycles.values()).find(c => c.cycleId === cycleId);
+        if (!cycle) {
+            console.error('TDD cycle not found:', cycleId);
+            return;
+        }
+        
+        if (confirm(`Complete TDD cycle for story ${cycle.storyId}?`)) {
+            // Send TDD completion command
+            if (this.socket && this.connected) {
+                this.socket.emit('complete_tdd_cycle', {
+                    cycle_id: cycleId,
+                    story_id: cycle.storyId,
+                    project: cycle.project
+                });
+            }
+            
+            this.addActivityLog(
+                'TDD Control',
+                `Completed TDD cycle ${cycleId}`,
+                'success'
+            );
+        }
+    }
+    
+    /**
+     * Handle TDD cycle started event
+     */
+    handleTDDCycleStarted(data) {
+        console.log('TDD cycle started:', data);
+        
+        const { story_id, cycle_id, project } = data;
+        
+        // Add to active cycles
+        this.activeTDDCycles.set(story_id, {
+            storyId: story_id,
+            cycleId: cycle_id,
+            currentState: 'design',
+            lastUpdated: new Date().toISOString(),
+            project: project || 'default',
+            progress: data.progress || {}
+        });
+        
+        this.updateTDDCycles();
+        this.updateActiveCyclesCount();
+        this.updateTDDCycleVisualization();
+        
+        this.addActivityLog(
+            'TDD',
+            `Started TDD cycle for story ${story_id}`,
+            'success'
+        );
+    }
+    
+    /**
+     * Handle TDD cycle completed event
+     */
+    handleTDDCycleCompleted(data) {
+        console.log('TDD cycle completed:', data);
+        
+        const { story_id, cycle_id } = data;
+        
+        // Remove from active cycles
+        this.activeTDDCycles.delete(story_id);
+        
+        this.updateTDDCycles();
+        this.updateActiveCyclesCount();
+        this.updateTDDCycleVisualization();
+        this.updateTDDConstraintIndicators(this.currentWorkflowState);
+        
+        this.addActivityLog(
+            'TDD',
+            `Completed TDD cycle for story ${story_id}`,
+            'success'
+        );
+    }
+    
+    /**
+     * Handle TDD progress update event
+     */
+    handleTDDProgressUpdate(data) {
+        console.log('TDD progress update:', data);
+        
+        const { story_id, cycle_id, progress } = data;
+        
+        // Update cycle progress if it exists
+        const cycle = this.activeTDDCycles.get(story_id);
+        if (cycle) {
+            cycle.progress = { ...cycle.progress, ...progress };
+            cycle.lastUpdated = new Date().toISOString();
+            
+            this.updateTDDCycles();
+            this.updateTDDProgressIndicators();
+        }
+    }
+    
+    /**
+     * Start a new TDD cycle (triggered from UI)
+     */
+    startTDDCycle(storyId) {
+        if (!storyId) {
+            storyId = prompt('Enter Story ID for TDD cycle:');
+            if (!storyId) return;
+        }
+        
+        // Send start TDD cycle command
+        if (this.socket && this.connected) {
+            this.socket.emit('start_tdd_cycle', {
+                story_id: storyId,
+                project: this.currentProject
+            });
+        }
+        
+        this.addActivityLog(
+            'TDD Control',
+            `Starting TDD cycle for story ${storyId}`,
+            'info'
+        );
     }
 
     /**
@@ -1365,28 +1753,19 @@ class StateVisualizer {
     }
 
     /**
-     * Show message to user
+     * Show message to user using unified system
      */
     showMessage(message, type = 'info') {
-        // Create message element
-        const messageDiv = document.createElement('div');
-        messageDiv.className = `${type}-message`;
-        messageDiv.textContent = message;
+        // Use global DOM utilities message system
+        if (window.domUtils) {
+            window.domUtils.showMessage(message, type);
+        } else {
+            // Fallback for compatibility
+            console.log(`[${type.toUpperCase()}] ${message}`);
+        }
         
         // Add to activity log
         this.addActivityLog('System', message, type);
-        
-        // Show temporarily in header
-        const header = document.querySelector('header');
-        if (header) {
-            header.appendChild(messageDiv);
-            
-            setTimeout(() => {
-                if (messageDiv.parentNode) {
-                    messageDiv.parentNode.removeChild(messageDiv);
-                }
-            }, 5000);
-        }
     }
 
     /**
@@ -1529,6 +1908,163 @@ class StateVisualizer {
             return project || { id: this.currentProject, name: this.currentProject, icon: '📁' };
         }
         return { id: this.currentProject, name: this.currentProject, icon: '📁' };
+    }
+    
+    /**
+     * Layout enforcement (consolidated from final-layout-enforcer.js)
+     * Nuclear option to force correct state machine layout
+     */
+    enforceLayout() {
+        console.log('🚀 Layout Enforcer: Activating...');
+        
+        // 1. FORCE SHOW state machine content
+        const showElements = [
+            '.visualization-grid',
+            '.diagram-container', 
+            '#workflow-diagram',
+            '#tdd-diagram',
+            'main[role="main"]'
+        ];
+        
+        showElements.forEach(selector => {
+            const elements = $$(selector);
+            elements.forEach(el => {
+                if (el) {
+                    DOMUtils.setStyle(el, {
+                        display: 'block',
+                        visibility: 'visible',
+                        opacity: '1',
+                        position: 'static'
+                    });
+                    console.log(`✅ Forced visible: ${selector}`);
+                }
+            });
+        });
+        
+        // 2. FORCE HIDE interface management panels
+        const hideElements = [
+            '.interface-panel',
+            '.agent-testing-panel',
+            '.interface-management',
+            '.testing-controls',
+            '.agent-interface-management',
+            '.activity-panel'
+        ];
+        
+        hideElements.forEach(selector => {
+            const elements = $$(selector);
+            elements.forEach(el => {
+                if (el) {
+                    el.remove(); // Completely remove from DOM
+                    console.log(`🗑️ Removed: ${selector}`);
+                }
+            });
+        });
+        
+        // 3. ENSURE proper app layout
+        const appLayout = $('.app-layout');
+        if (appLayout) {
+            DOMUtils.setStyle(appLayout, {
+                display: 'flex',
+                height: '100vh'
+            });
+            console.log('✅ App layout enforced');
+        }
+        
+        // 4. ENSURE main content layout
+        const mainContent = $('.main-content');
+        if (mainContent) {
+            DOMUtils.setStyle(mainContent, {
+                flex: '1',
+                display: 'flex',
+                flexDirection: 'column'
+            });
+            console.log('✅ Main content layout enforced');
+        }
+        
+        // 5. ADD visual confirmation
+        const visualGrid = $('.visualization-grid');
+        if (visualGrid && !visualGrid.querySelector('.layout-enforcer-badge')) {
+            const badge = DOMUtils.createElement('div', {
+                class: 'layout-enforcer-badge',
+                style: {
+                    background: '#4CAF50',
+                    color: 'white',
+                    padding: '10px',
+                    textAlign: 'center',
+                    borderRadius: '4px',
+                    marginBottom: '20px',
+                    fontWeight: 'bold'
+                }
+            }, '🎯 State Machine Visualizer (Layout Enforced)');
+            
+            visualGrid.insertBefore(badge, visualGrid.firstChild);
+            console.log('✅ Visual confirmation added');
+        }
+        
+        console.log('✅ Layout Enforcer: Layout enforcement complete!');
+        
+        // Set up continuous monitoring
+        this.setupLayoutMonitoring();
+    }
+    
+    /**
+     * Setup layout monitoring to prevent regression
+     */
+    setupLayoutMonitoring() {
+        const observer = new MutationObserver((mutations) => {
+            let needsEnforcement = false;
+            
+            mutations.forEach((mutation) => {
+                if (mutation.type === 'childList') {
+                    // Check if any interface panels were added
+                    mutation.addedNodes.forEach((node) => {
+                        if (node.nodeType === 1) { // Element node
+                            if (node.classList && (
+                                node.classList.contains('interface-panel') ||
+                                node.classList.contains('agent-testing-panel') ||
+                                node.classList.contains('interface-management')
+                            )) {
+                                needsEnforcement = true;
+                            }
+                        }
+                    });
+                }
+            });
+            
+            if (needsEnforcement) {
+                console.log('🔄 Interface panels detected, re-enforcing layout...');
+                setTimeout(() => this.enforceLayout(), 100);
+            }
+        });
+        
+        // Start monitoring
+        if (document.body) {
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+        } else {
+            DOMUtils.ready(() => {
+                observer.observe(document.body, {
+                    childList: true,
+                    subtree: true
+                });
+            });
+        }
+        
+        // Expose emergency functions globally
+        window.emergencyEnforceLayout = () => this.enforceLayout();
+        window.forceShowStateDiagrams = () => {
+            const grid = $('.visualization-grid');
+            if (grid) {
+                DOMUtils.setStyle(grid, {
+                    display: 'block',
+                    visibility: 'visible'
+                });
+                DOMUtils.scrollToElement(grid);
+            }
+        };
     }
 }
 

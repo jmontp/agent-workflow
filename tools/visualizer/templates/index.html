@@ -54,58 +54,6 @@
         })();
     </script>
 
-    <!-- Cache Busting Solution - Generated 2025-07-01T00:35:10.321546 -->
-    <script>
-        // Ultra-aggressive cache busting for development
-        (function() {
-            const timestamp = Date.now();
-            const cacheKey = Math.random().toString(36).substr(2, 9);
-            
-            // Add cache busting to all static resources
-            window.addEventListener('DOMContentLoaded', function() {
-                const links = document.querySelectorAll('link[rel="stylesheet"]');
-                const scripts = document.querySelectorAll('script[src]');
-                
-                // Add cache busting to stylesheets
-                links.forEach(link => {
-                    if (link.href.includes('/static/')) {
-                        const separator = link.href.includes('?') ? '&' : '?';
-                        link.href += separator + 'cb=' + timestamp + '&v=' + cacheKey;
-                    }
-                });
-                
-                // Force reload of cached scripts if needed
-                const criticalScripts = [
-                    'visualizer.js',
-                    'discord-chat.js', 
-                    'chat-components.js'
-                ];
-                
-                criticalScripts.forEach(scriptName => {
-                    const script = Array.from(scripts).find(s => s.src.includes(scriptName));
-                    if (script) {
-                        const separator = script.src.includes('?') ? '&' : '?';
-                        script.src += separator + 'cb=' + timestamp + '&v=' + cacheKey;
-                    }
-                });
-            });
-            
-            // Monitor for script loading failures
-            window.addEventListener('error', function(e) {
-                if (e.target.tagName === 'SCRIPT' || e.target.tagName === 'LINK') {
-                    console.error('Resource loading failed:', e.target.src || e.target.href);
-                    console.log('Attempting to reload with cache bust...');
-                    
-                    // Try to reload with extra cache busting
-                    if (e.target.tagName === 'SCRIPT' && e.target.src) {
-                        const newScript = document.createElement('script');
-                        newScript.src = e.target.src + '&retry=' + Date.now();
-                        document.head.appendChild(newScript);
-                    }
-                }
-            }, true);
-        })();
-    </script>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -116,8 +64,11 @@
     <script src="{{ url_for('static', filename='final-layout-enforcer.js') }}"></script>
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mermaid@10.4.0/dist/mermaid.min.js"></script>
+    <!-- CSS Variables - Load First -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/discord-chat.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/chat-inline.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='emergency-modal-fix.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='layout-fix.css') }}">
     <!-- NUCLEAR LAYOUT FIX - FINAL AUTHORITY OVERRIDE -->
@@ -336,11 +287,6 @@
                 </div>
             </div>
 
-            <!-- Agent Testing Panel REMOVED - Causing wrong interface to display -->
-            <!-- This panel was interfering with state diagram visualization -->
-
-            <!-- Activity Log REMOVED - Cleaned interface to show only state diagrams -->
-            <!-- Activity logging functionality moved to chat interface -->
         </main>
         </div> <!-- .container -->
     </div> <!-- .main-content -->

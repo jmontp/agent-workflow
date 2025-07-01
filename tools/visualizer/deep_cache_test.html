@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deep Cache Test - 2025-07-01 00:32:38</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .result {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .warning { background: #fff3cd; color: #856404; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #0056b3; }
+        #progress { margin: 20px 0; }
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: #28a745;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Deep Browser Cache Analysis</h1>
+    <p>Generated at: 2025-07-01 00:32:38</p>
+    
+    <div class="test-section">
+        <h2>🚀 Automated Tests</h2>
+        <button onclick="runAllTests()">Run All Tests</button>
+        <button onclick="clearAllCaches()">Clear All Caches</button>
+        <button onclick="testResourceLoading()">Test Resource Loading</button>
+        <button onclick="testJavaScriptExecution()">Test JavaScript Execution</button>
+        
+        <div id="progress">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <div id="progress-text">Ready to run tests</div>
+        </div>
+        
+        <div id="test-results"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>🌐 Browser Information</h2>
+        <div id="browser-info"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>📊 Resource Loading Analysis</h2>
+        <div id="resource-analysis"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>💾 Cache Status</h2>
+        <div id="cache-status"></div>
+    </div>
+    
+    <script>
+        const testResults = document.getElementById('test-results');
+        const progressFill = document.getElementById('progress-fill');
+        const progressText = document.getElementById('progress-text');
+        let testProgress = 0;
+        
+        function updateProgress(percent, text) {
+            progressFill.style.width = percent + '%';
+            progressText.textContent = text;
+        }
+        
+        function addResult(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `result ${type}`;
+            div.textContent = new Date().toLocaleTimeString() + ': ' + message;
+            testResults.appendChild(div);
+            testResults.scrollTop = testResults.scrollHeight;
+        }
+        
+        function getBrowserInfo() {
+            const info = {
+                userAgent: navigator.userAgent,
+                platform: navigator.platform,
+                language: navigator.language,
+                cookieEnabled: navigator.cookieEnabled,
+                onLine: navigator.onLine,
+                hardwareConcurrency: navigator.hardwareConcurrency,
+                maxTouchPoints: navigator.maxTouchPoints,
+                serviceWorker: 'serviceWorker' in navigator,
+                localStorage: typeof(Storage) !== 'undefined',
+                sessionStorage: typeof(Storage) !== 'undefined',
+                indexedDB: 'indexedDB' in window,
+                webSQL: 'openDatabase' in window,
+                applicationCache: 'applicationCache' in window,
+                caches: 'caches' in window,
+                currentTime: new Date().toISOString(),
+                timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                screen: {
+                    width: screen.width,
+                    height: screen.height,
+                    colorDepth: screen.colorDepth
+                }
+            };
+            
+            document.getElementById('browser-info').innerHTML = 
+                Object.entries(info).map(([key, value]) => 
+                    `<strong>${key}:</strong> ${typeof value === 'object' ? JSON.stringify(value) : value}`
+                ).join('<br>');
+        }
+        
+        async function clearAllCaches() {
+            addResult('Starting cache clearing process...', 'info');
+            
+            try {
+                // Clear service worker caches
+                if ('caches' in window) {
+                    const cacheNames = await caches.keys();
+                    for (const cacheName of cacheNames) {
+                        await caches.delete(cacheName);
+                        addResult(`Deleted cache: ${cacheName}`, 'success');
+                    }
+                }
+                
+                // Clear storage
+                if (localStorage) {
+                    localStorage.clear();
+                    addResult('Cleared localStorage', 'success');
+                }
+                
+                if (sessionStorage) {
+                    sessionStorage.clear();
+                    addResult('Cleared sessionStorage', 'success');
+                }
+                
+                addResult('All caches cleared successfully!', 'success');
+                
+            } catch (error) {
+                addResult(`Error clearing caches: ${error.message}`, 'error');
+            }
+        }
+        
+        async function testResourceLoading() {
+            addResult('Testing resource loading...', 'info');
+            
+            const testUrls = [
+                'http://localhost:5000/static/visualizer.js',
+                'http://localhost:5000/static/js/chat-components.js',
+                'http://localhost:5000/static/js/discord-chat.js',
+                'http://localhost:5000/static/css/discord-chat.css'
+            ];
+            
+            const results = [];
+            
+            for (const url of testUrls) {
+                try {
+                    const startTime = performance.now();
+                    const response = await fetch(url + '?t=' + Date.now());
+                    const endTime = performance.now();
+                    
+                    const resourceName = url.split('/').pop();
+                    const loadTime = Math.round(endTime - startTime);
+                    
+                    if (response.ok) {
+                        addResult(`✅ ${resourceName}: ${response.status} (${loadTime}ms)`, 'success');
+                        results.push({ url, status: response.status, loadTime, size: response.headers.get('content-length') });
+                    } else {
+                        addResult(`❌ ${resourceName}: ${response.status} (${loadTime}ms)`, 'error');
+                    }
+                    
+                } catch (error) {
+                    addResult(`❌ ${url.split('/').pop()}: ${error.message}`, 'error');
+                }
+            }
+            
+            document.getElementById('resource-analysis').innerHTML = 
+                '<h3>Resource Loading Results:</h3>' +
+                results.map(r => `<div>${r.url.split('/').pop()}: ${r.status} (${r.loadTime}ms, ${r.size || 'unknown'} bytes)</div>`).join('');
+        }
+        
+        async function testJavaScriptExecution() {
+            addResult('Testing JavaScript execution environment...', 'info');
+            
+            const tests = [
+                { name: 'Socket.IO', test: () => typeof io !== 'undefined' },
+                { name: 'Mermaid', test: () => typeof mermaid !== 'undefined' },
+                { name: 'Visualizer', test: () => typeof window.visualizer !== 'undefined' },
+                { name: 'Discord Chat', test: () => typeof window.discordChat !== 'undefined' },
+                { name: 'Chat Components', test: () => typeof window.chatComponents !== 'undefined' },
+            ];
+            
+            for (const { name, test } of tests) {
+                try {
+                    const result = test();
+                    addResult(`${result ? '✅' : '❌'} ${name}: ${result ? 'Available' : 'Not found'}`, result ? 'success' : 'warning');
+                } catch (error) {
+                    addResult(`❌ ${name}: Error - ${error.message}`, 'error');
+                }
+            }
+            
+            // Test specific functionality
+            try {
+                const input = document.getElementById('chat-input-field');
+                const button = document.getElementById('chat-send-btn');
+                
+                if (input && button) {
+                    addResult('✅ Chat elements found in parent window', 'success');
+                    addResult(`Button disabled: ${window.parent.document.getElementById('chat-send-btn')?.disabled}`, 'info');
+                } else {
+                    addResult('❌ Chat elements not found - opening parent window for testing', 'warning');
+                    // Try to test parent window
+                    try {
+                        const parentInput = window.parent.document.getElementById('chat-input-field');
+                        const parentButton = window.parent.document.getElementById('chat-send-btn');
+                        
+                        if (parentInput && parentButton) {
+                            addResult('✅ Chat elements found in parent window', 'success');
+                            addResult(`Parent button disabled: ${parentButton.disabled}`, 'info');
+                            
+                            // Test input event
+                            parentInput.value = 'Test';
+                            parentInput.dispatchEvent(new Event('input', {bubbles: true}));
+                            
+                            setTimeout(() => {
+                                addResult(`After test input - Button disabled: ${parentButton.disabled}`, parentButton.disabled ? 'error' : 'success');
+                            }, 100);
+                            
+                        } else {
+                            addResult('❌ Chat elements not found in parent window either', 'error');
+                        }
+                    } catch (e) {
+                        addResult(`Cannot access parent window: ${e.message}`, 'warning');
+                    }
+                }
+            } catch (error) {
+                addResult(`Error testing chat functionality: ${error.message}`, 'error');
+            }
+        }
+        
+        async function runAllTests() {
+            addResult('Starting comprehensive cache analysis...', 'info');
+            updateProgress(0, 'Starting tests...');
+            
+            updateProgress(10, 'Getting browser info...');
+            getBrowserInfo();
+            
+            updateProgress(30, 'Clearing caches...');
+            await clearAllCaches();
+            
+            updateProgress(60, 'Testing resource loading...');
+            await testResourceLoading();
+            
+            updateProgress(90, 'Testing JavaScript execution...');
+            await testJavaScriptExecution();
+            
+            updateProgress(100, 'Tests completed!');
+            addResult('All tests completed!', 'success');
+        }
+        
+        // Initialize
+        getBrowserInfo();
+        
+        // Auto-run tests after 2 seconds
+        setTimeout(() => {
+            addResult('Auto-running tests in 2 seconds...', 'info');
+            setTimeout(runAllTests, 2000);
+        }, 100);
+    </script>
+</body>
+</html>

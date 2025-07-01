@@ -10,7 +10,7 @@ import logging
 import re
 import sys
 from pathlib import Path
-from typing import Dict, Any, List, Optional
+from utils.types import Dict, Any, List, Optional
 from datetime import datetime
 
 # Add lib and scripts directories to path for orchestrator imports

@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Responsive Test - TDD Visualizer</title>
+    
+    <!-- Enhanced mobile meta tags -->
+    <meta name="theme-color" content="#4CAF50">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="TDD Visualizer">
+    <meta name="format-detection" content="telephone=no">
+    
+    <!-- Load CSS -->
+    <link rel="stylesheet" href="static/css/discord-chat.css">
+    
+    <style>
+        /* Test-specific styles */
+        .test-container {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        .test-section {
+            margin: 30px 0;
+            padding: 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            background: #fafafa;
+        }
+        
+        .test-section h2 {
+            margin-top: 0;
+            color: #333;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+        
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+        
+        .test-item {
+            padding: 15px;
+            background: white;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .test-item:hover {
+            background: #f0f8ff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .test-item:active {
+            transform: scale(0.98);
+        }
+        
+        .device-info {
+            background: #e8f5e8;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+        }
+        
+        .swipe-test-area {
+            height: 200px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            margin: 15px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .swipe-indicator {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        .touch-test-button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin: 10px;
+            min-width: 44px;
+            min-height: 44px;
+        }
+        
+        .touch-test-button:hover {
+            background: #45a049;
+            transform: scale(1.05);
+        }
+        
+        .touch-test-button:active {
+            background: #3d8b40;
+            transform: scale(0.95);
+        }
+        
+        .responsive-test {
+            resize: horizontal;
+            overflow: auto;
+            border: 2px dashed #4CAF50;
+            min-width: 320px;
+            max-width: 100%;
+            padding: 20px;
+            background: white;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        
+        .status-active { background: #4CAF50; }
+        .status-warning { background: #FF9800; }
+        .status-error { background: #F44336; }
+        
+        /* Mobile-specific test styles */
+        @media (max-width: 768px) {
+            .test-container {
+                padding: 10px;
+            }
+            
+            .test-section {
+                margin: 15px 0;
+                padding: 15px;
+            }
+            
+            .test-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            
+            .swipe-test-area {
+                height: 150px;
+                font-size: 16px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .test-section {
+                margin: 10px 0;
+                padding: 10px;
+            }
+            
+            .swipe-test-area {
+                height: 120px;
+                font-size: 14px;
+            }
+            
+            .touch-test-button {
+                padding: 12px 20px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>📱 Mobile Responsive Design Test</h1>
+        <p>This page tests the mobile responsiveness and touch interactions of the TDD Visualizer.</p>
+        
+        <!-- Device Information -->
+        <div class="test-section">
+            <h2>📊 Device Information</h2>
+            <div class="device-info" id="device-info">
+                <div><strong>Loading device information...</strong></div>
+            </div>
+        </div>
+        
+        <!-- Touch Target Tests -->
+        <div class="test-section">
+            <h2>👆 Touch Target Tests</h2>
+            <p>All buttons should be at least 44px in size for optimal touch interaction:</p>
+            <div class="test-grid">
+                <div class="test-item">
+                    <span class="status-indicator status-active"></span>
+                    Small Button Test
+                </div>
+                <div class="test-item">
+                    <span class="status-indicator status-warning"></span>
+                    Medium Button Test
+                </div>
+                <div class="test-item">
+                    <span class="status-indicator status-error"></span>
+                    Large Button Test
+                </div>
+                <div class="test-item">
+                    <span class="status-indicator status-active"></span>
+                    Icon Button Test
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin: 20px 0;">
+                <button class="touch-test-button" onclick="testTouchFeedback(this)">
+                    Test Touch Feedback
+                </button>
+                <button class="touch-test-button" onclick="testLongPress(this)" 
+                        oncontextmenu="event.preventDefault();">
+                    Test Long Press
+                </button>
+            </div>
+        </div>
+        
+        <!-- Swipe Gesture Tests -->
+        <div class="test-section">
+            <h2>👈👉 Swipe Gesture Tests</h2>
+            <p>Try swiping left/right on the area below:</p>
+            <div class="swipe-test-area" id="swipe-area">
+                <div>
+                    Swipe Left ← → Swipe Right
+                    <div class="swipe-indicator">Try swiping horizontally</div>
+                </div>
+            </div>
+            <div id="swipe-feedback" style="text-align: center; margin: 10px 0; font-weight: bold; color: #4CAF50;">
+                Swipe detected: None
+            </div>
+        </div>
+        
+        <!-- Responsive Layout Test -->
+        <div class="test-section">
+            <h2>📐 Responsive Layout Test</h2>
+            <p>Resize your browser or test on different devices:</p>
+            <div class="responsive-test">
+                <div class="test-grid">
+                    <div class="test-item">320px+ (Mobile)</div>
+                    <div class="test-item">768px+ (Tablet)</div>
+                    <div class="test-item">1024px+ (Desktop)</div>
+                    <div class="test-item">1200px+ (Large)</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Accessibility Tests -->
+        <div class="test-section">
+            <h2>♿ Accessibility Tests</h2>
+            <p>Test keyboard navigation and screen reader support:</p>
+            <div class="test-grid">
+                <button class="test-item" tabindex="0" aria-label="First accessible button">
+                    Tab Test 1
+                </button>
+                <button class="test-item" tabindex="0" aria-label="Second accessible button">
+                    Tab Test 2
+                </button>
+                <button class="test-item" tabindex="0" aria-label="Third accessible button">
+                    Tab Test 3
+                </button>
+                <button class="test-item" tabindex="0" aria-label="Fourth accessible button">
+                    Tab Test 4
+                </button>
+            </div>
+            <div style="margin: 15px 0;">
+                <label for="test-input">Test Input (should not zoom on mobile):</label>
+                <input type="text" id="test-input" placeholder="Type here..." 
+                       style="width: 100%; padding: 10px; margin-top: 5px; font-size: 16px;">
+            </div>
+        </div>
+        
+        <!-- Performance Tests -->
+        <div class="test-section">
+            <h2>⚡ Performance Tests</h2>
+            <div id="performance-info">
+                <div><strong>Touch Latency:</strong> <span id="touch-latency">Testing...</span></div>
+                <div><strong>Scroll Performance:</strong> <span id="scroll-performance">Testing...</span></div>
+                <div><strong>Gesture Recognition:</strong> <span id="gesture-recognition">Testing...</span></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Load mobile enhancements -->
+    <script src="static/js/mobile-enhancements.js"></script>
+    
+    <script>
+        // Test script functionality
+        let touchStartTime = 0;
+        let longPressTimer = null;
+        let swipeStartX = 0;
+        let swipeStartY = 0;
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            updateDeviceInfo();
+            setupSwipeTest();
+            setupPerformanceTests();
+            
+            // Test mobile enhancements integration
+            if (window.mobileEnhancements) {
+                console.log('✅ Mobile enhancements loaded successfully');
+                console.log('📱 Device Info:', window.mobileEnhancements.getDeviceInfo());
+            } else {
+                console.log('❌ Mobile enhancements not loaded');
+            }
+        });
+        
+        function updateDeviceInfo() {
+            const info = document.getElementById('device-info');
+            const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+            const isTablet = /iPad|Android/i.test(navigator.userAgent) && !/Mobile/i.test(navigator.userAgent);
+            const touchSupport = 'ontouchstart' in window;
+            
+            info.innerHTML = `
+                <div><strong>User Agent:</strong> ${navigator.userAgent}</div>
+                <div><strong>Screen Size:</strong> ${window.innerWidth} × ${window.innerHeight}</div>
+                <div><strong>Device Pixel Ratio:</strong> ${window.devicePixelRatio || 1}</div>
+                <div><strong>Mobile Detected:</strong> ${isMobile ? '✅ Yes' : '❌ No'}</div>
+                <div><strong>Tablet Detected:</strong> ${isTablet ? '✅ Yes' : '❌ No'}</div>
+                <div><strong>Touch Support:</strong> ${touchSupport ? '✅ Yes' : '❌ No'}</div>
+                <div><strong>Orientation:</strong> ${window.innerHeight > window.innerWidth ? 'Portrait' : 'Landscape'}</div>
+            `;
+        }
+        
+        function setupSwipeTest() {
+            const swipeArea = document.getElementById('swipe-area');
+            const feedback = document.getElementById('swipe-feedback');
+            
+            swipeArea.addEventListener('touchstart', function(e) {
+                swipeStartX = e.touches[0].clientX;
+                swipeStartY = e.touches[0].clientY;
+                feedback.textContent = 'Swipe detected: Touch started...';
+            }, { passive: true });
+            
+            swipeArea.addEventListener('touchend', function(e) {
+                const endX = e.changedTouches[0].clientX;
+                const endY = e.changedTouches[0].clientY;
+                const deltaX = endX - swipeStartX;
+                const deltaY = endY - swipeStartY;
+                
+                if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
+                    if (deltaX > 0) {
+                        feedback.textContent = 'Swipe detected: Right ➡️';
+                        feedback.style.color = '#4CAF50';
+                    } else {
+                        feedback.textContent = 'Swipe detected: Left ⬅️';
+                        feedback.style.color = '#2196F3';
+                    }
+                } else if (Math.abs(deltaY) > 50) {
+                    if (deltaY > 0) {
+                        feedback.textContent = 'Swipe detected: Down ⬇️';
+                        feedback.style.color = '#FF9800';
+                    } else {
+                        feedback.textContent = 'Swipe detected: Up ⬆️';
+                        feedback.style.color = '#9C27B0';
+                    }
+                } else {
+                    feedback.textContent = 'Swipe detected: Tap (no swipe)';
+                    feedback.style.color = '#666';
+                }
+                
+                setTimeout(() => {
+                    feedback.textContent = 'Swipe detected: None';
+                    feedback.style.color = '#4CAF50';
+                }, 3000);
+            }, { passive: true });
+        }
+        
+        function testTouchFeedback(button) {
+            touchStartTime = Date.now();
+            button.classList.add('touch-feedback');
+            button.textContent = 'Touch Registered!';
+            
+            setTimeout(() => {
+                button.classList.remove('touch-feedback');
+                button.textContent = 'Test Touch Feedback';
+                
+                const latency = Date.now() - touchStartTime;
+                document.getElementById('touch-latency').textContent = `${latency}ms`;
+            }, 200);
+        }
+        
+        function testLongPress(button) {
+            button.addEventListener('touchstart', function() {
+                longPressTimer = setTimeout(() => {
+                    button.style.background = '#FF9800';
+                    button.textContent = 'Long Press Detected!';
+                    
+                    // Haptic feedback if available
+                    if (navigator.vibrate) {
+                        navigator.vibrate(50);
+                    }
+                    
+                    setTimeout(() => {
+                        button.style.background = '#4CAF50';
+                        button.textContent = 'Test Long Press';
+                    }, 1000);
+                }, 600);
+            }, { passive: true });
+            
+            button.addEventListener('touchend', function() {
+                if (longPressTimer) {
+                    clearTimeout(longPressTimer);
+                    longPressTimer = null;
+                }
+            }, { passive: true });
+        }
+        
+        function setupPerformanceTests() {
+            // Test scroll performance
+            let scrollCount = 0;
+            let scrollStart = Date.now();
+            
+            document.addEventListener('scroll', function() {
+                scrollCount++;
+                const scrollTime = Date.now() - scrollStart;
+                
+                if (scrollTime > 1000) {
+                    const fps = Math.round((scrollCount / scrollTime) * 1000);
+                    document.getElementById('scroll-performance').textContent = `${fps} events/sec`;
+                    scrollCount = 0;
+                    scrollStart = Date.now();
+                }
+            }, { passive: true });
+            
+            // Test gesture recognition
+            document.getElementById('gesture-recognition').textContent = 
+                window.mobileEnhancements && window.mobileEnhancements.isActive() ? 
+                '✅ Active' : '❌ Not Active';
+        }
+        
+        // Update device info on orientation change
+        window.addEventListener('orientationchange', function() {
+            setTimeout(updateDeviceInfo, 100);
+        });
+        
+        window.addEventListener('resize', function() {
+            updateDeviceInfo();
+        });
+    </script>
+</body>
+</html>

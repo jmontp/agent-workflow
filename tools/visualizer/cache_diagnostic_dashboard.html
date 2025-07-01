@@ -1,0 +1,50 @@
+<\!DOCTYPE html>
+<html>
+<head>
+    <title>Cache Diagnostic Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+        .card { background: white; padding: 20px; margin: 20px 0; border-radius: 8px; }
+        .btn { background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; margin: 5px; }
+        .btn:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+    <h1>Cache Diagnostic Dashboard</h1>
+    <div class='card'>
+        <h3>Server Status</h3>
+        <button class='btn' onclick='checkServer()'>Check Server</button>
+        <div id='server-status'></div>
+    </div>
+    <div class='card'>
+        <h3>Cache Actions</h3>
+        <button class='btn' onclick='clearCaches()'>Clear All Caches</button>
+        <button class='btn' onclick='testResources()'>Test Resources</button>
+    </div>
+    <script>
+        function checkServer() {
+            fetch('http://localhost:5000')
+                .then(r => document.getElementById('server-status').innerHTML = 'Server: ' + r.status)
+                .catch(e => document.getElementById('server-status').innerHTML = 'Server: Error');
+        }
+        function clearCaches() {
+            if ('caches' in window) {
+                caches.keys().then(names => names.forEach(name => caches.delete(name)));
+            }
+            localStorage.clear();
+            sessionStorage.clear();
+            alert('Caches cleared');
+        }
+        function testResources() {
+            const urls = [
+                'http://localhost:5000/static/visualizer.js',
+                'http://localhost:5000/static/js/discord-chat.js'
+            ];
+            Promise.all(urls.map(url => fetch(url + '?t=' + Date.now())))
+                .then(() => alert('All resources loaded'))
+                .catch(() => alert('Some resources failed'));
+        }
+        checkServer();
+    </script>
+</body>
+</html>

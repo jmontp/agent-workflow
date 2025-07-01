@@ -1,52 +1,256 @@
-/* Discord-Style Chat Interface CSS */
+/* Discord-Style Chat Interface CSS - Optimized with CSS Variables */
+@import url('variables.css');
 
-/* Import color scheme variables */
-:root {
-  /* Chat-specific colors derived from Charcoal Glow theme */
-  --chat-bg: #ffffff;
-  --chat-panel-bg: #f8f9fa;
-  --chat-input-bg: #ffffff;
-  --chat-message-bg: #f5f5f5;
-  --chat-user-bg: #1e293b;
-  --chat-bot-bg: #ffffff;
-  --chat-system-bg: #e3f2fd;
-  --chat-border: #e2e8f0;
-  --chat-text: #0f172a;
-  --chat-text-muted: #64748b;
-  --chat-accent: #f59e0b;
-  --chat-success: #22c55e;
-  --chat-error: #ef4444;
-  --chat-warning: #f59e0b;
-  --chat-info: #3b82f6;
-  
-  /* Chat layout */
-  --chat-panel-width: 400px;
-  --chat-message-max-width: 80%;
-  --chat-input-height: 60px;
-  --chat-header-height: 60px;
-  --chat-border-radius: 8px;
-  --chat-message-padding: 12px 16px;
-  --chat-avatar-size: 32px;
-  
-  /* Animations */
-  --chat-animation-duration: 0.2s;
-  --chat-animation-easing: cubic-bezier(0.4, 0, 0.2, 1);
+/* Chat-specific variable overrides (preserved for compatibility) */
+
+/* Dark mode handled in variables.css */
+
+/* ===============================
+   CONSOLIDATED EMERGENCY FIXES
+   =============================== */
+
+/* EMERGENCY MODAL FIX: Prevent modal auto-show */
+#interface-config-modal {
+    display: none !important;
 }
 
-/* Dark mode support */
-[data-md-color-scheme="slate"] {
-  --chat-bg: #1e1e1e;
-  --chat-panel-bg: #2d2d2d;
-  --chat-input-bg: #2d2d2d;
-  --chat-message-bg: #333333;
-  --chat-user-bg: #007acc;
-  --chat-bot-bg: #2d2d2d;
-  --chat-system-bg: #1a365d;
-  --chat-border: #404040;
-  --chat-text: #d4d4d4;
-  --chat-text-muted: #b0b0b0;
-  --chat-accent: #007acc;
+#interface-config-modal.show {
+    display: block !important;
 }
+
+/* Emergency reset button */
+.emergency-reset {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 10000;
+    background: #f44336;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.emergency-reset:hover {
+    background: #d32f2f;
+}
+
+/* COMPREHENSIVE LAYOUT CONFLICT RESOLUTION */
+/* Phase 1: Core App Layout - Highest Priority */
+.app-layout {
+    display: flex !important;
+    height: 100vh !important;
+    background: var(--chat-bg, #ffffff) !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+.main-content {
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    min-width: 0 !important;
+    transition: margin-right var(--chat-animation-duration, 0.2s) var(--chat-animation-easing, ease) !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    background: var(--bg-secondary, #f5f5f5) !important;
+}
+
+/* Phase 2: Force State Diagrams to Display (Override column layout) */
+.visualization-grid {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+}
+
+.diagram-container {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: relative !important;
+    background: var(--bg-surface, #ffffff) !important;
+    border-radius: var(--border-radius, 8px) !important;
+    padding: 20px !important;
+    box-shadow: var(--shadow-md, 0 4px 6px rgba(0, 0, 0, 0.1)) !important;
+    border: 1px solid var(--border-color, #e2e8f0) !important;
+    margin-bottom: 20px !important;
+}
+
+/* Phase 3: Hide Interface Management Panels That Are Causing Column Layout */
+.interface-panel,
+.agent-testing-panel,
+.interface-management,
+.agent-interface-management,
+.interface-config-panel,
+#interface-tabs,
+.interface-container,
+.interface-controls,
+.interface-selector,
+.status-display,
+.testing-controls {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    position: absolute !important;
+    left: -9999px !important;
+    width: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
+}
+
+/* Phase 4: Ensure chat panel is a side panel, not inline */
+.chat-panel {
+    position: fixed !important;
+    top: 0 !important;
+    right: 0 !important;
+    width: var(--chat-panel-width, 400px) !important;
+    height: 100vh !important;
+    background: var(--chat-panel-bg, #f8f9fa) !important;
+    border-left: 1px solid var(--chat-border, #e2e8f0) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    transform: translateX(100%) !important;
+    transition: transform var(--chat-animation-duration, 0.2s) var(--chat-animation-easing, ease) !important;
+    z-index: 1000 !important;
+}
+
+.chat-panel.open,
+.chat-panel.show {
+    transform: translateX(0) !important;
+}
+
+/* Phase 5: Main content adjustment when chat is open */
+.main-content.chat-open {
+    margin-right: var(--chat-panel-width, 400px) !important;
+}
+
+/* Phase 6: Force visibility of core visualizer elements */
+main[role="main"],
+.container,
+header,
+.status-bar,
+.cycles-panel,
+.activity-panel,
+#workflow-diagram,
+#tdd-diagram,
+.mermaid {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* Phase 7: Emergency visibility override */
+.emergency-show-visualizer {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+.emergency-hide-interface {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+}
+
+/* NUCLEAR LAYOUT FIX OPTIMIZATIONS */
+/* Force Critical Components Visible */
+.visualization-grid,
+.diagram-container,
+.mermaid,
+main[role="main"],
+header,
+.status-bar {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+.visualization-grid {
+    width: 100% !important;
+    margin: var(--spacing-xl, 24px) 0 !important;
+}
+
+.diagram-container {
+    margin-bottom: var(--spacing-2xl, 32px) !important;
+    padding: var(--spacing-xl, 24px) !important;
+    background: var(--bg-surface, #ffffff) !important;
+    border: var(--border-width, 1px) solid var(--border-color, #e2e8f0) !important;
+    border-radius: var(--border-radius, 8px) !important;
+    box-shadow: var(--shadow-md, 0 4px 6px rgba(0, 0, 0, 0.1)) !important;
+}
+
+.mermaid {
+    min-height: 400px !important;
+    text-align: center !important;
+}
+
+/* Interface Panel Complete Removal */
+.interface-panel,
+.agent-testing-panel,
+.interface-management,
+.testing-controls,
+.agent-interface-management {
+    display: none !important;
+    visibility: hidden !important;
+    position: absolute !important;
+    left: -99999px !important;
+    width: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+}
+
+/* Essential Layout Enforcement */
+* {
+    box-sizing: border-box !important;
+}
+
+body {
+    overflow-x: hidden !important;
+}
+
+.container {
+    display: block !important;
+    width: 100% !important;
+    max-width: none !important;
+}
+
+main[role="main"] {
+    flex: 1 !important;
+    padding: 0 var(--spacing-xl, 24px) !important;
+}
+
+/* Anti-JS Override */
+[data-js-hidden] .visualization-grid,
+[data-js-hidden] .diagram-container {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* Layout Success Indicator */
+body::after {
+    content: "✅ Optimized Layout Active" !important;
+    position: fixed !important;
+    bottom: var(--spacing-md, 16px) !important;
+    left: var(--spacing-md, 16px) !important;
+    background: var(--color-success, #4CAF50) !important;
+    color: var(--text-inverse, #ffffff) !important;
+    padding: var(--spacing-sm, 8px) var(--spacing-md, 16px) !important;
+    border-radius: var(--border-radius-sm, 4px) !important;
+    font-size: 12px !important;
+    z-index: var(--z-tooltip, 1000) !important;
+    pointer-events: none !important;
+}
+
+/* ===============================
+   END CONSOLIDATED EMERGENCY FIXES
+   =============================== */
 
 /* Hidden state for chat panel */
 .chat-panel.hidden {
@@ -58,11 +262,11 @@
     width: 100% !important;
 }
 
-/* Layout Structure */
+/* Layout Structure - Using CSS Variables */
 .app-layout {
   display: flex;
   height: 100vh;
-  background: var(--chat-bg);
+  background: var(--bg-primary);
   position: relative;
 }
 
@@ -71,7 +275,7 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
-  transition: margin-right var(--chat-animation-duration) var(--chat-animation-easing);
+  transition: margin-right var(--transition-medium);
   overflow-y: auto;
   overflow-x: hidden;
 }
@@ -87,11 +291,11 @@
   right: var(--chat-panel-width);
   width: 4px;
   height: 100%;
-  background: var(--chat-border);
+  background: var(--border-color);
   cursor: col-resize;
   z-index: 1001;
   opacity: 0;
-  transition: all var(--chat-animation-duration) var(--chat-animation-easing);
+  transition: all var(--transition-medium);
 }
 
 .layout-divider.show {
@@ -99,7 +303,7 @@
 }
 
 .layout-divider:hover {
-  background: var(--chat-accent);
+  background: var(--color-primary);
   width: 6px;
 }
 
@@ -109,14 +313,14 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: var(--chat-bg);
-  border: 1px solid var(--chat-border);
-  border-radius: 4px;
-  padding: 4px 2px;
+  background: var(--bg-primary);
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--border-radius-sm);
+  padding: var(--spacing-xs) var(--spacing-xs);
   font-size: 8px;
   line-height: 1;
   opacity: 0;
-  transition: opacity var(--chat-animation-duration) var(--chat-animation-easing);
+  transition: opacity var(--transition-medium);
 }
 
 .layout-divider:hover::before {
@@ -130,13 +334,13 @@
   right: 0;
   width: var(--chat-panel-width);
   height: 100vh;
-  background: var(--chat-panel-bg);
-  border-left: 1px solid var(--chat-border);
+  background: var(--bg-secondary);
+  border-left: var(--border-width) solid var(--border-color);
   display: flex;
   flex-direction: column;
   transform: translateX(100%);
-  transition: transform var(--chat-animation-duration) var(--chat-animation-easing);
-  z-index: 1000;
+  transition: transform var(--transition-medium);
+  z-index: var(--z-modal);
 }
 
 .chat-panel.open {
@@ -146,42 +350,42 @@
 /* Chat Header */
 .chat-header {
   height: var(--chat-header-height);
-  background: var(--chat-bg);
-  border-bottom: 1px solid var(--chat-border);
+  background: var(--bg-primary);
+  border-bottom: var(--border-width) solid var(--border-color);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 16px;
+  padding: 0 var(--spacing-lg);
   flex-shrink: 0;
 }
 
 .chat-title {
   font-size: 16px;
   font-weight: 600;
-  color: var(--chat-text);
+  color: var(--text-primary);
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--spacing-sm);
 }
 
 .chat-status {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--spacing-sm);
   font-size: 12px;
-  color: var(--chat-text-muted);
+  color: var(--text-secondary);
 }
 
 .chat-status-dot {
   width: 8px;
   height: 8px;
-  border-radius: 50%;
-  background: var(--chat-success);
+  border-radius: var(--border-radius-full);
+  background: var(--color-success);
   animation: pulse 2s infinite;
 }
 
 .chat-status-dot.disconnected {
-  background: var(--chat-error);
+  background: var(--color-error);
   animation: none;
 }
 
@@ -189,16 +393,16 @@
   background: none;
   border: none;
   font-size: 18px;
-  color: var(--chat-text-muted);
+  color: var(--text-secondary);
   cursor: pointer;
-  padding: 4px;
-  border-radius: 4px;
-  transition: all var(--chat-animation-duration) var(--chat-animation-easing);
+  padding: var(--spacing-xs);
+  border-radius: var(--border-radius-sm);
+  transition: all var(--transition-medium);
 }
 
 .chat-close-btn:hover {
-  background: var(--chat-message-bg);
-  color: var(--chat-text);
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
 }
 
 /* Chat Messages Container */
