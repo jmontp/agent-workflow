@@ -388,3 +388,77 @@ The `agent_workflow` package integrates with the broader repository structure:
 - **Configuration:** Package respects repository configuration standards
 
 This design ensures the package feels like a natural part of the overall system while providing the clean, professional interface expected from a PyPI package.
+
+## Troubleshooting
+
+### 🔴 CRITICAL: Development Changes Not Reflecting
+
+**Problem**: After making code changes, running commands like `aw web` still uses old code
+
+**Root Cause**: Package installed in standard mode instead of editable/development mode
+
+**Solution**:
+```bash
+# Uninstall existing installation
+pip uninstall -y agent-workflow --break-system-packages
+
+# Reinstall in editable mode (REQUIRED for development)
+pip install -e . --user --break-system-packages
+
+# Verify installation mode
+pip show agent-workflow | grep Location
+# Should show your working directory, NOT site-packages
+```
+
+**Why This Matters**:
+- **Standard Install** (`pip install .`): Copies files to site-packages, changes require reinstall
+- **Editable Install** (`pip install -e .`): Uses symlinks, changes reflect immediately
+
+### Common Installation Issues
+
+#### "Externally Managed Environment" Error
+Modern Python installations protect system packages. Solutions:
+1. Use `--user` flag for user installation
+2. Use `--break-system-packages` if you understand the risks
+3. Create a virtual environment (recommended for isolation)
+
+#### Package Not Found After Installation
+```bash
+# Check if scripts are in PATH
+which aw
+which agent-orch
+
+# If not found, add to PATH:
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+source ~/.bashrc
+```
+
+#### Web Interface Port Conflicts
+```bash
+# Check what's using port 5000
+lsof -i:5000
+
+# Kill process if needed
+lsof -ti:5000 | xargs kill -9
+
+# Or use different port
+aw web --port 8080
+```
+
+### Browser Cache Issues (Web Interface)
+
+When updating JavaScript/CSS files, browsers may cache old versions:
+
+**Hard Refresh Methods**:
+- Windows/Linux: `Ctrl+F5` or `Ctrl+Shift+R`
+- Mac: `Cmd+Shift+R`
+- Chrome DevTools: Right-click refresh → "Empty Cache and Hard Reload"
+- Use incognito/private window to bypass all caches
+
+### Development Best Practices
+
+1. **Always use editable install** for development: `pip install -e .`
+2. **Restart services** after Python changes: `aw web-stop && aw web`
+3. **Hard refresh browser** after JS/CSS changes
+4. **Check logs** with `--debug` flag for detailed error information
+5. **Verify changes** by checking file timestamps or using `git status`

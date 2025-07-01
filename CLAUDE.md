@@ -790,3 +790,69 @@ See `tools/dependencies/README.md` for complete documentation.
 - **State Management**: The system uses finite state machines with strict validation
 - **HITL Workflow**: Human approval is required for strategic decisions
 - **Clean Structure**: Repository follows professional organization with tools separated from executables
+
+## 🚨 Critical Troubleshooting Guide
+
+### Development Environment Issues
+
+#### 1. **Changes Not Reflecting After Code Updates**
+This is the most common issue when developing with this repository.
+
+**Quick Fix**:
+```bash
+# For package changes not reflecting
+pip uninstall -y agent-workflow --break-system-packages
+pip install -e . --user --break-system-packages
+
+# For web interface specifically
+aw web-stop
+lsof -ti:5000 | xargs kill -9 2>/dev/null || true
+aw web
+# Then hard refresh browser: Ctrl+F5 (Windows/Linux) or Cmd+Shift+R (Mac)
+```
+
+**Detailed Solutions**:
+- **Package Installation Issues**: See `agent_workflow/CLAUDE.md` → Troubleshooting section
+- **Web Interface Issues**: See `tools/visualizer/CLAUDE.md` → Common Issues section
+- **Browser Cache**: Always hard refresh or use incognito mode for frontend changes
+
+#### 2. **Web Interface Specific Problems**
+- **"Initialization Error" banner**: Element ID mismatches - see `tools/visualizer/CLAUDE.md`
+- **Chat not working**: Check browser console for errors, ensure WebSocket connection
+- **Can't scroll diagrams**: Check CSS overflow properties
+- **Port 5000 in use**: Kill existing process or use `--port` flag
+
+#### 3. **Installation Problems**
+- **"Externally managed environment"**: Use `--user --break-system-packages` flags
+- **Commands not found**: Add `~/.local/bin` to PATH
+- **Import errors**: Ensure editable install with `pip install -e .`
+
+### Quick Debug Checklist
+
+1. ✅ **Is package installed in editable mode?**
+   ```bash
+   pip show agent-workflow | grep Location
+   # Should show your working directory, NOT site-packages
+   ```
+
+2. ✅ **Are there processes blocking ports?**
+   ```bash
+   lsof -i:5000  # Check web interface port
+   lsof -i:5001  # Check state broadcaster port
+   ```
+
+3. ✅ **Browser cache cleared?**
+   - Hard refresh: Ctrl+F5 or Cmd+Shift+R
+   - Or use incognito/private window
+
+4. ✅ **Check logs for errors**
+   ```bash
+   aw web --debug --log-level DEBUG
+   ```
+
+### Where to Find More Help
+
+- **Package Issues**: `agent_workflow/CLAUDE.md` - Comprehensive troubleshooting
+- **Web Interface**: `tools/visualizer/CLAUDE.md` - Discord interface debugging
+- **Test Issues**: Run test scripts in `tools/visualizer/test_*.py`
+- **General Structure**: This file (root CLAUDE.md) for repository overview

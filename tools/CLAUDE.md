@@ -406,3 +406,37 @@ All tools support command-line operation and can be integrated into:
 4. **Scalable Architecture**: Supports multiple client connections
 
 The tools directory provides a comprehensive suite of development utilities that enhance the AI Agent TDD-Scrum workflow system with monitoring, validation, documentation, and visualization capabilities.
+
+## Common Development Issues
+
+### Web Visualizer Not Updating
+If changes to the visualizer aren't showing after code updates:
+
+1. **Python Package Issue**: Package needs reinstalling in editable mode
+   ```bash
+   pip uninstall -y agent-workflow --break-system-packages
+   pip install -e . --user --break-system-packages
+   ```
+
+2. **Browser Cache Issue**: Browser serving old JavaScript/CSS files
+   - Hard refresh: Ctrl+F5 (Windows/Linux) or Cmd+Shift+R (Mac)
+   - Or use incognito/private window
+
+3. **Process Issue**: Old process still running on port
+   ```bash
+   lsof -ti:5000 | xargs kill -9 2>/dev/null || true
+   ```
+
+**Complete Fix Sequence**:
+```bash
+aw web-stop
+pip install -e . --user --break-system-packages
+aw web
+# Then Ctrl+F5 in browser
+```
+
+### Troubleshooting Resources
+- **Visualizer Specific Issues**: See `tools/visualizer/CLAUDE.md` for comprehensive Discord interface debugging
+- **Package Installation Issues**: See `agent_workflow/CLAUDE.md` for detailed troubleshooting
+- **Test Scripts**: Use `tools/visualizer/test_*.py` to verify functionality
+- **General Issues**: See root `CLAUDE.md` for repository-wide troubleshooting guide
