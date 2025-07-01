@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Verify Chat Fix</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #2d2d2d;
+            color: #e0e0e0;
+        }
+        .status {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-family: monospace;
+        }
+        .success { background: #1b5e20; color: #a5d6a7; }
+        .error { background: #b71c1c; color: #ef9a9a; }
+        .info { background: #0d47a1; color: #90caf9; }
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔧 Verify Chat Fix</h1>
+    
+    <div id="status" class="status info">Click the button to test if ChatComponents loads correctly now...</div>
+    
+    <button onclick="testChatComponents()">Test ChatComponents</button>
+    <button onclick="window.location.href='http://localhost:5000'">Go to Main App</button>
+    
+    <script>
+        function testChatComponents() {
+            const status = document.getElementById('status');
+            
+            // Load the script
+            const script = document.createElement('script');
+            script.src = '/static/js/chat-components.js';
+            
+            script.onload = () => {
+                try {
+                    // Try to create ChatComponents
+                    const chatComponents = new ChatComponents();
+                    
+                    // Check if all methods exist
+                    const requiredMethods = [
+                        'renderEpicEmbed',
+                        'renderSprintEmbed',
+                        'renderErrorEmbed',
+                        'renderWorkflowEmbed',
+                        'renderTDDEmbed'
+                    ];
+                    
+                    let allMethodsExist = true;
+                    let missingMethods = [];
+                    
+                    for (const method of requiredMethods) {
+                        if (typeof chatComponents[method] !== 'function') {
+                            allMethodsExist = false;
+                            missingMethods.push(method);
+                        }
+                    }
+                    
+                    if (allMethodsExist) {
+                        status.className = 'status success';
+                        status.innerHTML = `✅ ChatComponents loaded successfully!<br>
+                            All required methods are present.<br>
+                            The chat should now work correctly.<br><br>
+                            Click "Go to Main App" to test the chat interface.`;
+                    } else {
+                        status.className = 'status error';
+                        status.innerHTML = `❌ Some methods are still missing:<br>
+                            ${missingMethods.join(', ')}`;
+                    }
+                    
+                } catch (error) {
+                    status.className = 'status error';
+                    status.innerHTML = `❌ Error creating ChatComponents:<br>
+                        ${error.message}<br>
+                        ${error.stack}`;
+                }
+            };
+            
+            script.onerror = () => {
+                status.className = 'status error';
+                status.innerHTML = '❌ Failed to load chat-components.js';
+            };
+            
+            document.head.appendChild(script);
+        }
+    </script>
+</body>
+</html>

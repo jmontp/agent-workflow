@@ -44,28 +44,43 @@ class DiscordChat {
      * Initialize DOM event handlers
      */
     initializeEventHandlers() {
+        console.log('🔧 Initializing DiscordChat event handlers...');
+        
         const messageInput = document.getElementById('chat-input-field');
         const sendButton = document.getElementById('chat-send-btn');
         const chatMessages = document.getElementById('chat-messages');
         const autocompleteDropdown = document.getElementById('chat-autocomplete');
         
+        console.log('Elements found:', {
+            messageInput: !!messageInput,
+            sendButton: !!sendButton,
+            chatMessages: !!chatMessages,
+            autocompleteDropdown: !!autocompleteDropdown
+        });
+        
         if (!messageInput || !sendButton || !chatMessages) {
             console.warn('Chat elements not found - chat interface may not be loaded');
+            console.log('Missing elements:', {
+                messageInput: !messageInput ? 'MISSING' : 'found',
+                sendButton: !sendButton ? 'MISSING' : 'found',
+                chatMessages: !chatMessages ? 'MISSING' : 'found'
+            });
             return;
         }
         
         // Message input handlers
         messageInput.addEventListener('keydown', (e) => this.handleKeyDown(e));
         messageInput.addEventListener('keyup', (e) => this.handleKeyUp(e));
-        messageInput.addEventListener('input', (e) => this.handleInput(e));
-        messageInput.addEventListener('blur', () => this.hideAutocomplete());
-        
-        // Enable/disable send button based on input
         messageInput.addEventListener('input', (e) => {
+            // Handle input for autocomplete
+            this.handleInput(e);
+            
+            // Enable/disable send button based on input
             const hasContent = e.target.value.trim().length > 0;
             sendButton.disabled = !hasContent;
             console.log('Input changed, has content:', hasContent, 'button disabled:', !hasContent);
         });
+        messageInput.addEventListener('blur', () => this.hideAutocomplete());
         
         // Initial state - disable send button if input is empty
         sendButton.disabled = messageInput.value.trim().length === 0;
@@ -75,6 +90,8 @@ class DiscordChat {
             console.log('Send button clicked');
             this.sendMessage();
         });
+        
+        console.log('✅ Event handlers attached successfully');
         
         // Auto-scroll on new messages
         const resizeObserver = new ResizeObserver(() => {
@@ -105,6 +122,27 @@ class DiscordChat {
                 } else {
                     panelToggleBtn.textContent = '❌';
                     panelToggleBtn.title = 'Hide Chat Panel';
+                }
+            });
+        }
+        
+        // Chat close button functionality
+        const chatCloseBtn = document.getElementById('chat-close-btn');
+        if (chatCloseBtn && chatPanel) {
+            chatCloseBtn.addEventListener('click', () => {
+                console.log('Chat close button clicked');
+                chatPanel.classList.remove('open');
+                chatPanel.classList.add('hidden');
+                
+                // Also update the main content if needed
+                if (mainContent) {
+                    mainContent.classList.remove('chat-open');
+                }
+                
+                // Update panel toggle button if it exists
+                if (panelToggleBtn) {
+                    panelToggleBtn.textContent = '💬';
+                    panelToggleBtn.title = 'Show Chat Panel';
                 }
             });
         }

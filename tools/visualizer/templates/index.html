@@ -320,6 +320,8 @@
     <script src="{{ url_for('static', filename='js/ui-enhancements.js') }}"></script>
     <!-- Load visualizer.js last so it can integrate with all other components -->
     <script src="{{ url_for('static', filename='visualizer.js') }}"></script>
+    <!-- Failsafe initialization to ensure chat works even with timing issues -->
+    <script src="{{ url_for('static', filename='js/chat-init-failsafe.js') }}"></script>
     
     <!-- Initialize enhanced UI after all scripts load -->
     <script>

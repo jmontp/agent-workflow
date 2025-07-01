@@ -487,6 +487,64 @@ class ChatComponents {
     }
     
     /**
+     * Render epic embed
+     */
+    renderEpicEmbed(embedData) {
+        return `<div class="embed epic-embed">
+            <div class="embed-header">
+                <span class="embed-icon">📋</span>
+                <span class="embed-title">Epic: ${this.escapeHtml(embedData.title || 'Epic Details')}</span>
+            </div>
+            <div class="embed-content">
+                <div class="embed-description">${this.escapeHtml(embedData.description || '')}</div>
+                <div class="embed-fields">
+                    <div class="embed-field">
+                        <div class="field-name">Epic ID</div>
+                        <div class="field-value">${this.escapeHtml(embedData.epic_id || 'Unknown')}</div>
+                    </div>
+                    <div class="embed-field">
+                        <div class="field-name">Status</div>
+                        <div class="field-value">${this.escapeHtml(embedData.status || 'Active')}</div>
+                    </div>
+                    <div class="embed-field">
+                        <div class="field-name">Stories</div>
+                        <div class="field-value">${embedData.story_count || '0'}</div>
+                    </div>
+                </div>
+            </div>
+        </div>`;
+    }
+    
+    /**
+     * Render sprint embed
+     */
+    renderSprintEmbed(embedData) {
+        return `<div class="embed sprint-embed">
+            <div class="embed-header">
+                <span class="embed-icon">🏃</span>
+                <span class="embed-title">Sprint ${this.escapeHtml(embedData.sprint_id || 'Summary')}</span>
+            </div>
+            <div class="embed-content">
+                <div class="embed-description">${this.escapeHtml(embedData.description || '')}</div>
+                <div class="embed-fields">
+                    <div class="embed-field">
+                        <div class="field-name">Status</div>
+                        <div class="field-value">${this.escapeHtml(embedData.status || 'Active')}</div>
+                    </div>
+                    <div class="embed-field">
+                        <div class="field-name">Progress</div>
+                        <div class="field-value">${embedData.progress || '0%'}</div>
+                    </div>
+                    <div class="embed-field">
+                        <div class="field-name">Stories</div>
+                        <div class="field-value">${embedData.completed_stories || 0}/${embedData.total_stories || 0}</div>
+                    </div>
+                </div>
+            </div>
+        </div>`;
+    }
+    
+    /**
      * Render generic message
      */
     renderGenericMessage(messageData) {

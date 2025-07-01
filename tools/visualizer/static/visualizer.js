@@ -1409,20 +1409,49 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Wait a bit for all scripts to fully load
         setTimeout(() => {
+            console.log('=== Chat Initialization Debug ===');
+            console.log('Socket available:', !!visualizer.socket);
+            console.log('Socket connected:', visualizer.socket?.connected);
+            console.log('DiscordChat class available:', typeof DiscordChat);
+            console.log('ChatComponents class available:', typeof ChatComponents);
+            
             // Initialize chat system if available
             if (typeof DiscordChat !== 'undefined' && typeof ChatComponents !== 'undefined') {
                 console.log('Chat components found, initializing...');
                 try {
+                    // Initialize ChatComponents first
+                    console.log('Creating ChatComponents...');
                     chatComponents = new ChatComponents();
+                    console.log('ChatComponents created successfully');
+                    
+                    // Initialize DiscordChat with proper socket
+                    console.log('Creating DiscordChat...');
+                    console.log('Passing socket:', visualizer.socket);
+                    console.log('Passing visualizer:', visualizer);
+                    
                     discordChat = new DiscordChat(visualizer.socket, visualizer);
+                    console.log('DiscordChat created successfully');
+                    console.log('DiscordChat instance:', discordChat);
+                    
+                    // Expose to global scope immediately after successful creation
+                    window.discordChat = discordChat;
+                    window.chatComponents = chatComponents;
+                    console.log('window.discordChat set to:', window.discordChat);
                     
                     // Integrate chat with visualizer
                     integrateChatWithVisualizer();
                     
                     console.log('Discord chat system initialized successfully');
+                    console.log('=== Chat Initialization Complete ===');
                 } catch (chatError) {
                     console.error('Error initializing chat system:', chatError);
                     console.error('Stack trace:', chatError.stack);
+                    console.error('Error details:', {
+                        message: chatError.message,
+                        name: chatError.name,
+                        line: chatError.lineNumber || chatError.line,
+                        column: chatError.columnNumber || chatError.column
+                    });
                 }
             } else {
                 console.warn('Chat system not available - running in visualizer-only mode');
@@ -1430,10 +1459,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log('ChatComponents available:', typeof ChatComponents !== 'undefined');
             }
             
-            // Expose to global scope for debugging
+            // Always expose visualizer
             window.visualizer = visualizer;
-            window.discordChat = discordChat;
-            window.chatComponents = chatComponents;
         }, 100); // Small delay to ensure all scripts are loaded
         
         console.log('TDD State Visualizer initialized successfully');

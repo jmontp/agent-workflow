@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cache Clear Bookmarklet</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            max-width: 800px; 
+            margin: 50px auto; 
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .bookmarklet {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        .bookmarklet:hover {
+            background: #45a049;
+        }
+        code {
+            background: #e0e0e0;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        .steps {
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <h1>🧹 Cache Clear Bookmarklet</h1>
+    
+    <div class="steps">
+        <h2>Instructions:</h2>
+        <ol>
+            <li>Drag this button to your bookmarks bar: 
+                <a href="javascript:(function(){
+            console.clear();
+            console.log('🧹 Clearing cache and reloading...');
+            
+            // Clear all caches
+            if ('caches' in window) {
+                caches.keys().then(names => {
+                    names.forEach(name => caches.delete(name));
+                    console.log('✅ Service worker caches cleared');
+                });
+            }
+            
+            // Clear local storage
+            localStorage.clear();
+            sessionStorage.clear();
+            console.log('✅ Storage cleared');
+            
+            // Force reload with cache bypass
+            setTimeout(() => {
+                location.reload(true);
+            }, 500);
+            
+            // After reload, check the page
+            window.addEventListener('load', () => {
+                setTimeout(() => {
+                    const input = document.getElementById('chat-input-field');
+                    const button = document.getElementById('chat-send-btn');
+                    
+                    console.log('🔍 Checking elements after reload:');
+                    console.log('Input found:', !!input);
+                    console.log('Button found:', !!button);
+                    
+                    if (input && button) {
+                        console.log('Initial button state:', button.disabled);
+                        
+                        // Test typing
+                        input.value = 'Test';
+                        input.dispatchEvent(new Event('input', {bubbles: true}));
+                        
+                        console.log('After typing:', {
+                            value: input.value,
+                            disabled: button.disabled
+                        });
+                        
+                        if (!button.disabled) {
+                            console.log('✅ SUCCESS: Button is enabled after typing!');
+                            alert('✅ Cache cleared! The send button is now working correctly.');
+                        } else {
+                            console.log('❌ FAIL: Button still disabled');
+                            alert('❌ Button still disabled. Try closing ALL Chrome windows.');
+                        }
+                    }
+                }, 1000);
+            });
+        })();" class="bookmarklet">Clear Cache & Test</a>
+            </li>
+            <li>Navigate to <a href="http://localhost:5000" target="_blank">http://localhost:5000</a></li>
+            <li>Click the bookmarklet from your bookmarks bar</li>
+            <li>The page will reload and test if the send button works</li>
+        </ol>
+        
+        <h2>What it does:</h2>
+        <ul>
+            <li>Clears all browser caches for the current site</li>
+            <li>Clears local and session storage</li>
+            <li>Forces a hard reload bypassing cache</li>
+            <li>Tests if the send button enables when typing</li>
+            <li>Shows an alert with the result</li>
+        </ul>
+        
+        <h2>Manual Alternative:</h2>
+        <p>Press <code>Ctrl+Shift+R</code> (Windows/Linux) or <code>Cmd+Shift+R</code> (Mac) while on the page.</p>
+    </div>
+</body>
+</html>
