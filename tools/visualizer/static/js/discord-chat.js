@@ -60,8 +60,21 @@ class DiscordChat {
         messageInput.addEventListener('input', (e) => this.handleInput(e));
         messageInput.addEventListener('blur', () => this.hideAutocomplete());
         
+        // Enable/disable send button based on input
+        messageInput.addEventListener('input', (e) => {
+            const hasContent = e.target.value.trim().length > 0;
+            sendButton.disabled = !hasContent;
+            console.log('Input changed, has content:', hasContent, 'button disabled:', !hasContent);
+        });
+        
+        // Initial state - disable send button if input is empty
+        sendButton.disabled = messageInput.value.trim().length === 0;
+        
         // Send button
-        sendButton.addEventListener('click', () => this.sendMessage());
+        sendButton.addEventListener('click', () => {
+            console.log('Send button clicked');
+            this.sendMessage();
+        });
         
         // Auto-scroll on new messages
         const resizeObserver = new ResizeObserver(() => {
@@ -73,6 +86,28 @@ class DiscordChat {
         
         // Panel resizing
         this.initializePanelResizing();
+        
+        // Panel toggle functionality
+        const panelToggleBtn = document.getElementById('panel-toggle-btn');
+        const chatPanel = document.getElementById('chat-panel');
+        const mainContent = document.getElementById('main-content');
+        
+        if (panelToggleBtn && chatPanel && mainContent) {
+            panelToggleBtn.addEventListener('click', () => {
+                console.log('Panel toggle clicked');
+                chatPanel.classList.toggle('hidden');
+                mainContent.classList.toggle('full-width');
+                
+                // Update button appearance
+                if (chatPanel.classList.contains('hidden')) {
+                    panelToggleBtn.textContent = '💬';
+                    panelToggleBtn.title = 'Show Chat Panel';
+                } else {
+                    panelToggleBtn.textContent = '❌';
+                    panelToggleBtn.title = 'Hide Chat Panel';
+                }
+            });
+        }
     }
     
     /**
@@ -121,11 +156,13 @@ class DiscordChat {
     setupWebSocketHandlers() {
         // New chat message
         this.socket.on('new_chat_message', (data) => {
+            console.log('Received new_chat_message:', data);
             this.addMessageToChat(data);
         });
         
         // Command response
         this.socket.on('command_response', (data) => {
+            console.log('Received command_response:', data);
             this.addMessageToChat(data);
             this.highlightStateChange(data);
         });
@@ -237,10 +274,16 @@ class DiscordChat {
      * Send message to chat
      */
     sendMessage() {
+        console.log('sendMessage called');
         const messageInput = document.getElementById('chat-input-field');
+        const sendButton = document.getElementById('chat-send-btn');
         const message = messageInput.value.trim();
         
-        if (!message) return;
+        console.log('Message to send:', message);
+        if (!message) {
+            console.log('Empty message, returning');
+            return;
+        }
         
         // Add to command history
         if (message.startsWith('/')) {
@@ -256,16 +299,26 @@ class DiscordChat {
         this.currentInput = '';
         
         // Send via WebSocket with collaboration data
-        this.socket.emit('chat_command', {
-            message: message,
-            user_id: this.userId,
-            username: this.username,
-            session_id: this.sessionId,
-            project_name: this.projectName || 'default'
-        });
+        console.log('Sending message via socket.emit');
+        console.log('Socket available:', !!this.socket);
+        console.log('Socket connected:', this.socket && this.socket.connected);
         
-        // Clear input
+        try {
+            this.socket.emit('chat_command', {
+                message: message,
+                user_id: this.userId,
+                username: this.username,
+                session_id: this.sessionId,
+                project_name: this.projectName || 'default'
+            });
+            console.log('Message sent successfully');
+        } catch (error) {
+            console.error('Error sending message:', error);
+        }
+        
+        // Clear input and disable send button
         messageInput.value = '';
+        sendButton.disabled = true;
         this.hideAutocomplete();
         
         // Stop typing indicator
@@ -352,7 +405,7 @@ class DiscordChat {
      * Hide autocomplete dropdown
      */
     hideAutocomplete() {
-        const dropdown = document.getElementById('autocomplete-dropdown');
+        const dropdown = document.getElementById('chat-autocomplete');
         if (dropdown) {
             dropdown.style.display = 'none';
         }
@@ -377,7 +430,7 @@ class DiscordChat {
         }
         
         // Update dropdown display
-        const dropdown = document.getElementById('autocomplete-dropdown');
+        const dropdown = document.getElementById('chat-autocomplete');
         if (dropdown) {
             const items = dropdown.querySelectorAll('.autocomplete-item');
             items.forEach((item, index) => {

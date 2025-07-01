@@ -48,6 +48,16 @@
   --chat-accent: #007acc;
 }
 
+/* Hidden state for chat panel */
+.chat-panel.hidden {
+    display: none !important;
+}
+
+/* Full width for main content when chat is hidden */
+.main-content.full-width {
+    width: 100% !important;
+}
+
 /* Layout Structure */
 .app-layout {
   display: flex;

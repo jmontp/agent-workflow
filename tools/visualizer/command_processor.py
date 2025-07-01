@@ -999,29 +999,7 @@ class CommandProcessor:
             }
 
 
-# Global instance for easy import
-_processor = None
-
-def get_processor() -> CommandProcessor:
-    """Get global command processor instance"""
-    global _processor
-    if _processor is None:
-        _processor = CommandProcessor()
-    return _processor
-
-def process_command(message: str, user_id: str = "anonymous") -> Dict[str, Any]:
-    """
-    Convenience function to process a command.
-    
-    Args:
-        message: The command message from the user
-        user_id: Identifier for the user sending the command
-        
-    Returns:
-        Dictionary containing command result
-    """
-    processor = get_processor()
-    return processor.process_command(message, user_id)
+# Global instance for easy import (removed duplicate - see module interface below)
 
 
 if __name__ == "__main__":

@@ -434,7 +434,7 @@ main {
     transition: all var(--animation-normal) var(--animation-easing);
     animation: cardSlideIn var(--animation-slow) var(--animation-easing) backwards;
     position: relative;
-    overflow: hidden;
+    overflow: hidden; /* Keep hidden to contain the header line effect */
 }
 
 .diagram-container::before {
@@ -493,7 +493,36 @@ main {
     background-color: #fafafa;
     border-radius: 8px;
     padding: 20px;
-    overflow-x: auto;
+    overflow: auto; /* Allow scrolling in both directions */
+    max-height: 600px; /* Limit height to prevent diagrams from becoming too tall */
+    position: relative;
+}
+
+/* Custom scrollbar styling for better visibility */
+.diagram-wrapper::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+.diagram-wrapper::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 6px;
+}
+
+.diagram-wrapper::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 6px;
+    transition: background 0.2s ease;
+}
+
+.diagram-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #999;
+}
+
+/* Firefox scrollbar styling */
+.diagram-wrapper {
+    scrollbar-width: thin;
+    scrollbar-color: #c1c1c1 #f1f1f1;
 }
 
 .mermaid {
@@ -1686,6 +1715,10 @@ main {
 @media (max-width: 768px) {
     .container {
         padding: 15px;
+    }
+    
+    .diagram-wrapper {
+        max-height: 400px; /* Smaller height for mobile devices */
     }
     
     .status-bar {
