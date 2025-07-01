@@ -252,7 +252,7 @@ python3 tools/validation/diagram_validator.py --json --exit-code
 
 ### Visualizer Tools (`visualizer/`)
 
-Real-time web-based visualization interface for workflow and TDD state monitoring.
+Real-time web-based visualization interface for workflow and TDD state monitoring with Discord-style chat.
 
 #### `app.py`
 **Purpose**: Flask application with WebSocket support for real-time state visualization
@@ -263,6 +263,8 @@ Real-time web-based visualization interface for workflow and TDD state monitorin
 - Health monitoring and metrics
 - Multi-client support with connection management
 - Automatic reconnection with exponential backoff
+- Discord-style chat interface with slash commands
+- Vertical state diagram layout for better readability
 
 **Usage**:
 ```bash
@@ -440,3 +442,12 @@ aw web
 - **Package Installation Issues**: See `agent_workflow/CLAUDE.md` for detailed troubleshooting
 - **Test Scripts**: Use `tools/visualizer/test_*.py` to verify functionality
 - **General Issues**: See root `CLAUDE.md` for repository-wide troubleshooting guide
+
+### Recent Visualizer Improvements (2025-07-01)
+1. **Discord Chat Interface**: Fixed send button functionality by adding missing ChatComponents methods
+2. **Main Page Scrolling**: Fixed scrolling issue by changing CSS overflow property
+3. **Chat Close Button**: Added proper event handler for closing chat panel
+4. **Mermaid Diagram Fonts**: Increased font size to 16px for better readability
+5. **Diagram Layout**: Changed from side-by-side to vertical stacking for more space
+6. **Failsafe Initialization**: Added `chat-init-failsafe.js` for robust chat initialization
+7. **Comprehensive Diagnostics**: Created multiple test tools and troubleshooting guide

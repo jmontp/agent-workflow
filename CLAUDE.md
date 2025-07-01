@@ -783,13 +783,27 @@ See `tools/dependencies/README.md` for complete documentation.
 
 ## Important Notes for Claude Code
 
+### Navigation & Structure
 - **Documentation Location**: Primary docs are in `docs_src/` (MkDocs format)
 - **Dependency Tracking**: Use `tools/dependencies/` to identify affected files when making changes
+- **Clean Structure**: Repository follows professional organization with tools separated from executables
+- **ALWAYS use editable install**: `pip install -e .` to avoid development issues
+
+### Key System Components
 - **Security Testing**: Always run `tests/unit/test_agent_tool_config.py` after security changes
 - **Agent Restrictions**: Each agent type has specific tool limitations for security
 - **State Management**: The system uses finite state machines with strict validation
 - **HITL Workflow**: Human approval is required for strategic decisions
-- **Clean Structure**: Repository follows professional organization with tools separated from executables
+
+### Web Interface & Visualizer (`tools/visualizer/`)
+- **Discord Chat**: Fully functional chat interface with slash commands
+- **State Diagrams**: Vertical layout with Mermaid diagrams (recently changed from side-by-side)
+- **Recent Fixes**: 
+  - ✅ Chat send button (fixed missing methods in ChatComponents)
+  - ✅ Main page scrolling (changed overflow to auto)
+  - ✅ Chat close button (added event handler)
+  - ✅ Mermaid diagram font size (increased to 16px)
+- **Troubleshooting**: See `tools/visualizer/TROUBLESHOOTING_CHAT.md` for issues
 
 ## 🚨 Critical Troubleshooting Guide
 

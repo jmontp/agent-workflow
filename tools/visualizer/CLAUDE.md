@@ -57,6 +57,33 @@ aw web
 # Or use incognito/private window
 ```
 
+### ✅ RESOLVED: Recent Issues Fixed
+
+1. **Chat Send Button Not Working**
+   - **Issue**: TypeError in ChatComponents due to missing methods
+   - **Fix**: Added `renderEpicEmbed` and `renderSprintEmbed` methods
+   - **File**: `static/js/chat-components.js`
+
+2. **Main Page Cannot Scroll**
+   - **Issue**: CSS overflow:hidden preventing scrolling
+   - **Fix**: Changed to overflow-y:auto in `.main-content`
+   - **File**: `static/css/discord-chat.css`
+
+3. **Chat Close Button Not Working**
+   - **Issue**: Missing event handler for chat-close-btn
+   - **Fix**: Added click handler in `initializeEventHandlers()`
+   - **File**: `static/js/discord-chat.js`
+
+4. **Mermaid Diagrams Font Too Small**
+   - **Issue**: Default font size too small to read
+   - **Fix**: Added CSS rules for 16px base font size
+   - **File**: `static/style.css`
+
+5. **Diagrams Too Cramped Side-by-Side**
+   - **Issue**: Horizontal layout too narrow
+   - **Fix**: Changed grid to single column vertical layout
+   - **File**: `static/style.css`
+
 ### 🟡 Element ID Consistency Issues
 
 **Problem**: "Initialization Error: Failed to initialize the state visualizer"

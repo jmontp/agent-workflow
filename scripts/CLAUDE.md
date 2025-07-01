@@ -11,6 +11,13 @@ The scripts/ directory provides two main orchestration entry points:
 
 Both scripts integrate with the `lib/` modules and the `agent_workflow/` package to provide comprehensive orchestration capabilities.
 
+> **💡 Note**: For most users, the modern CLI commands (`agent-orch` or `aw`) provide a cleaner interface:
+> - `aw start` instead of `python scripts/orchestrator.py`
+> - `aw web` for the web interface with Discord chat
+> - `aw projects` for project management
+> 
+> See `agent_workflow/CLAUDE.md` for CLI documentation.
+
 ## Scripts Description
 
 ### orchestrator.py - Single-Project Orchestrator

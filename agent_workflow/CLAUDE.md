@@ -455,6 +455,17 @@ When updating JavaScript/CSS files, browsers may cache old versions:
 - Chrome DevTools: Right-click refresh → "Empty Cache and Hard Reload"
 - Use incognito/private window to bypass all caches
 
+### Recent Web Interface Improvements (2025-07-01)
+
+The web visualizer (`aw web`) has been significantly improved:
+- **Discord Chat**: Fully functional with send button fix
+- **Scrolling**: Main page now scrolls properly
+- **Close Button**: Chat panel can be closed
+- **Mermaid Diagrams**: Larger fonts (16px) and vertical layout
+- **Failsafe Init**: Robust chat initialization with retry logic
+
+See `tools/visualizer/CLAUDE.md` for detailed troubleshooting.
+
 ### Development Best Practices
 
 1. **Always use editable install** for development: `pip install -e .`
