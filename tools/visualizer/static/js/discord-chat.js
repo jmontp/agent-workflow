@@ -276,7 +276,7 @@ class DiscordChat {
      * Navigate command history
      */
     navigateHistory(direction) {
-        const messageInput = document.getElementById('message-input');
+        const messageInput = document.getElementById('chat-input-field');
         
         if (direction === 'up') {
             if (this.historyIndex === -1) {
@@ -314,7 +314,7 @@ class DiscordChat {
             this.autocompleteResults = data.suggestions || [];
             this.selectedAutocomplete = -1;
             
-            const dropdown = document.getElementById('autocomplete-dropdown');
+            const dropdown = document.getElementById('chat-autocomplete');
             if (!dropdown) return;
             
             if (this.autocompleteResults.length === 0) {
@@ -392,7 +392,7 @@ class DiscordChat {
     selectAutocomplete() {
         if (this.selectedAutocomplete >= 0 && this.selectedAutocomplete < this.autocompleteResults.length) {
             const suggestion = this.autocompleteResults[this.selectedAutocomplete];
-            const messageInput = document.getElementById('message-input');
+            const messageInput = document.getElementById('chat-input-field');
             
             messageInput.value = suggestion.command + ' ';
             messageInput.focus();
@@ -455,7 +455,7 @@ class DiscordChat {
     handleTypingIndicator(data) {
         if (data.user_id === this.userId) return; // Ignore own typing
         
-        const indicator = document.getElementById('typing-indicator');
+        const indicator = document.getElementById('typing-indicators');
         if (!indicator) return;
         
         if (data.typing) {
@@ -470,7 +470,7 @@ class DiscordChat {
      * Handle bot typing indicator
      */
     handleBotTyping(data) {
-        const indicator = document.getElementById('typing-indicator');
+        const indicator = document.getElementById('typing-indicators');
         if (!indicator) return;
         
         if (data.typing) {
@@ -898,4 +898,9 @@ class DiscordChat {
 // Export for module usage
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = DiscordChat;
+}
+
+// Also expose to window for browser usage
+if (typeof window !== 'undefined') {
+    window.DiscordChat = DiscordChat;
 }

@@ -16,7 +16,7 @@ from pathlib import Path
 from datetime import datetime
 from typing import Dict, Any, List
 
-from flask import Flask, render_template, jsonify, request, session
+from flask import Flask, render_template, jsonify, request, session, make_response
 from flask_socketio import SocketIO, emit, join_room, leave_room
 import websockets
 import re
@@ -74,7 +74,18 @@ except ImportError:
 # Flask app setup
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'state-visualizer-dev-key'
-socketio = SocketIO(app, cors_allowed_origins="*", async_mode='threading')
+# Disable caching for development
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
+# Configure SocketIO with more robust settings
+socketio = SocketIO(
+    app, 
+    cors_allowed_origins="*", 
+    async_mode='threading',
+    logger=True,
+    engineio_logger=False,
+    ping_timeout=60,
+    ping_interval=25
+)
 
 # Global state for tracking
 current_state = {
@@ -88,6 +99,24 @@ current_state = {
 chat_history = []
 typing_users = set()
 active_users = set()
+
+
+@app.after_request
+def add_header(response):
+    """Add headers to prevent caching and ensure correct MIME types"""
+    if 'static' in request.path:
+        # Set appropriate MIME types for JavaScript files
+        if request.path.endswith('.js'):
+            response.headers['Content-Type'] = 'application/javascript; charset=utf-8'
+        elif request.path.endswith('.css'):
+            response.headers['Content-Type'] = 'text/css; charset=utf-8'
+        
+        # Prevent caching for development
+        response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0'
+        response.headers['Pragma'] = 'no-cache'
+        response.headers['Expires'] = '-1'
+    
+    return response
 
 
 @app.route('/')
@@ -119,6 +148,28 @@ def health_check():
         "timestamp": datetime.now().isoformat(),
         "connected_clients": len(broadcaster.clients),
         "active_tdd_cycles": len(broadcaster.tdd_cycles)
+    })
+
+
+@app.route('/test/scripts')
+def test_scripts():
+    """Test endpoint to verify script loading"""
+    import os
+    static_path = os.path.join(app.root_path, 'static')
+    js_path = os.path.join(static_path, 'js')
+    
+    scripts = {
+        'chat-components.js': os.path.exists(os.path.join(js_path, 'chat-components.js')),
+        'discord-chat.js': os.path.exists(os.path.join(js_path, 'discord-chat.js')),
+        'ui-enhancements.js': os.path.exists(os.path.join(js_path, 'ui-enhancements.js')),
+        'visualizer.js': os.path.exists(os.path.join(static_path, 'visualizer.js'))
+    }
+    
+    return jsonify({
+        "static_path": static_path,
+        "scripts_exist": scripts,
+        "flask_static_folder": app.static_folder,
+        "flask_static_url_path": app.static_url_path
     })
 
 
@@ -1795,6 +1846,16 @@ def run_visualizer(host='localhost', port=5000, debug=False):
         )
     finally:
         state_monitor.stop_monitoring()
+
+
+@app.after_request
+def add_header(response):
+    """Add headers to disable caching and ensure correct content types"""
+    if response.mimetype == 'application/javascript' or response.mimetype == 'text/javascript':
+        response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+        response.headers['Pragma'] = 'no-cache'
+        response.headers['Expires'] = '0'
+    return response
 
 
 if __name__ == '__main__':

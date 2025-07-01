@@ -712,3 +712,8 @@ class ChatComponents {
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = ChatComponents;
 }
+
+// Also expose to window for browser usage
+if (typeof window !== 'undefined') {
+    window.ChatComponents = ChatComponents;
+}
