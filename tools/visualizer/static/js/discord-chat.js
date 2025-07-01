@@ -14,6 +14,9 @@ class DiscordChat {
         this.sessionId = null;
         this.projectName = 'default';
         this.permissionLevel = 'contributor';
+        
+        // Project awareness
+        this.setupProjectIntegration();
         this.collaborationEnabled = false;
         this.commandHistory = [];
         this.historyIndex = -1;
@@ -24,9 +27,16 @@ class DiscordChat {
         this.selectedAutocomplete = -1;
         this.isTyping = false;
         
+        // Project-specific chat isolation
+        this.projectChatHistory = new Map(); // project_name -> messages array
+        this.projectCommandHistory = new Map(); // project_name -> commands array
+        this.currentProjectRoom = null;
+        this.projectTypingUsers = new Map(); // project_name -> Set of typing users
+        
         // Initialize components
         this.initializeEventHandlers();
         this.setupWebSocketHandlers();
+        this.initializeProjectIsolation();
         this.loadChatHistory();
         this.initializeCollaboration();
         
@@ -38,6 +48,88 @@ class DiscordChat {
      */
     generateUserId() {
         return 'user_' + Math.random().toString(36).substr(2, 9);
+    }
+    
+    /**
+     * Initialize project-specific chat isolation
+     */
+    initializeProjectIsolation() {
+        // Load project chat data from localStorage
+        this.loadProjectData();
+        
+        // Set up project switching listener
+        this.setupProjectSwitchListener();
+        
+        // Initialize current project room
+        this.joinProjectRoom(this.projectName);
+        
+        console.log('Project isolation initialized for:', this.projectName);
+    }
+    
+    /**
+     * Load project-specific data from localStorage
+     */
+    loadProjectData() {
+        try {
+            const storedChatHistory = localStorage.getItem('agent_workflow_chat_history');
+            if (storedChatHistory) {
+                const data = JSON.parse(storedChatHistory);
+                this.projectChatHistory = new Map(Object.entries(data));
+            }
+            
+            const storedCommandHistory = localStorage.getItem('agent_workflow_command_history');
+            if (storedCommandHistory) {
+                const data = JSON.parse(storedCommandHistory);
+                this.projectCommandHistory = new Map(Object.entries(data));
+            }
+            
+            // Load current project's command history
+            const currentCommands = this.projectCommandHistory.get(this.projectName) || [];
+            this.commandHistory = [...currentCommands];
+            
+        } catch (error) {
+            console.warn('Failed to load project data from localStorage:', error);
+        }
+    }
+    
+    /**
+     * Save project-specific data to localStorage
+     */
+    saveProjectData() {
+        try {
+            // Save chat history
+            const chatHistoryObj = Object.fromEntries(this.projectChatHistory);
+            localStorage.setItem('agent_workflow_chat_history', JSON.stringify(chatHistoryObj));
+            
+            // Save command history for current project
+            this.projectCommandHistory.set(this.projectName, this.commandHistory.slice(0, 20));
+            const commandHistoryObj = Object.fromEntries(this.projectCommandHistory);
+            localStorage.setItem('agent_workflow_command_history', JSON.stringify(commandHistoryObj));
+            
+        } catch (error) {
+            console.warn('Failed to save project data to localStorage:', error);
+        }
+    }
+    
+    /**
+     * Set up project switching listener
+     */
+    setupProjectSwitchListener() {
+        // Listen for project changes from visualizer
+        if (window.visualizer && window.visualizer.onProjectChange) {
+            const originalOnProjectChange = window.visualizer.onProjectChange;
+            window.visualizer.onProjectChange = (newProject, oldProject) => {
+                this.switchProject(newProject, oldProject);
+                if (originalOnProjectChange) {
+                    originalOnProjectChange.call(window.visualizer, newProject, oldProject);
+                }
+            };
+        }
+        
+        // Also listen for direct project changes on the chat instance
+        document.addEventListener('projectChanged', (event) => {
+            this.switchProject(event.detail.newProject, event.detail.oldProject);
+        });
     }
     
     /**
@@ -192,50 +284,65 @@ class DiscordChat {
      * Setup WebSocket event handlers for chat
      */
     setupWebSocketHandlers() {
-        // New chat message
+        // New chat message - now project-aware
         this.socket.on('new_chat_message', (data) => {
             console.log('Received new_chat_message:', data);
-            this.addMessageToChat(data);
+            this.handleProjectMessage(data);
         });
         
-        // Command response
+        // Command response - now project-aware
         this.socket.on('command_response', (data) => {
             console.log('Received command_response:', data);
-            this.addMessageToChat(data);
+            this.handleProjectMessage(data);
             this.highlightStateChange(data);
         });
         
-        // Typing indicators
+        // Project-specific typing indicators
         this.socket.on('typing_indicator', (data) => {
-            this.handleTypingIndicator(data);
+            this.handleProjectTypingIndicator(data);
         });
         
-        // Bot typing
+        // Bot typing - project-aware
         this.socket.on('bot_typing', (data) => {
-            this.handleBotTyping(data);
+            this.handleProjectBotTyping(data);
         });
         
-        // Chat history response
+        // Project-specific chat history response
         this.socket.on('chat_history', (data) => {
-            this.loadHistoryMessages(data.messages);
+            this.loadProjectHistoryMessages(data.messages, data.project_name);
         });
         
-        // User presence
+        // Project-specific user presence
         this.socket.on('user_joined', (data) => {
-            this.showUserPresence(data, 'joined');
+            this.showProjectUserPresence(data, 'joined');
         });
         
         this.socket.on('user_left', (data) => {
-            this.showUserPresence(data, 'left');
+            this.showProjectUserPresence(data, 'left');
         });
         
-        // Error handling
+        // Project switching event
+        this.socket.on('project_switched', (data) => {
+            this.handleProjectSwitch(data.project_name, data.previous_project);
+        });
+        
+        // Room joined/left confirmations
+        this.socket.on('room_joined', (data) => {
+            console.log('Joined project room:', data.room);
+            this.currentProjectRoom = data.room;
+        });
+        
+        this.socket.on('room_left', (data) => {
+            console.log('Left project room:', data.room);
+        });
+        
+        // Project-aware error handling
         this.socket.on('command_error', (data) => {
-            this.showError(data.error);
+            this.showProjectError(data.error, data.project_name);
         });
         
         this.socket.on('chat_error', (data) => {
-            this.showError(data.error);
+            this.showProjectError(data.error, data.project_name);
         });
     }
     
@@ -347,9 +454,13 @@ class DiscordChat {
                 user_id: this.userId,
                 username: this.username,
                 session_id: this.sessionId,
-                project_name: this.projectName || 'default'
+                project_name: this.projectName || 'default',
+                room: this.currentProjectRoom
             });
-            console.log('Message sent successfully');
+            console.log('Message sent successfully for project:', this.projectName);
+            
+            // Save command to project-specific history
+            this.saveProjectData();
         } catch (error) {
             console.error('Error sending message:', error);
         }
@@ -504,7 +615,8 @@ class DiscordChat {
             this.socket.emit('start_typing', {
                 user_id: this.userId,
                 username: this.username,
-                project_name: this.projectName
+                project_name: this.projectName,
+                room: this.currentProjectRoom
             });
         }
         
@@ -530,7 +642,8 @@ class DiscordChat {
             this.socket.emit('stop_typing', {
                 user_id: this.userId,
                 username: this.username,
-                project_name: this.projectName
+                project_name: this.projectName,
+                room: this.currentProjectRoom
             });
         }
         
@@ -570,6 +683,320 @@ class DiscordChat {
         } else {
             indicator.style.display = 'none';
         }
+    }
+    
+    /**
+     * Switch to a different project
+     */
+    switchProject(newProject, oldProject) {
+        console.log(`Switching from project '${oldProject}' to '${newProject}'`);
+        
+        // Save current project's chat state
+        if (oldProject && oldProject !== newProject) {
+            this.saveCurrentProjectState();
+            this.leaveProjectRoom(oldProject);
+        }
+        
+        // Update current project
+        this.projectName = newProject;
+        
+        // Load new project's chat state
+        this.loadProjectState(newProject);
+        
+        // Join new project room
+        this.joinProjectRoom(newProject);
+        
+        // Update UI to show current project
+        this.updateProjectDisplay(newProject);
+        
+        // Clear typing indicators for old project
+        this.clearTypingIndicators();
+        
+        // Emit project switch event to server
+        this.socket.emit('switch_project', {
+            user_id: this.userId,
+            new_project: newProject,
+            old_project: oldProject
+        });
+        
+        console.log('Project switched successfully to:', newProject);
+    }
+    
+    /**
+     * Save current project's chat state
+     */
+    saveCurrentProjectState() {
+        const currentMessages = this.getCurrentChatMessages();
+        this.projectChatHistory.set(this.projectName, currentMessages);
+        this.projectCommandHistory.set(this.projectName, [...this.commandHistory]);
+        this.saveProjectData();
+    }
+    
+    /**
+     * Load project-specific chat state
+     */
+    loadProjectState(projectName) {
+        // Load project's command history
+        const projectCommands = this.projectCommandHistory.get(projectName) || [];
+        this.commandHistory = [...projectCommands];
+        
+        // Load and display project's chat history
+        const projectMessages = this.projectChatHistory.get(projectName) || [];
+        this.displayProjectMessages(projectMessages);
+        
+        // Reset history navigation
+        this.historyIndex = -1;
+        this.currentInput = '';
+    }
+    
+    /**
+     * Get current chat messages from DOM
+     */
+    getCurrentChatMessages() {
+        const chatMessages = document.getElementById('chat-messages');
+        if (!chatMessages) return [];
+        
+        const messages = [];
+        const messageElements = chatMessages.querySelectorAll('.message');
+        
+        messageElements.forEach(element => {
+            const messageId = element.getAttribute('data-message-id');
+            if (messageId) {
+                // Extract message data from DOM (simplified approach)
+                const timestamp = element.querySelector('.timestamp')?.textContent || new Date().toISOString();
+                const username = element.querySelector('.username')?.textContent || 'Unknown';
+                const messageContent = element.querySelector('.message-content')?.textContent || '';
+                const messageType = element.classList.contains('bot') ? 'bot' : 
+                                 element.classList.contains('system') ? 'system' : 'user';
+                
+                messages.push({
+                    id: messageId,
+                    username: username,
+                    message: messageContent,
+                    timestamp: timestamp,
+                    type: messageType,
+                    project_name: this.projectName
+                });
+            }
+        });
+        
+        return messages;
+    }
+    
+    /**
+     * Display project-specific messages
+     */
+    displayProjectMessages(messages) {
+        const chatMessages = document.getElementById('chat-messages');
+        if (!chatMessages) return;
+        
+        // Clear current chat
+        chatMessages.innerHTML = '';
+        
+        // Add project messages
+        messages.forEach(message => {
+            this.addMessageToChat(message);
+        });
+        
+        // Scroll to bottom
+        this.scrollToBottom(chatMessages);
+    }
+    
+    /**
+     * Join project-specific WebSocket room
+     */
+    joinProjectRoom(projectName) {
+        if (!projectName) return;
+        
+        this.socket.emit('join_project_room', {
+            user_id: this.userId,
+            username: this.username,
+            project_name: projectName,
+            session_id: this.sessionId
+        });
+        
+        console.log('Joining project room:', projectName);
+    }
+    
+    /**
+     * Leave project-specific WebSocket room
+     */
+    leaveProjectRoom(projectName) {
+        if (!projectName) return;
+        
+        this.socket.emit('leave_project_room', {
+            user_id: this.userId,
+            project_name: projectName
+        });
+        
+        console.log('Leaving project room:', projectName);
+    }
+    
+    /**
+     * Update project display in UI
+     */
+    updateProjectDisplay(projectName) {
+        // Update project name in chat header
+        const projectHeader = document.getElementById('chat-project-name');
+        if (projectHeader) {
+            projectHeader.textContent = projectName;
+        }
+        
+        // Update chat title
+        const chatTitle = document.querySelector('.chat-header h3');
+        if (chatTitle) {
+            chatTitle.textContent = `Discord Chat - ${projectName}`;
+        }
+        
+        // Update status text
+        const statusElement = document.getElementById('chat-status-text');
+        if (statusElement) {
+            statusElement.title = `Active project: ${projectName}`;
+        }
+    }
+    
+    /**
+     * Handle project-specific messages
+     */
+    handleProjectMessage(messageData) {
+        // Only display messages for current project
+        if (messageData.project_name && messageData.project_name !== this.projectName) {
+            console.log('Message for different project, storing but not displaying:', messageData.project_name);
+            // Store message for the correct project
+            const projectMessages = this.projectChatHistory.get(messageData.project_name) || [];
+            projectMessages.push(messageData);
+            this.projectChatHistory.set(messageData.project_name, projectMessages);
+            return;
+        }
+        
+        // Display message for current project
+        this.addMessageToChat(messageData);
+    }
+    
+    /**
+     * Handle project-specific typing indicators
+     */
+    handleProjectTypingIndicator(data) {
+        // Only show typing indicators for current project
+        if (data.project_name && data.project_name !== this.projectName) {
+            return;
+        }
+        
+        if (data.user_id === this.userId) return; // Ignore own typing
+        
+        const indicator = document.getElementById('typing-indicators');
+        if (!indicator) return;
+        
+        if (data.typing) {
+            indicator.textContent = `${data.username} is typing...`;
+            indicator.style.display = 'block';
+        } else {
+            indicator.style.display = 'none';
+        }
+    }
+    
+    /**
+     * Handle project-specific bot typing
+     */
+    handleProjectBotTyping(data) {
+        // Only show bot typing for current project
+        if (data.project_name && data.project_name !== this.projectName) {
+            return;
+        }
+        
+        const indicator = document.getElementById('typing-indicators');
+        if (!indicator) return;
+        
+        if (data.typing) {
+            indicator.innerHTML = '🤖 Agent Bot is thinking...';
+            indicator.style.display = 'block';
+        } else {
+            indicator.style.display = 'none';
+        }
+    }
+    
+    /**
+     * Handle project switch event from server
+     */
+    handleProjectSwitch(newProject, oldProject) {
+        console.log('Server initiated project switch:', { newProject, oldProject });
+        this.switchProject(newProject, oldProject);
+    }
+    
+    /**
+     * Clear typing indicators
+     */
+    clearTypingIndicators() {
+        const indicator = document.getElementById('typing-indicators');
+        if (indicator) {
+            indicator.style.display = 'none';
+        }
+    }
+    
+    /**
+     * Show project-specific user presence
+     */
+    showProjectUserPresence(data, action) {
+        // Only show presence for current project
+        if (data.project_name && data.project_name !== this.projectName) {
+            return;
+        }
+        
+        if (data.user_id === this.userId) return; // Don't show own presence
+        
+        const systemMessage = {
+            id: 'presence_' + Date.now(),
+            user_id: 'system',
+            username: 'System',
+            message: `${data.username} ${action} the ${data.project_name} project chat`,
+            timestamp: new Date().toISOString(),
+            type: 'system',
+            project_name: this.projectName
+        };
+        
+        this.addMessageToChat(systemMessage);
+    }
+    
+    /**
+     * Show project-specific error messages
+     */
+    showProjectError(errorMessage, projectName) {
+        // Only show errors for current project
+        if (projectName && projectName !== this.projectName) {
+            return;
+        }
+        
+        const errorMsg = {
+            id: 'error_' + Date.now(),
+            user_id: 'system',
+            username: 'System',
+            message: `Error: ${errorMessage}`,
+            timestamp: new Date().toISOString(),
+            type: 'system',
+            error: true,
+            project_name: this.projectName
+        };
+        
+        this.addMessageToChat(errorMsg);
+    }
+    
+    /**
+     * Load project-specific chat history
+     */
+    loadProjectHistoryMessages(messages, projectName) {
+        if (!messages) return;
+        
+        // Store messages for the specified project
+        const targetProject = projectName || this.projectName;
+        this.projectChatHistory.set(targetProject, messages);
+        
+        // Only display if it's for the current project
+        if (targetProject === this.projectName) {
+            this.displayProjectMessages(messages);
+        }
+        
+        // Save to localStorage
+        this.saveProjectData();
     }
     
     /**
@@ -860,7 +1287,11 @@ class DiscordChat {
      */
     async loadChatHistory() {
         try {
-            this.socket.emit('request_chat_history', { limit: 50 });
+            this.socket.emit('request_chat_history', { 
+                limit: 50,
+                project_name: this.projectName,
+                room: this.currentProjectRoom
+            });
         } catch (error) {
             console.error('Error loading chat history:', error);
         }
@@ -934,7 +1365,8 @@ class DiscordChat {
             user_id: this.userId,
             username: this.username,
             session_id: this.sessionId,
-            project_name: this.projectName
+            project_name: this.projectName,
+            room: this.currentProjectRoom
         });
     }
     
@@ -983,6 +1415,121 @@ class DiscordChat {
      */
     getUserId() {
         return this.userId;
+    }
+    
+    /**
+     * Set current project (external API)
+     */
+    setProject(projectName) {
+        if (projectName && projectName !== this.projectName) {
+            this.switchProject(projectName, this.projectName);
+        }
+    }
+    
+    /**
+     * Get current project name
+     */
+    getProject() {
+        return this.projectName;
+    }
+    
+    /**
+     * Get project chat history (external API)
+     */
+    getProjectHistory(projectName) {
+        return this.projectChatHistory.get(projectName) || [];
+    }
+    
+    /**
+     * Clear project chat history (external API)
+     */
+    clearProjectHistory(projectName) {
+        if (projectName) {
+            this.projectChatHistory.delete(projectName);
+            this.projectCommandHistory.delete(projectName);
+            this.saveProjectData();
+            
+            // If it's current project, clear display
+            if (projectName === this.projectName) {
+                const chatMessages = document.getElementById('chat-messages');
+                if (chatMessages) {
+                    chatMessages.innerHTML = '';
+                }
+            }
+        }
+    }
+    
+    /**
+     * Setup project integration
+     */
+    setupProjectIntegration() {
+        // Listen for project switch events
+        window.addEventListener('projectSwitch', (event) => {
+            const { projectId } = event.detail;
+            console.log(`💬 Chat switching to project: ${projectId}`);
+            
+            this.projectName = projectId;
+            
+            // Update chat title to reflect active project
+            this.updateChatTitle(projectId);
+            
+            // Clear chat and reload history for new project
+            this.clearChatForProjectSwitch();
+            this.loadChatHistory();
+            
+            // Re-join chat with new project context
+            this.joinChat();
+        });
+    }
+    
+    /**
+     * Update chat title to show current project
+     */
+    updateChatTitle(projectId) {
+        const chatTitle = document.querySelector('.chat-title');
+        if (chatTitle && window.projectManager) {
+            const project = window.projectManager.projects.get(projectId);
+            const projectName = project ? project.name : projectId;
+            chatTitle.innerHTML = `
+                💬 Discord Chat
+                <span style="font-size: 12px; opacity: 0.7; margin-left: 8px;">
+                    ${project ? project.icon : '📁'} ${projectName}
+                </span>
+            `;
+        }
+    }
+    
+    /**
+     * Clear chat for project switch
+     */
+    clearChatForProjectSwitch() {
+        const chatMessages = document.getElementById('chat-messages');
+        if (chatMessages) {
+            chatMessages.innerHTML = '';
+            
+            // Add project switch indicator
+            const switchMessage = {
+                id: 'project_switch_' + Date.now(),
+                user_id: 'system',
+                username: 'System',
+                message: `Switched to project: ${this.projectName}`,
+                timestamp: new Date().toISOString(),
+                type: 'system'
+            };
+            
+            this.addMessageToChat(switchMessage);
+        }
+    }
+    
+    /**
+     * Get current project name for display
+     */
+    getCurrentProjectName() {
+        if (window.projectManager) {
+            const project = window.projectManager.projects.get(this.projectName);
+            return project ? project.name : this.projectName;
+        }
+        return this.projectName;
     }
 }
 

@@ -16,6 +16,10 @@ class StateVisualizer {
         this.maxReconnectAttempts = 5;
         this.reconnectDelay = 5000; // 5 seconds
         
+        // Project awareness
+        this.currentProject = 'default';
+        this.setupProjectIntegration();
+        
         // Interface management
         this.interfaceStatus = {};
         this.activeInterface = null;
@@ -238,6 +242,18 @@ class StateVisualizer {
             if (event.ctrlKey && event.key === 'r') {
                 event.preventDefault();
                 this.requestStateUpdate();
+            }
+            
+            // Emergency escape handlers
+            if (event.key === 'Escape') {
+                this.forceCloseAllModals();
+            }
+            
+            // Ctrl+Alt+Q for emergency reset
+            if (event.ctrlKey && event.altKey && event.key.toLowerCase() === 'q') {
+                console.log('🚨 Emergency reset triggered!');
+                this.forceCloseAllModals();
+                event.preventDefault();
             }
         });
     }
@@ -1127,6 +1143,27 @@ class StateVisualizer {
     }
 
     /**
+     * Emergency close - force close any visible modals
+     */
+    forceCloseAllModals() {
+        const modals = document.querySelectorAll('.modal.show');
+        modals.forEach(modal => {
+            modal.classList.remove('show');
+            console.log('Force closed modal:', modal.id);
+        });
+        
+        // Also hide any elements with show class
+        const showElements = document.querySelectorAll('.show');
+        showElements.forEach(element => {
+            if (element.classList.contains('modal') || element.id.includes('modal') || element.id.includes('config')) {
+                element.classList.remove('show');
+                element.style.display = 'none';
+                console.log('Force hidden element:', element.id || element.className);
+            }
+        });
+    }
+
+    /**
      * Switch configuration tab
      */
     switchConfigTab(targetTab) {
@@ -1393,6 +1430,106 @@ class StateVisualizer {
             this.showMessage(`Failed to switch: ${data.error}`, 'error');
         }
     }
+    
+    /**
+     * Setup project integration
+     */
+    setupProjectIntegration() {
+        // Listen for project switch events
+        window.addEventListener('projectSwitch', (event) => {
+            const { projectId } = event.detail;
+            console.log(`📊 Visualizer switching to project: ${projectId}`);
+            
+            this.currentProject = projectId;
+            
+            // Clear current state and request fresh data for new project
+            this.clearProjectState();
+            this.requestProjectState(projectId);
+            
+            // Update activity log
+            this.addActivityLog('Project', `Switched to project: ${projectId}`, 'info');
+        });
+    }
+    
+    /**
+     * Clear project-specific state
+     */
+    clearProjectState() {
+        // Clear TDD cycles
+        this.activeTDDCycles.clear();
+        
+        // Reset workflow state
+        this.currentWorkflowState = 'IDLE';
+        
+        // Update displays
+        this.updateActiveCyclesCount();
+        this.updateTDDCycles();
+        this.updateWorkflowState('IDLE');
+        
+        // Clear project-specific activity log entries
+        const logContainer = document.getElementById('activity-log');
+        if (logContainer) {
+            const entries = logContainer.children;
+            for (let i = entries.length - 1; i >= 0; i--) {
+                const entry = entries[i];
+                if (entry.textContent.includes('Workflow:') || entry.textContent.includes('TDD:')) {
+                    entry.remove();
+                }
+            }
+        }
+    }
+    
+    /**
+     * Request state for specific project
+     */
+    requestProjectState(projectId) {
+        if (this.connected && this.socket) {
+            this.socket.emit('request_project_state', { project: projectId });
+            this.addActivityLog('System', `Requested state for project: ${projectId}`, 'info');
+        }
+    }
+    
+    /**
+     * Update project-aware state displays
+     */
+    updateProjectAwareState(state, project) {
+        // Only update if the state belongs to current project
+        if (!project || project === this.currentProject) {
+            if (state.workflow_state) {
+                this.updateWorkflowState(state.workflow_state);
+            }
+            
+            if (state.tdd_cycles) {
+                // Filter TDD cycles for current project
+                this.activeTDDCycles.clear();
+                Object.entries(state.tdd_cycles).forEach(([storyId, cycleData]) => {
+                    if (!cycleData.project || cycleData.project === this.currentProject) {
+                        this.activeTDDCycles.set(storyId, {
+                            storyId: storyId,
+                            currentState: cycleData.current_state,
+                            lastUpdated: cycleData.last_updated,
+                            project: cycleData.project || this.currentProject
+                        });
+                    }
+                });
+                this.updateTDDCycles();
+            }
+            
+            this.updateActiveCyclesCount();
+            this.updateLastUpdateTime();
+        }
+    }
+    
+    /**
+     * Get current project info for display
+     */
+    getCurrentProjectInfo() {
+        if (window.projectManager) {
+            const project = window.projectManager.projects.get(this.currentProject);
+            return project || { id: this.currentProject, name: this.currentProject, icon: '📁' };
+        }
+        return { id: this.currentProject, name: this.currentProject, icon: '📁' };
+    }
 }
 
 // Global instances
@@ -1414,6 +1551,31 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('Socket connected:', visualizer.socket?.connected);
             console.log('DiscordChat class available:', typeof DiscordChat);
             console.log('ChatComponents class available:', typeof ChatComponents);
+            
+            // Initialize project manager if available
+            if (typeof ProjectManager !== 'undefined' && window.projectManager) {
+                console.log('Project manager found, integrating...');
+                
+                // Update project status when visualizer state changes
+                const originalUpdateWorkflowState = visualizer.updateWorkflowState;
+                visualizer.updateWorkflowState = function(state) {
+                    originalUpdateWorkflowState.call(this, state);
+                    
+                    // Update project status based on workflow state
+                    if (window.projectManager) {
+                        let status = 'idle';
+                        if (state === 'SPRINT_ACTIVE') {
+                            status = 'active';
+                        } else if (state === 'BLOCKED') {
+                            status = 'error';
+                        } else if (state === 'SPRINT_REVIEW') {
+                            status = 'warning';
+                        }
+                        
+                        window.projectManager.updateProjectStatus(this.currentProject, status);
+                    }
+                };
+            }
             
             // Initialize chat system if available
             if (typeof DiscordChat !== 'undefined' && typeof ChatComponents !== 'undefined') {
@@ -1461,6 +1623,19 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Always expose visualizer
             window.visualizer = visualizer;
+            
+            // Expose emergency functions globally
+            window.emergencyCloseModals = () => {
+                if (visualizer) {
+                    visualizer.forceCloseAllModals();
+                } else {
+                    // Fallback if visualizer not ready
+                    document.querySelectorAll('.modal.show').forEach(modal => {
+                        modal.classList.remove('show');
+                        modal.style.display = 'none';
+                    });
+                }
+            };
         }, 100); // Small delay to ensure all scripts are loaded
         
         console.log('TDD State Visualizer initialized successfully');

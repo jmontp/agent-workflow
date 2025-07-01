@@ -95,7 +95,14 @@ agent-workflow/
 ├── 🧪 Testing Infrastructure
 │   ├── tests/                      # Comprehensive test suite (99+ files)
 │   │   ├── unit/                   # Unit tests (77 files, 95%+ coverage)
-│   │   ├── integration/            # Integration tests (9 files)
+│   │   ├── integration/            # Integration tests (15+ files)
+│   │   │   ├── test_multi_project_backend.py     # Backend API testing
+│   │   │   ├── test_project_switching.py         # Project context switching
+│   │   │   ├── test_chat_isolation.py            # Chat isolation validation
+│   │   │   ├── test_responsive_design.py         # Mobile responsiveness
+│   │   │   ├── run_multi_project_tests.py        # Comprehensive test runner
+│   │   │   ├── validate_multi_project_system.py  # Live system validation
+│   │   │   └── README_MULTI_PROJECT_TESTS.md     # Test suite documentation
 │   │   ├── performance/            # Performance benchmarks
 │   │   ├── security/               # Security validation
 │   │   ├── acceptance/             # User acceptance tests
@@ -118,9 +125,20 @@ agent-workflow/
 │   │   ├── documentation/          # Automated API documentation generation
 │   │   │   └── generate_api_docs.py         # AST-based doc generation (Markdown/OpenAPI)
 │   │   └── visualizer/             # Real-time web-based state visualization
-│   │       ├── app.py               # Flask/SocketIO web application
+│   │       ├── app.py               # Flask/SocketIO web application with multi-project support
+│   │       ├── CLAUDE.md            # Comprehensive visualizer documentation
+│   │       ├── MULTI_PROJECT_API.md # Multi-project backend API specification
+│   │       ├── PROJECT_CHAT_ISOLATION.md # Chat isolation implementation guide
+│   │       ├── interface_configs.json # Project interface configuration
 │   │       ├── static/              # Frontend assets (CSS, JS)
-│   │       └── templates/           # HTML templates with real-time updates
+│   │       │   ├── css/discord-chat.css     # Discord-style chat interface
+│   │       │   ├── js/discord-chat.js       # Chat functionality with isolation
+│   │       │   ├── js/project-manager.js    # Project switching and management
+│   │       │   └── visualizer.js            # Main state visualization engine
+│   │       ├── templates/           # HTML templates with real-time updates
+│   │       │   └── index.html       # Main interface with responsive design
+│   │       ├── test_multi_project_api.py    # API endpoint testing
+│   │       └── test_project_isolation.html  # Chat isolation test interface
 │   └── scripts/                    # Main executable entry points (documented in scripts/CLAUDE.md)
 │       ├── orchestrator.py         # Single-project orchestrator with TDD support
 │       ├── multi_project_orchestrator.py  # Multi-project coordination system
@@ -244,21 +262,38 @@ The system provides comprehensive CLI commands via `agent-orch` or `aw`:
 ### Project Management
 - `init` - Initialize orchestration environment
 - `register-project` - Register new project repository
-- `projects` - List and manage projects
+- `projects` - List and manage projects with multi-project support
+- `project-switch` - Switch active project context
+- `project-info` - Get detailed project information and status
 
 ### Orchestration Control
-- `start` - Start orchestration engine
-- `stop` - Stop orchestration gracefully
-- `status` - Check system status
+- `start` - Start orchestration engine (single or multi-project mode)
+- `stop` - Stop orchestration gracefully with project cleanup
+- `status` - Check system status across all projects
+- `restart` - Restart orchestration with state preservation
+
+### Multi-Project Management
+- `multi-project-start` - Start multi-project orchestration daemon
+- `multi-project-status` - Get status of all registered projects
+- `multi-project-stop` - Stop multi-project orchestration
+- `project-discover` - Discover and register projects automatically
+
+### Web Interface Control
+- `web` - Start web visualizer interface
+- `web-stop` - Stop web interface
+- `web-status` - Check web interface status
+- `web-restart` - Restart web interface with multi-project support
 
 ### Configuration & Setup
 - `setup-discord` - Configure Discord integration
 - `setup-api` - Configure AI API integration
+- `setup-multi-project` - Configure multi-project orchestration
 - `configure` - Interactive configuration wizard
 
 ### System Information
 - `version` - Display version information
-- `health` - System health check
+- `health` - System health check with project status
+- `info` - Comprehensive system information
 - `migrate` - Database/configuration migration
 
 ## 🧪 Testing & Quality Assurance
@@ -608,10 +643,44 @@ Commands are validated against current state - invalid commands return helpful e
 - **Error Handling**: Comprehensive error messages with helpful hints and suggestions
 
 ### Multi-Project Orchestration
-The orchestrator monitors multiple projects simultaneously, each with independent state machines and Discord channels. Projects are defined in YAML with orchestration modes:
-- `blocking`: Requires human approval for all strategic decisions
-- `partial`: Executes with quarantined output for review
-- `autonomous`: Full execution with monitoring and alerts
+The system provides comprehensive multi-project orchestration capabilities with advanced coordination and isolation features:
+
+#### Core Multi-Project Features
+- **Project Isolation**: Complete separation of project contexts, states, and chat history
+- **Concurrent Execution**: Multiple projects can run simultaneously with independent workflows
+- **Resource Management**: Per-project resource limits (CPU, memory, agents) with intelligent scheduling
+- **Cross-Project Intelligence**: Optional knowledge sharing between related projects
+- **Web-Based Management**: Full-featured web interface for project switching and monitoring
+
+#### Project Configuration Modes
+Projects are defined in YAML configuration with multiple orchestration modes:
+- **blocking**: Requires human approval for all strategic decisions
+- **partial**: Executes with quarantined output for review  
+- **autonomous**: Full execution with monitoring and alerts
+- **collaborative**: Multi-user project support with role-based permissions
+
+#### Web Interface Integration
+- **Discord-Style Chat**: Project-specific chat interfaces with complete isolation
+- **Real-Time State Visualization**: Live workflow state diagrams with project switching
+- **Project Management**: Registration, configuration, and monitoring through web UI
+- **Session Management**: User sessions tracked across projects with proper isolation
+- **WebSocket Room Management**: Project-specific real-time communication channels
+
+#### Backend API Architecture
+Comprehensive REST API for multi-project management:
+- **Project Discovery**: Automatic detection and registration of projects
+- **State Management**: Project-specific workflow state handling
+- **Chat Isolation**: Project-scoped chat history and command processing  
+- **Context Switching**: Seamless project context switching with state preservation
+- **Resource Monitoring**: Real-time resource usage and performance metrics
+
+#### Integration Testing
+Complete integration test suite validates multi-project functionality:
+- **Backend API Tests**: All endpoints and data integrity validation
+- **Project Switching Tests**: Context switching and state preservation
+- **Chat Isolation Tests**: Project-specific communication boundaries
+- **Responsive Design Tests**: Mobile and accessibility compliance
+- **System Validation**: Live system testing and health monitoring
 
 ## Documentation Strategy
 

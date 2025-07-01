@@ -1,63 +1,242 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Cache Busting Solution - Generated 2025-07-01T00:35:23.618948 -->
+    <script>
+        // Ultra-aggressive cache busting for development
+        (function() {
+            const timestamp = Date.now();
+            const cacheKey = Math.random().toString(36).substr(2, 9);
+            
+            // Add cache busting to all static resources
+            window.addEventListener('DOMContentLoaded', function() {
+                const links = document.querySelectorAll('link[rel="stylesheet"]');
+                const scripts = document.querySelectorAll('script[src]');
+                
+                // Add cache busting to stylesheets
+                links.forEach(link => {
+                    if (link.href.includes('/static/')) {
+                        const separator = link.href.includes('?') ? '&' : '?';
+                        link.href += separator + 'cb=' + timestamp + '&v=' + cacheKey;
+                    }
+                });
+                
+                // Force reload of cached scripts if needed
+                const criticalScripts = [
+                    'visualizer.js',
+                    'discord-chat.js', 
+                    'chat-components.js'
+                ];
+                
+                criticalScripts.forEach(scriptName => {
+                    const script = Array.from(scripts).find(s => s.src.includes(scriptName));
+                    if (script) {
+                        const separator = script.src.includes('?') ? '&' : '?';
+                        script.src += separator + 'cb=' + timestamp + '&v=' + cacheKey;
+                    }
+                });
+            });
+            
+            // Monitor for script loading failures
+            window.addEventListener('error', function(e) {
+                if (e.target.tagName === 'SCRIPT' || e.target.tagName === 'LINK') {
+                    console.error('Resource loading failed:', e.target.src || e.target.href);
+                    console.log('Attempting to reload with cache bust...');
+                    
+                    // Try to reload with extra cache busting
+                    if (e.target.tagName === 'SCRIPT' && e.target.src) {
+                        const newScript = document.createElement('script');
+                        newScript.src = e.target.src + '&retry=' + Date.now();
+                        document.head.appendChild(newScript);
+                    }
+                }
+            }, true);
+        })();
+    </script>
+
+    <!-- Cache Busting Solution - Generated 2025-07-01T00:35:10.321546 -->
+    <script>
+        // Ultra-aggressive cache busting for development
+        (function() {
+            const timestamp = Date.now();
+            const cacheKey = Math.random().toString(36).substr(2, 9);
+            
+            // Add cache busting to all static resources
+            window.addEventListener('DOMContentLoaded', function() {
+                const links = document.querySelectorAll('link[rel="stylesheet"]');
+                const scripts = document.querySelectorAll('script[src]');
+                
+                // Add cache busting to stylesheets
+                links.forEach(link => {
+                    if (link.href.includes('/static/')) {
+                        const separator = link.href.includes('?') ? '&' : '?';
+                        link.href += separator + 'cb=' + timestamp + '&v=' + cacheKey;
+                    }
+                });
+                
+                // Force reload of cached scripts if needed
+                const criticalScripts = [
+                    'visualizer.js',
+                    'discord-chat.js', 
+                    'chat-components.js'
+                ];
+                
+                criticalScripts.forEach(scriptName => {
+                    const script = Array.from(scripts).find(s => s.src.includes(scriptName));
+                    if (script) {
+                        const separator = script.src.includes('?') ? '&' : '?';
+                        script.src += separator + 'cb=' + timestamp + '&v=' + cacheKey;
+                    }
+                });
+            });
+            
+            // Monitor for script loading failures
+            window.addEventListener('error', function(e) {
+                if (e.target.tagName === 'SCRIPT' || e.target.tagName === 'LINK') {
+                    console.error('Resource loading failed:', e.target.src || e.target.href);
+                    console.log('Attempting to reload with cache bust...');
+                    
+                    // Try to reload with extra cache busting
+                    if (e.target.tagName === 'SCRIPT' && e.target.src) {
+                        const newScript = document.createElement('script');
+                        newScript.src = e.target.src + '&retry=' + Date.now();
+                        document.head.appendChild(newScript);
+                    }
+                }
+            }, true);
+        })();
+    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TDD State Visualizer</title>
+    <!-- EMERGENCY LAYOUT PRELOAD - MUST BE FIRST -->
+    <script src="{{ url_for('static', filename='emergency-layout-preload.js') }}"></script>
+    <!-- FINAL LAYOUT ENFORCER - NUCLEAR OPTION -->
+    <script src="{{ url_for('static', filename='final-layout-enforcer.js') }}"></script>
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mermaid@10.4.0/dist/mermaid.min.js"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/discord-chat.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='emergency-modal-fix.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='layout-fix.css') }}">
+    <!-- NUCLEAR LAYOUT FIX - FINAL AUTHORITY OVERRIDE -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='nuclear-layout-fix.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/conflict-resolver.css') }}">
     
     <!-- Preload critical resources -->
     <link rel="preload" href="{{ url_for('static', filename='js/ui-enhancements.js') }}" as="script">
     
-    <!-- Meta tags for better mobile experience -->
+    <!-- Enhanced mobile experience meta tags -->
     <meta name="theme-color" content="#4CAF50">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="TDD Visualizer">
+    <meta name="apple-touch-icon" href="/static/icon-192.png">
+    <meta name="msapplication-TileColor" content="#4CAF50">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="manifest" href="/static/manifest.json">
+    
+    <!-- Accessibility optimizations -->
+    <meta name="description" content="Interactive TDD State Machine Visualizer with chat interface and real-time project monitoring">
+    <meta name="keywords" content="TDD, Test Driven Development, State Machine, Visualizer, Accessibility">
 </head>
-<body>
-    <div class="app-layout">
-        <div id="main-content" class="main-content">
-            <div class="container">
-        <header>
-            <h1>🔄 TDD State Machine Visualizer</h1>
-            <div class="status-bar">
-                <div class="status-item">
-                    <span class="label">Connection:</span>
-                    <span id="connection-status" class="status disconnected">Disconnected</span>
+<body role="application" aria-label="TDD State Machine Visualizer Application" class="force-visualizer-layout">
+    <!-- Emergency Layout Fix Button -->
+    <button id="emergency-reset-btn" class="emergency-reset" onclick="window.emergencyLayoutFix()" title="Emergency Layout Fix - Force Visualizer Mode">
+        🚨 FIX LAYOUT
+    </button>
+    
+    <!-- Skip Navigation Links -->
+    <nav aria-label="Skip navigation" class="skip-navigation">
+        <a href="#main-content" class="skip-link">Skip to main content</a>
+        <a href="#chat-panel" class="skip-link">Skip to chat interface</a>
+        <a href="#status-bar" class="skip-link">Skip to status information</a>
+    </nav>
+    
+    <div class="app-layout" role="main" aria-label="Application layout">
+        <div id="main-content" class="main-content" role="main" aria-label="Main application content">
+            <div class="container" role="document">
+        <header role="banner" aria-label="Application header">
+            <h1 id="app-title" tabindex="0">🔄 TDD State Machine Visualizer</h1>
+            
+            <!-- Project Tab Bar -->
+            <nav id="project-tab-bar" class="project-tab-bar" role="navigation" aria-label="Project navigation">
+                <div class="project-tabs" role="tablist" aria-label="Project tabs">
+                    <div class="tab-list" id="project-tab-list" role="tablist" aria-label="Available projects">
+                        <div class="project-tab active" data-project="default" role="tab" tabindex="0" aria-selected="true" aria-controls="default-project-content" aria-label="Default project, currently active">
+                            <span class="project-icon">📁</span>
+                            <span class="project-name">Default Project</span>
+                            <span class="project-status-dot" data-status="idle" aria-label="Project status: idle"></span>
+                        </div>
+                    </div>
+                    <div class="tab-controls" role="toolbar" aria-label="Project controls">
+                        <button id="add-project-btn" class="tab-control-btn" title="Add Project" aria-label="Add new project" tabindex="0">
+                            <span class="icon">➕</span>
+                        </button>
+                        <button id="project-analytics-btn" class="tab-control-btn" title="Project Analytics" aria-label="View project analytics and metrics" tabindex="0">
+                            <span class="icon">📊</span>
+                        </button>
+                        <button id="project-collaboration-btn" class="tab-control-btn" title="Team Collaboration" aria-label="Manage team collaboration and permissions" tabindex="0">
+                            <span class="icon">👥</span>
+                        </button>
+                        <button id="project-settings-btn" class="tab-control-btn" title="Project Settings" aria-label="Open project settings" tabindex="0">
+                            <span class="icon">⚙️</span>
+                        </button>
+                        <button id="global-view-btn" class="tab-control-btn" title="Global View" aria-label="Switch to global view of all projects" tabindex="0">
+                            <span class="icon">🌐</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Mobile Project Selector -->
+                <div class="mobile-project-selector">
+                    <select id="mobile-project-select" class="mobile-select">
+                        <option value="default">📁 Default Project</option>
+                    </select>
+                    <div class="mobile-controls">
+                        <button id="mobile-add-project" class="mobile-control-btn" title="Add Project">➕</button>
+                        <button id="mobile-analytics" class="mobile-control-btn" title="Analytics">📊</button>
+                        <button id="mobile-collaboration" class="mobile-control-btn" title="Team">👥</button>
+                        <button id="mobile-project-settings" class="mobile-control-btn" title="Settings">⚙️</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="status-bar" class="status-bar" role="status" aria-live="polite" aria-label="System status information">
+                <div class="status-item" role="status">
+                    <span class="label" id="connection-label">Connection:</span>
+                    <span id="connection-status" class="status disconnected" aria-describedby="connection-label" aria-live="polite">Disconnected</span>
+                </div>
+                <div class="status-item" role="status">
+                    <span class="label" id="interface-label">Agent Interface:</span>
+                    <span id="active-interface" class="interface" aria-describedby="interface-label" aria-live="polite">Loading...</span>
+                    <button id="interface-config-btn" class="btn btn-small" aria-label="Configure agent interface" tabindex="0">⚙️</button>
+                </div>
+                <div class="status-item" role="status">
+                    <span class="label" id="workflow-label">Workflow State:</span>
+                    <span id="workflow-state" class="state" aria-describedby="workflow-label" aria-live="polite">IDLE</span>
+                </div>
+                <div class="status-item" role="status">
+                    <span class="label" id="cycles-label">Active TDD Cycles:</span>
+                    <span id="active-cycles" class="count" aria-describedby="cycles-label" aria-live="polite">0</span>
+                </div>
+                <div class="status-item" role="status">
+                    <span class="label" id="update-label">Last Update:</span>
+                    <span id="last-update" class="timestamp" aria-describedby="update-label" aria-live="polite">Never</span>
                 </div>
                 <div class="status-item">
-                    <span class="label">Agent Interface:</span>
-                    <span id="active-interface" class="interface">Loading...</span>
-                    <button id="interface-config-btn" class="btn btn-small">⚙️</button>
-                </div>
-                <div class="status-item">
-                    <span class="label">Workflow State:</span>
-                    <span id="workflow-state" class="state">IDLE</span>
-                </div>
-                <div class="status-item">
-                    <span class="label">Active TDD Cycles:</span>
-                    <span id="active-cycles" class="count">0</span>
-                </div>
-                <div class="status-item">
-                    <span class="label">Last Update:</span>
-                    <span id="last-update" class="timestamp">Never</span>
-                </div>
-                <div class="status-item">
-                    <button id="panel-toggle-btn" class="btn btn-small" title="Toggle Chat Panel">💬</button>
+                    <button id="panel-toggle-btn" class="btn btn-small" title="Toggle Chat Panel" aria-label="Toggle chat panel visibility" aria-expanded="false" aria-controls="chat-panel" tabindex="0">💬</button>
                 </div>
             </div>
         </header>
 
-        <main>
-            <div class="visualization-grid">
+        <main role="main" aria-label="Visualization dashboard">
+            <div class="visualization-grid" role="region" aria-label="State machine visualizations">
                 <!-- Workflow State Machine -->
-                <div class="diagram-container">
-                    <h2>📋 Workflow State Machine</h2>
+                <section class="diagram-container" role="img" aria-labelledby="workflow-diagram-title" tabindex="0">
+                    <h2 id="workflow-diagram-title">📋 Workflow State Machine</h2>
                     <div class="diagram-wrapper">
                         <div id="workflow-diagram" class="mermaid">
                             stateDiagram-v2
@@ -157,48 +336,11 @@
                 </div>
             </div>
 
-            <!-- Agent Testing Panel -->
-            <div class="agent-testing-panel">
-                <h2>🧪 Agent Testing</h2>
-                <div class="testing-controls">
-                    <div class="test-input-section">
-                        <div class="input-row">
-                            <label for="agent-type-select">Agent Type:</label>
-                            <select id="agent-type-select" class="agent-select">
-                                <option value="CODE">Code Agent</option>
-                                <option value="DESIGN">Design Agent</option>
-                                <option value="QA">QA Agent</option>
-                                <option value="DATA">Data Agent</option>
-                                <option value="ORCHESTRATOR">Orchestrator</option>
-                            </select>
-                        </div>
-                        <div class="input-row">
-                            <label for="test-prompt">Test Prompt:</label>
-                            <textarea id="test-prompt" class="test-textarea" placeholder="Enter a prompt to test the agent interface..." rows="3"></textarea>
-                        </div>
-                        <div class="input-row">
-                            <button id="test-generate-btn" class="btn btn-primary">Generate Response</button>
-                            <button id="clear-response-btn" class="btn btn-secondary">Clear</button>
-                        </div>
-                    </div>
-                    <div class="test-output-section">
-                        <label>Response:</label>
-                        <div id="test-response" class="test-response">
-                            <div class="response-placeholder">Test responses will appear here...</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <!-- Agent Testing Panel REMOVED - Causing wrong interface to display -->
+            <!-- This panel was interfering with state diagram visualization -->
 
-            <!-- Activity Log -->
-            <div class="activity-panel">
-                <h2>📝 Activity Log</h2>
-                <div class="log-controls">
-                    <button id="clear-log" class="btn btn-secondary">Clear Log</button>
-                    <button id="auto-scroll-toggle" class="btn btn-secondary active">Auto Scroll</button>
-                </div>
-                <div id="activity-log" class="activity-log"></div>
-            </div>
+            <!-- Activity Log REMOVED - Cleaned interface to show only state diagrams -->
+            <!-- Activity logging functionality moved to chat interface -->
         </main>
         </div> <!-- .container -->
     </div> <!-- .main-content -->
@@ -207,6 +349,234 @@
     {% include 'partials/chat.html' %}
     
     </div> <!-- .app-layout -->
+
+    <!-- Project Management Modals -->
+    <div id="project-discovery-results-modal" class="modal project-management-modal" style="display: none;">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h3>🔍 Discovered Projects</h3>
+                <div class="discovery-stats">
+                    <span id="discovery-count">0 projects found</span>
+                </div>
+                <button class="btn btn-small close-btn">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="discovery-filters">
+                    <div class="filter-group">
+                        <label>
+                            <input type="checkbox" id="filter-git" checked> Git repositories
+                        </label>
+                        <label>
+                            <input type="checkbox" id="filter-node" checked> Node.js projects
+                        </label>
+                        <label>
+                            <input type="checkbox" id="filter-python" checked> Python projects
+                        </label>
+                        <label>
+                            <input type="checkbox" id="filter-other" checked> Other projects
+                        </label>
+                    </div>
+                    <div class="bulk-actions">
+                        <button class="btn btn-secondary" id="select-all-discovered">Select All</button>
+                        <button class="btn btn-primary" id="import-selected">Import Selected</button>
+                    </div>
+                </div>
+                <div class="discovered-projects-list" id="discovered-projects-list">
+                    <!-- Discovered projects will be populated here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="discovery-actions">
+                    <button class="btn btn-secondary" id="rescan-btn">🔄 Rescan</button>
+                    <button class="btn btn-secondary" id="close-discovery-btn">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="project-analytics-modal" class="modal project-management-modal" style="display: none;">
+        <div class="modal-content extra-large">
+            <div class="modal-header">
+                <h3>📊 Project Analytics & Health</h3>
+                <div class="analytics-timeframe">
+                    <select id="analytics-timeframe">
+                        <option value="7d">Last 7 days</option>
+                        <option value="30d" selected>Last 30 days</option>
+                        <option value="90d">Last 90 days</option>
+                        <option value="1y">Last year</option>
+                    </select>
+                </div>
+                <button class="btn btn-small close-btn">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="analytics-dashboard">
+                    <div class="analytics-overview">
+                        <div class="metric-card">
+                            <div class="metric-icon">📈</div>
+                            <div class="metric-content">
+                                <div class="metric-value" id="total-commits">0</div>
+                                <div class="metric-label">Total Commits</div>
+                            </div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon">🧪</div>
+                            <div class="metric-content">
+                                <div class="metric-value" id="test-coverage">0%</div>
+                                <div class="metric-label">Test Coverage</div>
+                            </div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon">⚡</div>
+                            <div class="metric-content">
+                                <div class="metric-value" id="build-success">0%</div>
+                                <div class="metric-label">Build Success</div>
+                            </div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon">🚀</div>
+                            <div class="metric-content">
+                                <div class="metric-value" id="deployment-count">0</div>
+                                <div class="metric-label">Deployments</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="analytics-charts">
+                        <div class="chart-container">
+                            <h4>📊 Activity Timeline</h4>
+                            <div class="chart-placeholder" id="activity-chart">
+                                <div class="chart-loading">Loading chart data...</div>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <h4>🏥 Health Status</h4>
+                            <div class="health-grid" id="health-grid">
+                                <!-- Health indicators will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="analytics-details">
+                        <div class="details-tabs">
+                            <button class="details-tab active" data-tab="commits">Commits</button>
+                            <button class="details-tab" data-tab="issues">Issues</button>
+                            <button class="details-tab" data-tab="performance">Performance</button>
+                            <button class="details-tab" data-tab="dependencies">Dependencies</button>
+                        </div>
+                        <div class="details-content" id="analytics-details-content">
+                            <!-- Details will be populated based on selected tab -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="export-options">
+                    <button class="btn btn-secondary" id="export-csv">📄 Export CSV</button>
+                    <button class="btn btn-secondary" id="export-json">📋 Export JSON</button>
+                </div>
+                <button class="btn btn-secondary" id="close-analytics-btn">Close</button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="project-collaboration-modal" class="modal project-management-modal" style="display: none;">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h3>👥 Project Collaboration</h3>
+                <div class="collaboration-status">
+                    <span class="status-indicator online">●</span>
+                    <span id="online-users">0 users online</span>
+                </div>
+                <button class="btn btn-small close-btn">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="collaboration-content">
+                    <div class="team-panel">
+                        <h4>👥 Team Members</h4>
+                        <div class="team-list-advanced" id="team-list-advanced">
+                            <!-- Team members will be populated here -->
+                        </div>
+                        <div class="invite-section">
+                            <h5>📧 Invite New Members</h5>
+                            <div class="invite-form">
+                                <input type="email" id="invite-email" placeholder="user@example.com">
+                                <select id="invite-role">
+                                    <option value="viewer">Viewer</option>
+                                    <option value="contributor">Contributor</option>
+                                    <option value="maintainer">Maintainer</option>
+                                    <option value="admin">Admin</option>
+                                </select>
+                                <button class="btn btn-primary" id="send-invite-btn">Send Invite</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="activity-panel">
+                        <h4>📝 Recent Activity</h4>
+                        <div class="activity-feed" id="collaboration-activity-feed">
+                            <!-- Activity feed will be populated here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="permissions-section">
+                    <h4>🔐 Permissions & Access Control</h4>
+                    <div class="permissions-grid">
+                        <div class="permission-category">
+                            <h5>Project Access</h5>
+                            <div class="permission-list">
+                                <label class="permission-item">
+                                    <input type="checkbox" id="perm-view-project" checked disabled>
+                                    <span>View project</span>
+                                </label>
+                                <label class="permission-item">
+                                    <input type="checkbox" id="perm-edit-files">
+                                    <span>Edit files</span>
+                                </label>
+                                <label class="permission-item">
+                                    <input type="checkbox" id="perm-create-branches">
+                                    <span>Create branches</span>
+                                </label>
+                                <label class="permission-item">
+                                    <input type="checkbox" id="perm-merge-prs">
+                                    <span>Merge pull requests</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="permission-category">
+                            <h5>Workflow Control</h5>
+                            <div class="permission-list">
+                                <label class="permission-item">
+                                    <input type="checkbox" id="perm-start-workflows">
+                                    <span>Start workflows</span>
+                                </label>
+                                <label class="permission-item">
+                                    <input type="checkbox" id="perm-approve-tasks">
+                                    <span>Approve tasks</span>
+                                </label>
+                                <label class="permission-item">
+                                    <input type="checkbox" id="perm-configure-agents">
+                                    <span>Configure agents</span>
+                                </label>
+                                <label class="permission-item">
+                                    <input type="checkbox" id="perm-manage-settings">
+                                    <span>Manage settings</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="collaboration-actions">
+                    <button class="btn btn-secondary" id="export-permissions">Export Permissions</button>
+                    <button class="btn btn-primary" id="save-permissions">Save Changes</button>
+                    <button class="btn btn-secondary" id="close-collaboration-btn">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Interface Configuration Modal -->
     <div id="interface-config-modal" class="modal">
@@ -314,9 +684,17 @@
     </div>
 
     <!-- Scripts - Fixed loading order to prevent dependency issues -->
+    <!-- Load accessibility enhancements first for proper keyboard navigation -->
+    <script src="{{ url_for('static', filename='js/accessibility-enhancements.js') }}"></script>
+    <!-- Force visualizer mode (override interface management auto-loading) -->
+    <script src="{{ url_for('static', filename='force-visualizer-mode.js') }}"></script>
+    
     <!-- Load chat components before discord-chat.js to ensure ChatComponents is available -->
     <script src="{{ url_for('static', filename='js/chat-components.js') }}"></script>
     <script src="{{ url_for('static', filename='js/discord-chat.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/project-manager.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/project-management.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/mobile-enhancements.js') }}"></script>
     <script src="{{ url_for('static', filename='js/ui-enhancements.js') }}"></script>
     <!-- Load visualizer.js last so it can integrate with all other components -->
     <script src="{{ url_for('static', filename='visualizer.js') }}"></script>
@@ -327,6 +705,19 @@
     <script>
         // Wait for all components to be ready
         document.addEventListener('DOMContentLoaded', () => {
+            // Integrate accessibility with existing components
+            if (window.AccessibilityManager) {
+                // Integrate with visualizer
+                if (window.visualizer) {
+                    window.AccessibilityManager.integrateWithVisualizer(window.visualizer);
+                }
+                
+                // Announce app readiness
+                setTimeout(() => {
+                    window.AccessibilityManager.announce('TDD State Machine Visualizer loaded and ready for interaction');
+                }, 1000);
+            }
+            
             // Integrate UI enhancements with existing visualizer
             if (window.visualizer && window.UI) {
                 // Add enhanced state change animations

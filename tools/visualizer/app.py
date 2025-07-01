@@ -7,6 +7,7 @@ of workflow and TDD state machine transitions.
 """
 
 import asyncio
+import hashlib
 import json
 import logging
 import os
@@ -48,6 +49,14 @@ try:
 except ImportError:
     logger.warning("Context management not available - some features disabled")
     CONTEXT_MANAGEMENT_AVAILABLE = False
+
+# Try to import multi-project components
+try:
+    from multi_project_config import MultiProjectConfigManager, ProjectStatus
+    MULTI_PROJECT_AVAILABLE = True
+except ImportError:
+    logger.warning("Multi-project management not available - using single project mode")
+    MULTI_PROJECT_AVAILABLE = False
 
 # Import chat and collaboration components
 try:
@@ -98,23 +107,58 @@ current_state = {
 # Chat history for the Discord-style interface
 chat_history = []
 typing_users = set()
+
+# Project-specific chat data structures
+project_chat_history = {}  # project_name -> list of messages
+project_user_sessions = {}  # user_id -> {'project': project_name, 'session_id': session_id}
+project_typing_users = {}  # project_name -> set of user_ids
+user_project_rooms = {}  # user_id -> project_name (current room)
 active_users = set()
+
+# Multi-project support
+multi_project_manager = None
+project_rooms = {}  # project_name -> set of session_ids
+active_project_sessions = {}  # session_id -> project_name
+
+# Initialize multi-project manager
+if MULTI_PROJECT_AVAILABLE:
+    try:
+        multi_project_manager = MultiProjectConfigManager()
+        logger.info(f"Multi-project manager initialized with {len(multi_project_manager.projects)} projects")
+    except Exception as e:
+        logger.warning(f"Failed to initialize multi-project manager: {e}")
+        multi_project_manager = None
+        MULTI_PROJECT_AVAILABLE = False
 
 
 @app.after_request
-def add_header(response):
-    """Add headers to prevent caching and ensure correct MIME types"""
-    if 'static' in request.path:
-        # Set appropriate MIME types for JavaScript files
-        if request.path.endswith('.js'):
-            response.headers['Content-Type'] = 'application/javascript; charset=utf-8'
-        elif request.path.endswith('.css'):
-            response.headers['Content-Type'] = 'text/css; charset=utf-8'
-        
-        # Prevent caching for development
+def add_enhanced_cache_headers(response):
+    """Add enhanced headers to completely disable caching and ensure correct content types"""
+    # Determine if this is a static file request
+    is_static = (request.path.startswith('/static/') or 
+                request.path.endswith('.js') or 
+                request.path.endswith('.css') or
+                request.path.endswith('.html'))
+    
+    if is_static:
+        # Ultra-aggressive cache busting for static files
         response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0'
         response.headers['Pragma'] = 'no-cache'
-        response.headers['Expires'] = '-1'
+        response.headers['Expires'] = '0'
+        response.headers['Last-Modified'] = datetime.now().strftime('%a, %d %b %Y %H:%M:%S GMT')
+        response.headers['ETag'] = f'"{int(time.time())}"'
+        
+        # Add development timestamp to identify cache issues
+        response.headers['X-Dev-Timestamp'] = str(int(time.time() * 1000))
+        response.headers['X-Cache-Buster'] = hashlib.md5(str(time.time()).encode()).hexdigest()[:8]
+        
+    # Ensure correct content types for JavaScript and CSS
+    if request.path.endswith('.js'):
+        response.headers['Content-Type'] = 'application/javascript; charset=utf-8'
+    elif request.path.endswith('.css'):
+        response.headers['Content-Type'] = 'text/css; charset=utf-8'
+    elif request.path.endswith('.html'):
+        response.headers['Content-Type'] = 'text/html; charset=utf-8'
     
     return response
 
@@ -209,10 +253,351 @@ def metrics_endpoint():
         return jsonify({"error": "metrics collection failed"}), 500
 
 
+# =====================================================
+# Multi-Project API Endpoints
+# =====================================================
+
+@app.route('/api/projects')
+def get_projects():
+    """Get all registered projects with their status"""
+    if not MULTI_PROJECT_AVAILABLE or not multi_project_manager:
+        return jsonify({
+            "multi_project_enabled": False,
+            "projects": [],
+            "reason": "Multi-project management not available"
+        }), 200
+    
+    try:
+        projects = []
+        for project in multi_project_manager.list_projects():
+            # Load project state if available
+            project_state = load_project_state(project.name, project.path)
+            
+            project_info = {
+                "name": project.name,
+                "path": project.path,
+                "status": project.status.value,
+                "priority": project.priority.value,
+                "description": project.description,
+                "git_url": project.git_url,
+                "owner": project.owner,
+                "team": project.team,
+                "discord_channel": project.discord_channel,
+                "tags": project.tags,
+                "created_at": project.created_at.isoformat(),
+                "last_activity": project.last_activity.isoformat() if project.last_activity else None,
+                "resource_limits": {
+                    "max_parallel_agents": project.resource_limits.max_parallel_agents,
+                    "max_parallel_cycles": project.resource_limits.max_parallel_cycles,
+                    "max_memory_mb": project.resource_limits.max_memory_mb,
+                    "max_disk_mb": project.resource_limits.max_disk_mb,
+                    "cpu_priority": project.resource_limits.cpu_priority
+                },
+                "ai_settings": project.ai_settings,
+                "work_hours": project.work_hours,
+                "dependencies": [
+                    {
+                        "target_project": dep.target_project,
+                        "dependency_type": dep.dependency_type,
+                        "description": dep.description,
+                        "criticality": dep.criticality
+                    }
+                    for dep in project.dependencies
+                ],
+                "state": project_state
+            }
+            projects.append(project_info)
+        
+        return jsonify({
+            "multi_project_enabled": True,
+            "projects": projects,
+            "total_count": len(projects),
+            "active_count": len([p for p in projects if p["status"] == "active"])
+        })
+        
+    except Exception as e:
+        logger.error(f"Error getting projects: {e}")
+        return jsonify({"error": "Failed to get projects"}), 500
+
+
+@app.route('/api/projects/<project_name>/switch', methods=['POST'])
+def switch_project(project_name):
+    """Switch active project context"""
+    if not MULTI_PROJECT_AVAILABLE or not multi_project_manager:
+        return jsonify({"error": "Multi-project management not available"}), 503
+    
+    try:
+        # Validate project exists
+        project = multi_project_manager.get_project(project_name)
+        if not project:
+            return jsonify({"error": f"Project '{project_name}' not found"}), 404
+        
+        # Get session ID from request
+        data = request.get_json() or {}
+        session_id = data.get('session_id', request.headers.get('X-Session-ID', 'default'))
+        
+        # Update active project for this session
+        old_project = active_project_sessions.get(session_id)
+        active_project_sessions[session_id] = project_name
+        
+        # Join/leave project rooms
+        if old_project and old_project != project_name:
+            if old_project in project_rooms:
+                project_rooms[old_project].discard(session_id)
+        
+        if project_name not in project_rooms:
+            project_rooms[project_name] = set()
+        project_rooms[project_name].add(session_id)
+        
+        # Load project state
+        project_state = load_project_state(project_name, project.path)
+        
+        # Emit project switched event
+        socketio.emit('project_switched', {
+            'old_project': old_project,
+            'new_project': project_name,
+            'session_id': session_id,
+            'timestamp': datetime.now().isoformat(),
+            'project_state': project_state
+        }, room=session_id)
+        
+        return jsonify({
+            "success": True,
+            "old_project": old_project,
+            "new_project": project_name,
+            "session_id": session_id,
+            "project_state": project_state
+        })
+        
+    except Exception as e:
+        logger.error(f"Error switching to project {project_name}: {e}")
+        return jsonify({"error": f"Failed to switch to project: {str(e)}"}), 500
+
+
+@app.route('/api/projects/<project_name>/state')
+def get_project_state(project_name):
+    """Get project-specific state"""
+    if not MULTI_PROJECT_AVAILABLE or not multi_project_manager:
+        return jsonify({"error": "Multi-project management not available"}), 503
+    
+    try:
+        # Validate project exists
+        project = multi_project_manager.get_project(project_name)
+        if not project:
+            return jsonify({"error": f"Project '{project_name}' not found"}), 404
+        
+        # Load project state
+        project_state = load_project_state(project_name, project.path)
+        
+        return jsonify({
+            "project_name": project_name,
+            "state": project_state,
+            "last_updated": datetime.now().isoformat()
+        })
+        
+    except Exception as e:
+        logger.error(f"Error getting state for project {project_name}: {e}")
+        return jsonify({"error": f"Failed to get project state: {str(e)}"}), 500
+
+
+@app.route('/api/projects/<project_name>/config')
+def get_project_config(project_name):
+    """Get project configuration"""
+    if not MULTI_PROJECT_AVAILABLE or not multi_project_manager:
+        return jsonify({"error": "Multi-project management not available"}), 503
+    
+    try:
+        # Validate project exists
+        project = multi_project_manager.get_project(project_name)
+        if not project:
+            return jsonify({"error": f"Project '{project_name}' not found"}), 404
+        
+        # Return sanitized project configuration
+        config = {
+            "name": project.name,
+            "path": project.path,
+            "status": project.status.value,
+            "priority": project.priority.value,
+            "description": project.description,
+            "git_url": project.git_url,
+            "owner": project.owner,
+            "team": project.team,
+            "discord_channel": project.discord_channel,
+            "tags": project.tags,
+            "work_hours": project.work_hours,
+            "ai_settings": project.ai_settings,
+            "resource_limits": {
+                "max_parallel_agents": project.resource_limits.max_parallel_agents,
+                "max_parallel_cycles": project.resource_limits.max_parallel_cycles,
+                "max_memory_mb": project.resource_limits.max_memory_mb,
+                "max_disk_mb": project.resource_limits.max_disk_mb,
+                "cpu_priority": project.resource_limits.cpu_priority
+            },
+            "dependencies": [
+                {
+                    "target_project": dep.target_project,
+                    "dependency_type": dep.dependency_type,
+                    "description": dep.description,
+                    "criticality": dep.criticality
+                }
+                for dep in project.dependencies
+            ],
+            "created_at": project.created_at.isoformat(),
+            "last_activity": project.last_activity.isoformat() if project.last_activity else None,
+            "version": project.version
+        }
+        
+        return jsonify(config)
+        
+    except Exception as e:
+        logger.error(f"Error getting config for project {project_name}: {e}")
+        return jsonify({"error": f"Failed to get project config: {str(e)}"}), 500
+
+
+@app.route('/api/projects/discover', methods=['POST'])
+def discover_projects():
+    """Discover potential projects in specified paths"""
+    if not MULTI_PROJECT_AVAILABLE or not multi_project_manager:
+        return jsonify({"error": "Multi-project management not available"}), 503
+    
+    try:
+        data = request.get_json()
+        if not data or 'search_paths' not in data:
+            return jsonify({"error": "search_paths is required"}), 400
+        
+        search_paths = data['search_paths']
+        if not isinstance(search_paths, list):
+            return jsonify({"error": "search_paths must be a list"}), 400
+        
+        discovered = multi_project_manager.discover_projects(search_paths)
+        
+        return jsonify({
+            "discovered_projects": discovered,
+            "total_count": len(discovered)
+        })
+        
+    except Exception as e:
+        logger.error(f"Error discovering projects: {e}")
+        return jsonify({"error": f"Failed to discover projects: {str(e)}"}), 500
+
+
+@app.route('/api/projects/register', methods=['POST'])
+def register_project():
+    """Register a new project"""
+    if not MULTI_PROJECT_AVAILABLE or not multi_project_manager:
+        return jsonify({"error": "Multi-project management not available"}), 503
+    
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({"error": "No data provided"}), 400
+        
+        name = data.get('name')
+        path = data.get('path')
+        
+        if not name or not path:
+            return jsonify({"error": "name and path are required"}), 400
+        
+        # Extract additional project configuration
+        project_kwargs = {}
+        optional_fields = [
+            'description', 'git_url', 'owner', 'team', 'discord_channel', 
+            'tags', 'priority', 'status'
+        ]
+        
+        for field in optional_fields:
+            if field in data:
+                project_kwargs[field] = data[field]
+        
+        # Handle nested objects
+        if 'resource_limits' in data:
+            from multi_project_config import ResourceLimits
+            project_kwargs['resource_limits'] = ResourceLimits(**data['resource_limits'])
+        
+        if 'ai_settings' in data:
+            project_kwargs['ai_settings'] = data['ai_settings']
+        
+        if 'work_hours' in data:
+            project_kwargs['work_hours'] = data['work_hours']
+        
+        # Register project
+        project = multi_project_manager.register_project(name, path, **project_kwargs)
+        
+        # Initialize project room
+        if name not in project_rooms:
+            project_rooms[name] = set()
+        
+        # Emit project registered event
+        socketio.emit('project_registered', {
+            'project_name': name,
+            'project_path': path,
+            'timestamp': datetime.now().isoformat()
+        })
+        
+        return jsonify({
+            "success": True,
+            "message": f"Project '{name}' registered successfully",
+            "project": {
+                "name": project.name,
+                "path": project.path,
+                "status": project.status.value,
+                "priority": project.priority.value,
+                "created_at": project.created_at.isoformat()
+            }
+        })
+        
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 400
+    except Exception as e:
+        logger.error(f"Error registering project: {e}")
+        return jsonify({"error": f"Failed to register project: {str(e)}"}), 500
+
+
+def load_project_state(project_name: str, project_path: str) -> Dict[str, Any]:
+    """Load project state from .orch-state directory"""
+    try:
+        from pathlib import Path
+        
+        state_dir = Path(project_path) / ".orch-state"
+        status_file = state_dir / "status.json"
+        
+        if not status_file.exists():
+            return {
+                "workflow_state": "IDLE",
+                "tdd_cycles": {},
+                "last_updated": None,
+                "transition_history": [],
+                "initialized": False
+            }
+        
+        with open(status_file, 'r') as f:
+            state_data = json.load(f)
+        
+        return {
+            "workflow_state": state_data.get("workflow_state", "IDLE"),
+            "tdd_cycles": state_data.get("tdd_cycles", {}),
+            "last_updated": state_data.get("last_updated"),
+            "transition_history": state_data.get("transition_history", [])[-10:],  # Last 10 transitions
+            "initialized": True,
+            "project_name": project_name
+        }
+        
+    except Exception as e:
+        logger.error(f"Error loading state for project {project_name}: {e}")
+        return {
+            "workflow_state": "IDLE",
+            "tdd_cycles": {},
+            "last_updated": None,
+            "transition_history": [],
+            "initialized": False,
+            "error": str(e)
+        }
+
+
 @app.route('/debug')
 def debug_info():
     """Debug information endpoint"""
-    return jsonify({
+    debug_data = {
         "broadcaster_clients": len(broadcaster.clients),
         "socketio_clients": len(socketio.server.manager.rooms.get("/", {})),
         "transition_history_count": len(broadcaster.transition_history),
@@ -223,7 +608,28 @@ def debug_info():
         "performance": {
             "uptime_seconds": (datetime.now() - datetime.fromisoformat("2024-01-01T00:00:00")).total_seconds()
         }
-    })
+    }
+    
+    # Add multi-project debug information
+    if MULTI_PROJECT_AVAILABLE and multi_project_manager:
+        debug_data["multi_project"] = {
+            "enabled": True,
+            "total_projects": len(multi_project_manager.projects),
+            "active_projects": len(multi_project_manager.get_active_projects()),
+            "project_rooms": {
+                project_name: len(sessions)
+                for project_name, sessions in project_rooms.items()
+            },
+            "active_sessions": len(active_project_sessions),
+            "room_count": len(project_rooms)
+        }
+    else:
+        debug_data["multi_project"] = {
+            "enabled": False,
+            "reason": "Multi-project management not available"
+        }
+    
+    return jsonify(debug_data)
 
 
 # =====================================================
@@ -1297,12 +1703,293 @@ def handle_connect():
     # Send current state to new client
     current_state = broadcaster.get_current_state()
     emit('state_update', current_state)
+    
+    # Send multi-project status if available
+    if MULTI_PROJECT_AVAILABLE and multi_project_manager:
+        emit('multi_project_status', {
+            'enabled': True,
+            'project_count': len(multi_project_manager.projects),
+            'projects': [
+                {
+                    'name': p.name,
+                    'status': p.status.value,
+                    'priority': p.priority.value
+                }
+                for p in multi_project_manager.list_projects()
+            ]
+        })
+    else:
+        emit('multi_project_status', {
+            'enabled': False,
+            'reason': 'Multi-project management not available'
+        })
+
+
+# =====================================================
+# Multi-Project WebSocket Room Management
+# =====================================================
+
+@socketio.on('join_project')
+def handle_join_project(data):
+    """Handle client joining a project room"""
+    if not MULTI_PROJECT_AVAILABLE or not multi_project_manager:
+        emit('project_error', {"error": "Multi-project management not available"})
+        return
+    
+    try:
+        project_name = data.get('project_name')
+        session_id = data.get('session_id', request.sid)
+        
+        if not project_name:
+            emit('project_error', {"error": "project_name is required"})
+            return
+        
+        # Validate project exists
+        project = multi_project_manager.get_project(project_name)
+        if not project:
+            emit('project_error', {"error": f"Project '{project_name}' not found"})
+            return
+        
+        # Leave current project room if any
+        current_project = active_project_sessions.get(session_id)
+        if current_project and current_project != project_name:
+            if current_project in project_rooms:
+                project_rooms[current_project].discard(session_id)
+            leave_room(current_project)
+        
+        # Join new project room
+        join_room(project_name)
+        active_project_sessions[session_id] = project_name
+        
+        if project_name not in project_rooms:
+            project_rooms[project_name] = set()
+        project_rooms[project_name].add(session_id)
+        
+        # Load and send project state
+        project_state = load_project_state(project_name, project.path)
+        
+        emit('project_joined', {
+            'project_name': project_name,
+            'session_id': session_id,
+            'timestamp': datetime.now().isoformat(),
+            'project_state': project_state,
+            'room_members': len(project_rooms[project_name])
+        })
+        
+        # Broadcast to project room that a new member joined
+        emit('project_member_joined', {
+            'session_id': session_id,
+            'project_name': project_name,
+            'timestamp': datetime.now().isoformat(),
+            'room_members': len(project_rooms[project_name])
+        }, room=project_name, include_self=False)
+        
+        logger.info(f"Session {session_id} joined project {project_name}")
+        
+    except Exception as e:
+        logger.error(f"Error joining project: {e}")
+        emit('project_error', {"error": f"Failed to join project: {str(e)}"})
+
+
+@socketio.on('leave_project')
+def handle_leave_project(data):
+    """Handle client leaving a project room"""
+    try:
+        project_name = data.get('project_name') if data else None
+        session_id = data.get('session_id', request.sid) if data else request.sid
+        
+        # If no project specified, leave current project
+        if not project_name:
+            project_name = active_project_sessions.get(session_id)
+        
+        if not project_name:
+            emit('project_error', {"error": "No active project to leave"})
+            return
+        
+        # Leave project room
+        leave_room(project_name)
+        
+        if project_name in project_rooms:
+            project_rooms[project_name].discard(session_id)
+        
+        if session_id in active_project_sessions:
+            del active_project_sessions[session_id]
+        
+        emit('project_left', {
+            'project_name': project_name,
+            'session_id': session_id,
+            'timestamp': datetime.now().isoformat()
+        })
+        
+        # Broadcast to project room that a member left
+        if project_name in project_rooms and project_rooms[project_name]:
+            emit('project_member_left', {
+                'session_id': session_id,
+                'project_name': project_name,
+                'timestamp': datetime.now().isoformat(),
+                'room_members': len(project_rooms[project_name])
+            }, room=project_name)
+        
+        logger.info(f"Session {session_id} left project {project_name}")
+        
+    except Exception as e:
+        logger.error(f"Error leaving project: {e}")
+        emit('project_error', {"error": f"Failed to leave project: {str(e)}"})
+
+
+@socketio.on('request_project_list')
+def handle_project_list_request():
+    """Handle request for project list"""
+    if not MULTI_PROJECT_AVAILABLE or not multi_project_manager:
+        emit('project_list', {
+            'enabled': False,
+            'projects': [],
+            'reason': 'Multi-project management not available'
+        })
+        return
+    
+    try:
+        projects = []
+        for project in multi_project_manager.list_projects():
+            project_state = load_project_state(project.name, project.path)
+            
+            projects.append({
+                'name': project.name,
+                'path': project.path,
+                'status': project.status.value,
+                'priority': project.priority.value,
+                'description': project.description,
+                'owner': project.owner,
+                'team': project.team,
+                'tags': project.tags,
+                'state': project_state,
+                'room_members': len(project_rooms.get(project.name, set()))
+            })
+        
+        emit('project_list', {
+            'enabled': True,
+            'projects': projects,
+            'total_count': len(projects),
+            'active_count': len([p for p in projects if p['status'] == 'active'])
+        })
+        
+    except Exception as e:
+        logger.error(f"Error getting project list: {e}")
+        emit('project_error', {"error": f"Failed to get project list: {str(e)}"})
+
+
+@socketio.on('switch_project')
+def handle_switch_project(data):
+    """Handle project switch via WebSocket"""
+    if not MULTI_PROJECT_AVAILABLE or not multi_project_manager:
+        emit('project_error', {"error": "Multi-project management not available"})
+        return
+    
+    try:
+        project_name = data.get('project_name')
+        session_id = data.get('session_id', request.sid)
+        
+        if not project_name:
+            emit('project_error', {"error": "project_name is required"})
+            return
+        
+        # Validate project exists
+        project = multi_project_manager.get_project(project_name)
+        if not project:
+            emit('project_error', {"error": f"Project '{project_name}' not found"})
+            return
+        
+        # Leave current project and join new one
+        current_project = active_project_sessions.get(session_id)
+        
+        # Leave current project room
+        if current_project and current_project != project_name:
+            if current_project in project_rooms:
+                project_rooms[current_project].discard(session_id)
+            leave_room(current_project)
+        
+        # Join new project room
+        join_room(project_name)
+        active_project_sessions[session_id] = project_name
+        
+        if project_name not in project_rooms:
+            project_rooms[project_name] = set()
+        project_rooms[project_name].add(session_id)
+        
+        # Load project state
+        project_state = load_project_state(project_name, project.path)
+        
+        emit('project_switched', {
+            'old_project': current_project,
+            'new_project': project_name,
+            'session_id': session_id,
+            'timestamp': datetime.now().isoformat(),
+            'project_state': project_state
+        })
+        
+        logger.info(f"Session {session_id} switched from {current_project} to {project_name}")
+        
+    except Exception as e:
+        logger.error(f"Error switching project: {e}")
+        emit('project_error', {"error": f"Failed to switch project: {str(e)}"})
+
+
+@socketio.on('broadcast_to_project')
+def handle_project_broadcast(data):
+    """Handle broadcasting a message to a specific project room"""
+    try:
+        project_name = data.get('project_name')
+        message = data.get('message')
+        message_type = data.get('type', 'general')
+        session_id = data.get('session_id', request.sid)
+        
+        if not project_name or not message:
+            emit('project_error', {"error": "project_name and message are required"})
+            return
+        
+        # Verify session is in the project room
+        if session_id not in project_rooms.get(project_name, set()):
+            emit('project_error', {"error": "Not a member of the specified project room"})
+            return
+        
+        # Broadcast to project room
+        emit('project_broadcast', {
+            'project_name': project_name,
+            'message': message,
+            'type': message_type,
+            'sender_session': session_id,
+            'timestamp': datetime.now().isoformat()
+        }, room=project_name)
+        
+    except Exception as e:
+        logger.error(f"Error broadcasting to project: {e}")
+        emit('project_error', {"error": f"Failed to broadcast message: {str(e)}"})
 
 
 @socketio.on('disconnect')
 def handle_disconnect():
     """Handle SocketIO client disconnection"""
     logger.info(f"SocketIO client disconnected: {request.sid}")
+    
+    # Clean up project room memberships
+    session_id = request.sid
+    project_name = active_project_sessions.get(session_id)
+    
+    if project_name:
+        if project_name in project_rooms:
+            project_rooms[project_name].discard(session_id)
+        
+        if session_id in active_project_sessions:
+            del active_project_sessions[session_id]
+        
+        # Notify project room of member leaving
+        if project_name in project_rooms and project_rooms[project_name]:
+            socketio.emit('project_member_left', {
+                'session_id': session_id,
+                'project_name': project_name,
+                'timestamp': datetime.now().isoformat(),
+                'room_members': len(project_rooms[project_name])
+            }, room=project_name)
 
 
 @socketio.on('request_state')
@@ -1511,52 +2198,65 @@ def handle_context_test(data):
 
 @socketio.on('chat_command')
 def handle_chat_command(data):
-    """Handle incoming chat command from WebSocket"""
+    """Handle incoming chat command from WebSocket - project-aware"""
     try:
         message = data.get('message', '').strip()
         user_id = data.get('user_id', 'anonymous')
         username = data.get('username', 'User')
+        project_name = data.get('project_name', 'default')
+        room = data.get('room')
         
         if not message:
-            emit('command_error', {"error": "Message cannot be empty"})
+            emit('command_error', {"error": "Message cannot be empty", "project_name": project_name})
             return
         
-        # Create message object
+        # Create message object with project context
         chat_message = {
             "id": str(uuid.uuid4()),
             "user_id": user_id,
             "username": username,
             "message": message,
             "timestamp": datetime.now().isoformat(),
-            "type": "user"
+            "type": "user",
+            "project_name": project_name
         }
         
-        # Add to chat history
-        chat_history.append(chat_message)
+        # Add to project-specific chat history
+        if project_name not in project_chat_history:
+            project_chat_history[project_name] = []
         
-        # Keep only last 100 messages
+        project_chat_history[project_name].append(chat_message)
+        
+        # Keep only last 100 messages per project
+        if len(project_chat_history[project_name]) > 100:
+            project_chat_history[project_name].pop(0)
+        
+        # Also add to global history for backwards compatibility
+        chat_history.append(chat_message)
         if len(chat_history) > 100:
             chat_history.pop(0)
         
-        # Broadcast message to all clients
-        socketio.emit('new_chat_message', chat_message)
+        # Broadcast message to project room
+        room_name = f"project_{project_name}"
+        socketio.emit('new_chat_message', chat_message, room=room_name)
         
         # If it's a command, process it
         if message.startswith('/'):
-            # Show typing indicator
-            socketio.emit('typing_indicator', {
+            # Show typing indicator for project room
+            socketio.emit('bot_typing', {
                 "user_id": "bot",
                 "username": "Agent Bot",
-                "typing": True
-            })
+                "typing": True,
+                "project_name": project_name
+            }, room=room_name)
             
             # Process command asynchronously
             def process_command_async():
                 try:
                     from command_processor import process_command
-                    result = process_command(message, user_id)
+                    result = process_command(message, user_id, project_name=project_name)
                     
-                    # Create bot response
+                    # Create bot response with project context
                     bot_response = {
                         "id": str(uuid.uuid4()),
                         "user_id": "bot",
@@ -1564,19 +2264,24 @@ def handle_chat_command(data):
                         "message": result.get('response', 'Command processed'),
                         "timestamp": datetime.now().isoformat(),
                         "type": "bot",
-                        "command_result": result
+                        "command_result": result,
+                        "project_name": project_name
                     }
                     
-                    # Add to chat history
+                    # Add to project-specific chat history
+                    project_chat_history[project_name].append(bot_response)
+                    
+                    # Also add to global history
                     chat_history.append(bot_response)
                     
-                    # Stop typing and send response
-                    socketio.emit('typing_indicator', {
+                    # Stop typing and send response to project room
+                    socketio.emit('bot_typing', {
                         "user_id": "bot",
                         "username": "Agent Bot", 
-                        "typing": False
-                    })
-                    socketio.emit('command_response', bot_response)
+                        "typing": False,
+                        "project_name": project_name
+                    }, room=room_name)
+                    socketio.emit('command_response', bot_response, room=room_name)
                     
                 except Exception as e:
                     logger.error(f"Error processing command via WebSocket: {e}")
@@ -1587,15 +2292,22 @@ def handle_chat_command(data):
                         "message": f"Error processing command: {str(e)}",
                         "timestamp": datetime.now().isoformat(),
                         "type": "bot",
-                        "error": True
+                        "error": True,
+                        "project_name": project_name
                     }
+                    
+                    # Add to project-specific history
+                    project_chat_history[project_name].append(error_response)
                     chat_history.append(error_response)
-                    socketio.emit('typing_indicator', {
+                    
+                    # Stop typing and send error to project room
+                    socketio.emit('bot_typing', {
                         "user_id": "bot",
                         "username": "Agent Bot",
-                        "typing": False
-                    })
-                    socketio.emit('command_response', error_response)
+                        "typing": False,
+                        "project_name": project_name
+                    }, room=room_name)
+                    socketio.emit('command_response', error_response, room=room_name)
             
             # Run in background thread
             import threading
@@ -1608,39 +2320,49 @@ def handle_chat_command(data):
 
 @socketio.on('request_chat_history')
 def handle_chat_history_request(data):
-    """Handle request for chat history"""
+    """Handle request for project-specific chat history"""
     try:
         limit = data.get('limit', 50) if data else 50
         limit = min(limit, 100)  # Max 100 messages
+        project_name = data.get('project_name', 'default') if data else 'default'
         
-        # Return most recent messages
-        recent_messages = chat_history[-limit:] if chat_history else []
+        # Get project-specific messages
+        project_messages = project_chat_history.get(project_name, [])
+        recent_messages = project_messages[-limit:] if project_messages else []
         
         emit('chat_history', {
             "messages": recent_messages,
-            "total_count": len(chat_history)
+            "total_count": len(project_messages),
+            "project_name": project_name
         })
         
     except Exception as e:
         logger.error(f"Error getting chat history via WebSocket: {e}")
-        emit('chat_error', {"error": "Failed to get chat history"})
+        emit('chat_error', {"error": "Failed to get chat history", "project_name": data.get('project_name', 'default') if data else 'default'})
 
 
 @socketio.on('start_typing')
 def handle_start_typing(data):
-    """Handle user start typing event"""
+    """Handle user start typing event - project-aware"""
     try:
         user_id = data.get('user_id', 'anonymous')
         username = data.get('username', 'User')
+        project_name = data.get('project_name', 'default')
         
+        # Add to global and project-specific typing users
         typing_users.add(user_id)
+        if project_name not in project_typing_users:
+            project_typing_users[project_name] = set()
+        project_typing_users[project_name].add(user_id)
         
-        # Broadcast typing indicator to other clients
+        # Broadcast typing indicator to project room only
+        room_name = f"project_{project_name}"
         socketio.emit('typing_indicator', {
             "user_id": user_id,
             "username": username,
-            "typing": True
-        }, broadcast=True, include_self=False)
+            "typing": True,
+            "project_name": project_name
+        }, room=room_name, include_self=False)
         
     except Exception as e:
         logger.error(f"Error handling start typing: {e}")
@@ -1648,22 +2370,182 @@ def handle_start_typing(data):
 
 @socketio.on('stop_typing')
 def handle_stop_typing(data):
-    """Handle user stop typing event"""
+    """Handle user stop typing event - project-aware"""
     try:
         user_id = data.get('user_id', 'anonymous')
         username = data.get('username', 'User')
+        project_name = data.get('project_name', 'default')
         
+        # Remove from global and project-specific typing users
         typing_users.discard(user_id)
+        if project_name in project_typing_users:
+            project_typing_users[project_name].discard(user_id)
         
-        # Broadcast stop typing indicator to other clients
+        # Broadcast stop typing indicator to project room only
+        room_name = f"project_{project_name}"
         socketio.emit('typing_indicator', {
             "user_id": user_id,
             "username": username,
-            "typing": False
-        }, broadcast=True, include_self=False)
+            "typing": False,
+            "project_name": project_name
+        }, room=room_name, include_self=False)
         
     except Exception as e:
         logger.error(f"Error handling stop typing: {e}")
+
+
+# =====================================================
+# Project-Specific Room Management
+# =====================================================
+
+@socketio.on('join_project_room')
+def handle_join_project_room(data):
+    """Handle user joining a project-specific chat room"""
+    try:
+        user_id = data.get('user_id', 'anonymous')
+        username = data.get('username', 'User')
+        project_name = data.get('project_name', 'default')
+        session_id = data.get('session_id')
+        
+        # Create room name
+        room_name = f"project_{project_name}"
+        
+        # Join the room
+        join_room(room_name)
+        
+        # Track user's current project room
+        user_project_rooms[user_id] = project_name
+        
+        # Track project session
+        project_user_sessions[user_id] = {
+            'project': project_name,
+            'session_id': session_id,
+            'joined_at': datetime.now().isoformat()
+        }
+        
+        # Emit confirmation
+        emit('room_joined', {
+            "room": room_name,
+            "project_name": project_name,
+            "user_id": user_id
+        })
+        
+        # Notify other users in the project room
+        socketio.emit('user_joined', {
+            "user_id": user_id,
+            "username": username,
+            "project_name": project_name,
+            "timestamp": datetime.now().isoformat()
+        }, room=room_name, include_self=False)
+        
+        logger.info(f"User {username} ({user_id}) joined project room: {project_name}")
+        
+    except Exception as e:
+        logger.error(f"Error joining project room: {e}")
+        emit('chat_error', {"error": "Failed to join project room", "project_name": data.get('project_name', 'default')})
+
+
+@socketio.on('leave_project_room')
+def handle_leave_project_room(data):
+    """Handle user leaving a project-specific chat room"""
+    try:
+        user_id = data.get('user_id', 'anonymous')
+        project_name = data.get('project_name', 'default')
+        
+        # Create room name
+        room_name = f"project_{project_name}"
+        
+        # Leave the room
+        leave_room(room_name)
+        
+        # Clean up tracking
+        if user_id in user_project_rooms:
+            del user_project_rooms[user_id]
+        
+        if user_id in project_user_sessions:
+            del project_user_sessions[user_id]
+        
+        # Clean up typing indicators
+        if project_name in project_typing_users:
+            project_typing_users[project_name].discard(user_id)
+        
+        # Emit confirmation
+        emit('room_left', {
+            "room": room_name,
+            "project_name": project_name,
+            "user_id": user_id
+        })
+        
+        # Notify other users in the project room
+        socketio.emit('user_left', {
+            "user_id": user_id,
+            "project_name": project_name,
+            "timestamp": datetime.now().isoformat()
+        }, room=room_name)
+        
+        logger.info(f"User {user_id} left project room: {project_name}")
+        
+    except Exception as e:
+        logger.error(f"Error leaving project room: {e}")
+        emit('chat_error', {"error": "Failed to leave project room", "project_name": project_name})
+
+
+@socketio.on('switch_project')
+def handle_switch_project(data):
+    """Handle user switching between projects"""
+    try:
+        user_id = data.get('user_id', 'anonymous')
+        new_project = data.get('new_project', 'default')
+        old_project = data.get('old_project')
+        
+        # Leave old project room if specified
+        if old_project and old_project != new_project:
+            old_room_name = f"project_{old_project}"
+            leave_room(old_room_name)
+            
+            # Clean up old project typing indicators
+            if old_project in project_typing_users:
+                project_typing_users[old_project].discard(user_id)
+            
+            # Notify users in old room
+            socketio.emit('user_left', {
+                "user_id": user_id,
+                "project_name": old_project,
+                "timestamp": datetime.now().isoformat()
+            }, room=old_room_name)
+        
+        # Join new project room
+        new_room_name = f"project_{new_project}"
+        join_room(new_room_name)
+        
+        # Update tracking
+        user_project_rooms[user_id] = new_project
+        project_user_sessions[user_id] = project_user_sessions.get(user_id, {})
+        project_user_sessions[user_id].update({
+            'project': new_project,
+            'switched_at': datetime.now().isoformat()
+        })
+        
+        # Emit confirmations
+        emit('room_left', {"room": f"project_{old_project}", "project_name": old_project})
+        emit('room_joined', {"room": new_room_name, "project_name": new_project})
+        emit('project_switched', {
+            "project_name": new_project,
+            "previous_project": old_project
+        })
+        
+        # Notify users in new room
+        socketio.emit('user_joined', {
+            "user_id": user_id,
+            "project_name": new_project,
+            "timestamp": datetime.now().isoformat()
+        }, room=new_room_name, include_self=False)
+        
+        logger.info(f"User {user_id} switched from {old_project} to {new_project}")
+        
+    except Exception as e:
+        logger.error(f"Error switching project: {e}")
+        emit('chat_error', {"error": "Failed to switch project"})
 
 
 @socketio.on('join_chat')
@@ -1848,15 +2730,301 @@ def run_visualizer(host='localhost', port=5000, debug=False):
         state_monitor.stop_monitoring()
 
 
+# =====================================================
+# Enhanced Project Management API Endpoints
+# =====================================================
+
+@app.route('/api/project-templates')
+def get_project_templates():
+    """Get available project templates"""
+    try:
+        # Return default templates for now
+        templates = [
+            {
+                "id": "web-app",
+                "name": "Web Application",
+                "icon": "🌐",
+                "description": "Modern web application with frontend and backend",
+                "category": "web",
+                "files": ["package.json", "src/", "public/", "tests/"],
+                "settings": {
+                    "workflowMode": "partial",
+                    "tddEnabled": True,
+                    "agents": {
+                        "design": {"enabled": True, "creativity": 7},
+                        "code": {"enabled": True, "style": "standard"},
+                        "qa": {"enabled": True, "rigor": "thorough"}
+                    }
+                }
+            },
+            {
+                "id": "api-service",
+                "name": "API Service",
+                "icon": "🔌",
+                "description": "RESTful API service with database integration",
+                "category": "api",
+                "files": ["requirements.txt", "src/", "tests/", "docs/"],
+                "settings": {
+                    "workflowMode": "autonomous",
+                    "tddEnabled": True,
+                    "agents": {
+                        "code": {"enabled": True, "style": "minimal"},
+                        "qa": {"enabled": True, "rigor": "exhaustive"},
+                        "data": {"enabled": True, "depth": "detailed"}
+                    }
+                }
+            }
+        ]
+        
+        return jsonify(templates)
+        
+    except Exception as e:
+        logger.error(f"Error getting project templates: {e}")
+        return jsonify({"error": "Failed to get project templates"}), 500
+
+
+
+
+@app.route('/api/projects/<project_id>/health')
+def get_project_health(project_id):
+    """Get health status for a specific project"""
+    try:
+        # Mock health data
+        health_data = {
+            "status": "healthy" if project_id != "error-project" else "error",
+            "score": 85,
+            "lastCheck": datetime.now().isoformat(),
+            "metrics": {
+                "gitStatus": "clean",
+                "testCoverage": 78,
+                "buildStatus": "passing",
+                "dependencies": "up-to-date",
+                "lastActivity": "2 hours ago"
+            },
+            "issues": [],
+            "suggestions": [
+                "Consider increasing test coverage to 80%+",
+                "Update outdated dependencies"
+            ]
+        }
+        
+        if project_id == "error-project":
+            health_data["issues"] = ["Build failing", "Security vulnerabilities found"]
+            health_data["score"] = 45
+        
+        return jsonify(health_data)
+        
+    except Exception as e:
+        logger.error(f"Error getting project health for {project_id}: {e}")
+        return jsonify({"error": "Failed to get project health"}), 500
+
+
+@app.route('/api/projects/<project_id>/analytics')
+def get_project_analytics(project_id):
+    """Get analytics data for a specific project"""
+    try:
+        timeframe = request.args.get('timeframe', '30d')
+        
+        # Mock analytics data
+        analytics_data = {
+            "timeframe": timeframe,
+            "summary": {
+                "totalCommits": 127,
+                "testCoverage": 78.5,
+                "buildSuccess": 94.2,
+                "deploymentCount": 15
+            },
+            "activity": {
+                "commits": [
+                    {"date": "2024-01-15", "count": 5},
+                    {"date": "2024-01-14", "count": 3},
+                    {"date": "2024-01-13", "count": 8},
+                    {"date": "2024-01-12", "count": 2},
+                    {"date": "2024-01-11", "count": 4}
+                ],
+                "issues": [
+                    {"date": "2024-01-15", "opened": 2, "closed": 3},
+                    {"date": "2024-01-14", "opened": 1, "closed": 1},
+                    {"date": "2024-01-13", "opened": 0, "closed": 2}
+                ]
+            },
+            "performance": {
+                "buildTime": "2m 34s",
+                "testTime": "1m 12s",
+                "deploymentTime": "4m 56s"
+            },
+            "dependencies": {
+                "total": 45,
+                "outdated": 3,
+                "vulnerable": 1
+            }
+        }
+        
+        return jsonify(analytics_data)
+        
+    except Exception as e:
+        logger.error(f"Error getting analytics for {project_id}: {e}")
+        return jsonify({"error": "Failed to get project analytics"}), 500
+
+
+@app.route('/api/projects/<project_id>/collaboration')
+def get_project_collaboration(project_id):
+    """Get collaboration data for a specific project"""
+    try:
+        collaboration_data = {
+            "teamMembers": [
+                {
+                    "id": "user1",
+                    "name": "John Doe",
+                    "email": "john@example.com",
+                    "role": "maintainer",
+                    "status": "online",
+                    "avatar": "JD",
+                    "lastActive": "5 minutes ago"
+                },
+                {
+                    "id": "user2",
+                    "name": "Jane Smith",
+                    "email": "jane@example.com",
+                    "role": "contributor",
+                    "status": "away",
+                    "avatar": "JS",
+                    "lastActive": "2 hours ago"
+                }
+            ],
+            "recentActivity": [
+                {
+                    "type": "commit",
+                    "user": "John Doe",
+                    "action": "committed changes to feature branch",
+                    "timestamp": "2024-01-15T10:30:00Z",
+                    "icon": "💾"
+                },
+                {
+                    "type": "review",
+                    "user": "Jane Smith",
+                    "action": "reviewed pull request #123",
+                    "timestamp": "2024-01-15T09:15:00Z",
+                    "icon": "👀"
+                },
+                {
+                    "type": "issue",
+                    "user": "John Doe",
+                    "action": "closed issue #456",
+                    "timestamp": "2024-01-15T08:45:00Z",
+                    "icon": "✅"
+                }
+            ],
+            "permissions": {
+                "viewProject": True,
+                "editFiles": True,
+                "createBranches": True,
+                "mergePRs": False,
+                "startWorkflows": True,
+                "approveTasks": False,
+                "configureAgents": False,
+                "manageSettings": False
+            }
+        }
+        
+        return jsonify(collaboration_data)
+        
+    except Exception as e:
+        logger.error(f"Error getting collaboration data for {project_id}: {e}")
+        return jsonify({"error": "Failed to get collaboration data"}), 500
+
+
+@app.route('/api/projects/<project_id>/invite', methods=['POST'])
+def invite_team_member(project_id):
+    """Invite a new team member to the project"""
+    try:
+        data = request.get_json()
+        email = data.get('email')
+        role = data.get('role', 'viewer')
+        
+        if not email:
+            return jsonify({"success": False, "error": "Email is required"}), 400
+        
+        # Mock invitation logic
+        invitation_data = {
+            "success": True,
+            "invitationId": f"inv_{project_id}_{int(time.time())}",
+            "email": email,
+            "role": role,
+            "status": "sent",
+            "expiresAt": (datetime.now() + timedelta(days=7)).isoformat()
+        }
+        
+        return jsonify(invitation_data)
+        
+    except Exception as e:
+        logger.error(f"Error inviting team member to {project_id}: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
 @app.after_request
-def add_header(response):
-    """Add headers to disable caching and ensure correct content types"""
-    if response.mimetype == 'application/javascript' or response.mimetype == 'text/javascript':
-        response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+def add_enhanced_cache_headers(response):
+    """Add enhanced headers to completely disable caching and ensure correct content types"""
+    # Determine if this is a static file request
+    is_static = (request.path.startswith('/static/') or 
+                request.path.endswith('.js') or 
+                request.path.endswith('.css') or
+                request.path.endswith('.html'))
+    
+    if is_static:
+        # Ultra-aggressive cache busting for static files
+        response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0'
         response.headers['Pragma'] = 'no-cache'
         response.headers['Expires'] = '0'
+        response.headers['Last-Modified'] = datetime.now().strftime('%a, %d %b %Y %H:%M:%S GMT')
+        response.headers['ETag'] = f'"{int(time.time())}"'
+        
+        # Add development timestamp to identify cache issues
+        response.headers['X-Dev-Timestamp'] = str(int(time.time() * 1000))
+        response.headers['X-Cache-Buster'] = hashlib.md5(str(time.time()).encode()).hexdigest()[:8]
+        
+    # Ensure correct content types for JavaScript and CSS
+    if request.path.endswith('.js'):
+        response.headers['Content-Type'] = 'application/javascript; charset=utf-8'
+    elif request.path.endswith('.css'):
+        response.headers['Content-Type'] = 'text/css; charset=utf-8'
+    elif request.path.endswith('.html'):
+        response.headers['Content-Type'] = 'text/html; charset=utf-8'
+    
     return response
 
+
+
+@app.after_request
+def add_enhanced_cache_headers(response):
+    """Add enhanced headers to completely disable caching and ensure correct content types"""
+    # Determine if this is a static file request
+    is_static = (request.path.startswith('/static/') or 
+                request.path.endswith('.js') or 
+                request.path.endswith('.css') or
+                request.path.endswith('.html'))
+    
+    if is_static:
+        # Ultra-aggressive cache busting for static files
+        response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0'
+        response.headers['Pragma'] = 'no-cache'
+        response.headers['Expires'] = '0'
+        response.headers['Last-Modified'] = datetime.now().strftime('%a, %d %b %Y %H:%M:%S GMT')
+        response.headers['ETag'] = f'"{int(time.time())}"'
+        
+        # Add development timestamp to identify cache issues
+        response.headers['X-Dev-Timestamp'] = str(int(time.time() * 1000))
+        response.headers['X-Cache-Buster'] = hashlib.md5(str(time.time()).encode()).hexdigest()[:8]
+        
+    # Ensure correct content types for JavaScript and CSS
+    if request.path.endswith('.js'):
+        response.headers['Content-Type'] = 'application/javascript; charset=utf-8'
+    elif request.path.endswith('.css'):
+        response.headers['Content-Type'] = 'text/css; charset=utf-8'
+    elif request.path.endswith('.html'):
+        response.headers['Content-Type'] = 'text/html; charset=utf-8'
+    
+    return response
 
 if __name__ == '__main__':
     import argparse

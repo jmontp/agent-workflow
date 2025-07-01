@@ -128,8 +128,13 @@ class StateMachine:
         Returns:
             CommandResult with validation outcome
         """
+        # Extract base command for validation (e.g., "/epic" from "/epic create auth system")
+        base_command = command.split()[0] if command.strip() else ""
+        
+        logger.debug(f"Validating command '{command}' (base: '{base_command}') in state {self.current_state.value}")
+        
         # Handle backlog commands specially
-        if any(command.startswith(bc) for bc in self.BACKLOG_COMMANDS):
+        if any(base_command.startswith(bc) for bc in self.BACKLOG_COMMANDS):
             if self.current_state == State.SPRINT_REVIEW:
                 return CommandResult(
                     success=False,
@@ -138,18 +143,18 @@ class StateMachine:
                 )
             return CommandResult(success=True, new_state=self.current_state)
         
-        # Check if command exists in transition matrix
-        if command not in self.TRANSITIONS:
+        # Check if base command exists in transition matrix
+        if base_command not in self.TRANSITIONS:
             return CommandResult(
                 success=False,
-                error_message=f"Unknown command: {command}",
+                error_message=f"Unknown command: {base_command}",
                 hint="Use /state to see available commands"
             )
         
-        # Check if command is allowed in current state
-        allowed_states = self.TRANSITIONS[command]
+        # Check if base command is allowed in current state
+        allowed_states = self.TRANSITIONS[base_command]
         if self.current_state not in allowed_states:
-            hint = self.ERROR_HINTS.get((command, self.current_state))
+            hint = self.ERROR_HINTS.get((base_command, self.current_state))
             if not hint:
                 # Generate generic hint
                 valid_states = ", ".join([s.value for s in allowed_states.keys()])
@@ -157,15 +162,15 @@ class StateMachine:
             
             return CommandResult(
                 success=False,
-                error_message=f"Command {command} not allowed in state {self.current_state.value}",
+                error_message=f"Command {base_command} not allowed in state {self.current_state.value}",
                 hint=hint
             )
         
         new_state = allowed_states[self.current_state]
         
-        # Apply context-aware validation
+        # Apply context-aware validation using the base command
         if context:
-            context_result = self._validate_transition_context(command, new_state, context)
+            context_result = self._validate_transition_context(base_command, new_state, context)
             if not context_result.success:
                 return context_result
         
@@ -216,9 +221,12 @@ class StateMachine:
         if result.success and result.new_state:
             old_state = self.current_state
             self.current_state = result.new_state
-            logger.info(f"State transition: {old_state.value} → {self.current_state.value} via {command}")
             
-            # Always track transition history
+            # Use base command for cleaner logging
+            base_command = command.split()[0] if command.strip() else command
+            logger.info(f"State transition: {old_state.value} → {self.current_state.value} via {base_command}")
+            
+            # Always track transition history with full command for context
             self._track_transition_minimal(old_state, self.current_state, command)
             
             # Emit workflow transition for real-time visualization
