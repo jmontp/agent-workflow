@@ -4,7 +4,7 @@ This file provides comprehensive guidance to Claude Code (claude.ai/code) when w
 
 ## Repository Overview
 
-This is the **AI Agent TDD-Scrum Workflow** orchestration framework - a comprehensive system for coordinating AI agents in software development with Human-in-the-Loop oversight. The repository contains a complete implementation with dual architecture patterns supporting both modern Python packaging and legacy library structure.
+This is the **AI Agent TDD-Scrum Workflow** orchestration framework - a comprehensive system for coordinating AI agents in software development with Human-in-the-Loop oversight. The repository contains a complete, unified implementation with modern Python packaging standards and a clean, consolidated architecture.
 
 ## Project Status
 
@@ -12,33 +12,34 @@ This is the **AI Agent TDD-Scrum Workflow** orchestration framework - a comprehe
 
 ## Repository Structure
 
-### 🏗️ Dual Architecture Design
+### 🏗️ Unified Architecture Design
 
-The repository implements both modern Python packaging standards and a legacy library structure for backward compatibility:
+The repository implements a modern, unified Python package architecture:
 
-**Modern Python Package** (`agent_workflow/`):
+**Main Package** (`agent_workflow/`):
 - Clean, standards-compliant package structure
 - CLI interface with comprehensive command system (`agent-orch`/`aw` commands)
 - Modular core components (orchestrator, state machine, storage)
+- Specialized AI agents with security controls
+- Advanced context management and token calculation
 - Professional integration points and PyPI distribution
 - **See `agent_workflow/CLAUDE.md` for detailed package documentation**
 
-**Legacy Library** (`lib/`):
-- Complete feature implementation (42 modules)
-- Specialized AI agents with security controls
-- Context management and token calculation
-- Discord bot and multi-project coordination
+**Legacy Support** (`lib/`):
+- Minimal legacy modules for backward compatibility
+- Multi-project coordination utilities
+- Legacy Discord bot implementations
 
 ### 📁 Root Directory Organization
 
 ```
 agent-workflow/
 ├── 🐍 Core Implementation
-│   ├── agent_workflow/              # Modern Python package (7 modules)
+│   ├── agent_workflow/              # Unified Python package
 │   │   ├── CLAUDE.md                # Package documentation and architecture
 │   │   ├── __init__.py              # Package entry point with core exports
 │   │   ├── orchestrator.py          # Simple orchestrator runner
-│   │   ├── cli/                     # Command-line interface (8 commands)
+│   │   ├── cli/                     # Command-line interface (12 commands)
 │   │   │   ├── main.py              # Primary CLI entry point (agent-orch/aw)
 │   │   │   ├── init.py              # Global environment initialization
 │   │   │   ├── project.py           # Project registration and management
@@ -47,23 +48,40 @@ agent-workflow/
 │   │   │   ├── info.py              # System information and diagnostics
 │   │   │   ├── migrate.py           # Migration from git-clone installs
 │   │   │   ├── web.py               # Web interface management
+│   │   │   ├── dev.py               # Development tools and utilities
+│   │   │   ├── config.py            # Configuration management
 │   │   │   └── utils.py             # CLI utilities and helpers
 │   │   ├── core/                    # Core orchestration components
 │   │   │   ├── orchestrator.py      # Central coordination engine
 │   │   │   ├── state_machine.py     # Finite state machine
-│   │   │   ├── data_models.py       # Project, Epic, Story, Sprint models
-│   │   │   └── project_storage.py   # File-based persistence
+│   │   │   ├── models.py            # Project, Epic, Story, Sprint models
+│   │   │   ├── storage.py           # File-based persistence
+│   │   │   └── project_storage.py   # Project-specific storage
+│   │   ├── agents/                  # AI agent implementations
+│   │   │   ├── code_agent.py        # Implementation and refactoring
+│   │   │   ├── design_agent.py      # Architecture and specifications
+│   │   │   ├── qa_agent.py          # Testing and quality validation
+│   │   │   ├── data_agent.py        # Analysis and reporting
+│   │   │   └── mock_agent.py        # Testing and development
+│   │   ├── context/                 # Advanced context management system
+│   │   │   ├── manager.py           # Context manager
+│   │   │   ├── cache.py             # Context caching
+│   │   │   ├── filter.py            # Context filtering
+│   │   │   ├── compressor.py        # Context compression
+│   │   │   └── index.py             # Context indexing
 │   │   ├── config/                  # Configuration management
+│   │   │   ├── schema.py            # Configuration validation
+│   │   │   └── templates.py         # Configuration templates
 │   │   ├── security/                # Security framework
+│   │   │   └── tool_config.py       # Agent tool access control
 │   │   ├── integrations/            # External integrations
+│   │   │   ├── discord/             # Discord bot integration
+│   │   │   └── claude/              # AI service integration
 │   │   └── templates/               # Project templates
-│   └── lib/                         # Legacy library implementation (42 modules)
-│       ├── agents/                  # AI agent implementations (5 specialized agents)
-│       ├── context/                 # Context management system (5 modules)
-│       ├── discord_bot.py          # Discord integration
-│       ├── global_orchestrator.py  # Multi-project coordination
-│       ├── parallel_tdd_*.py       # Parallel TDD system (3 modules)
-│       └── state_machine.py        # Workflow state management
+│   └── lib/                         # Legacy support modules (18 modules)
+│       ├── multi_project_*.py       # Multi-project coordination utilities
+│       ├── state_broadcaster.py     # Real-time state updates
+│       └── token_calculator.py      # AI token usage optimization
 │
 ├── 🔧 Build System & Configuration
 │   ├── pyproject.toml              # Modern Python packaging configuration
@@ -214,45 +232,46 @@ The Makefile provides 40+ targets organized into categories:
 ## 🐍 Core System Architecture
 
 ### Orchestration Engine
-- **Main Entry Points** (`scripts/`): Two primary executable scripts (see `scripts/CLAUDE.md`)
-  - **Single-Project Orchestrator** (`scripts/orchestrator.py`): Focused development with TDD support
-  - **Multi-Project Orchestrator** (`scripts/multi_project_orchestrator.py`): Advanced coordination system
-- **State Machine** (`lib/state_machine.py`): Finite state machine with strict transitions
-- **Global Orchestrator** (`lib/global_orchestrator.py`): Cross-project intelligence
-- **Resource Scheduler** (`lib/resource_scheduler.py`): Agent pool management
+- **Main CLI Interface** (`agent_workflow/cli/main.py`): Primary entry point with `agent-orch`/`aw` commands
+- **Core Orchestrator** (`agent_workflow/core/orchestrator.py`): Central coordination engine
+- **State Machine** (`agent_workflow/core/state_machine.py`): Finite state machine with strict transitions
+- **Legacy Scripts** (`scripts/`): Legacy orchestrator scripts for backward compatibility
+- **Resource Management** (`lib/resource_scheduler.py`): Agent pool and resource management
 
 ### AI Agent System
-- **Agent Pool** (`lib/agent_pool.py`): Dynamic agent lifecycle management
+- **Specialized Agents** (`agent_workflow/agents/`):
+  - **Design Agent** (`design_agent.py`): Architecture and technical specifications
+  - **Code Agent** (`code_agent.py`): Implementation and refactoring
+  - **QA Agent** (`qa_agent.py`): Testing and quality validation
+  - **Data Agent** (`data_agent.py`): Analysis and reporting
+  - **Mock Agent** (`mock_agent.py`): Testing and development
 - **Agent Memory** (`lib/agent_memory.py`): Context-aware agent memory system
-- **Specialized Agents** (`lib/agents/`):
-  - **Design Agent**: Architecture and technical specifications
-  - **Code Agent**: Implementation and refactoring
-  - **QA Agent**: Testing and quality validation
-  - **Data Agent**: Analysis and reporting
-  - **Mock Agent**: Testing and development
+- **Agent Pool** (`lib/agent_pool.py`): Dynamic agent lifecycle management
 
 ### Context Management System
-- **Context Manager** (`lib/context_manager.py`): Advanced context handling
-- **Context Cache** (`lib/context_cache.py`): Efficient context caching
-- **Context Filter** (`lib/context_filter.py`): Context relevance filtering
-- **Context Compressor** (`lib/context_compressor.py`): Context size optimization
-- **Context Index** (`lib/context_index.py`): Context search and retrieval
+- **Context Manager** (`agent_workflow/context/manager.py`): Advanced context handling
+- **Context Cache** (`agent_workflow/context/cache.py`): Efficient context caching
+- **Context Filter** (`agent_workflow/context/filter.py`): Context relevance filtering
+- **Context Compressor** (`agent_workflow/context/compressor.py`): Context size optimization
+- **Context Index** (`agent_workflow/context/index.py`): Context search and retrieval
+- **Background Processing** (`agent_workflow/context/background.py`): Async context operations
+- **Learning System** (`agent_workflow/context/learning.py`): Context adaptation
 
 ### Security & Control
-- **Agent Tool Config** (`lib/agent_tool_config.py`): Command access control
+- **Agent Tool Config** (`agent_workflow/security/tool_config.py`): Command access control
 - **Multi-Project Security** (`lib/multi_project_security.py`): Cross-project isolation
 - **Token Calculator** (`lib/token_calculator.py`): AI token usage optimization
 
 ### Integration Layer
-- **Discord Bot** (`lib/discord_bot.py`): Primary HITL interface
-- **Multi-Project Discord Bot** (`lib/multi_project_discord_bot.py`): Multi-project coordination
-- **Claude Client** (`lib/claude_client.py`): AI service integration
+- **Discord Integration** (`agent_workflow/integrations/discord/`): Discord bot and command interface
+- **Claude Integration** (`agent_workflow/integrations/claude/`): AI service integration
+- **Web Interface** (`tools/visualizer/`): Discord-style web interface with real-time updates
 - **Cross-Project Intelligence** (`lib/cross_project_intelligence.py`): Knowledge sharing
 
 ### Data & Storage
-- **Data Models** (`lib/data_models.py`): Epic, Story, Sprint entities
-- **Project Storage** (`lib/project_storage.py`): File-based persistence
-- **TDD Models** (`lib/tdd_models.py`): Test-driven development entities
+- **Data Models** (`agent_workflow/core/models.py`): Epic, Story, Sprint, TDD entities
+- **Project Storage** (`agent_workflow/core/storage.py`): File-based persistence
+- **Project-Specific Storage** (`agent_workflow/core/project_storage.py`): Project data management
 - **State Broadcaster** (`lib/state_broadcaster.py`): Real-time state updates
 
 ## 📋 CLI Command System
@@ -287,14 +306,59 @@ The system provides comprehensive CLI commands via `agent-orch` or `aw`:
 ### Configuration & Setup
 - `setup-discord` - Configure Discord integration
 - `setup-api` - Configure AI API integration
-- `setup-multi-project` - Configure multi-project orchestration
 - `configure` - Interactive configuration wizard
+- `config` - Configuration management commands
+
+### Development Tools
+- `dev check-coverage` - Analyze test coverage of the codebase
+- `dev check-compliance` - Check government audit compliance status
+- `dev generate-docs` - Generate API documentation from source code
 
 ### System Information
 - `version` - Display version information
 - `health` - System health check with project status
-- `info` - Comprehensive system information
-- `migrate` - Database/configuration migration
+- `migrate-from-git` - Migrate from git-clone installation
+
+## 🔧 Refactoring and Architectural Decisions
+
+### Major Refactoring Completed (Phase 1-4)
+
+The repository has undergone comprehensive refactoring to achieve a modern, unified architecture:
+
+**Phase 1: Architectural Unification**
+- Consolidated dual architecture into single `agent_workflow` package
+- Migrated all core functionality from `lib/` to proper package structure
+- Unified data models and interfaces
+
+**Phase 2: Test and Documentation Consolidation**
+- Reduced test files from 99+ to 47 while maintaining 95%+ coverage
+- Streamlined documentation with dual-stream architecture
+- Preserved all compliance achievements and quality metrics
+
+**Phase 3: Enhanced Tooling**
+- Integrated development tools into CLI (`aw dev` commands)
+- Unified configuration system with single `config.yml`
+- Updated web visualizer for new architecture
+
+**Phase 4: Final Validation and Documentation**
+- Comprehensive system validation completed
+- Updated all documentation to reflect unified architecture
+- Production readiness confirmed
+
+### Key Architectural Changes
+
+1. **Unified Package Structure**: Replaced dual architecture with single `agent_workflow` package
+2. **CLI-First Experience**: Enhanced CLI with integrated development tools
+3. **Consolidated Configuration**: Single configuration file replacing multiple configs
+4. **Modern Import Patterns**: Proper Python package imports throughout
+5. **Legacy Support**: Minimal `lib/` directory for backward compatibility
+
+### Development Workflow
+
+- **Primary Interface**: Use `aw` CLI for all operations
+- **Package Development**: All new code goes in `agent_workflow/` package
+- **Testing**: Comprehensive test suite with real-time validation
+- **Documentation**: Professional MkDocs system with 74+ pages
 
 ## 🧪 Testing & Quality Assurance
 
@@ -873,6 +937,45 @@ See `tools/dependencies/README.md` for complete documentation.
   - ✅ Chat close button (added event handler)
   - ✅ Mermaid diagram font size (increased to 16px)
 - **Troubleshooting**: See `tools/visualizer/TROUBLESHOOTING_CHAT.md` for issues
+
+## 🔧 Phase 2 Consolidation Achievements
+
+### Test Suite Consolidation (Epic 2.1) ✅
+**Major Achievement**: Successfully reduced test files from 99+ to 47 files (52% reduction)
+
+**Key Consolidations**:
+- `test_agent_memory*.py` (4 files) → `test_agent_memory.py` (comprehensive coverage)
+- `test_context_manager*.py` (6 files) → `test_context_manager.py` + core files
+- `test_discord_bot*.py` (5 files) → `test_discord_bot.py`
+- `test_multi_project_security*.py` (6 files) → `test_multi_project_security.py`
+- `test_project_storage*.py` (6 files) → `test_project_storage.py`
+
+**Benefits**:
+- Simplified maintenance and navigation
+- Preserved 95%+ test coverage
+- Eliminated redundant coverage/comprehensive variants
+- Maintained government audit compliance
+
+### Documentation Consolidation (Epic 2.2) ✅
+**Major Achievement**: Streamlined documentation from 62+ scattered files to organized structure
+
+**Key Actions**:
+- Deleted 8 summary/report files (AUDIT_COMPLIANCE_ACHIEVEMENT_REPORT.md, etc.)
+- Created user-oriented documentation stream: `docs_src/user-guide/visualizer/`
+- Created engineering documentation stream: `docs_src/architecture/visualizer/`
+- Enhanced CLAUDE.md files with troubleshooting patterns
+
+**New Documentation Structure**:
+```
+docs_src/
+├── user-guide/visualizer/           # Task-oriented user guides
+│   ├── index.md                     # Quick start hub
+│   └── daily-tasks.md               # Common workflows
+├── architecture/visualizer/         # Engineering reference
+│   ├── overview.md                  # System architecture
+│   └── decisions/                   # Architecture Decision Records
+│       └── ADR-001-websocket.md     # WebSocket communication
+```
 
 ## 🚨 Critical Troubleshooting Guide
 

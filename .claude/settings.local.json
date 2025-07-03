@@ -26,7 +26,18 @@
       "WebFetch(domain:jmontp.github.io)",
       "Bash(curl:*)",
       "Bash(echo)",
-      "Bash(cp:*)"
+      "Bash(cp:*)",
+      "Bash(rm:*)",
+      "Bash(touch:*)",
+      "Bash(for file in context_*.py)",
+      "Bash(do mv \"$file\" \"$file#context_\")",
+      "Bash(done)",
+      "Bash(aw dev:*)",
+      "Bash(aw web:*)",
+      "Bash(timeout:*)",
+      "Bash(aw:*)",
+      "Bash(test:*)",
+      "Bash(true)"
     ],
     "deny": []
   }

@@ -1,11 +1,15 @@
 """
-Security and access control components.
+Security module for AI Agent Workflow.
 
-This module provides:
-- Agent permission restrictions
-- Credential encryption and management
-- Command access control
-- Security policy enforcement
+Provides security controls and configurations for agent access control,
+tool restrictions, and security boundaries.
 """
 
-__all__ = []
+from .tool_config import AgentType, AGENT_TOOL_CONFIG, get_allowed_tools, get_disallowed_tools
+
+__all__ = [
+    "AgentType",
+    "AGENT_TOOL_CONFIG", 
+    "get_allowed_tools",
+    "get_disallowed_tools"
+]

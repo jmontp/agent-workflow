@@ -131,7 +131,7 @@ def _show_dry_run_plan(config_path: Path, profile: Optional[str], minimal: bool)
         "credentials.key", 
         "projects/registry.yaml",
         "templates/project-config.yaml.template",
-        "templates/orch-config.yaml.template"
+        "templates/config.yml.template"
     ]
     
     console.print("\n[bold]Files to create:[/bold]")
@@ -397,7 +397,7 @@ def _create_template_files(templates_path: Path) -> None:
         ]
     }
     
-    with open(templates_path / "orch-config.yaml.template", 'w') as f:
+    with open(templates_path / "config.yml.template", 'w') as f:
         yaml.dump(orch_template, f, default_flow_style=False, indent=2)
 
 

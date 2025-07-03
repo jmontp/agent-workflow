@@ -3,6 +3,9 @@ Comprehensive test suite for AgentMemory persistence functionality.
 
 Tests the persistent storage of agent decisions and artifacts with context handoffs
 between TDD phases, including memory retrieval based on relevance and recency.
+
+This consolidated test file includes comprehensive, enhanced, and final coverage tests
+for achieving 95%+ test coverage and TIER 4 compliance.
 """
 
 import pytest
@@ -925,6 +928,273 @@ class TestSanitizationAndSecurity:
         memory.updated_at = None
         summary = agent_memory._get_recent_activity_summary(memory)
         assert summary["last_activity"] is None
+
+
+# Additional test classes from enhanced and final coverage
+
+class TestAdvancedFileOperations:
+    """Test advanced file operations and edge cases"""
+    
+    @pytest.fixture
+    def agent_memory(self):
+        """Create a test agent memory instance"""
+        with tempfile.TemporaryDirectory() as temp_dir:
+            yield FileBasedAgentMemory(base_path=temp_dir)
+    
+    @pytest.mark.asyncio
+    async def test_store_memory_with_json_serialization_error(self, agent_memory):
+        """Test handling of JSON serialization errors"""
+        memory = AgentMemory(agent_type="TestAgent", story_id="test_story")
+        
+        # Mock json.dump to raise an error
+        with patch('json.dump', side_effect=TypeError("Object not serializable")):
+            with pytest.raises(TypeError):
+                await agent_memory.store_memory(memory)
+    
+    @pytest.mark.asyncio
+    async def test_get_memory_with_json_decode_error(self, agent_memory):
+        """Test handling of JSON decode errors"""
+        # Create a memory file with invalid JSON
+        memory_file = agent_memory.memory_dir / "TestAgent" / "test_story.json"
+        memory_file.parent.mkdir(parents=True, exist_ok=True)
+        
+        with open(memory_file, 'w') as f:
+            f.write('{"invalid": json, "content": }')
+        
+        # Should return None for invalid JSON
+        result = await agent_memory.get_memory("TestAgent", "test_story")
+        assert result is None
+    
+    @pytest.mark.asyncio
+    async def test_cleanup_with_file_stat_error(self, agent_memory):
+        """Test cleanup when file stat fails"""
+        # Create a memory file
+        memory = AgentMemory(agent_type="TestAgent", story_id="test_story")
+        await agent_memory.store_memory(memory)
+        
+        # Mock Path.stat to raise an error during cleanup
+        original_stat = Path.stat
+        def mock_stat(path_self):
+            if str(path_self).endswith('.json'):
+                raise OSError("Stat failed")
+            return original_stat(path_self)
+            
+        with patch.object(Path, 'stat', mock_stat):
+            # Should handle the error gracefully and continue
+            deleted_count = await agent_memory.cleanup_old_memories(older_than_days=0)
+            assert deleted_count == 0  # No files deleted due to error
+
+
+class TestAnalysisEdgeCases:
+    """Test edge cases in memory analysis and patterns"""
+    
+    @pytest.fixture
+    def agent_memory(self):
+        """Create a test agent memory instance"""
+        with tempfile.TemporaryDirectory() as temp_dir:
+            yield FileBasedAgentMemory(base_path=temp_dir)
+    
+    @pytest.mark.asyncio
+    async def test_analyze_patterns_with_empty_data(self, agent_memory):
+        """Test pattern analysis with empty or minimal data"""
+        # Create memory with no patterns or decisions
+        memory = AgentMemory(agent_type="TestAgent", story_id="test_story")
+        await agent_memory.store_memory(memory)
+        
+        analysis = await agent_memory.analyze_agent_patterns("TestAgent", "test_story")
+        
+        assert analysis["pattern_types"] == {}
+        assert analysis["decision_confidence_avg"] == 0.0
+        assert analysis["successful_patterns"] == []
+        assert analysis["phase_transitions"] == {}
+    
+    @pytest.mark.asyncio
+    async def test_analyze_patterns_with_none_phases(self, agent_memory):
+        """Test pattern analysis with None phase values"""
+        memory = AgentMemory(agent_type="TestAgent", story_id="test_story")
+        
+        # Add handoff with None phases
+        handoff = PhaseHandoff(
+            from_phase=None,
+            to_phase=None,
+            context_summary="Test handoff"
+        )
+        memory.add_phase_handoff(handoff)
+        
+        await agent_memory.store_memory(memory)
+        
+        analysis = await agent_memory.analyze_agent_patterns("TestAgent", "test_story")
+        
+        # Should handle None phases gracefully
+        assert "none -> none" in analysis["phase_transitions"]
+        assert analysis["phase_transitions"]["none -> none"] == 1
+
+
+class TestComprehensiveMemoryOperations:
+    """Comprehensive tests to ensure high coverage"""
+    
+    @pytest.fixture
+    def agent_memory(self):
+        """Create a test agent memory instance"""
+        with tempfile.TemporaryDirectory() as temp_dir:
+            yield FileBasedAgentMemory(base_path=temp_dir)
+    
+    @pytest.mark.asyncio
+    async def test_store_memory_updates_timestamp(self, agent_memory):
+        """Test that storing memory updates the timestamp"""
+        original_time = datetime.utcnow()
+        memory = AgentMemory(agent_type="TestAgent", story_id="test_story")
+        memory.updated_at = original_time
+        
+        # Wait a tiny bit to ensure timestamp difference
+        await asyncio.sleep(0.01)
+        
+        await agent_memory.store_memory(memory)
+        
+        # The updated_at should be newer than original
+        assert memory.updated_at > original_time
+    
+    @pytest.mark.asyncio
+    async def test_successful_patterns_filtering(self, agent_memory):
+        """Test the successful patterns filtering logic in analyze_agent_patterns"""
+        memory = AgentMemory(agent_type="TestAgent", story_id="test_story")
+        
+        # Add patterns with different success rates and usage counts
+        low_success_pattern = Pattern(
+            pattern_type="low_success", description="Low success pattern",
+            success_rate=0.7, usage_count=5  # Low success rate
+        )
+        successful_pattern = Pattern(
+            pattern_type="successful", description="Successful pattern",
+            success_rate=0.85, usage_count=5  # High success rate and usage
+        )
+        
+        memory.add_pattern(low_success_pattern)
+        memory.add_pattern(successful_pattern)
+        
+        await agent_memory.store_memory(memory)
+        
+        analysis = await agent_memory.analyze_agent_patterns("TestAgent", "test_story")
+        
+        # Only the successful pattern should be in successful_patterns (success_rate > 0.8 and usage_count > 2)
+        assert len(analysis["successful_patterns"]) == 1
+        assert analysis["successful_patterns"][0]["pattern_type"] == "successful"
+    
+    @pytest.mark.asyncio
+    async def test_clear_memory_cache_removal(self, agent_memory):
+        """Test that clear_memory removes entries from cache"""
+        memory = AgentMemory(agent_type="TestAgent", story_id="test_story")
+        await agent_memory.store_memory(memory)
+        
+        # Verify it's in cache
+        cache_key = "TestAgent:test_story"
+        assert cache_key in agent_memory._memory_cache
+        
+        # Clear specific memory
+        await agent_memory.clear_memory("TestAgent", "test_story")
+        
+        # Should be removed from cache
+        assert cache_key not in agent_memory._memory_cache
+    
+    @pytest.mark.asyncio
+    async def test_specialized_method_memory_creation(self, agent_memory):
+        """Test that specialized methods create memory when it doesn't exist"""
+        # Test add_decision creates memory
+        decision = Decision(description="Test decision")
+        await agent_memory.add_decision("NewAgent", "new_story", decision)
+        
+        memory = await agent_memory.get_memory("NewAgent", "new_story")
+        assert memory is not None
+        assert len(memory.decisions) == 1
+
+
+class TestFilePathSanitization:
+    """Test file path sanitization and security"""
+    
+    @pytest.fixture
+    def agent_memory(self):
+        """Create a test agent memory instance"""
+        with tempfile.TemporaryDirectory() as temp_dir:
+            yield FileBasedAgentMemory(base_path=temp_dir)
+    
+    def test_sanitize_complex_story_id(self, agent_memory):
+        """Test sanitization of complex story IDs"""
+        # Test with various problematic characters
+        test_cases = [
+            ("story!@#$%^&*()", "story.json"),
+            ("story with spaces", "storywithspaces.json"),
+            ("", "default.json"),
+            ("   ", "default.json"),
+        ]
+        
+        for input_id, expected_filename in test_cases:
+            file_path = agent_memory._get_memory_file_path("TestAgent", input_id)
+            if expected_filename == "default.json":
+                assert file_path.name == "default.json"
+            else:
+                # Just check that it creates a valid filename
+                assert file_path.name.endswith(".json")
+                assert "/" not in file_path.name
+                assert "\\" not in file_path.name
+            assert file_path.parent.name == "TestAgent"
+
+
+class TestComplexScenarios:
+    """Test complex real-world scenarios"""
+    
+    @pytest.fixture
+    def agent_memory(self):
+        """Create a test agent memory instance"""
+        with tempfile.TemporaryDirectory() as temp_dir:
+            yield FileBasedAgentMemory(base_path=temp_dir)
+    
+    @pytest.mark.asyncio
+    async def test_full_workflow_scenario(self, agent_memory):
+        """Test a complete workflow scenario with all operations"""
+        agent_type = "WorkflowAgent"
+        story_id = "complex_story"
+        
+        # 1. Create initial memory with decision
+        decision = Decision(
+            agent_type=agent_type,
+            description="Initial design decision",
+            rationale="Need to establish architecture",
+            confidence=0.8
+        )
+        await agent_memory.add_decision(agent_type, story_id, decision)
+        
+        # 2. Add pattern learned during process
+        pattern = Pattern(
+            pattern_type="architecture",
+            description="Use microservices for scalability",
+            success_rate=0.9,
+            usage_count=3
+        )
+        await agent_memory.add_pattern(agent_type, story_id, pattern)
+        
+        # 3. Update memory with additional metadata
+        updates = {
+            "project_info": "Complex microservice project",
+            "priority": "high"
+        }
+        await agent_memory.update_memory(agent_type, story_id, updates)
+        
+        # 4. Verify complete memory state
+        memory = await agent_memory.get_memory(agent_type, story_id)
+        assert memory is not None
+        assert len(memory.decisions) == 1
+        assert len(memory.learned_patterns) == 1
+        assert memory.metadata["project_info"] == "Complex microservice project"
+        
+        # 5. Analyze patterns
+        analysis = await agent_memory.analyze_agent_patterns(agent_type, story_id)
+        assert "architecture" in analysis["pattern_types"]
+        
+        # 6. Get memory summary
+        summary = await agent_memory.get_memory_summary(agent_type, story_id)
+        assert summary["exists"] is True
+        assert summary["decisions_count"] == 1
+        assert summary["patterns_count"] == 1
 
 
 if __name__ == "__main__":

@@ -21,20 +21,32 @@ sys.path.insert(0, str(lib_path))
 
 logger = logging.getLogger(__name__)
 
-# Try to import state broadcaster and state machine
+# Try to import state broadcaster and state machine with prioritized pattern: agent_workflow → lib → fallback
 try:
-    from state_broadcaster import broadcaster
+    # Primary: Try agent_workflow package first
+    from agent_workflow.core.state_broadcaster import broadcaster
     STATE_BROADCASTER_AVAILABLE = True
 except ImportError:
-    logger.warning("State broadcaster not available - using mock implementation")
-    STATE_BROADCASTER_AVAILABLE = False
+    try:
+        # Secondary: Try lib directory for backward compatibility
+        from state_broadcaster import broadcaster
+        STATE_BROADCASTER_AVAILABLE = True
+    except ImportError:
+        logger.warning("State broadcaster not available - using mock implementation")
+        STATE_BROADCASTER_AVAILABLE = False
 
 try:
-    from state_machine import StateMachine
+    # Primary: Try agent_workflow package first
+    from agent_workflow.core.state_machine import StateMachine
     STATE_MACHINE_AVAILABLE = True
 except ImportError:
-    logger.warning("State machine not available - using mock implementation")
-    STATE_MACHINE_AVAILABLE = False
+    try:
+        # Secondary: Try lib directory for backward compatibility
+        from state_machine import StateMachine
+        STATE_MACHINE_AVAILABLE = True
+    except ImportError:
+        logger.warning("State machine not available - using mock implementation")
+        STATE_MACHINE_AVAILABLE = False
 
 
 class ChatStateSynchronizer:

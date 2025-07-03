@@ -3,6 +3,10 @@ State Broadcasting System for Real-Time Visualization
 
 Provides WebSocket broadcasting of state machine changes for real-time
 visualization and monitoring of workflow and TDD state transitions.
+
+NOTE: This file is kept in lib/ because it's heavily used by the web visualizer
+(tools/visualizer/app.py) and provides critical real-time state broadcasting
+functionality that hasn't been migrated to the new architecture yet.
 """
 
 import asyncio

@@ -288,7 +288,7 @@ class ConfigValidator:
         
         # Check common config files
         config_files = [
-            ("orch-config.yaml", "orchestration"),
+            ("config.yml", "orchestration"),
             (".dependency-config.yaml", "dependency")
         ]
         

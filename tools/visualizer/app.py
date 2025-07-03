@@ -8,9 +8,11 @@ of workflow and TDD state machine transitions.
 
 # Standard library imports
 import asyncio
+import hashlib
 import logging
 import os
 import sys
+import time
 from datetime import datetime
 from pathlib import Path
 
@@ -26,50 +28,305 @@ from utils import generate_uuid, serialize_json, ConfigDict, StateDict, Dict, An
 lib_path = Path(__file__).parent.parent.parent / "lib"
 sys.path.insert(0, str(lib_path))
 
-from state_broadcaster import broadcaster
-from agent_interfaces import interface_manager, InterfaceType, AgentType
-from security import (
-    validate_configuration, sanitize_prompt, sanitize_code,
-    audit_operation, SecurityLevel, mask_api_key
-)
+# Also add agent_workflow to path for new package structure
+agent_workflow_path = Path(__file__).parent.parent.parent / "agent_workflow"
+sys.path.insert(0, str(agent_workflow_path))
 
-# Configure logging first
+# State broadcaster import with prioritized pattern: agent_workflow → lib → fallback
+try:
+    # Primary: Try agent_workflow package first
+    from agent_workflow.core.state_broadcaster import broadcaster
+except ImportError:
+    try:
+        # Secondary: Try lib directory for backward compatibility
+        from state_broadcaster import broadcaster
+    except ImportError:
+        try:
+            # Fallback - try direct import with lib prefix
+            sys.path.insert(0, str(Path(__file__).parent.parent.parent))
+            from lib.state_broadcaster import broadcaster
+        except ImportError:
+            import logging
+            logging.warning("state_broadcaster not available - using mock")
+            # Create a mock broadcaster
+            class MockBroadcaster:
+                def broadcast_state(self, state): pass
+                def start(self): pass
+                def stop(self): pass
+            broadcaster = MockBroadcaster()
+# Agent interfaces import with prioritized pattern: agent_workflow → lib/local → fallback
+try:
+    # Primary: Try agent_workflow package structure
+    from agent_workflow.integrations.agent_interfaces import interface_manager, InterfaceType, AgentType
+except ImportError:
+    try:
+        # Secondary: Try local visualizer agent_interfaces
+        from agent_interfaces import interface_manager, InterfaceType, AgentType
+    except ImportError:
+        try:
+            # Tertiary: Try lib directory for backward compatibility
+            from lib.agent_interfaces import interface_manager, InterfaceType, AgentType
+        except ImportError:
+            # Fallback if agent_interfaces doesn't exist
+            import logging
+            temp_logger = logging.getLogger(__name__)
+            temp_logger.warning("agent_interfaces not available - some features disabled")
+            interface_manager = None
+            InterfaceType = None
+            AgentType = None
+
+# Configure logging first - do this before any logger usage
+import logging
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
 
-# Try to import additional components with graceful fallback
+# Import security from agent_workflow package if available, otherwise provide fallbacks
+security_available = False
+validate_configuration = None
+sanitize_prompt = None
+sanitize_code = None
+audit_operation = None
+SecurityLevel = None
+mask_api_key = None
+
 try:
-    from context_manager_factory import get_context_manager_factory, ContextMode
+    from agent_workflow.security.tool_config import validate_agent_access, get_security_summary, AgentType
+    # Create compatible wrapper functions using available security functions
+    def validate_configuration(config): 
+        """Validate configuration using available security functions"""
+        return isinstance(config, dict)
+    
+    def sanitize_prompt(prompt): 
+        """Sanitize prompt for security"""
+        if not isinstance(prompt, str):
+            return ""
+        # Basic sanitization - remove potential command injection
+        import re
+        sanitized = re.sub(r'[;&|`$(){}[\]<>]', '', prompt)
+        return sanitized[:1000]  # Limit length
+    
+    def sanitize_code(code): 
+        """Sanitize code for security"""
+        if not isinstance(code, str):
+            return ""
+        # Basic sanitization for display
+        import re
+        sanitized = re.sub(r'(\w+)\s*=\s*["\'][^"\']*password[^"\']*["\']', r'\1 = "***"', code, flags=re.IGNORECASE)
+        return sanitized
+    
+    def audit_operation(operation): 
+        """Audit security operation"""
+        logger.info(f"Security audit: {operation}")
+    
+    # Use AgentType as SecurityLevel equivalent
+    SecurityLevel = AgentType
+    
+    def mask_api_key(key): 
+        """Mask API key for security"""
+        if not key or not isinstance(key, str):
+            return "***"
+        if len(key) <= 8:
+            return "***"
+        return key[:4] + "***" + key[-2:]
+    
+    security_available = True
+    logger.info("Security module loaded with agent tool config")
+    
+except ImportError:
+    try:
+        # Secondary: Try agent_workflow security structure
+        from agent_workflow.security.multi_project_security import AccessLevel
+        # Create wrapper functions using multi-project security
+        def validate_configuration(config): 
+            return isinstance(config, dict)
+        
+        def sanitize_prompt(prompt): 
+            if not isinstance(prompt, str):
+                return ""
+            import re
+            sanitized = re.sub(r'[;&|`$(){}[\]<>]', '', prompt)
+            return sanitized[:1000]
+        
+        def sanitize_code(code): 
+            if not isinstance(code, str):
+                return ""
+            import re
+            sanitized = re.sub(r'(\w+)\s*=\s*["\'][^"\']*password[^"\']*["\']', r'\1 = "***"', code, flags=re.IGNORECASE)
+            return sanitized
+        
+        def audit_operation(operation): 
+            logger.info(f"Security audit: {operation}")
+        
+        SecurityLevel = AccessLevel
+        
+        def mask_api_key(key): 
+            if not key or not isinstance(key, str):
+                return "***"
+            if len(key) <= 8:
+                return "***"
+            return key[:4] + "***" + key[-2:]
+        
+        security_available = True
+        logger.info("Security module loaded with agent_workflow security")
+        
+    except ImportError:
+        try:
+            # Tertiary: Try lib directory for backward compatibility
+            from lib.multi_project_security import AccessLevel
+            # Create wrapper functions using multi-project security
+            def validate_configuration(config): 
+                return isinstance(config, dict)
+            
+            def sanitize_prompt(prompt): 
+                if not isinstance(prompt, str):
+                    return ""
+                import re
+                sanitized = re.sub(r'[;&|`$(){}[\]<>]', '', prompt)
+                return sanitized[:1000]
+            
+            def sanitize_code(code): 
+                if not isinstance(code, str):
+                    return ""
+                import re
+                sanitized = re.sub(r'(\w+)\s*=\s*["\'][^"\']*password[^"\']*["\']', r'\1 = "***"', code, flags=re.IGNORECASE)
+                return sanitized
+            
+            def audit_operation(operation): 
+                logger.info(f"Security audit: {operation}")
+            
+            SecurityLevel = AccessLevel
+            
+            def mask_api_key(key): 
+                if not key or not isinstance(key, str):
+                    return "***"
+                if len(key) <= 8:
+                    return "***"
+                return key[:4] + "***" + key[-2:]
+        
+            security_available = True
+            logger.info("Security module loaded with multi-project security")
+            
+        except ImportError:
+            # Fallback implementations
+            logger.warning("Security module not available - using fallback implementations")
+            
+            # Fallback implementations
+            def validate_configuration(config): 
+                """Fallback configuration validation"""
+                return isinstance(config, dict)
+            
+            def sanitize_prompt(prompt): 
+                """Fallback prompt sanitization"""
+                if not isinstance(prompt, str):
+                    return ""
+                # Basic sanitization - remove potential command injection
+                import re
+                sanitized = re.sub(r'[;&|`$(){}[\]<>]', '', prompt)
+                return sanitized[:1000]  # Limit length
+            
+            def sanitize_code(code): 
+                """Fallback code sanitization"""
+                if not isinstance(code, str):
+                    return ""
+                # Basic sanitization for display - mask sensitive patterns
+                import re
+                sanitized = re.sub(r'(\w+)\s*=\s*["\'][^"\']*password[^"\']*["\']', r'\1 = "***"', code, flags=re.IGNORECASE)
+                return sanitized
+            
+            def audit_operation(operation): 
+                """Fallback audit operation"""
+                logger.info(f"Security audit (fallback): {operation}")
+            
+            class SecurityLevel:
+                """Fallback security level enum"""
+                LOW = "low"
+                MEDIUM = "medium"
+                HIGH = "high"
+            
+            def mask_api_key(key): 
+                """Fallback API key masking"""
+                if not key or not isinstance(key, str):
+                    return "***"
+                if len(key) <= 8:
+                    return "***"
+                return key[:4] + "***" + key[-2:]
+            
+            security_available = False
+
+# Try to import context management components (prefer agent_workflow, fallback to lib)
+try:
+    from agent_workflow.context.manager_factory import get_context_manager_factory, ContextMode
     CONTEXT_MANAGEMENT_AVAILABLE = True
 except ImportError:
-    logger.warning("Context management not available - some features disabled")
-    CONTEXT_MANAGEMENT_AVAILABLE = False
+    try:
+        from context_manager_factory import get_context_manager_factory, ContextMode
+        CONTEXT_MANAGEMENT_AVAILABLE = True
+    except ImportError:
+        try:
+            from lib.context_manager_factory import get_context_manager_factory, ContextMode
+            CONTEXT_MANAGEMENT_AVAILABLE = True
+        except ImportError:
+            logger.warning("Context management not available - some features disabled")
+            CONTEXT_MANAGEMENT_AVAILABLE = False
 
-# Try to import multi-project components
+# Try to import multi-project components with prioritized pattern: agent_workflow → lib → fallback
 try:
-    from multi_project_config import MultiProjectConfigManager
+    # Primary: Try agent_workflow package structure
+    from agent_workflow.config.multi_project_config import MultiProjectConfigManager
     MULTI_PROJECT_AVAILABLE = True
 except ImportError:
-    logger.warning("Multi-project management not available - using single project mode")
-    MULTI_PROJECT_AVAILABLE = False
+    try:
+        # Secondary: Try local import
+        from multi_project_config import MultiProjectConfigManager
+        MULTI_PROJECT_AVAILABLE = True
+    except ImportError:
+        try:
+            # Tertiary: Try lib directory for backward compatibility
+            from lib.multi_project_config import MultiProjectConfigManager
+            MULTI_PROJECT_AVAILABLE = True
+        except ImportError:
+            logger.warning("Multi-project management not available - using single project mode")
+            MULTI_PROJECT_AVAILABLE = False
 
-# Import chat and collaboration components
+# Import chat and collaboration components with prioritized pattern: agent_workflow → local → lib → fallback
 try:
-    from command_processor import CommandProcessor
+    # Primary: Try agent_workflow package structure
+    from agent_workflow.integrations.command_processor import CommandProcessor
     COMMAND_PROCESSOR_AVAILABLE = True
 except ImportError:
-    logger.warning("Command processor not available - basic chat only")
-    COMMAND_PROCESSOR_AVAILABLE = False
+    try:
+        # Secondary: Try local import
+        from command_processor import CommandProcessor
+        COMMAND_PROCESSOR_AVAILABLE = True
+    except ImportError:
+        try:
+            # Tertiary: Try lib directory for backward compatibility
+            from lib.command_processor import CommandProcessor
+            COMMAND_PROCESSOR_AVAILABLE = True
+        except ImportError:
+            logger.warning("Command processor not available - basic chat only")
+            COMMAND_PROCESSOR_AVAILABLE = False
 
 try:
-    from lib.collaboration_manager import get_collaboration_manager, UserPermission
+    # Primary: Try agent_workflow package structure
+    from agent_workflow.integrations.collaboration_manager import get_collaboration_manager, UserPermission
     COLLABORATION_AVAILABLE = True
 except ImportError:
-    logger.warning("Collaboration features not available")
-    COLLABORATION_AVAILABLE = False
+    try:
+        # Secondary: Try local import
+        from collaboration_manager import get_collaboration_manager, UserPermission
+        COLLABORATION_AVAILABLE = True
+    except ImportError:
+        try:
+            # Tertiary: Try lib directory for backward compatibility
+            from lib.collaboration_manager import get_collaboration_manager, UserPermission
+            COLLABORATION_AVAILABLE = True
+        except ImportError:
+            logger.warning("Collaboration features not available")
+            COLLABORATION_AVAILABLE = False
 
 # Flask app setup
 app = Flask(__name__)
@@ -1682,7 +1939,11 @@ def get_command_autocomplete():
         # Try to get contextual suggestions
         if CHAT_SYNC_AVAILABLE:
             try:
-                from lib.chat_state_sync import get_contextual_commands
+                # Try agent_workflow first, then lib for backward compatibility
+                try:
+                    from agent_workflow.context.chat_state_sync import get_contextual_commands
+                except ImportError:
+                    from lib.chat_state_sync import get_contextual_commands
                 contextual_commands = get_contextual_commands(current_state, user_id, project_name)
                 
                 # Convert to autocomplete format

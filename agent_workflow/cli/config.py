@@ -108,7 +108,7 @@ def generate(template: str, output: Optional[str], output_format: str):
                 output = ".env.template"
                 output_format = "env"
             elif template.startswith('orch-'):
-                output = f"orch-config.{output_format}"
+                output = f"config.{output_format}"
             else:
                 output = f"{template}-config.{output_format}"
         
@@ -211,7 +211,7 @@ def list_files(all: bool):
     
     # Common configuration files
     config_files = [
-        ("orch-config.yaml", "Multi-project orchestration configuration"),
+        ("config.yml", "Unified orchestration and project configuration"),
         (".dependency-config.yaml", "Dependency tracking configuration"),
         ("context_config.yaml", "Context management configuration"),
         ("logging.yaml", "Logging configuration")

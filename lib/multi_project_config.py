@@ -146,7 +146,7 @@ class MultiProjectConfigManager:
     and provides a unified interface for multi-project management.
     """
     
-    def __init__(self, config_path: str = "orch-config.yaml"):
+    def __init__(self, config_path: str = "config.yml"):
         """
         Initialize multi-project configuration manager.
         

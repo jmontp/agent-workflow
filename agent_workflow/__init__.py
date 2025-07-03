@@ -15,8 +15,20 @@ try:
     from .core.orchestrator import Orchestrator
     from .core.state_machine import StateMachine, State
     from .core.project_storage import ProjectStorage
-    from .core.data_models import ProjectData, Epic, Story, Sprint
+    from .core.models import ProjectData, Epic, Story, Sprint
+    
+    # Import integration components
+    from .integrations.discord.client import DiscordClient
+    from .integrations.claude.client import ClaudeClient, create_agent_client
+    
+    # Import agents
+    from .agents import CodeAgent, DesignAgent, QAAgent, DataAgent, MockAgent
+    
+    # Import security components
+    from .security.tool_config import AgentType
+    
     __all__ = [
+        # Core components
         "Orchestrator",
         "StateMachine", 
         "State",
@@ -25,6 +37,18 @@ try:
         "Epic",
         "Story", 
         "Sprint",
+        # Integrations
+        "DiscordClient",
+        "ClaudeClient",
+        "create_agent_client",
+        # Agents
+        "CodeAgent",
+        "DesignAgent", 
+        "QAAgent",
+        "DataAgent",
+        "MockAgent",
+        # Security
+        "AgentType",
     ]
 except ImportError as e:
     # Graceful degradation if core components aren't available yet

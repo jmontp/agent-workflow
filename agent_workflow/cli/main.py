@@ -35,6 +35,7 @@ try:
     from agent_workflow.cli.migrate import migrate_command
     from agent_workflow.cli.web import web_command, web_stop_command, web_status_command
     from agent_workflow.cli.config import config
+    from agent_workflow.cli.dev import dev
 except ImportError as e:
     # Graceful fallback if command modules aren't implemented yet
     init_command = None
@@ -53,6 +54,7 @@ except ImportError as e:
     web_stop_command = None
     web_status_command = None
     config = None
+    dev = None
 
 
 @click.group(name="agent-orch", invoke_without_command=True)
@@ -93,6 +95,10 @@ def cli(ctx, version, verbose, config_dir, no_banner):
       health             System health check and diagnostics
       migrate            Migrate from git-clone installation
       web                Start web visualization interface
+    
+    \b
+    Development Commands:
+      dev                Development and utility commands
     
     Visit https://agent-workflow.readthedocs.io for comprehensive documentation.
     """
@@ -445,6 +451,10 @@ def web_status(ctx, verbose, output_json):
 # Add configuration command group if available
 if config:
     cli.add_command(config)
+
+# Add development command group if available
+if dev:
+    cli.add_command(dev)
 
 
 # ============================================================================

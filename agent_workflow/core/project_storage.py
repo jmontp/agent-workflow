@@ -14,7 +14,7 @@ from typing import Dict, Any, List, Optional
 from datetime import datetime
 import logging
 
-from .data_models import ProjectData, Epic, Story, Sprint
+from .models import ProjectData, Epic, Story, Sprint
 
 logger = logging.getLogger(__name__)
 
@@ -222,7 +222,7 @@ class ProjectStorage:
             return False
         
         story = project_data.stories[story_id]
-        from .data_models import StoryStatus
+        from .models import StoryStatus
         
         try:
             story.status = StoryStatus(status)

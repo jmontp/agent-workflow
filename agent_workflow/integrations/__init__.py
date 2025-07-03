@@ -8,4 +8,14 @@ This module provides integrations with:
 - Other external APIs and services
 """
 
-__all__ = []
+try:
+    from .discord.client import DiscordClient
+    from .claude.client import ClaudeClient, create_agent_client
+    
+    __all__ = [
+        "DiscordClient",
+        "ClaudeClient", 
+        "create_agent_client",
+    ]
+except ImportError:
+    __all__ = []

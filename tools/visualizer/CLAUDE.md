@@ -19,6 +19,19 @@ The visualizer is a Flask/SocketIO web application that provides:
 - Command processor for handling Discord-style commands
 - Mock orchestrator support for standalone testing
 
+### Import Structure (Updated)
+The visualizer now uses a prioritized import pattern following the new `agent_workflow` package structure:
+
+**Pattern**: `agent_workflow` → `local/lib` → `fallback`
+
+**Key Imports**:
+- `agent_workflow.core.state_broadcaster` → `lib.state_broadcaster` → mock
+- `agent_workflow.security.tool_config` → `lib.multi_project_security` → fallback
+- `agent_workflow.context.manager_factory` → `lib.context_manager_factory` → fallback
+- `agent_workflow.integrations.*` → `local modules` → `lib.*` → fallback
+
+This ensures compatibility with both the new unified package structure and legacy lib-based installations.
+
 ### Frontend Components
 - `static/js/discord-chat.js` - Main Discord chat implementation
 - `static/js/chat-components.js` - Reusable chat UI components
