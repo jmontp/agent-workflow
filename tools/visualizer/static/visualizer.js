@@ -2547,3 +2547,53 @@ document.addEventListener('DOMContentLoaded', function() {
         console.warn('Chat panel element not found');
     }
 });
+
+/**
+ * Emergency Layout Fix Function
+ * Fixes common layout issues by forcing visualizer mode and refreshing elements
+ */
+window.emergencyLayoutFix = function() {
+    console.log('🚨 Emergency layout fix triggered');
+    
+    try {
+        // Force visualizer layout class
+        document.body.classList.add('force-visualizer-layout');
+        
+        // Reset chat panel state
+        const chatPanel = document.getElementById('chat-panel');
+        if (chatPanel) {
+            chatPanel.classList.remove('hidden');
+            chatPanel.classList.add('show', 'open');
+        }
+        
+        // Reset main content area
+        const mainContent = document.getElementById('main-content');
+        if (mainContent) {
+            mainContent.style.display = '';
+            mainContent.classList.remove('hidden');
+        }
+        
+        // Force refresh of Mermaid diagrams
+        if (typeof mermaid !== 'undefined') {
+            mermaid.init();
+        }
+        
+        // Reset any collapsed sections
+        const collapsedElements = document.querySelectorAll('.collapsed');
+        collapsedElements.forEach(el => el.classList.remove('collapsed'));
+        
+        // Trigger resize events to fix responsive layouts
+        window.dispatchEvent(new Event('resize'));
+        
+        // Show success message
+        if (window.visualizer && window.visualizer.showMessage) {
+            window.visualizer.showMessage('Layout fixed successfully!', 'success');
+        } else {
+            console.log('✅ Layout fix completed');
+        }
+        
+    } catch (error) {
+        console.error('Failed to fix layout:', error);
+        alert('Layout fix failed. Please refresh the page.');
+    }
+};

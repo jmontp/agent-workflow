@@ -20,13 +20,45 @@ import websockets
 from websockets.server import WebSocketServerProtocol
 from uuid import uuid4
 
-# Import state types
+# Import state types - try new architecture first, fallback to legacy
 try:
-    from .state_machine import State
-    from .tdd_models import TDDState
+    from agent_workflow.core.state_machine import State
+    try:
+        from agent_workflow.core.models import TDDState
+    except ImportError:
+        # Fallback to a simple enum if TDDState not available
+        from enum import Enum
+        class TDDState(Enum):
+            DESIGN = "design"
+            TEST = "test" 
+            CODE = "code"
+            REFACTOR = "refactor"
+            COMMIT = "commit"
 except ImportError:
-    from state_machine import State
-    from tdd_models import TDDState
+    try:
+        from .state_machine import State
+        from .tdd_models import TDDState
+    except ImportError:
+        try:
+            from state_machine import State
+            from tdd_models import TDDState
+        except ImportError:
+            # Final fallback - create simple enums
+            from enum import Enum
+            class State(Enum):
+                IDLE = "IDLE"
+                BACKLOG_READY = "BACKLOG_READY"
+                SPRINT_PLANNED = "SPRINT_PLANNED"
+                SPRINT_ACTIVE = "SPRINT_ACTIVE"
+                SPRINT_PAUSED = "SPRINT_PAUSED"
+                SPRINT_REVIEW = "SPRINT_REVIEW"
+            
+            class TDDState(Enum):
+                DESIGN = "design"
+                TEST = "test"
+                CODE = "code" 
+                REFACTOR = "refactor"
+                COMMIT = "commit"
 
 logger = logging.getLogger(__name__)
 

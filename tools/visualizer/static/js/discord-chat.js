@@ -6,6 +6,9 @@
  * Now uses unified WebSocket Manager and DOM utilities.
  */
 
+// Alias for DOM utilities - must be available before class definition
+const $ = (selector) => DOMUtils.$(selector);
+
 class DiscordChat {
     constructor(socketIO, visualizer) {
         // Use global WebSocket manager if available, fallback to provided socket
@@ -205,6 +208,9 @@ class DiscordChat {
             }
         });
         resizeObserver.observe(chatMessages);
+        
+        // DOM State Synchronization - Prevents button/input desynchronization
+        this.setupStateSynchronization(messageInput, sendButton);
         
         // Panel resizing
         this.initializePanelResizing();
@@ -1561,6 +1567,77 @@ class DiscordChat {
             return project ? project.name : this.projectName;
         }
         return this.projectName;
+    }
+    
+    /**
+     * Setup DOM state synchronization to prevent button/input desynchronization
+     * Uses mutation observer to ensure send button state stays synchronized with input content
+     */
+    setupStateSynchronization(messageInput, sendButton) {
+        if (!messageInput || !sendButton) {
+            console.warn('⚠️ Cannot setup state synchronization: missing elements');
+            return;
+        }
+        
+        console.log('🔧 Setting up DOM state synchronization...');
+        
+        // Create mutation observer to watch for state changes
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'disabled') {
+                    const hasContent = messageInput.value.trim().length > 0;
+                    const isDisabled = sendButton.disabled;
+                    
+                    // Fix desynchronization: button should be enabled when there's content
+                    if (hasContent && isDisabled) {
+                        sendButton.disabled = false;
+                        console.log('🔧 Fixed desynchronized send button state (enabled)');
+                    }
+                    // Fix desynchronization: button should be disabled when there's no content
+                    else if (!hasContent && !isDisabled) {
+                        sendButton.disabled = true;
+                        console.log('🔧 Fixed desynchronized send button state (disabled)');
+                    }
+                }
+            });
+        });
+        
+        // Observe send button for attribute changes (disabled state)
+        observer.observe(sendButton, { 
+            attributes: true, 
+            attributeFilter: ['disabled'] 
+        });
+        
+        // Also observe input changes with a secondary check
+        const inputObserver = new MutationObserver(() => {
+            // Secondary state validation
+            const hasContent = messageInput.value.trim().length > 0;
+            const shouldBeEnabled = hasContent;
+            const isEnabled = !sendButton.disabled;
+            
+            if (shouldBeEnabled !== isEnabled) {
+                sendButton.disabled = !shouldBeEnabled;
+                console.log(`🔧 State sync correction: content=${hasContent}, enabled=${shouldBeEnabled}`);
+            }
+        });
+        
+        // Observe input value changes
+        inputObserver.observe(messageInput, { 
+            attributes: true, 
+            childList: true, 
+            characterData: true,
+            subtree: true
+        });
+        
+        // Store observers for cleanup if needed
+        this.stateObservers = [observer, inputObserver];
+        
+        // Initial state check
+        const hasContent = messageInput.value.trim().length > 0;
+        sendButton.disabled = !hasContent;
+        
+        console.log('✅ DOM state synchronization setup complete');
+        console.log(`Initial state: input="${messageInput.value}", hasContent=${hasContent}, buttonDisabled=${sendButton.disabled}`);
     }
 }
 

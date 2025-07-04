@@ -249,6 +249,10 @@ class Orchestrator:
             format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
         )
         
+        # Initialize state broadcaster
+        self.state_broadcaster = None
+        self._broadcaster_task = None
+        
         # Load configuration and initialize
         self._load_configuration()
         self._initialize_agents()
@@ -412,6 +416,42 @@ class Orchestrator:
         except Exception as e:
             logger.error(f"Failed to save state for {project.name}: {e}")
     
+    async def run(self, projects: Optional[List[Dict[str, Any]]] = None, mode: Optional[str] = None, 
+                  start_broadcaster: bool = True, broadcaster_port: int = 8080) -> None:
+        """
+        Run the orchestrator with state broadcaster integration.
+        
+        This is the main entry point that starts both the orchestrator and state broadcaster
+        for real-time updates to the web interface.
+        
+        Args:
+            projects: Optional list of project configurations
+            mode: Optional mode override
+            start_broadcaster: Whether to start the state broadcaster WebSocket server
+            broadcaster_port: Port for the state broadcaster WebSocket server
+        """
+        logger.info(f"Running orchestrator with state broadcaster on port {broadcaster_port}")
+        
+        try:
+            # Start state broadcaster first
+            if start_broadcaster:
+                await self._start_state_broadcaster(broadcaster_port)
+            
+            # Start orchestrator
+            await self.start(projects, mode)
+            
+            # Keep running until stopped
+            while self.running:
+                await asyncio.sleep(1)
+                
+        except KeyboardInterrupt:
+            logger.info("Received interrupt signal, shutting down...")
+        except Exception as e:
+            logger.error(f"Error in orchestrator run loop: {e}")
+            raise
+        finally:
+            await self.stop()
+    
     async def start(self, projects: Optional[List[Dict[str, Any]]] = None, mode: Optional[str] = None) -> None:
         """
         Start the orchestrator with specified projects.
@@ -467,6 +507,9 @@ class Orchestrator:
         logger.info("Stopping orchestrator...")
         
         try:
+            # Stop state broadcaster first
+            await self._stop_state_broadcaster()
+            
             if self.mode == "multi":
                 # Stop all project orchestrators
                 await self._stop_all_projects()
@@ -626,8 +669,14 @@ class Orchestrator:
             
             # Transition state if command was successful
             if result["success"] and validation_result.new_state:
-                # Use the transition method with broadcasting
+                # Broadcast state transition if broadcaster is available
+                old_state = project.state_machine.current_state
                 project.state_machine.transition(command, project_name)
+                new_state = project.state_machine.current_state
+                
+                # Broadcast the transition
+                await self._broadcast_state_transition(old_state, new_state, project_name)
+                
                 self._save_project_state(project)
             
             return result
@@ -1549,13 +1598,96 @@ class Orchestrator:
             Dict containing execution results
         """
         return await self.handle_command(command, project_name, **kwargs)
+    
+    # State broadcaster integration methods
+    
+    async def _start_state_broadcaster(self, port: int = 8080) -> None:
+        """Start the state broadcaster WebSocket server."""
+        try:
+            # Import the state broadcaster - try multiple import strategies
+            import sys
+            from pathlib import Path
+            
+            # Add lib to path for state broadcaster import
+            lib_path = Path(__file__).parent.parent.parent / "lib"
+            if str(lib_path) not in sys.path:
+                sys.path.insert(0, str(lib_path))
+            
+            # Try different import paths
+            StatebroadCaster = None
+            try:
+                from lib.state_broadcaster import StatebroadCaster
+            except ImportError:
+                try:
+                    import state_broadcaster
+                    StatebroadCaster = state_broadcaster.StatebroadCaster
+                except ImportError:
+                    # Try relative import from current directory
+                    import importlib.util
+                    spec = importlib.util.spec_from_file_location("state_broadcaster", lib_path / "state_broadcaster.py")
+                    if spec and spec.loader:
+                        module = importlib.util.module_from_spec(spec)
+                        spec.loader.exec_module(module)
+                        StatebroadCaster = module.StatebroadCaster
+            
+            if not StatebroadCaster:
+                raise ImportError("Could not import StatebroadCaster from any location")
+            
+            # Initialize broadcaster instance
+            self.state_broadcaster = StatebroadCaster()
+            
+            # Start the WebSocket server
+            await self.state_broadcaster.start_server(port)
+            logger.info(f"State broadcaster WebSocket server started on port {port}")
+            
+        except ImportError as e:
+            logger.warning(f"State broadcaster not available: {e}")
+            self.state_broadcaster = None
+        except Exception as e:
+            logger.error(f"Failed to start state broadcaster: {e}")
+            self.state_broadcaster = None
+    
+    async def _stop_state_broadcaster(self) -> None:
+        """Stop the state broadcaster WebSocket server."""
+        if self.state_broadcaster:
+            try:
+                await self.state_broadcaster.stop_server()
+                logger.info("State broadcaster stopped")
+            except Exception as e:
+                logger.error(f"Error stopping state broadcaster: {e}")
+            finally:
+                self.state_broadcaster = None
+    
+    async def _broadcast_state_transition(self, old_state, new_state, project_name: str = "default") -> None:
+        """Broadcast state transition to connected clients."""
+        if self.state_broadcaster:
+            try:
+                self.state_broadcaster.emit_workflow_transition(old_state, new_state, project_name)
+            except Exception as e:
+                logger.error(f"Error broadcasting state transition: {e}")
+    
+    async def _broadcast_tdd_transition(self, story_id: str, old_state, new_state, project_name: str = "default", cycle_id: str = None) -> None:
+        """Broadcast TDD state transition to connected clients."""
+        if self.state_broadcaster:
+            try:
+                self.state_broadcaster.emit_tdd_transition(story_id, old_state, new_state, project_name, cycle_id)
+            except Exception as e:
+                logger.error(f"Error broadcasting TDD transition: {e}")
+    
+    async def _broadcast_agent_activity(self, agent_type: str, story_id: str, action: str, status: str, project_name: str = "default") -> None:
+        """Broadcast agent activity to connected clients."""
+        if self.state_broadcaster:
+            try:
+                self.state_broadcaster.emit_agent_activity(agent_type, story_id, action, status, project_name)
+            except Exception as e:
+                logger.error(f"Error broadcasting agent activity: {e}")
 
 
 async def main():
     """Main entry point"""
     orchestrator = Orchestrator()
     
-    # Run orchestrator
+    # Run orchestrator with state broadcaster
     try:
         await orchestrator.run()
     except KeyboardInterrupt:

@@ -36,7 +36,7 @@ async def main():
     }]
     
     try:
-        await orchestrator.start(test_projects)
+        await orchestrator.run(test_projects)
     except KeyboardInterrupt:
         logger.info("Shutting down orchestrator...")
         await orchestrator.stop()

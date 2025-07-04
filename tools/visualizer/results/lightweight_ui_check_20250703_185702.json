@@ -1,0 +1,180 @@
+{
+  "timestamp": "2025-07-03T18:56:58.442598",
+  "tests": {
+    "html_structure": {
+      "test_name": "html_structure",
+      "status": "FAIL",
+      "errors": [
+        "Chat send button is disabled in HTML"
+      ],
+      "details": {
+        "javascript_includes": [
+          "/static/emergency-layout-preload.js",
+          "/static/final-layout-enforcer.js",
+          "https://cdn.socket.io/4.7.2/socket.io.min.js",
+          "https://cdn.jsdelivr.net/npm/mermaid@10.4.0/dist/mermaid.min.js",
+          "/static/js/accessibility-enhancements.js",
+          "/static/force-visualizer-mode.js",
+          "/static/js/websocket-manager.js",
+          "/static/js/chat-components.js",
+          "/static/js/discord-chat.js",
+          "/static/js/project-manager.js",
+          "/static/js/project-management.js",
+          "/static/js/mobile-enhancements.js",
+          "/static/js/ui-enhancements.js",
+          "/static/visualizer.js",
+          "/static/js/chat-init-failsafe.js"
+        ],
+        "css_includes": [
+          "/static/css/variables.css",
+          "/static/style.css",
+          "/static/css/discord-chat.css",
+          "/static/css/chat-inline.css",
+          "/static/emergency-modal-fix.css",
+          "/static/layout-fix.css",
+          "/static/nuclear-layout-fix.css",
+          "/static/css/conflict-resolver.css",
+          "/static/css/chat-inline.css"
+        ],
+        "send_button_disabled": true,
+        "html_size": 48746
+      },
+      "timestamp": "2025-07-03T18:57:02.484365"
+    },
+    "static_resources": {
+      "test_name": "static_resources",
+      "status": "FAIL",
+      "errors": [
+        "Failed to load 4 resources"
+      ],
+      "details": {
+        "javascript_files": [
+          "/static/emergency-layout-preload.js",
+          "/static/final-layout-enforcer.js",
+          "https://cdn.socket.io/4.7.2/socket.io.min.js",
+          "https://cdn.jsdelivr.net/npm/mermaid@10.4.0/dist/mermaid.min.js",
+          "/static/js/accessibility-enhancements.js",
+          "/static/force-visualizer-mode.js",
+          "/static/js/websocket-manager.js",
+          "/static/js/chat-components.js",
+          "/static/js/discord-chat.js",
+          "/static/js/project-manager.js",
+          "/static/js/project-management.js",
+          "/static/js/mobile-enhancements.js",
+          "/static/js/ui-enhancements.js",
+          "/static/visualizer.js",
+          "/static/js/chat-init-failsafe.js"
+        ],
+        "css_files": [
+          "/static/css/variables.css",
+          "/static/style.css",
+          "/static/css/discord-chat.css",
+          "/static/css/chat-inline.css",
+          "/static/emergency-modal-fix.css",
+          "/static/layout-fix.css",
+          "/static/nuclear-layout-fix.css",
+          "/static/css/conflict-resolver.css",
+          "/static/css/chat-inline.css"
+        ],
+        "failed_resources": [
+          {
+            "url": "http://localhost:5000/static/emergency-layout-preload.js",
+            "status": 404,
+            "type": "javascript"
+          },
+          {
+            "url": "http://localhost:5000/static/final-layout-enforcer.js",
+            "status": 404,
+            "type": "javascript"
+          },
+          {
+            "url": "http://localhost:5000/static/force-visualizer-mode.js",
+            "status": 404,
+            "type": "javascript"
+          },
+          {
+            "url": "http://localhost:5000/static/js/project-management.js",
+            "status": 404,
+            "type": "javascript"
+          }
+        ]
+      },
+      "timestamp": "2025-07-03T18:57:02.493126"
+    },
+    "api_endpoints": {
+      "test_name": "api_endpoints",
+      "status": "FAIL",
+      "errors": [
+        "Critical endpoint /api/status failed"
+      ],
+      "details": {
+        "endpoints": {
+          "/api/status": {
+            "status_code": 404,
+            "response_time": 0.000798,
+            "content_length": 207
+          },
+          "/api/interfaces": {
+            "status_code": 200,
+            "response_time": 0.000766,
+            "content_length": 440,
+            "json_valid": true,
+            "json_keys": [
+              "active_interface",
+              "interfaces"
+            ]
+          },
+          "/api/projects": {
+            "status_code": 200,
+            "response_time": 0.000683,
+            "content_length": 78,
+            "json_valid": true,
+            "json_keys": [
+              "active_count",
+              "multi_project_enabled",
+              "projects",
+              "total_count"
+            ]
+          },
+          "/health": {
+            "status_code": 200,
+            "response_time": 0.000782,
+            "content_length": 106,
+            "json_valid": true,
+            "json_keys": [
+              "active_tdd_cycles",
+              "connected_clients",
+              "status",
+              "timestamp"
+            ]
+          }
+        }
+      },
+      "timestamp": "2025-07-03T18:57:02.819634"
+    }
+  },
+  "server_info": {
+    "status_code": 200,
+    "headers": {
+      "Server": "Werkzeug/3.0.1 Python/3.12.3",
+      "Date": "Thu, 03 Jul 2025 22:57:00 GMT",
+      "Content-Type": "text/html; charset=utf-8",
+      "Content-Length": "48885",
+      "Connection": "close"
+    },
+    "response_time": 0.028594
+  },
+  "summary": {
+    "total_tests": 3,
+    "passed_tests": 0,
+    "failed_tests": 3,
+    "error_tests": 0,
+    "failed_test_names": [
+      "html_structure",
+      "static_resources",
+      "api_endpoints"
+    ],
+    "error_test_names": [],
+    "overall_status": "FAIL"
+  }
+}

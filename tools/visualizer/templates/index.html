@@ -58,12 +58,73 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TDD State Visualizer</title>
-    <!-- EMERGENCY LAYOUT PRELOAD - MUST BE FIRST -->
-    <script src="{{ url_for('static', filename='emergency-layout-preload.js') }}"></script>
-    <!-- FINAL LAYOUT ENFORCER - NUCLEAR OPTION -->
-    <script src="{{ url_for('static', filename='final-layout-enforcer.js') }}"></script>
+    <!-- REMOVED: emergency-layout-preload.js and final-layout-enforcer.js - files do not exist and cause 404 errors -->
+    <!-- Layout management now handled by existing CSS files and proper script loading order -->
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mermaid@10.4.0/dist/mermaid.min.js"></script>
+    
+    <!-- Dependency Loading Manager - Prevents race conditions -->
+    <script>
+        window.dependencyLoader = {
+            dependencies: ['io', 'mermaid'],
+            localDependencies: ['WebSocketManager', 'ChatComponents', 'DiscordChat'],
+            loaded: [],
+            localLoaded: [],
+            
+            checkCDNDependencies: function() {
+                const allCDNLoaded = this.dependencies.every(dep => window[dep]);
+                if (allCDNLoaded && this.loaded.length === 0) {
+                    this.loaded = [...this.dependencies];
+                    console.log('✅ CDN dependencies loaded:', this.loaded);
+                    // CDN dependencies ready, local scripts can now load safely
+                }
+                return allCDNLoaded;
+            },
+            
+            checkLocalDependencies: function() {
+                const allLocalLoaded = this.localDependencies.every(dep => window[dep]);
+                if (allLocalLoaded && this.localLoaded.length === 0) {
+                    this.localLoaded = [...this.localDependencies];
+                    console.log('✅ Local dependencies loaded:', this.localLoaded);
+                    this.initializeApp();
+                }
+                return allLocalLoaded;
+            },
+            
+            initializeApp: function() {
+                if (!window.wsManager && window.WebSocketManager) {
+                    window.wsManager = new WebSocketManager();
+                    console.log('✅ WebSocket Manager initialized');
+                }
+                
+                if (!window.discordChat && window.DiscordChat && window.visualizer) {
+                    window.discordChat = new DiscordChat(window.wsManager, window.visualizer);
+                    console.log('✅ Discord Chat initialized');
+                }
+                
+                // Remove any loading indicators
+                document.body.classList.remove('loading-dependencies');
+                document.body.classList.add('app-ready');
+                
+                console.log('🎉 All dependencies loaded and app initialized successfully');
+            },
+            
+            onError: function(scriptSrc) {
+                console.error('❌ Failed to load script:', scriptSrc);
+                // Continue with partial functionality rather than breaking completely
+            }
+        };
+
+        // Check CDN dependencies every 100ms until ready
+        const cdnCheckInterval = setInterval(() => {
+            if (window.dependencyLoader.checkCDNDependencies()) {
+                clearInterval(cdnCheckInterval);
+            }
+        }, 100);
+        
+        // Set loading state
+        document.body.classList.add('loading-dependencies');
+    </script>
     <!-- CSS Variables - Load First -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
@@ -95,7 +156,7 @@
 </head>
 <body role="application" aria-label="TDD State Machine Visualizer Application" class="force-visualizer-layout">
     <!-- Emergency Layout Fix Button -->
-    <button id="emergency-reset-btn" class="emergency-reset" onclick="window.emergencyLayoutFix()" title="Emergency Layout Fix - Force Visualizer Mode">
+    <button id="emergency-reset-btn" class="emergency-reset" onclick="window.forceVisualizerLayout && window.forceVisualizerLayout()" title="Emergency Layout Fix - Force Visualizer Mode" style="display: none;">
         🚨 FIX LAYOUT
     </button>
     
@@ -633,19 +694,51 @@
     <!-- Load accessibility enhancements first for proper keyboard navigation -->
     <script src="{{ url_for('static', filename='js/accessibility-enhancements.js') }}"></script>
     <!-- Force visualizer mode (override interface management auto-loading) -->
-    <script src="{{ url_for('static', filename='force-visualizer-mode.js') }}"></script>
+    <!-- REMOVED: force-visualizer-mode.js - file does not exist and causes 404 error -->
     
+    <!-- Load WebSocket manager first for connection handling -->
+    <script src="{{ url_for('static', filename='js/websocket-manager.js') }}"></script>
     <!-- Load chat components before discord-chat.js to ensure ChatComponents is available -->
     <script src="{{ url_for('static', filename='js/chat-components.js') }}"></script>
     <script src="{{ url_for('static', filename='js/discord-chat.js') }}"></script>
     <script src="{{ url_for('static', filename='js/project-manager.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/project-management.js') }}"></script>
+    <!-- REMOVED: project-management.js - file does not exist, should be project-manager.js -->
     <script src="{{ url_for('static', filename='js/mobile-enhancements.js') }}"></script>
     <script src="{{ url_for('static', filename='js/ui-enhancements.js') }}"></script>
     <!-- Load visualizer.js last so it can integrate with all other components -->
     <script src="{{ url_for('static', filename='visualizer.js') }}"></script>
     <!-- Failsafe initialization to ensure chat works even with timing issues -->
     <script src="{{ url_for('static', filename='js/chat-init-failsafe.js') }}"></script>
+    
+    <!-- Local Dependency Checker - Called after all scripts load -->
+    <script>
+        // Check local dependencies after all scripts have loaded
+        function checkLocalDependenciesLoaded() {
+            // Check every 200ms for local dependencies to be available
+            const localCheckInterval = setInterval(() => {
+                if (window.dependencyLoader && window.dependencyLoader.checkLocalDependencies()) {
+                    clearInterval(localCheckInterval);
+                }
+            }, 200);
+            
+            // Timeout after 10 seconds to prevent infinite waiting
+            setTimeout(() => {
+                clearInterval(localCheckInterval);
+                if (!window.dependencyLoader.localLoaded.length) {
+                    console.warn('⚠️ Some local dependencies may not have loaded properly');
+                    // Initialize what we can
+                    window.dependencyLoader.initializeApp();
+                }
+            }, 10000);
+        }
+        
+        // Start checking once DOM and scripts are ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', checkLocalDependenciesLoaded);
+        } else {
+            checkLocalDependenciesLoaded();
+        }
+    </script>
     
     <!-- Initialize enhanced UI after all scripts load -->
     <script>

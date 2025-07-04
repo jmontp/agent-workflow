@@ -11,6 +11,7 @@ import yaml
 import json
 import signal
 import subprocess
+import asyncio
 from pathlib import Path
 from typing import Optional, Dict, Any, List
 from datetime import datetime
@@ -296,31 +297,44 @@ def _start_interactive(config_file: Path, projects: List[Dict], mode: Optional[s
         if not no_browser:
             print_info(f"Status page: http://localhost:{port}")
         
-        # Main orchestrator loop would go here
-        _run_orchestrator_loop(projects, discord, log_level)
+        # Main orchestrator loop - run asynchronously
+        asyncio.run(_run_orchestrator_loop(projects, discord, log_level))
         
     finally:
         # Cleanup on exit
         _cleanup_orchestrator_files(config_dir)
 
 
-def _run_orchestrator_loop(projects: List[Dict], discord: bool, log_level: str) -> None:
+async def _run_orchestrator_loop(projects: List[Dict], discord: bool, log_level: str) -> None:
     """Main orchestrator execution loop."""
-    # This is a simplified version - real implementation would be much more complex
+    # Import the orchestrator
     try:
-        while True:
-            # Monitor projects
-            for project in projects:
-                _check_project_status(project)
-            
-            # Process Discord commands if enabled
-            if discord:
-                _process_discord_commands()
-            
-            # Wait before next cycle
-            import time
-            time.sleep(5)
-            
+        from agent_workflow.core.orchestrator import Orchestrator
+        
+        # Create orchestrator instance
+        orchestrator = Orchestrator(mode="multi" if len(projects) > 1 else "single")
+        
+        # Run orchestrator with state broadcaster
+        await orchestrator.run(projects, start_broadcaster=True, broadcaster_port=8080)
+        
+    except ImportError:
+        # Fallback to simplified version if orchestrator not available
+        print_info("Using simplified orchestrator loop...")
+        try:
+            while True:
+                # Monitor projects
+                for project in projects:
+                    _check_project_status(project)
+                
+                # Process Discord commands if enabled
+                if discord:
+                    _process_discord_commands()
+                
+                # Wait before next cycle
+                await asyncio.sleep(5)
+                
+        except KeyboardInterrupt:
+            print_info("\nGracefully shutting down...")
     except KeyboardInterrupt:
         print_info("\nGracefully shutting down...")
 

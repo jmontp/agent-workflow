@@ -3288,7 +3288,26 @@ class StateMonitor:
         """Stop the state monitoring"""
         self.running = False
         if self.websocket_client:
-            asyncio.create_task(self.websocket_client.close())
+            # Check if there's a running event loop
+            try:
+                loop = asyncio.get_running_loop()
+                asyncio.create_task(self.websocket_client.close())
+            except RuntimeError:
+                # No running event loop, create a new one for cleanup
+                import threading
+                def cleanup_websocket():
+                    loop = asyncio.new_event_loop()
+                    asyncio.set_event_loop(loop)
+                    try:
+                        loop.run_until_complete(self.websocket_client.close())
+                    except Exception as e:
+                        logger.error(f"Error closing websocket: {e}")
+                    finally:
+                        loop.close()
+                
+                cleanup_thread = threading.Thread(target=cleanup_websocket, daemon=True)
+                cleanup_thread.start()
+                cleanup_thread.join(timeout=2.0)  # Give it 2 seconds to complete
 
 
 # Global state monitor
@@ -3298,6 +3317,21 @@ state_monitor = StateMonitor(socketio)
 def run_visualizer(host='localhost', port=5000, debug=False):
     """Run the visualizer web application"""
     logger.info(f"Starting State Visualizer on http://{host}:{port}")
+    
+    # Check if port is already in use
+    import socket
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.settimeout(1)
+    try:
+        result = sock.connect_ex((host, port))
+        if result == 0:
+            logger.error(f"Port {port} is already in use. Please stop the existing process or use a different port.")
+            sock.close()
+            return False
+    except Exception as e:
+        logger.warning(f"Could not check port availability: {e}")
+    finally:
+        sock.close()
     
     # Start state monitoring in background
     import threading
@@ -3313,8 +3347,8 @@ def run_visualizer(host='localhost', port=5000, debug=False):
         finally:
             loop.close()
     
-    monitor_thread = threading.Thread(target=monitor_thread, daemon=True)
-    monitor_thread.start()
+    monitor_thread_obj = threading.Thread(target=monitor_thread, daemon=True)
+    monitor_thread_obj.start()
     
     # Run Flask-SocketIO app
     try:
@@ -3325,8 +3359,14 @@ def run_visualizer(host='localhost', port=5000, debug=False):
             debug=debug,
             allow_unsafe_werkzeug=True
         )
+        return True
+    except Exception as e:
+        logger.error(f"Error running visualizer: {e}")
+        return False
     finally:
+        logger.info("Shutting down visualizer...")
         state_monitor.stop_monitoring()
+        logger.info("Visualizer shutdown complete")
 
 
 # =====================================================
@@ -3563,6 +3603,18 @@ def invite_team_member(project_id):
 
 if __name__ == '__main__':
     import argparse
+    import signal
+    import sys
+    
+    def signal_handler(signum, frame):
+        """Handle shutdown signals gracefully"""
+        logger.info(f"Received signal {signum}, shutting down gracefully...")
+        state_monitor.stop_monitoring()
+        sys.exit(0)
+    
+    # Register signal handlers
+    signal.signal(signal.SIGINT, signal_handler)
+    signal.signal(signal.SIGTERM, signal_handler)
     
     parser = argparse.ArgumentParser(description='TDD State Visualizer')
     parser.add_argument('--host', default='localhost', help='Host to bind to')
@@ -3571,4 +3623,6 @@ if __name__ == '__main__':
     
     args = parser.parse_args()
     
-    run_visualizer(args.host, args.port, args.debug)
+    success = run_visualizer(args.host, args.port, args.debug)
+    if not success:
+        sys.exit(1)
