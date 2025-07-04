@@ -1,4 +1,4 @@
-// Ultra-minimal client-side logic
+// Agent workflow state machine client
 const socket = io();
 
 // Initialize Mermaid
@@ -17,9 +17,9 @@ mermaid.initialize({
 
 // DOM elements
 const workflowState = document.getElementById('workflow-state');
-const tddState = document.getElementById('tdd-state');
+const executionState = document.getElementById('execution-state');
 const workflowDiagram = document.querySelector('#workflow-diagram .mermaid');
-const tddDiagram = document.querySelector('#tdd-diagram .mermaid');
+const executionDiagram = document.querySelector('#execution-diagram .mermaid');
 const commandInput = document.getElementById('command-input');
 const sendBtn = document.getElementById('send-btn');
 const errorMessage = document.getElementById('error-message');
@@ -32,9 +32,9 @@ async function loadInitialState() {
         const data = await response.json();
         
         updateDiagram('workflow', data.workflow.diagram);
-        updateDiagram('tdd', data.tdd.diagram);
+        updateDiagram('execution', data.execution.diagram);
         updateStateDisplay(workflowState, data.workflow.current);
-        updateStateDisplay(tddState, data.tdd.current);
+        updateStateDisplay(executionState, data.execution.current);
     } catch (error) {
         console.error('Failed to load initial state:', error);
     }
@@ -42,7 +42,7 @@ async function loadInitialState() {
 
 // Update diagram
 function updateDiagram(type, diagramCode) {
-    const element = type === 'workflow' ? workflowDiagram : tddDiagram;
+    const element = type === 'workflow' ? workflowDiagram : executionDiagram;
     element.textContent = diagramCode;
     element.removeAttribute('data-processed');
     mermaid.run();
@@ -72,7 +72,7 @@ socket.on('connect', () => {
 
 socket.on('state_update', (data) => {
     updateStateDisplay(workflowState, data.workflow);
-    updateStateDisplay(tddState, data.tdd);
+    updateStateDisplay(executionState, data.execution);
 });
 
 socket.on('state_change', (data) => {
@@ -80,8 +80,8 @@ socket.on('state_change', (data) => {
         updateStateDisplay(workflowState, data.new_state);
         updateDiagram('workflow', data.diagram);
     } else {
-        updateStateDisplay(tddState, data.new_state);
-        updateDiagram('tdd', data.diagram);
+        updateStateDisplay(executionState, data.new_state);
+        updateDiagram('execution', data.diagram);
     }
     
     // Add to history

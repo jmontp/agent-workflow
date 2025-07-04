@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Ultra-minimal state machine demo with web interface.
-Demonstrates core concepts with ~150 lines of code.
+Agent workflow state machine with meaningful execution stages.
+Tracks the actual flow of agent task execution.
 """
 
 from flask import Flask, render_template, jsonify, request
@@ -15,18 +15,21 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'demo-secret-key'
 socketio = SocketIO(app, cors_allowed_origins="*")
 
-# Main Workflow States
+# Agent Execution States
 class WorkflowState(Enum):
-    IDLE = "IDLE"
-    BACKLOG_READY = "BACKLOG_READY"
-    SPRINT_ACTIVE = "SPRINT_ACTIVE"
+    IDLE = "IDLE"                           # No active request
+    REQUEST_RECEIVED = "REQUEST_RECEIVED"   # User submitted request
+    CONTEXT_SEARCH = "CONTEXT_SEARCH"       # Searching for relevant patterns
+    EXECUTING = "EXECUTING"                 # Agent performing task
+    CONTEXT_UPDATE = "CONTEXT_UPDATE"       # Storing results and learnings
+    HUMAN_REVIEW = "HUMAN_REVIEW"           # Awaiting human feedback
 
-# TDD States
-class TDDState(Enum):
-    DESIGN = "DESIGN"
-    TEST_RED = "TEST_RED"
-    TEST_GREEN = "TEST_GREEN"
-    REFACTOR = "REFACTOR"
+# Execution Status (simplified TDD tracking)
+class ExecutionStatus(Enum):
+    PLANNING = "PLANNING"       # Designing approach
+    IMPLEMENTING = "IMPLEMENTING" # Writing code/docs
+    VALIDATING = "VALIDATING"   # Running tests/checks
+    COMPLETE = "COMPLETE"       # Task finished
 
 @dataclass
 class StateMachine:
@@ -70,31 +73,39 @@ class StateMachine:
 workflow_sm = StateMachine(
     current_state=WorkflowState.IDLE,
     transitions={
-        WorkflowState.IDLE: [WorkflowState.BACKLOG_READY],
-        WorkflowState.BACKLOG_READY: [WorkflowState.SPRINT_ACTIVE, WorkflowState.IDLE],
-        WorkflowState.SPRINT_ACTIVE: [WorkflowState.IDLE]
+        WorkflowState.IDLE: [WorkflowState.REQUEST_RECEIVED],
+        WorkflowState.REQUEST_RECEIVED: [WorkflowState.CONTEXT_SEARCH, WorkflowState.IDLE],
+        WorkflowState.CONTEXT_SEARCH: [WorkflowState.EXECUTING, WorkflowState.IDLE],
+        WorkflowState.EXECUTING: [WorkflowState.CONTEXT_UPDATE, WorkflowState.IDLE],
+        WorkflowState.CONTEXT_UPDATE: [WorkflowState.HUMAN_REVIEW],
+        WorkflowState.HUMAN_REVIEW: [WorkflowState.IDLE, WorkflowState.REQUEST_RECEIVED]
     }
 )
 
-tdd_sm = StateMachine(
-    current_state=TDDState.DESIGN,
+execution_sm = StateMachine(
+    current_state=ExecutionStatus.PLANNING,
     transitions={
-        TDDState.DESIGN: [TDDState.TEST_RED],
-        TDDState.TEST_RED: [TDDState.TEST_GREEN],
-        TDDState.TEST_GREEN: [TDDState.REFACTOR],
-        TDDState.REFACTOR: [TDDState.DESIGN]
+        ExecutionStatus.PLANNING: [ExecutionStatus.IMPLEMENTING],
+        ExecutionStatus.IMPLEMENTING: [ExecutionStatus.VALIDATING],
+        ExecutionStatus.VALIDATING: [ExecutionStatus.COMPLETE, ExecutionStatus.IMPLEMENTING],
+        ExecutionStatus.COMPLETE: [ExecutionStatus.PLANNING]
     }
 )
 
 # Command mapping
 COMMANDS = {
-    '/backlog': WorkflowState.BACKLOG_READY,
-    '/sprint': WorkflowState.SPRINT_ACTIVE,
+    # Workflow commands
+    '/request': WorkflowState.REQUEST_RECEIVED,
+    '/search': WorkflowState.CONTEXT_SEARCH,
+    '/execute': WorkflowState.EXECUTING,
+    '/update': WorkflowState.CONTEXT_UPDATE,
+    '/review': WorkflowState.HUMAN_REVIEW,
     '/idle': WorkflowState.IDLE,
-    '/design': TDDState.DESIGN,
-    '/test-red': TDDState.TEST_RED,
-    '/test-green': TDDState.TEST_GREEN,
-    '/refactor': TDDState.REFACTOR
+    # Execution status commands
+    '/plan': ExecutionStatus.PLANNING,
+    '/implement': ExecutionStatus.IMPLEMENTING,
+    '/validate': ExecutionStatus.VALIDATING,
+    '/complete': ExecutionStatus.COMPLETE
 }
 
 @app.route('/')
@@ -111,10 +122,10 @@ def get_state():
             'diagram': workflow_sm.get_diagram(),
             'history': workflow_sm.history[-5:]  # Last 5 transitions
         },
-        'tdd': {
-            'current': tdd_sm.current_state.value,
-            'diagram': tdd_sm.get_diagram(),
-            'history': tdd_sm.history[-5:]
+        'execution': {
+            'current': execution_sm.current_state.value,
+            'diagram': execution_sm.get_diagram(),
+            'history': execution_sm.history[-5:]
         }
     })
 
@@ -123,7 +134,7 @@ def handle_connect():
     """Handle client connection."""
     emit('state_update', {
         'workflow': workflow_sm.current_state.value,
-        'tdd': tdd_sm.current_state.value
+        'execution': execution_sm.current_state.value
     })
 
 @socketio.on('command')
@@ -142,23 +153,24 @@ def handle_command(data):
         success = workflow_sm.transition(target_state)
         machine = 'workflow'
     else:
-        success = tdd_sm.transition(target_state)
-        machine = 'tdd'
+        success = execution_sm.transition(target_state)
+        machine = 'execution'
     
     if success:
         # Broadcast state change to all clients
         socketio.emit('state_change', {
             'machine': machine,
             'new_state': target_state.value,
-            'diagram': workflow_sm.get_diagram() if machine == 'workflow' else tdd_sm.get_diagram()
+            'diagram': workflow_sm.get_diagram() if machine == 'workflow' else execution_sm.get_diagram()
         })
     else:
-        current = workflow_sm.current_state.value if machine == 'workflow' else tdd_sm.current_state.value
+        current = workflow_sm.current_state.value if machine == 'workflow' else execution_sm.current_state.value
         emit('error', {
             'message': f'Cannot transition from {current} to {target_state.value}'
         })
 
 if __name__ == '__main__':
-    print("Starting ultra-minimal state machine demo...")
+    print("Starting agent workflow state machine...")
+    print("Tracking execution stages: Request → Context Search → Execute → Update → Review")
     print("Open http://localhost:5000 in your browser")
     socketio.run(app, debug=True, host='0.0.0.0', port=5000, allow_unsafe_werkzeug=True)

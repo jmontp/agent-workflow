@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>State Machine Demo</title>
+    <title>Agent Workflow State Machine</title>
     <link rel="stylesheet" href="/static/style.css">
     <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
 </head>
 <body>
     <div class="container">
-        <h1>Ultra-Minimal State Machine Demo</h1>
+        <h1>Agent Workflow State Machine</h1>
         
         <div class="panels">
             <div class="panel">
-                <h2>Workflow State Machine</h2>
+                <h2>Agent Execution Workflow</h2>
                 <div class="current-state" id="workflow-state">IDLE</div>
                 <div class="diagram" id="workflow-diagram">
                     <pre class="mermaid"></pre>
@@ -22,9 +22,9 @@
             </div>
             
             <div class="panel">
-                <h2>TDD State Machine</h2>
-                <div class="current-state" id="tdd-state">DESIGN</div>
-                <div class="diagram" id="tdd-diagram">
+                <h2>Execution Status</h2>
+                <div class="current-state" id="execution-state">PLANNING</div>
+                <div class="diagram" id="execution-diagram">
                     <pre class="mermaid"></pre>
                 </div>
             </div>
@@ -32,27 +32,30 @@
         
         <div class="command-panel">
             <h2>Commands</h2>
-            <input type="text" id="command-input" placeholder="Enter command (e.g., /backlog, /design)">
+            <input type="text" id="command-input" placeholder="Enter command (e.g., /request, /execute)">
             <button id="send-btn">Send</button>
             
             <div class="command-help">
                 <h3>Available Commands:</h3>
                 <div class="commands-grid">
                     <div class="command-group">
-                        <strong>Workflow:</strong>
+                        <strong>Workflow Commands:</strong>
                         <ul>
+                            <li>/request - New request received</li>
+                            <li>/search - Search for patterns</li>
+                            <li>/execute - Execute task</li>
+                            <li>/update - Update context</li>
+                            <li>/review - Human review</li>
                             <li>/idle - Return to idle</li>
-                            <li>/backlog - Ready backlog</li>
-                            <li>/sprint - Start sprint</li>
                         </ul>
                     </div>
                     <div class="command-group">
-                        <strong>TDD:</strong>
+                        <strong>Execution Status:</strong>
                         <ul>
-                            <li>/design - Design phase</li>
-                            <li>/test-red - Write failing tests</li>
-                            <li>/test-green - Make tests pass</li>
-                            <li>/refactor - Improve code</li>
+                            <li>/plan - Planning approach</li>
+                            <li>/implement - Implementing solution</li>
+                            <li>/validate - Validating results</li>
+                            <li>/complete - Mark complete</li>
                         </ul>
                     </div>
                 </div>
