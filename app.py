@@ -161,4 +161,4 @@ def handle_command(data):
 if __name__ == '__main__':
     print("Starting ultra-minimal state machine demo...")
     print("Open http://localhost:5000 in your browser")
-    socketio.run(app, debug=True, host='0.0.0.0', port=5000)
+    socketio.run(app, debug=True, host='0.0.0.0', port=5000, allow_unsafe_werkzeug=True)
