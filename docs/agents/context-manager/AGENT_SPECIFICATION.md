@@ -12,7 +12,7 @@ The Context Manager serves as the central nervous system of the agent-workflow s
 ## Purpose & Capabilities
 
 ### Primary Purpose
-Manage all context flow in the system, ensuring the right information reaches the right agent at the right time while maintaining security boundaries and optimizing token usage.
+Serve as the central nervous system for context flow and documentation gateway, ensuring the right information reaches the right agent at the right time, while maintaining consistency across all documentation through intelligent management and pattern-based updates.
 
 ### Key Capabilities
 1. **Context Routing**: Direct context between agents based on rules and patterns
@@ -20,10 +20,12 @@ Manage all context flow in the system, ensuring the right information reaches th
 3. **Pattern Recognition**: Identify recurring patterns and suggest optimizations
 4. **Audit Trail**: Maintain complete record for compliance and debugging
 5. **Bootstrap Learning**: Improve itself by analyzing its own development
+6. **Documentation Gateway**: Sole manager of all documentation operations, ensuring consistency
 
 ### Constraints
-- Must process requests in <100ms for real-time responsiveness
-- Context storage must not exceed token limits (100k tokens active)
+- Must process simple requests within 2 seconds for interactive use
+- Complex operations (pattern detection, bulk updates) may take up to 10 minutes
+- Context storage must not exceed token limits (1k contexts active initially)
 - All operations must be auditable for FDA compliance
 - Cannot modify agent code directly (only suggest improvements)
 
@@ -69,6 +71,48 @@ class ContextManager:
         
     def log_decision(self, decision: str, reasoning: str) -> str:
         """Log development decision (bootstrap feature)."""
+    
+    # Documentation Gateway Methods
+    def create_doc(self, doc_type: DocumentType, content: str, 
+                  metadata: Dict[str, Any]) -> str:
+        """
+        Create new documentation with proper structure.
+        
+        Args:
+            doc_type: Type of documentation (README, API_SPEC, etc.)
+            content: Initial document content
+            metadata: Additional metadata (author, tags, etc.)
+            
+        Returns:
+            str: Document ID/path
+        """
+    
+    def update_doc(self, doc_path: str, updates: Dict[str, str]) -> bool:
+        """
+        Update documentation sections intelligently.
+        
+        Args:
+            doc_path: Path to document
+            updates: Dict of section -> new content
+            
+        Returns:
+            bool: Success status
+        """
+    
+    def read_doc(self, doc_path: str) -> Document:
+        """Read documentation with enhanced metadata."""
+    
+    def search_docs(self, query: str, doc_types: List[DocumentType] = None) -> List[Document]:
+        """Search across all documentation."""
+    
+    def link_docs(self, doc1: str, doc2: str, relationship: str) -> bool:
+        """Create relationships between documents."""
+    
+    def suggest_doc_updates(self, code_changes: List[Dict[str, Any]]) -> List[Suggestion]:
+        """Suggest documentation updates based on code changes."""
+    
+    def ensure_doc_standards(self, doc_content: str, doc_type: DocumentType) -> ValidationResult:
+        """Validate documentation meets standards."""
 ```
 
 ### Context Schema
@@ -99,6 +143,51 @@ class Context:
         """Validate context against schema rules."""
 ```
 
+### Document Schema
+
+```python
+from enum import Enum
+
+class DocumentType(Enum):
+    """Types of documentation managed by Context Manager."""
+    README = "readme"
+    API_SPEC = "api_spec"
+    ARCHITECTURE = "architecture"
+    DECISION_RECORD = "decision_record"
+    WORKFLOW = "workflow"
+    AGENT_SPEC = "agent_spec"
+    USER_GUIDE = "user_guide"
+    CHANGELOG = "changelog"
+    MEETING_NOTES = "meeting_notes"
+    TEST_PLAN = "test_plan"
+
+@dataclass
+class Document:
+    """Mutable documentation artifact managed by Context Manager."""
+    
+    # Required fields
+    path: str                    # File path (e.g., "docs/README.md")
+    doc_type: DocumentType       # Type of documentation
+    content: str                 # Current content
+    version: int                 # Version number
+    last_modified: datetime      # Last update timestamp
+    modified_by: str             # Agent/human identifier
+    
+    # Relationships
+    linked_contexts: List[str] = field(default_factory=list)   # Related context IDs
+    linked_docs: List[str] = field(default_factory=list)       # Related document paths
+    
+    # Metadata
+    metadata: Dict[str, Any] = field(default_factory=dict)
+    sections: Dict[str, str] = field(default_factory=dict)     # Section mapping
+    tags: List[str] = field(default_factory=list)
+    
+    # Quality metrics
+    completeness_score: float = 0.0  # 0-1 score
+    consistency_score: float = 0.0    # 0-1 score
+    last_validated: Optional[datetime] = None
+```
+
 ### Error Handling
 
 ```python
@@ -116,6 +205,15 @@ class RoutingError(ContextError):
 
 class PatternError(ContextError):
     """Pattern detection/application failed."""
+
+class DocumentError(ContextError):
+    """Document operation failed."""
+
+class DocumentValidationError(DocumentError):
+    """Document failed standards validation."""
+
+class DocumentVersionError(DocumentError):
+    """Document version conflict."""
 ```
 
 ## Behavioral Characteristics
@@ -157,13 +255,43 @@ graph TD
     J --> K
 ```
 
+**Documentation Gateway Decision Tree**:
+```mermaid
+graph TD
+    A[Doc Operation Request] --> B{Operation Type}
+    B -->|Create| C{Valid Type?}
+    B -->|Update| D{Doc Exists?}
+    B -->|Read| E[Retrieve & Return]
+    
+    C -->|Yes| F{Standards Check}
+    C -->|No| G[Reject Invalid Type]
+    
+    D -->|Yes| H{Version Check}
+    D -->|No| I[Create New Doc]
+    
+    F -->|Pass| J[Create Document]
+    F -->|Fail| K[Return Violations]
+    
+    H -->|No Conflict| L{Standards Check}
+    H -->|Conflict| M[Resolve Version]
+    
+    L -->|Pass| N[Update Document]
+    L -->|Fail| O[Return Violations]
+    
+    N --> P[Update Context Links]
+    J --> P
+```
+
 ### Performance Characteristics
 
 | Operation | Target Latency | Max Latency | Throughput |
 |-----------|---------------|-------------|------------|
-| add_context | 10ms | 50ms | 1000/sec |
-| get_context | 5ms | 20ms | 5000/sec |
-| query_context | 50ms | 200ms | 100/sec |
+| add_context | 100ms | 2s | 10/sec |
+| get_context | 50ms | 1s | 20/sec |
+| query_context | 500ms | 2s | 5/sec |
+| create_doc | 200ms | 3s | 5/sec |
+| update_doc | 300ms | 3s | 5/sec |
+| search_docs | 500ms | 2s | 5/sec |
 | route_context | 20ms | 100ms | 500/sec |
 | pattern_detection | 100ms | 500ms | 10/sec |
 
@@ -232,17 +360,33 @@ def implement_new_feature(feature_name: str):
 ### Storage Hierarchy
 
 ```
-contexts/
-├── active/              # Hot contexts (in-memory + file backup)
+contexts/                   # Immutable event records
+├── active/                 # Hot contexts (in-memory + file backup)
 │   └── {date}/
 │       └── {context_id}.json
-├── archive/             # Cold storage (compressed)
+├── archive/                # Cold storage (compressed)
 │   └── {year-month}/
 │       └── {date}/
-└── indices/             # Search indices
+└── indices/                # Search indices
     ├── by_type.json
     ├── by_source.json
     └── patterns.json
+
+documents/                  # Mutable documentation
+├── current/                # Current versions
+│   ├── README.md.json
+│   ├── CHANGELOG.md.json
+│   ├── api/
+│   │   └── openapi.json
+│   └── guides/
+│       └── user-guide.json
+├── versions/               # Version history
+│   └── {doc_path}/
+│       └── v{version}.json
+└── indices/                # Document search indices
+    ├── by_type.json
+    ├── by_tag.json
+    └── relationships.json
 ```
 
 ### Backup Strategy
@@ -322,6 +466,12 @@ class ContextMetrics:
     suggestions_generated: int
     suggestion_acceptance_rate: float
     
+    # Documentation
+    total_documents: int
+    doc_versions_tracked: int
+    avg_doc_consistency_score: float
+    doc_update_frequency: float
+    
     # Health
     error_rate: float
     last_error: Optional[str]
@@ -354,11 +504,20 @@ class ContextSecurity:
     """Security boundaries for context access."""
     
     AGENT_PERMISSIONS = {
-        'DesignAgent': ['read_all', 'write_design'],
-        'CodeAgent': ['read_design', 'read_test', 'write_code'],
-        'QAAgent': ['read_all', 'write_test'],
-        'DocumentationAgent': ['read_all', 'write_docs'],
-        'DataAgent': ['read_all']  # No write
+        'DesignAgent': ['read_all', 'write_design', 'read_docs'],
+        'CodeAgent': ['read_design', 'read_test', 'write_code', 'read_docs'],
+        'QAAgent': ['read_all', 'write_test', 'read_docs'],
+        'DocumentationAgent': ['read_all', 'write_docs', 'manage_docs'],
+        'DataAgent': ['read_all', 'read_docs'],  # No write
+        'SwissArmyAgent': ['read_all', 'write_code', 'request_doc_update']
+    }
+    
+    # Documentation permissions (only through Context Manager)
+    DOC_PERMISSIONS = {
+        'create': ['DocumentationAgent', 'ContextManager'],
+        'update': ['DocumentationAgent', 'ContextManager'],
+        'delete': ['ContextManager'],  # Only CM can delete
+        'version': ['ContextManager'],  # Only CM manages versions
     }
     
     def can_access(self, agent: str, context: Context, operation: str) -> bool:
@@ -367,8 +526,9 @@ class ContextSecurity:
 
 ### Audit Requirements
 
-Every context operation generates an audit entry:
+Every operation generates an audit entry:
 
+**Context Operations:**
 ```json
 {
     "timestamp": "2024-01-20T10:30:00Z",
@@ -378,6 +538,24 @@ Every context operation generates an audit entry:
     "context_id": "123e4567-e89b-12d3-a456-426614174000",
     "success": true,
     "duration_ms": 15
+}
+```
+
+**Documentation Operations:**
+```json
+{
+    "timestamp": "2024-01-20T10:30:15Z",
+    "operation": "update_doc",
+    "source": "SwissArmyAgent",
+    "document": "docs/README.md",
+    "version": 12,
+    "changes": {
+        "sections_modified": ["installation", "usage"],
+        "lines_changed": 45
+    },
+    "validation_passed": true,
+    "success": true,
+    "duration_ms": 320
 }
 ```
 
@@ -399,6 +577,23 @@ class TestContextManager:
         
     def test_bootstrap_decision_logging(self):
         """Test self-documentation features."""
+
+# tests/test_document_manager.py
+class TestDocumentManager:
+    def test_create_doc_with_validation(self):
+        """Test document creation with standards validation."""
+        
+    def test_update_doc_version_control(self):
+        """Test document updates create proper versions."""
+        
+    def test_doc_context_linking(self):
+        """Test bidirectional linking between docs and contexts."""
+        
+    def test_suggest_doc_updates_from_code_changes(self):
+        """Test intelligent documentation suggestions."""
+        
+    def test_concurrent_doc_updates(self):
+        """Test handling concurrent documentation updates."""
 ```
 
 ### Integration Tests
@@ -414,6 +609,9 @@ class TestContextIntegration:
         
     def test_storage_persistence(self):
         """Test contexts persist across restarts."""
+        
+    def test_doc_gateway_enforcement(self):
+        """Test all doc operations go through Context Manager."""
 ```
 
 ### Performance Tests
@@ -421,34 +619,44 @@ class TestContextIntegration:
 ```python
 # tests/test_context_performance.py
 class TestContextPerformance:
-    def test_throughput_1000_per_second(self):
-        """Verify system handles 1000 contexts/second."""
+    def test_throughput_10_per_second(self):
+        """Verify system handles 10 contexts/second sustainably."""
         
-    def test_query_latency_under_200ms(self):
-        """Verify query response time."""
+    def test_query_latency_under_2_seconds(self):
+        """Verify query response time for simple searches."""
+        
+    def test_complex_operations_timeout(self):
+        """Verify complex operations complete within 10 minutes."""
         
     def test_memory_usage_under_512mb(self):
         """Verify memory constraints."""
+        
+    def test_doc_operations_performance(self):
+        """Verify documentation operations meet SLA."""
 ```
 
 ## Development Roadmap
 
 ### Week 1 (Current)
 - [x] Design document
-- [ ] Schema implementation
-- [ ] Basic storage
+- [ ] Schema implementation (Context + Document)
+- [ ] Basic storage (dual structure)
 - [ ] Simple patterns
 - [ ] API integration
+- [ ] Documentation gateway foundation
 
 ### Week 2
 - [ ] Advanced patterns
 - [ ] WebSocket support
+- [ ] Document versioning system
+- [ ] Documentation standards validation
 - [ ] Performance optimization
 - [ ] Enhanced monitoring
 
 ### Week 3
 - [ ] Redis integration
-- [ ] Distributed support
+- [ ] Documentation search & linking
+- [ ] Intelligent suggestion engine
 - [ ] Advanced security
 - [ ] Production hardening
 
@@ -466,6 +674,8 @@ class TestContextPerformance:
 - Basic pattern detection
 - JSON storage backend
 - Flask integration
+- Documentation gateway capabilities
+- Document versioning and standards
 
 ## Dependencies
 

@@ -4,7 +4,7 @@
 
 ## Overview
 
-This plan outlines the practical implementation of Context Manager v1 over 4 weeks, using TDD principles and bootstrap methodology.
+This plan outlines the practical implementation of Context Manager v1 over 4 weeks, using TDD principles and bootstrap methodology. Updated to include documentation gateway capabilities as the sole manager of all documentation operations.
 
 ## Week 1: Core Foundation
 
@@ -26,6 +26,25 @@ def test_context_validation():
     """Test schema validation catches missing fields"""
     with pytest.raises(ValidationError):
         Context(type="invalid_type")  # Should fail
+
+# test_document_schema.py
+def test_document_creation():
+    """Test document creation with versioning"""
+    doc = Document(
+        path="docs/README.md",
+        doc_type=DocumentType.README,
+        content="# Project Title",
+        version=1,
+        last_modified=datetime.now(),
+        modified_by="TestAgent"
+    )
+    assert doc.validate_standards()
+
+def test_document_versioning():
+    """Test documents maintain version history"""
+    # Create initial version
+    # Update document
+    # Verify version incremented
 ```
 
 ### Day 2-3: Storage Implementation
@@ -155,6 +174,14 @@ cm.log_decision(
 - [x] Audit trail for all context operations
 - [x] Pattern detection for self-improvement
 
+### Documentation Gateway (New) ✓
+- [ ] Document schema implementation
+- [ ] Version control system
+- [ ] Standards validation
+- [ ] Document-context linking
+- [ ] Cross-reference management
+- [ ] Documentation search indices
+
 ## Week 2: Advanced Features
 
 ### Monday: Advanced Patterns
@@ -162,32 +189,46 @@ cm.log_decision(
 - Implement time-based patterns
 - Multiple pattern types working
 
-### Tuesday: Suggestion Engine
+### Tuesday: Suggestion Engine & Document Validation
 - Suggestion generation tests
 - Implement suggestion logic
 - Basic suggestions working
+- Document standards validation
+- Validation rules per doc type
+- Documentation quality scoring
+- Auto-suggestion for doc improvements
 
-### Wednesday: Search & Query
+### Wednesday: Search & Query (Context + Docs)
 - Search functionality tests
 - Implement search filters
 - Advanced search working
+- Document search implementation
+- Cross-reference search (contexts ↔ docs)
+- Full-text document search
+- Document relationship graphs
 
-### Thursday: WebSocket Integration
+### Thursday: WebSocket Integration & Doc Events
 - WebSocket tests
 - Real-time events implementation
 - Live updates working
+- Document change notifications
+- Suggestion streaming
+- Concurrent doc update handling
+- Version conflict resolution
 
 ### Friday: UI Integration
 - UI component tests
 - Implement minimal UI
 - Quick capture working
+- Documentation dashboard
+- Doc quality visualization
 
 ## Week 3: Polish & Performance
 
 ### Monday: Performance Optimization
 - Performance benchmarks
 - Optimize slow operations
-- Meet performance targets (<100ms search, <500ms patterns)
+- Meet performance targets (<2s search, <30s patterns)
 
 ### Tuesday: Error Handling
 - Error case tests
@@ -198,11 +239,16 @@ cm.log_decision(
 - Import/export tests
 - Multiple format support (JSON, Markdown, CSV)
 - Data portability complete
+- Documentation export formats
+- Bulk documentation operations
 
 ### Thursday: Documentation
 - API documentation
 - User guide
 - Complete docs
+- Document gateway guide
+- Documentation standards reference
+- Example integration patterns
 
 ### Friday: Release Prep
 - Final integration tests
@@ -220,16 +266,22 @@ cm.log_decision(
 - Review suggestion effectiveness
 - Implement feedback loop
 - Adjust confidence scores
+- Documentation suggestion accuracy
+- Cross-agent doc consistency
 
 ### Wednesday: Performance Monitoring
 - Deploy monitoring
 - Analyze usage patterns
 - Plan optimizations
+- Document operation metrics
+- Documentation coverage analysis
 
 ### Thursday: User Feedback
 - Gather developer feedback
 - Prioritize improvements
 - Plan v1.1 features
+- Documentation workflow feedback
+- Agent integration experiences
 
 ### Friday: Retrospective
 - Team retrospective
@@ -244,6 +296,10 @@ cm.log_decision(
 3. Maintains audit trail for all operations
 4. Persists state between sessions
 5. Integrates with existing Flask app
+6. Document schema and storage working
+7. Basic document versioning implemented
+8. Documentation gateway enforced
+9. Standards validation operational
 
 ### Ready for Agents When:
 1. Stable context flow established
@@ -251,6 +307,10 @@ cm.log_decision(
 3. No context explosion (staying under limits)
 4. Clean API for agent integration
 5. Documentation patterns captured
+6. Document gateway enforcing consistency
+7. All agents using CM for doc operations
+8. Documentation suggestions improving
+9. Cross-references maintained automatically
 
 ## Key Implementation Notes
 
@@ -263,6 +323,8 @@ cm.log_decision(
 - Audit trail from day one
 - Every decision tracked
 - Patterns emerge from usage
+- All docs go through Context Manager
+- Intelligent documentation updates
 
 ### Self-Bootstrapping
 - Use it to build itself
@@ -281,16 +343,21 @@ cm.log_decision(
 tests/
 ├── unit/
 │   ├── test_context_schema.py      # Schema validation
+│   ├── test_document_schema.py     # Document validation
 │   ├── test_storage.py             # Storage operations
+│   ├── test_doc_storage.py         # Document storage & versioning
 │   ├── test_patterns.py            # Pattern detection
+│   ├── test_standards.py           # Documentation standards
 │   └── test_api.py                 # API endpoints
 ├── integration/
 │   ├── test_flask_integration.py   # Flask app integration
 │   ├── test_websocket.py           # Real-time events
-│   └── test_bootstrap.py           # Self-documentation
+│   ├── test_bootstrap.py           # Self-documentation
+│   └── test_doc_gateway.py         # Document gateway enforcement
 └── performance/
-    ├── test_throughput.py          # 1000 contexts/sec
-    └── test_search.py              # <200ms searches
+    ├── test_throughput.py          # 10 contexts/sec
+    ├── test_search.py              # <2s searches
+    └── test_doc_operations.py      # Document operation performance
 ```
 
 ## Migration Path
@@ -314,5 +381,8 @@ tests/
 3. Add context scoring and pruning
 4. Implement control loop from Context Engineering
 5. Build agent communication protocols
+6. Expand documentation intelligence
+7. Cross-project documentation learning
+8. Automated documentation quality improvement
 
 This plan gives us a working Context Manager in one week that genuinely helps its own development while laying the foundation for a compliant, scalable system.

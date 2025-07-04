@@ -55,7 +55,59 @@ class Context:
         # Implementation in schema.py
 ```
 
-### Design Rationale
+### Document Data Structure
+
+```python
+class DocumentType(Enum):
+    """Types of documentation managed by Context Manager."""
+    README = "readme"
+    API_SPEC = "api_spec"
+    ARCHITECTURE = "architecture"
+    DECISION_RECORD = "decision_record"
+    WORKFLOW = "workflow"
+    AGENT_SPEC = "agent_spec"
+    USER_GUIDE = "user_guide"
+    CHANGELOG = "changelog"
+    MEETING_NOTES = "meeting_notes"
+    TEST_PLAN = "test_plan"
+
+@dataclass
+class Document:
+    """Mutable documentation artifact managed by Context Manager."""
+    
+    # Required fields
+    path: str                    # File path (e.g., "docs/README.md")
+    doc_type: DocumentType       # Type of documentation
+    content: str                 # Current content
+    version: int                 # Version number
+    last_modified: datetime      # Last update timestamp
+    modified_by: str             # Agent/human identifier
+    
+    # Relationships
+    linked_contexts: List[str] = field(default_factory=list)   # Related context IDs
+    linked_docs: List[str] = field(default_factory=list)       # Related document paths
+    
+    # Metadata
+    metadata: Dict[str, Any] = field(default_factory=dict)
+    sections: Dict[str, str] = field(default_factory=dict)     # Section mapping
+    tags: List[str] = field(default_factory=list)
+    
+    # Quality metrics
+    completeness_score: float = 0.0  # 0-1 score
+    consistency_score: float = 0.0    # 0-1 score
+    last_validated: Optional[datetime] = None
+    
+    def validate_standards(self) -> ValidationResult:
+        """Validate document against type-specific standards."""
+        # Implementation in document_validator.py
+```
+
+### Context vs Document Design Rationale
+
+- **Context = Immutable Events**: Once created, contexts never change (audit trail)
+- **Documents = Mutable Knowledge**: Documents evolve through versions
+- **Bidirectional Linking**: Contexts can reference docs that existed at that time
+- **Separation of Concerns**: Different storage, different lifecycles
 
 - **Dataclasses over Pydantic**: Native Python, good IDE support, no external dependencies
 - **Flexible Metadata**: Core fields are typed, metadata dict for extensibility
@@ -67,16 +119,32 @@ class Context:
 
 ```python
 # Directory structure
-contexts/
-├── active/              # Hot contexts
+contexts/                   # Immutable event records
+├── active/                 # Hot contexts
 │   └── {date}/
 │       └── {context_id}.json
-├── archive/             # Cold storage
+├── archive/                # Cold storage
 │   └── {year-month}/
-└── indices/             # Search indices
+└── indices/                # Search indices
     ├── by_type.json
     ├── by_source.json
     └── patterns.json
+
+documents/                  # Mutable documentation
+├── current/                # Current versions
+│   ├── README.md.json
+│   ├── CHANGELOG.md.json
+│   ├── api/
+│   │   └── openapi.json
+│   └── guides/
+│       └── user-guide.json
+├── versions/               # Version history
+│   └── {doc_path}/
+│       └── v{version}.json
+└── indices/                # Document search indices
+    ├── by_type.json
+    ├── by_tag.json
+    └── relationships.json
 ```
 
 ### Storage Interface (Future-proof)
@@ -99,8 +167,31 @@ class StorageBackend(ABC):
     def search_contexts(self, query: Dict[str, Any]) -> List[Context]:
         pass
 
+class DocumentBackend(ABC):
+    """Abstract document storage interface"""
+    
+    @abstractmethod
+    def save_document(self, doc: Document) -> bool:
+        pass
+    
+    @abstractmethod
+    def get_document(self, path: str, version: Optional[int] = None) -> Optional[Document]:
+        pass
+    
+    @abstractmethod
+    def search_documents(self, query: Dict[str, Any]) -> List[Document]:
+        pass
+    
+    @abstractmethod
+    def get_versions(self, path: str) -> List[int]:
+        pass
+
 class JSONFileBackend(StorageBackend):
     """v1 implementation using JSON files"""
+    pass
+
+class JSONDocumentBackend(DocumentBackend):
+    """v1 document storage using JSON"""
     pass
 
 class RedisBackend(StorageBackend):
@@ -166,6 +257,17 @@ POST   /api/context/feedback            # Feedback on suggestions
 POST   /api/context/decision            # Log decision
 POST   /api/context/problem             # Log problem
 GET    /api/context/next                # Get next task suggestions
+
+# Documentation Gateway
+POST   /api/docs/                       # Create document
+GET    /api/docs/{path}                 # Get document (latest version)
+GET    /api/docs/{path}/v/{version}    # Get specific version
+PUT    /api/docs/{path}                 # Update document
+GET    /api/docs/{path}/versions        # List all versions
+POST   /api/docs/search                 # Search documents
+POST   /api/docs/validate               # Validate against standards
+GET    /api/docs/{path}/suggestions     # Get update suggestions
+POST   /api/docs/link                   # Link documents
 ```
 
 ### WebSocket Events
@@ -182,6 +284,15 @@ socket.on('pattern_detected', (data) => {
 
 socket.on('suggestion_available', (data) => {
     displaySuggestion(data.suggestion);
+});
+
+// Documentation events
+socket.on('doc_updated', (data) => {
+    notifyDocChange(data.path, data.version);
+});
+
+socket.on('doc_suggestion', (data) => {
+    showDocSuggestion(data.suggestion);
 });
 ```
 
@@ -227,16 +338,45 @@ class TestContextManager:
         """Relevant suggestions from patterns"""
         # Create pattern
         # Verify suggestions match pattern
+
+class TestDocumentManager:
+    def test_document_versioning(self):
+        """Document updates create new versions"""
+        cm = ContextManager()
+        doc_id = cm.create_doc(
+            DocumentType.README,
+            "# Initial Content",
+            {"author": "test"}
+        )
+        
+        cm.update_doc(doc_id, {"content": "# Updated Content"})
+        versions = cm.get_versions(doc_id)
+        assert len(versions) == 2
+        
+    def test_document_standards_validation(self):
+        """Documents validated against standards"""
+        # Create doc missing required sections
+        # Verify validation fails with specific errors
+        
+    def test_context_document_linking(self):
+        """Contexts and documents can be linked"""
+        # Create context referencing doc
+        # Update doc
+        # Verify context still references correct version
 ```
 
 ## Performance Targets
 
 | Operation | Target | Max | Notes |
 |-----------|--------|-----|-------|
-| add_context | 10ms | 50ms | Include validation |
-| get_context | 5ms | 20ms | From cache |
-| search | 50ms | 200ms | Full-text search |
-| pattern_detection | 100ms | 500ms | Run async |
+| add_context | 100ms | 2s | Include validation |
+| get_context | 50ms | 1s | From cache/storage |
+| search_contexts | 500ms | 2s | Full-text search |
+| pattern_detection | 5s | 10min | Run async in background |
+| create_doc | 200ms | 3s | Include validation |
+| update_doc | 300ms | 3s | Version + validation |
+| search_docs | 500ms | 2s | Full-text search |
+| validate_standards | 100ms | 1s | Per document |
 
 ## Security Considerations
 
@@ -244,11 +384,20 @@ class TestContextManager:
 
 ```python
 AGENT_PERMISSIONS = {
-    'DesignAgent': ['read_all', 'write_design'],
-    'CodeAgent': ['read_design', 'read_test', 'write_code'],
-    'QAAgent': ['read_all', 'write_test'],
-    'DocumentationAgent': ['read_all', 'write_docs'],
-    'DataAgent': ['read_all']  # No write
+    'DesignAgent': ['read_all', 'write_design', 'read_docs'],
+    'CodeAgent': ['read_design', 'read_test', 'write_code', 'read_docs'],
+    'QAAgent': ['read_all', 'write_test', 'read_docs'],
+    'DocumentationAgent': ['read_all', 'write_docs', 'manage_docs'],
+    'DataAgent': ['read_all', 'read_docs'],  # No write
+    'SwissArmyAgent': ['read_all', 'write_code', 'request_doc_update']
+}
+
+# Documentation permissions (only through Context Manager)
+DOC_PERMISSIONS = {
+    'create': ['DocumentationAgent', 'ContextManager'],
+    'update': ['DocumentationAgent', 'ContextManager'],
+    'delete': ['ContextManager'],  # Only CM can delete
+    'version': ['ContextManager'],  # Only CM manages versions
 }
 ```
 
@@ -286,7 +435,8 @@ Every operation generates an audit entry:
 CONTEXT_MANAGER_CONFIG = {
     'storage': {
         'backend': 'json',  # 'redis' in future
-        'path': './contexts',
+        'contexts_path': './contexts',
+        'documents_path': './documents',
         'backup_interval': 3600,  # seconds
     },
     'patterns': {
@@ -297,17 +447,28 @@ CONTEXT_MANAGER_CONFIG = {
     'api': {
         'rate_limit': 100,  # requests per minute
         'max_context_size': 10240,  # bytes
+        'max_doc_size': 1048576,  # 1MB
+    },
+    'documents': {
+        'version_limit': 100,  # Max versions per doc
+        'validation_enabled': True,
+        'auto_suggest': True,  # Auto-suggest doc updates
+        'link_depth': 3,  # Max link traversal depth
     }
 }
 ```
 
 ## Summary
 
-This technical design provides a complete blueprint for implementing Context Manager v1. The focus is on:
+This technical design provides a complete blueprint for implementing Context Manager v1 with documentation gateway capabilities. The focus is on:
 
-1. **Simplicity**: JSON storage, basic patterns, clean API
-2. **Quality**: TDD approach, comprehensive testing
-3. **Future-proof**: Interfaces for migration, extensible schema
-4. **Bootstrap**: Self-documenting from day one
+1. **Dual Purpose**: Context management + Documentation gateway
+2. **Clear Separation**: Immutable contexts vs versioned documents
+3. **Quality**: TDD approach, comprehensive testing
+4. **Future-proof**: Interfaces for migration, extensible schema
+5. **Bootstrap**: Self-documenting from day one
+6. **Consistency**: All docs go through Context Manager
+
+Key architectural decision: Context Manager is the sole gateway for all documentation operations, ensuring consistency, versioning, and intelligent suggestions across the entire documentation ecosystem.
 
 For implementation details and daily plan, see [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md).
