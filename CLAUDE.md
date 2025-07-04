@@ -23,6 +23,13 @@ agent-workflow/
 │   │   ├── 05_AGENT_SPECIFICATIONS_EXPANDED.md
 │   │   ├── 06_CONTEXT_MANAGER_V1_DESIGN.md     # NEW: Detailed design with TDD approach
 │   │   └── 07_AGENT_DOCUMENTATION_STANDARD.md  # NEW: Unified documentation framework
+│   ├── agents/              # Agent specifications
+│   │   ├── README.md       # Agent overview
+│   │   └── context-manager/ # Context Manager docs
+│   │       ├── AGENT_SPECIFICATION.md    # Complete API spec
+│   │       ├── BOOTSTRAP_GUIDE.md        # Self-improvement guide
+│   │       ├── IMPLEMENTATION_NOTES.md   # Development learnings
+│   │       └── README.md                 # Quick start
 │   └── research/            # Deep research by complexity level
 │       ├── simple/          # Current approach
 │       ├── advanced/        # 1-2 year horizon
@@ -50,6 +57,20 @@ agent-workflow/
 - **Schema**: Python dataclasses with type safety
 - **Pattern Detection**: Simple keyword/decision tracking
 - **Testing**: TDD approach with tests written first
+
+### Documentation Structure
+All Context Manager documentation is organized in `docs/agents/context-manager/`:
+- **AGENT_SPECIFICATION.md** - Complete API reference and behavioral specs
+- **TECHNICAL_DESIGN.md** - Schema, storage, pattern detection, and API design
+- **IMPLEMENTATION_PLAN.md** - Week-by-week implementation guide with code examples
+- **BOOTSTRAP_GUIDE.md** - How Context Manager builds itself
+- **IMPLEMENTATION_NOTES.md** - Real development learnings
+- **README.md** - Quick overview and navigation
+
+Related planning documents in `docs/project-evolution-guide/`:
+- **03** - Where to stop development (skip neural fields)
+- **04** - Original week 1 planning (now see IMPLEMENTATION_PLAN.md)
+- **06** - Original design exploration (now see TECHNICAL_DESIGN.md)
 
 ### Bootstrap Process
 The Context Manager is being built to document its own development:
@@ -83,9 +104,9 @@ The Context Manager will help build itself by:
    Read: docs/project-evolution-guide/01_AUTONOMOUS_SOFTWARE_COMPANY_VISION.md
    ```
 
-2. **Review Week 1 Plan** (15 min):
+2. **Review Implementation Plan** (15 min):
    ```
-   Read: docs/project-evolution-guide/04_CONTEXT_MANAGER_V1_PLAN.md
+   Read: docs/agents/context-manager/IMPLEMENTATION_PLAN.md
    ```
 
 3. **Start Coding Context Manager v1**:
@@ -243,6 +264,23 @@ gemini -p "@./ What has been implemented so far in this agent-workflow project?"
 # Review research findings
 gemini -p "@docs/research/ What are the key findings from the research phase?"
 ```
+
+## Implementation Readiness Summary
+
+### ✅ Documentation Complete
+- Vision and roadmap established
+- Context Manager fully specified
+- TDD approach defined
+- Bootstrap methodology documented
+- File organization optimized
+
+### 📁 Key Documentation Locations
+- **Context Manager Spec**: `docs/agents/context-manager/AGENT_SPECIFICATION.md`
+- **Technical Design**: `docs/agents/context-manager/TECHNICAL_DESIGN.md`
+- **Implementation Plan**: `docs/agents/context-manager/IMPLEMENTATION_PLAN.md`
+
+### 🎯 Ready to Start Coding
+With comprehensive documentation in place, we're ready to begin Week 1 implementation following TDD principles and bootstrap methodology.
 
 ## Next Actions
 
