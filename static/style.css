@@ -1,0 +1,175 @@
+/* Ultra-minimal styling */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #0d1117;
+    color: #c9d1d9;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    color: #58a6ff;
+    margin-bottom: 30px;
+}
+
+h2 {
+    color: #58a6ff;
+    margin-bottom: 15px;
+    font-size: 1.2em;
+}
+
+h3 {
+    color: #8b949e;
+    margin-bottom: 10px;
+    font-size: 1em;
+}
+
+.panels {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.panel {
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.current-state {
+    font-size: 1.5em;
+    font-weight: bold;
+    text-align: center;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.state-idle { background: #1f6feb; }
+.state-backlog-ready { background: #8957e5; }
+.state-sprint-active { background: #da3633; }
+.state-design { background: #2ea043; }
+.state-test-red { background: #da3633; }
+.state-test-green { background: #2ea043; }
+.state-refactor { background: #fb8500; }
+
+.diagram {
+    background: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 5px;
+    padding: 10px;
+    overflow: auto;
+    max-height: 300px;
+}
+
+.command-panel {
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+#command-input {
+    width: calc(100% - 80px);
+    padding: 10px;
+    background: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 5px;
+    color: #c9d1d9;
+    font-size: 16px;
+}
+
+#send-btn {
+    width: 70px;
+    padding: 10px;
+    margin-left: 10px;
+    background: #238636;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#send-btn:hover {
+    background: #2ea043;
+}
+
+.command-help {
+    margin-top: 20px;
+    padding: 15px;
+    background: #0d1117;
+    border-radius: 5px;
+}
+
+.commands-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.command-group ul {
+    list-style: none;
+    margin-top: 5px;
+}
+
+.command-group li {
+    padding: 2px 0;
+    color: #8b949e;
+}
+
+.error-message {
+    color: #f85149;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.history-panel {
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+#history-log {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.history-entry {
+    padding: 5px 0;
+    border-bottom: 1px solid #30363d;
+    color: #8b949e;
+    font-size: 0.9em;
+}
+
+/* Mermaid diagram text */
+.mermaid {
+    font-size: 16px !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .panels {
+        grid-template-columns: 1fr;
+    }
+    
+    .commands-grid {
+        grid-template-columns: 1fr;
+    }
+}
