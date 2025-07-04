@@ -20,7 +20,9 @@ agent-workflow/
 │   │   ├── 02_IMPLEMENTATION_ROADMAP.md
 │   │   ├── 03_CONTEXT_MANAGER_DEVELOPMENT_GUIDE.md
 │   │   ├── 04_CONTEXT_MANAGER_V1_PLAN.md
-│   │   └── 05_AGENT_SPECIFICATIONS_EXPANDED.md
+│   │   ├── 05_AGENT_SPECIFICATIONS_EXPANDED.md
+│   │   ├── 06_CONTEXT_MANAGER_V1_DESIGN.md     # NEW: Detailed design with TDD approach
+│   │   └── 07_AGENT_DOCUMENTATION_STANDARD.md  # NEW: Unified documentation framework
 │   └── research/            # Deep research by complexity level
 │       ├── simple/          # Current approach
 │       ├── advanced/        # 1-2 year horizon
@@ -34,9 +36,30 @@ agent-workflow/
 - ✅ Minimal state machine demo working (4 files)
 - ✅ Comprehensive research completed
 - ✅ Documentation organized with clear reading order
+- ✅ Context Manager v1 design completed (TDD approach)
+- ✅ Agent Documentation Standard established
 - 🎯 **Next**: Implement Context Manager v1 (Week 1 goal)
 - ⏳ Then: Add Documentation Agent (FDA compliance)
 - ⏳ Future: Build full agent suite
+
+## Context Manager v1 Implementation Status
+
+### Design Decisions Made
+- **Architecture**: Separate module with clean interfaces
+- **Storage**: JSON files for v1 (human-readable, debuggable)
+- **Schema**: Python dataclasses with type safety
+- **Pattern Detection**: Simple keyword/decision tracking
+- **Testing**: TDD approach with tests written first
+
+### Bootstrap Process
+The Context Manager is being built to document its own development:
+```python
+# Example of self-documentation in action
+cm.log_decision(
+    "Using JSON storage instead of SQLite",
+    "Prioritizing debuggability and simplicity for v1"
+)
+```
 
 ## Development Approach
 
@@ -223,17 +246,54 @@ gemini -p "@docs/research/ What are the key findings from the research phase?"
 
 ## Next Actions
 
-1. [ ] Implement Context Manager v1 (Week 1)
-   - Start with context_manager.py
-   - Follow docs/project-evolution-guide/04_CONTEXT_MANAGER_V1_PLAN.md
-   - Use it to track its own development
+### Week 1: Context Manager v1 Implementation
 
-2. [ ] Integrate with existing Flask app
-   - Add REST endpoints for context operations
-   - Connect to state machine transitions
-   - Add WebSocket events for real-time updates
+**Monday - Schema & Core Tests**
+- [ ] Create `tests/test_context_schema.py` (TDD first)
+- [ ] Implement `context/schema.py` with dataclasses
+- [ ] Create `tests/test_storage.py`
+- [ ] Log decision: "Starting with TDD approach"
 
-3. [ ] Begin Documentation Agent design
-   - Use patterns learned from Context Manager
-   - Focus on FDA compliance needs
-   - Plan integration with Context Manager
+**Tuesday - Storage Implementation**
+- [ ] Implement `context/storage.py` with JSON backend
+- [ ] Add file locking for concurrent access
+- [ ] Create backup mechanism
+- [ ] Log decision: "JSON vs SQLite trade-offs"
+
+**Wednesday - Pattern Detection**
+- [ ] Create `tests/test_patterns.py`
+- [ ] Implement basic pattern detection in `context/patterns.py`
+- [ ] Add suggestion generation
+- [ ] Log decision: "Pattern detection algorithm choice"
+
+**Thursday - API Integration**
+- [ ] Create `tests/test_api.py`
+- [ ] Implement REST endpoints in `context/api.py`
+- [ ] Integrate with existing Flask app
+- [ ] Log decision: "API design choices"
+
+**Friday - Bootstrap Features & Testing**
+- [ ] Complete bootstrap features
+- [ ] Run full test suite
+- [ ] Document learnings
+- [ ] Plan Week 2 based on patterns
+
+### Documentation to Maintain
+As you implement, update these sections in CLAUDE.md:
+1. Design decisions made
+2. Patterns discovered
+3. Next features suggested by Context Manager
+4. Test coverage status
+5. Integration points completed
+
+### Self-Documentation Examples
+```python
+# Track why each decision was made
+cm.log_decision("decision", "reasoning")
+
+# Track problems encountered
+cm.log_problem("issue", "attempted_solution")
+
+# Track successful patterns
+cm.log_pattern("pattern_name", "where_applied", "outcome")
+```
