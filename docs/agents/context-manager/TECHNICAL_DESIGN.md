@@ -55,63 +55,97 @@ class Context:
         # Implementation in schema.py
 ```
 
-### Document Data Structure
+### Documentation Intelligence System
 
 ```python
-class DocumentType(Enum):
-    """Types of documentation managed by Context Manager."""
-    README = "readme"
-    API_SPEC = "api_spec"
-    ARCHITECTURE = "architecture"
-    DECISION_RECORD = "decision_record"
-    WORKFLOW = "workflow"
-    AGENT_SPEC = "agent_spec"
-    USER_GUIDE = "user_guide"
-    CHANGELOG = "changelog"
-    MEETING_NOTES = "meeting_notes"
-    TEST_PLAN = "test_plan"
-
 @dataclass
-class Document:
-    """Mutable documentation artifact managed by Context Manager."""
+class DocMetadata:
+    """Lightweight metadata for existing documentation files."""
     
-    # Required fields
-    path: str                    # File path (e.g., "docs/README.md")
-    doc_type: DocumentType       # Type of documentation
-    content: str                 # Current content
-    version: int                 # Version number
-    last_modified: datetime      # Last update timestamp
-    modified_by: str             # Agent/human identifier
+    # File reference
+    path: str                       # Path to actual .md file
+    doc_type: str                   # Inferred type (readme, api_spec, etc.)
+    last_analyzed: datetime         # When we last analyzed this doc
+    
+    # Intelligence data
+    patterns_detected: 'DocPattern' # Learned patterns from this doc
+    quality_scores: Dict[str, float] = field(default_factory=dict)
+    staleness_indicators: List[str] = field(default_factory=list)
     
     # Relationships
-    linked_contexts: List[str] = field(default_factory=list)   # Related context IDs
-    linked_docs: List[str] = field(default_factory=list)       # Related document paths
+    linked_contexts: List[str] = field(default_factory=list)    # Related events
+    linked_docs: List[str] = field(default_factory=list)        # Related docs
+    dependencies: Dict[str, List[str]] = field(default_factory=dict)  # Code dependencies
     
-    # Metadata
-    metadata: Dict[str, Any] = field(default_factory=dict)
-    sections: Dict[str, str] = field(default_factory=dict)     # Section mapping
-    tags: List[str] = field(default_factory=list)
+    # Update tracking
+    update_history: List['DocUpdate'] = field(default_factory=list)
+    pending_updates: List['SuggestedUpdate'] = field(default_factory=list)
     
-    # Quality metrics
-    completeness_score: float = 0.0  # 0-1 score
-    consistency_score: float = 0.0    # 0-1 score
-    last_validated: Optional[datetime] = None
+    def needs_update(self) -> bool:
+        """Check if document likely needs updating."""
+        return len(self.staleness_indicators) > 0 or len(self.pending_updates) > 0
+
+@dataclass
+class DocPattern:
+    """Learned patterns from existing documentation."""
     
-    def validate_standards(self) -> ValidationResult:
-        """Validate document against type-specific standards."""
-        # Implementation in document_validator.py
+    # Structure patterns
+    file_naming: Dict[str, str]         # Pattern mappings
+    section_headers: List[str]          # Common sections in order
+    section_patterns: Dict[str, str]    # Section name -> content pattern
+    
+    # Style patterns
+    markdown_style: Dict[str, str]      # Style preferences
+    code_block_style: str               # Language tags used
+    list_style: str                     # Bullet point style
+    
+    # Content patterns
+    common_phrases: Dict[str, int]      # Phrase -> frequency
+    terminology: Dict[str, str]         # Project-specific terms
+    update_triggers: Dict[str, List[str]]  # Code pattern -> doc sections
+    
+    # Quality patterns
+    avg_section_length: Dict[str, int]  # Expected section sizes
+    required_sections: List[str]        # Sections that should exist
+    optional_sections: List[str]        # Sections that might exist
+
+@dataclass
+class DocUpdate:
+    """Record of a documentation update."""
+    timestamp: datetime
+    trigger_context: str                # Context ID that triggered update
+    update_type: str                    # 'manual', 'automated', 'suggested'
+    sections_affected: List[str]
+    change_summary: str
+    performed_by: str                   # Agent or human ID
+
+@dataclass 
+class SuggestedUpdate:
+    """Pending documentation update suggestion."""
+    suggested_at: datetime
+    trigger_contexts: List[str]         # Contexts suggesting this update
+    section: str                        # Section to update
+    update_type: str                    # 'addition', 'modification', 'deletion'
+    confidence: float                   # 0.0-1.0
+    suggested_content: Optional[str]    # For simple updates
+    complexity: str                     # 'simple', 'medium', 'complex'
+    suggested_handler: str              # 'context_manager', 'swiss_army', 'human'
 ```
 
-### Context vs Document Design Rationale
+### Documentation Intelligence Design Rationale
 
-- **Context = Immutable Events**: Once created, contexts never change (audit trail)
-- **Documents = Mutable Knowledge**: Documents evolve through versions
-- **Bidirectional Linking**: Contexts can reference docs that existed at that time
-- **Separation of Concerns**: Different storage, different lifecycles
+- **Metadata Only**: No content duplication - work with existing .md files directly
+- **Pattern Learning**: Extract and adapt to project's documentation style
+- **Intelligence Layer**: Context Manager coordinates but doesn't own all writing
+- **Progressive Enhancement**: Start with metadata, add intelligence over time
+- **Flexible Routing**: Simple updates handled directly, complex ones routed to appropriate agents/humans
 
-- **Dataclasses over Pydantic**: Native Python, good IDE support, no external dependencies
-- **Flexible Metadata**: Core fields are typed, metadata dict for extensibility
-- **Compliance Built-in**: Audit and sensitivity fields for medical device requirements
+### Context vs Documentation Relationship
+
+- **Context = Immutable Events**: Track all changes and decisions
+- **DocMetadata = Learned Intelligence**: Understanding of documentation structure and needs
+- **Bidirectional Linking**: Contexts trigger doc updates, docs reference relevant contexts
+- **No Lock-in**: Documentation remains in standard markdown, CM adds intelligence layer
 
 ## Storage Strategy
 
@@ -130,21 +164,21 @@ contexts/                   # Immutable event records
     ├── by_source.json
     └── patterns.json
 
-documents/                  # Mutable documentation
-├── current/                # Current versions
-│   ├── README.md.json
-│   ├── CHANGELOG.md.json
-│   ├── api/
-│   │   └── openapi.json
-│   └── guides/
-│       └── user-guide.json
-├── versions/               # Version history
-│   └── {doc_path}/
-│       └── v{version}.json
-└── indices/                # Document search indices
-    ├── by_type.json
-    ├── by_tag.json
-    └── relationships.json
+doc_metadata/               # Documentation intelligence
+├── metadata/               # Metadata for each doc
+│   └── {path_hash}.json   # Hash of file path -> metadata
+├── patterns/               # Learned patterns
+│   ├── global_patterns.json    # Project-wide patterns
+│   └── by_type/               # Type-specific patterns
+│       ├── readme_patterns.json
+│       └── api_patterns.json
+├── indices/                # Search and relationships
+│   ├── doc_index.json     # Path -> metadata mapping
+│   ├── dependency_graph.json  # Code -> doc dependencies
+│   └── update_queue.json  # Pending updates
+└── learning/              # Pattern learning data
+    ├── style_samples.json
+    └── update_history.json
 ```
 
 ### Storage Interface (Future-proof)
@@ -167,31 +201,35 @@ class StorageBackend(ABC):
     def search_contexts(self, query: Dict[str, Any]) -> List[Context]:
         pass
 
-class DocumentBackend(ABC):
-    """Abstract document storage interface"""
+class DocMetadataBackend(ABC):
+    """Abstract documentation metadata interface"""
     
     @abstractmethod
-    def save_document(self, doc: Document) -> bool:
+    def save_metadata(self, metadata: DocMetadata) -> bool:
         pass
     
     @abstractmethod
-    def get_document(self, path: str, version: Optional[int] = None) -> Optional[Document]:
+    def get_metadata(self, path: str) -> Optional[DocMetadata]:
         pass
     
     @abstractmethod
-    def search_documents(self, query: Dict[str, Any]) -> List[Document]:
+    def search_metadata(self, query: Dict[str, Any]) -> List[DocMetadata]:
         pass
     
     @abstractmethod
-    def get_versions(self, path: str) -> List[int]:
+    def save_patterns(self, patterns: DocPattern, scope: str = 'global') -> bool:
+        pass
+    
+    @abstractmethod
+    def get_patterns(self, scope: str = 'global') -> Optional[DocPattern]:
         pass
 
 class JSONFileBackend(StorageBackend):
     """v1 implementation using JSON files"""
     pass
 
-class JSONDocumentBackend(DocumentBackend):
-    """v1 document storage using JSON"""
+class JSONMetadataBackend(DocMetadataBackend):
+    """v1 metadata storage using JSON"""
     pass
 
 class RedisBackend(StorageBackend):
@@ -231,6 +269,131 @@ def detect_patterns(self, time_window: timedelta = timedelta(hours=24)):
 2. **Error Patterns**: Common errors and resolutions
 3. **Workflow Patterns**: State transition sequences
 4. **Development Patterns**: Feature implementation success/failure
+5. **Documentation Patterns**: Update triggers and style consistency
+
+## Documentation Intelligence
+
+### Pattern Learning System
+
+```python
+def learn_doc_patterns(self, doc_path: str) -> DocPattern:
+    """Extract patterns from existing documentation."""
+    content = self.read_file(doc_path)
+    
+    # Structure analysis
+    patterns = DocPattern()
+    patterns.section_headers = self.extract_headers(content)
+    patterns.markdown_style = self.analyze_markdown_style(content)
+    
+    # Content analysis
+    patterns.common_phrases = self.extract_common_phrases(content)
+    patterns.terminology = self.extract_project_terms(content)
+    
+    # Learn from multiple docs of same type
+    if doc_type := self.infer_doc_type(doc_path):
+        similar_docs = self.find_similar_docs(doc_type)
+        patterns = self.merge_patterns(patterns, similar_docs)
+    
+    return patterns
+```
+
+### Update Detection and Routing
+
+```python
+def analyze_update_impact(self, context: Context) -> List[SuggestedUpdate]:
+    """Determine which docs need updating based on context."""
+    suggestions = []
+    
+    # Check if context represents code change
+    if context.type == ContextType.CODE_CHANGE:
+        affected_files = context.data.get('files', [])
+        
+        # Find documentation dependencies
+        for file in affected_files:
+            dependent_docs = self.find_dependent_docs(file)
+            
+            for doc_path in dependent_docs:
+                metadata = self.get_metadata(doc_path)
+                update_type = self.classify_update_need(context, metadata)
+                
+                suggestion = SuggestedUpdate(
+                    suggested_at=datetime.now(),
+                    trigger_contexts=[context.id],
+                    section=self.identify_section(doc_path, context),
+                    update_type=update_type,
+                    complexity=self.assess_complexity(update_type),
+                    confidence=self.calculate_confidence(context, metadata),
+                    suggested_handler=self.route_to_handler(update_type)
+                )
+                suggestions.append(suggestion)
+    
+    return suggestions
+
+def route_to_handler(self, update_type: str) -> str:
+    """Determine who should handle the documentation update."""
+    routing_rules = {
+        # Simple updates - Context Manager handles directly
+        'version_bump': 'context_manager',
+        'timestamp_update': 'context_manager',
+        'list_addition': 'context_manager',
+        
+        # Medium complexity - Swiss Army Knife agent
+        'new_section': 'swiss_army_agent',
+        'example_update': 'swiss_army_agent',
+        'api_addition': 'swiss_army_agent',
+        
+        # Complex updates - Future Documentation Agent or Human
+        'major_refactor': 'documentation_agent',
+        'architecture_change': 'human',
+        'breaking_change': 'human'
+    }
+    return routing_rules.get(update_type, 'human')
+```
+
+### Documentation Quality Metrics
+
+```python
+def calculate_doc_quality(self, doc_path: str) -> Dict[str, float]:
+    """Assess documentation quality across multiple dimensions."""
+    metadata = self.get_metadata(doc_path)
+    content = self.read_file(doc_path)
+    patterns = metadata.patterns_detected
+    
+    scores = {
+        'completeness': self.check_required_sections(content, patterns),
+        'consistency': self.check_style_consistency(content, patterns),
+        'staleness': self.calculate_staleness(metadata),
+        'clarity': self.assess_readability(content),
+        'accuracy': self.check_code_doc_sync(doc_path, metadata)
+    }
+    
+    return scores
+```
+
+### Learning from Updates
+
+```python
+def record_update_outcome(self, update: DocUpdate, success: bool, feedback: str = None):
+    """Learn from documentation update outcomes."""
+    # Record what worked or didn't
+    self.update_history.append({
+        'update': update,
+        'success': success,
+        'feedback': feedback,
+        'patterns_used': update.patterns_applied
+    })
+    
+    # Adjust confidence for similar future updates
+    if not success:
+        self.adjust_pattern_confidence(update.update_type, -0.1)
+    else:
+        self.adjust_pattern_confidence(update.update_type, 0.05)
+    
+    # Learn new patterns from successful manual updates
+    if update.update_type == 'manual' and success:
+        new_patterns = self.extract_patterns_from_diff(update)
+        self.merge_learned_patterns(new_patterns)
+```
 
 ## API Design
 
@@ -258,16 +421,16 @@ POST   /api/context/decision            # Log decision
 POST   /api/context/problem             # Log problem
 GET    /api/context/next                # Get next task suggestions
 
-# Documentation Gateway
-POST   /api/docs/                       # Create document
-GET    /api/docs/{path}                 # Get document (latest version)
-GET    /api/docs/{path}/v/{version}    # Get specific version
-PUT    /api/docs/{path}                 # Update document
-GET    /api/docs/{path}/versions        # List all versions
-POST   /api/docs/search                 # Search documents
-POST   /api/docs/validate               # Validate against standards
+# Documentation Intelligence
+POST   /api/docs/analyze                # Analyze doc and extract patterns
+GET    /api/docs/{path}/metadata        # Get doc metadata and quality scores
 GET    /api/docs/{path}/suggestions     # Get update suggestions
-POST   /api/docs/link                   # Link documents
+POST   /api/docs/{path}/update          # Apply simple update (CM handles)
+GET    /api/docs/patterns               # Get learned documentation patterns
+POST   /api/docs/learn                  # Force pattern learning from docs
+GET    /api/docs/quality                # Get quality metrics for all docs
+POST   /api/docs/link                   # Link documents and contexts
+GET    /api/docs/stale                  # List potentially stale documentation
 ```
 
 ### WebSocket Events
@@ -286,13 +449,17 @@ socket.on('suggestion_available', (data) => {
     displaySuggestion(data.suggestion);
 });
 
-// Documentation events
-socket.on('doc_updated', (data) => {
-    notifyDocChange(data.path, data.version);
+// Documentation intelligence events
+socket.on('doc_stale', (data) => {
+    notifyStaleDoc(data.path, data.reasons);
 });
 
-socket.on('doc_suggestion', (data) => {
-    showDocSuggestion(data.suggestion);
+socket.on('doc_update_suggested', (data) => {
+    showUpdateSuggestion(data.path, data.suggestion);
+});
+
+socket.on('pattern_learned', (data) => {
+    console.log(`Learned new pattern: ${data.pattern_type}`);
 });
 ```
 
@@ -339,30 +506,39 @@ class TestContextManager:
         # Create pattern
         # Verify suggestions match pattern
 
-class TestDocumentManager:
-    def test_document_versioning(self):
-        """Document updates create new versions"""
+class TestDocumentIntelligence:
+    def test_pattern_extraction(self):
+        """Extract patterns from existing documentation"""
         cm = ContextManager()
-        doc_id = cm.create_doc(
-            DocumentType.README,
-            "# Initial Content",
-            {"author": "test"}
+        patterns = cm.learn_doc_patterns("docs/README.md")
+        assert patterns.section_headers is not None
+        assert patterns.markdown_style is not None
+        
+    def test_update_detection(self):
+        """Detect when docs need updating"""
+        cm = ContextManager()
+        # Add code change context
+        context = Context(
+            type=ContextType.CODE_CHANGE,
+            data={"files": ["api/endpoints.py"], "changes": "new endpoint"}
         )
+        suggestions = cm.analyze_update_impact(context)
+        assert any(s.path == "docs/API.md" for s in suggestions)
         
-        cm.update_doc(doc_id, {"content": "# Updated Content"})
-        versions = cm.get_versions(doc_id)
-        assert len(versions) == 2
+    def test_update_routing(self):
+        """Route updates to appropriate handlers"""
+        cm = ContextManager()
+        assert cm.route_to_handler('version_bump') == 'context_manager'
+        assert cm.route_to_handler('new_section') == 'swiss_army_agent'
+        assert cm.route_to_handler('breaking_change') == 'human'
         
-    def test_document_standards_validation(self):
-        """Documents validated against standards"""
-        # Create doc missing required sections
-        # Verify validation fails with specific errors
-        
-    def test_context_document_linking(self):
-        """Contexts and documents can be linked"""
-        # Create context referencing doc
-        # Update doc
-        # Verify context still references correct version
+    def test_quality_metrics(self):
+        """Calculate documentation quality scores"""
+        cm = ContextManager()
+        scores = cm.calculate_doc_quality("docs/README.md")
+        assert 'completeness' in scores
+        assert 'staleness' in scores
+        assert all(0 <= score <= 1 for score in scores.values())
 ```
 
 ## Performance Targets
@@ -373,10 +549,11 @@ class TestDocumentManager:
 | get_context | 50ms | 1s | From cache/storage |
 | search_contexts | 500ms | 2s | Full-text search |
 | pattern_detection | 5s | 10min | Run async in background |
-| create_doc | 200ms | 3s | Include validation |
-| update_doc | 300ms | 3s | Version + validation |
-| search_docs | 500ms | 2s | Full-text search |
-| validate_standards | 100ms | 1s | Per document |
+| analyze_doc | 200ms | 3s | Extract patterns from doc |
+| learn_patterns | 2s | 30s | Learn from multiple docs |
+| suggest_updates | 500ms | 5s | Analyze impact and route |
+| apply_simple_update | 300ms | 2s | Version bump, list add |
+| calculate_quality | 100ms | 1s | Per document metrics |
 
 ## Security Considerations
 

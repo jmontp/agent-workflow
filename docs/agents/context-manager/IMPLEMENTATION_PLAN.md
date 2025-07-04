@@ -27,24 +27,23 @@ def test_context_validation():
     with pytest.raises(ValidationError):
         Context(type="invalid_type")  # Should fail
 
-# test_document_schema.py
-def test_document_creation():
-    """Test document creation with versioning"""
-    doc = Document(
+# test_doc_metadata.py
+def test_metadata_creation():
+    """Test metadata tracking for existing docs"""
+    metadata = DocMetadata(
         path="docs/README.md",
-        doc_type=DocumentType.README,
-        content="# Project Title",
-        version=1,
-        last_modified=datetime.now(),
-        modified_by="TestAgent"
+        doc_type="readme",
+        last_analyzed=datetime.now(),
+        patterns_detected=DocPattern(),
+        quality_scores={"completeness": 0.8}
     )
-    assert doc.validate_standards()
+    assert metadata.path == "docs/README.md"
 
-def test_document_versioning():
-    """Test documents maintain version history"""
-    # Create initial version
-    # Update document
-    # Verify version incremented
+def test_pattern_extraction():
+    """Test extracting patterns from doc"""
+    patterns = cm.learn_doc_patterns("docs/README.md")
+    assert patterns.section_headers is not None
+    # Verify learned markdown style
 ```
 
 ### Day 2-3: Storage Implementation
@@ -174,13 +173,13 @@ cm.log_decision(
 - [x] Audit trail for all context operations
 - [x] Pattern detection for self-improvement
 
-### Documentation Gateway (New) ✓
-- [ ] Document schema implementation
-- [ ] Version control system
-- [ ] Standards validation
-- [ ] Document-context linking
-- [ ] Cross-reference management
-- [ ] Documentation search indices
+### Documentation Intelligence (New) ✓
+- [ ] DocMetadata schema implementation
+- [ ] Pattern learning system
+- [ ] Update detection from contexts
+- [ ] Routing by complexity
+- [ ] Quality metrics calculation
+- [ ] Learn from manual updates
 
 ## Week 2: Advanced Features
 
@@ -296,10 +295,10 @@ cm.log_decision(
 3. Maintains audit trail for all operations
 4. Persists state between sessions
 5. Integrates with existing Flask app
-6. Document schema and storage working
-7. Basic document versioning implemented
-8. Documentation gateway enforced
-9. Standards validation operational
+6. DocMetadata schema working
+7. Pattern extraction from existing docs
+8. Update suggestions based on code changes
+9. Simple updates handled by CM
 
 ### Ready for Agents When:
 1. Stable context flow established
@@ -307,8 +306,8 @@ cm.log_decision(
 3. No context explosion (staying under limits)
 4. Clean API for agent integration
 5. Documentation patterns captured
-6. Document gateway enforcing consistency
-7. All agents using CM for doc operations
+6. Documentation intelligence routing updates
+7. Agents requesting doc updates through CM
 8. Documentation suggestions improving
 9. Cross-references maintained automatically
 
@@ -343,21 +342,21 @@ cm.log_decision(
 tests/
 ├── unit/
 │   ├── test_context_schema.py      # Schema validation
-│   ├── test_document_schema.py     # Document validation
+│   ├── test_doc_metadata.py        # DocMetadata schema
 │   ├── test_storage.py             # Storage operations
-│   ├── test_doc_storage.py         # Document storage & versioning
+│   ├── test_pattern_learning.py    # Doc pattern extraction
 │   ├── test_patterns.py            # Pattern detection
-│   ├── test_standards.py           # Documentation standards
+│   ├── test_update_routing.py      # Update complexity routing
 │   └── test_api.py                 # API endpoints
 ├── integration/
 │   ├── test_flask_integration.py   # Flask app integration
 │   ├── test_websocket.py           # Real-time events
 │   ├── test_bootstrap.py           # Self-documentation
-│   └── test_doc_gateway.py         # Document gateway enforcement
+│   └── test_doc_intelligence.py    # End-to-end doc intelligence
 └── performance/
     ├── test_throughput.py          # 10 contexts/sec
     ├── test_search.py              # <2s searches
-    └── test_doc_operations.py      # Document operation performance
+    └── test_pattern_analysis.py     # Pattern learning performance
 ```
 
 ## Migration Path
