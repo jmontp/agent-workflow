@@ -1,0 +1,22 @@
+{
+  "id": "b0e0eeca-c135-4611-a2d2-43645fe73d8e",
+  "type": "decision",
+  "source": "human",
+  "timestamp": "2025-07-04T18:52:49.287924",
+  "data": {
+    "decision": "Design Context Manager as documentation intelligence hub",
+    "reasoning": "Avoids content duplication and respects existing documentation structure"
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 32
+  },
+  "relationships": [],
+  "tags": [
+    "bootstrap",
+    "decision"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

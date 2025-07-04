@@ -85,3 +85,9 @@ temp/
 # Demo & Test HTML Files
 *-demo.html
 test-*.html
+
+# Context Manager storage
+context_store/
+
+# CM CLI config
+.cm_config.json

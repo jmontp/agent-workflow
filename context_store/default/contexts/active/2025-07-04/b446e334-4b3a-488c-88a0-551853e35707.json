@@ -1,0 +1,22 @@
+{
+  "id": "b446e334-4b3a-488c-88a0-551853e35707",
+  "type": "decision",
+  "source": "human",
+  "timestamp": "2025-07-04T18:50:17.834373",
+  "data": {
+    "decision": "Created Context Manager v1 with CLI interface",
+    "reasoning": "Need quick command-line access for logging decisions and bootstrap methodology requires self-documentation"
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 37
+  },
+  "relationships": [],
+  "tags": [
+    "bootstrap",
+    "decision"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

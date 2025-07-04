@@ -1,0 +1,22 @@
+{
+  "id": "5dc7952f-a3d2-4fad-b21d-1464bceb5251",
+  "type": "decision",
+  "source": "human",
+  "timestamp": "2025-07-04T18:52:13.865196",
+  "data": {
+    "decision": "Use JSON storage for Context Manager",
+    "reasoning": "Human-readable, debuggable, and sufficient for v1 performance requirements"
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 27
+  },
+  "relationships": [],
+  "tags": [
+    "bootstrap",
+    "decision"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

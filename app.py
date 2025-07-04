@@ -8,8 +8,9 @@ from flask import Flask, render_template, jsonify, request
 from flask_socketio import SocketIO, emit
 from enum import Enum
 from dataclasses import dataclass
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, List
 from datetime import datetime
+from context_manager import ContextManager, Context, ContextType
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'demo-secret-key'
@@ -169,8 +170,99 @@ def handle_command(data):
             'message': f'Cannot transition from {current} to {target_state.value}'
         })
 
+# Initialize Context Manager
+cm = ContextManager()
+
+# Context Manager API endpoints
+@app.route('/api/context', methods=['POST'])
+def add_context():
+    """Add a new context."""
+    try:
+        data = request.json
+        context = Context(
+            id=data.get('id', str(datetime.now().timestamp())),
+            type=ContextType(data['type']),
+            source=data.get('source', 'api'),
+            timestamp=datetime.now(),
+            data=data.get('data', {}),
+            metadata=data.get('metadata', {}),
+            tags=data.get('tags', [])
+        )
+        context_id = cm.add_context(context)
+        return jsonify({"success": True, "context_id": context_id})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 400
+
+@app.route('/api/context/<context_id>')
+def get_context(context_id):
+    """Get a specific context."""
+    context = cm.get_context(context_id)
+    if context:
+        return jsonify(context.to_dict())
+    return jsonify({"error": "Context not found"}), 404
+
+@app.route('/api/context/query')
+def query_contexts():
+    """Query contexts with filters."""
+    # Get query parameters
+    query = request.args.get('q')
+    context_type = request.args.get('type')
+    limit = int(request.args.get('limit', 10))
+    
+    kwargs = {}
+    if query:
+        kwargs['query'] = query
+    if context_type:
+        try:
+            kwargs['context_type'] = ContextType(context_type)
+        except ValueError:
+            return jsonify({"error": f"Invalid type: {context_type}"}), 400
+    kwargs['limit'] = limit
+    
+    results = cm.query_contexts(**kwargs)
+    return jsonify([c.to_dict() for c in results])
+
+@app.route('/api/context/decision', methods=['POST'])
+def log_decision():
+    """Log a development decision."""
+    data = request.json
+    context_id = cm.log_decision(
+        data['decision'],
+        data['reasoning']
+    )
+    
+    # Also trigger state transition if applicable
+    if workflow_sm.current_state == WorkflowState.REQUEST_RECEIVED:
+        workflow_sm.transition(WorkflowState.CONTEXT_SEARCH)
+        socketio.emit('state_change', {
+            'machine': 'workflow',
+            'new_state': WorkflowState.CONTEXT_SEARCH.value
+        })
+    
+    return jsonify({
+        "context_id": context_id,
+        "suggestions": cm.suggest_next_task()
+    })
+
+@app.route('/api/context/suggest')
+def get_suggestions():
+    """Get task suggestions."""
+    return jsonify({"suggestions": cm.suggest_next_task()})
+
+@app.route('/api/context/stats')
+def get_stats():
+    """Get Context Manager statistics."""
+    return jsonify(cm.get_stats())
+
+@app.route('/api/context/patterns')
+def get_patterns():
+    """Get detected patterns."""
+    min_occurrences = int(request.args.get('min', 3))
+    return jsonify(cm.get_patterns(min_occurrences))
+
 if __name__ == '__main__':
     print("Starting agent workflow state machine...")
     print("Tracking execution stages: Request → Context Search → Execute → Update → Review")
+    print("Context Manager API available at /api/context")
     print("Open http://localhost:5000 in your browser")
     socketio.run(app, debug=True, host='0.0.0.0', port=5000, allow_unsafe_werkzeug=True)

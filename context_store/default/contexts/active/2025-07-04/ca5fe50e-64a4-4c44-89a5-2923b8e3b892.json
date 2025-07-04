@@ -1,0 +1,22 @@
+{
+  "id": "ca5fe50e-64a4-4c44-89a5-2923b8e3b892",
+  "type": "decision",
+  "source": "human",
+  "timestamp": "2025-07-04T18:54:20.397936",
+  "data": {
+    "decision": "Added Context Manager API endpoints to Flask app",
+    "reasoning": "Need web API for agents and UI to interact with Context Manager"
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 27
+  },
+  "relationships": [],
+  "tags": [
+    "bootstrap",
+    "decision"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}
