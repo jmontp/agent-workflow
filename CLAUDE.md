@@ -1,62 +1,171 @@
-# Using Gemini CLI for Large Codebase Analysis
+# Agent-Workflow Project Guide
+
+## Project Overview
+
+This is an autonomous software engineering company project that uses AI agents orchestrated through a Context Manager to build software with minimal human intervention. The system is designed to scale from assisting with 1-3 projects (current) to managing dozens of autonomous software companies (future).
+
+## Project Structure
+
+```
+agent-workflow/
+├── app.py                    # Minimal state machine demo (Flask + WebSocket)
+├── templates/index.html      # Web interface
+├── static/                   # Client-side JS and CSS
+│   ├── app.js
+│   └── style.css
+├── docs/                     # All project documentation
+│   ├── README.md            # Documentation overview
+│   ├── project-evolution-guide/  # Main docs (READ IN ORDER)
+│   │   ├── 01_AUTONOMOUS_SOFTWARE_COMPANY_VISION.md
+│   │   ├── 02_IMPLEMENTATION_ROADMAP.md
+│   │   ├── 03_CONTEXT_MANAGER_DEVELOPMENT_GUIDE.md
+│   │   ├── 04_CONTEXT_MANAGER_V1_PLAN.md
+│   │   └── 05_AGENT_SPECIFICATIONS_EXPANDED.md
+│   └── research/            # Deep research by complexity level
+│       ├── simple/          # Current approach
+│       ├── advanced/        # 1-2 year horizon
+│       ├── future-advanced/ # 3-5 year vision
+│       └── theoretical-limits/ # Long-term possibilities
+└── CLAUDE.md               # This file
+```
+
+## Current Status
+
+- ✅ Minimal state machine demo working (4 files)
+- ✅ Comprehensive research completed
+- ✅ Documentation organized with clear reading order
+- 🎯 **Next**: Implement Context Manager v1 (Week 1 goal)
+- ⏳ Then: Add Documentation Agent (FDA compliance)
+- ⏳ Future: Build full agent suite
+
+## Development Approach
+
+### Bootstrap Philosophy
+The Context Manager will help build itself by:
+1. Logging all development decisions
+2. Learning patterns from its own development
+3. Suggesting next features based on usage
+4. Creating a self-improving foundation
+
+### Key Principles
+- **Context-First**: Everything flows through the Context Manager
+- **Progressive Complexity**: Start simple, enhance based on real usage
+- **Compliance Ready**: Built for FDA/medical device requirements
+- **Self-Documenting**: Every decision logged with reasoning
+
+## Quick Start for Development
+
+1. **Understand the Vision** (30 min):
+   ```
+   Read: docs/project-evolution-guide/01_AUTONOMOUS_SOFTWARE_COMPANY_VISION.md
+   ```
+
+2. **Review Week 1 Plan** (15 min):
+   ```
+   Read: docs/project-evolution-guide/04_CONTEXT_MANAGER_V1_PLAN.md
+   ```
+
+3. **Start Coding Context Manager v1**:
+   ```python
+   # Begin with ~150 lines in context_manager.py
+   # Focus on bootstrap features:
+   # - log_decision()
+   # - suggest_next_task()
+   # - basic persistence
+   ```
+
+4. **Run the Current Demo**:
+   ```bash
+   pip install flask flask-socketio
+   python app.py
+   # Open http://localhost:5000
+   ```
+
+## Using Gemini CLI for Large Codebase Analysis
 
 When analyzing large codebases or multiple files that might exceed context limits, use the Gemini CLI with its massive
 context window. Use `gemini -p` to leverage Google Gemini's large context capacity.
 
-## File and Directory Inclusion Syntax
+### File and Directory Inclusion Syntax
 
 Use the `@` syntax to include files and directories in your Gemini prompts. The paths should be relative to WHERE you run the
   gemini command:
 
-### Examples:
+#### Examples:
 
 **Single file analysis:**
+```bash
 gemini -p "@src/main.py Explain this file's purpose and structure"
+```
 
-Multiple files:
+**Multiple files:**
+```bash
 gemini -p "@package.json @src/index.js Analyze the dependencies used in the code"
+```
 
-Entire directory:
+**Entire directory:**
+```bash
 gemini -p "@src/ Summarize the architecture of this codebase"
+```
 
-Multiple directories:
+**Multiple directories:**
+```bash
 gemini -p "@src/ @tests/ Analyze test coverage for the source code"
+```
 
-Current directory and subdirectories:
+**Current directory and subdirectories:**
+```bash
 gemini -p "@./ Give me an overview of this entire project"
 
 # Or use --all_files flag:
 gemini --all_files -p "Analyze the project structure and dependencies"
+```
 
-Implementation Verification Examples
+### Implementation Verification Examples
 
-Check if a feature is implemented:
+**Check if a feature is implemented:**
+```bash
 gemini -p "@src/ @lib/ Has dark mode been implemented in this codebase? Show me the relevant files and functions"
+```
 
-Verify authentication implementation:
+**Verify authentication implementation:**
+```bash
 gemini -p "@src/ @middleware/ Is JWT authentication implemented? List all auth-related endpoints and middleware"
+```
 
-Check for specific patterns:
+**Check for specific patterns:**
+```bash
 gemini -p "@src/ Are there any React hooks that handle WebSocket connections? List them with file paths"
+```
 
-Verify error handling:
+**Verify error handling:**
+```bash
 gemini -p "@src/ @api/ Is proper error handling implemented for all API endpoints? Show examples of try-catch blocks"
+```
 
-Check for rate limiting:
+**Check for rate limiting:**
+```bash
 gemini -p "@backend/ @middleware/ Is rate limiting implemented for the API? Show the implementation details"
+```
 
-Verify caching strategy:
+**Verify caching strategy:**
+```bash
 gemini -p "@src/ @lib/ @services/ Is Redis caching implemented? List all cache-related functions and their usage"
+```
 
-Check for specific security measures:
+**Check for specific security measures:**
+```bash
 gemini -p "@src/ @api/ Are SQL injection protections implemented? Show how user inputs are sanitized"
+```
 
-Verify test coverage for features:
+**Verify test coverage for features:**
+```bash
 gemini -p "@src/payment/ @tests/ Is the payment processing module fully tested? List all test cases"
+```
 
-When to Use Gemini CLI
+### When to Use Gemini CLI
 
-Use gemini -p when:
+Use `gemini -p` when:
 - Analyzing entire codebases or large directories
 - Comparing multiple large files
 - Need to understand project-wide patterns or architecture
@@ -65,10 +174,66 @@ Use gemini -p when:
 - Verifying if specific features, patterns, or security measures are implemented
 - Checking for the presence of certain coding patterns across the entire codebase
 
-Important Notes
+### Important Notes
 
 - Paths in @ syntax are relative to your current working directory when invoking gemini
 - The CLI will include file contents directly in the context
 - No need for --yolo flag for read-only analysis
 - Gemini's context window can handle entire codebases that would overflow Claude's context
 - When checking implementations, be specific about what you're looking for to get accurate results
+
+## Project-Specific Context
+
+### Medical Device Focus
+This project will eventually build medical devices (ankle exoskeleton for OA), requiring:
+- Early Documentation Agent for FDA compliance
+- Comprehensive audit trails
+- Requirement traceability
+- Future hardware-specific agents (mechanical, electronics, firmware)
+
+### Agent Types (By Priority)
+1. **Context Manager** (Week 1) - The nervous system
+2. **Documentation Agent** (Week 2-3) - FDA compliance
+3. **Design Agent** (Week 4) - Specifications
+4. **Code Agent** (Week 4-5) - Implementation
+5. **QA Agent** (Week 5-6) - Testing
+6. Future: Regulatory, Hardware, Clinical agents
+
+### Key Decisions Made
+1. Bootstrap approach: Context Manager builds itself
+2. Skip neural fields: Too complex for v1
+3. Documentation Agent early: Critical for medical devices
+4. Progressive complexity: Simple → Advanced → Future → Theoretical
+
+## Useful Commands
+
+```bash
+# Run the current demo
+python app.py
+
+# Analyze project structure with Gemini
+gemini -p "@docs/ Summarize the project evolution plan"
+
+# Check implementation progress
+gemini -p "@./ What has been implemented so far in this agent-workflow project?"
+
+# Review research findings
+gemini -p "@docs/research/ What are the key findings from the research phase?"
+```
+
+## Next Actions
+
+1. [ ] Implement Context Manager v1 (Week 1)
+   - Start with context_manager.py
+   - Follow docs/project-evolution-guide/04_CONTEXT_MANAGER_V1_PLAN.md
+   - Use it to track its own development
+
+2. [ ] Integrate with existing Flask app
+   - Add REST endpoints for context operations
+   - Connect to state machine transitions
+   - Add WebSocket events for real-time updates
+
+3. [ ] Begin Documentation Agent design
+   - Use patterns learned from Context Manager
+   - Focus on FDA compliance needs
+   - Plan integration with Context Manager
