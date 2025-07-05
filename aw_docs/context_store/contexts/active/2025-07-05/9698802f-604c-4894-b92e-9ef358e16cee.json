@@ -1,0 +1,22 @@
+{
+  "id": "9698802f-604c-4894-b92e-9ef358e16cee",
+  "type": "decision",
+  "source": "human",
+  "timestamp": "2025-07-05T12:50:44.095688",
+  "data": {
+    "decision": "Need to fix API endpoints to use Claude-enabled ContextManager",
+    "reasoning": "Current implementation doesn't pass config or load Claude tools, so Claude analysis never runs"
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 39
+  },
+  "relationships": [],
+  "tags": [
+    "bootstrap",
+    "decision"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

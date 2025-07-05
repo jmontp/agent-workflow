@@ -355,6 +355,11 @@ As you implement, update these sections in CLAUDE.md:
 13. **Fixed Context Manager to auto-load project index on initialization** - Essential for CLI usage where new instances are created per command
 14. **Used agent spawning for parallel task execution** - Main agent acts as orchestrator while spawning specialized agents for implementation tasks
 
+### Phase 1 Context Collection Issues
+15. **Web UI not using Claude for context collection** - API endpoint creates ContextManager without config and Claude tools aren't loaded by default
+16. **Fixed API endpoints to use Claude-enabled ContextManager** - Updated app.py to properly initialize ContextManager with ContextManagerConfig, enabling Claude analysis with fallback to heuristic
+17. **Fixed web UI to properly initialize ContextManager with Claude config** - API endpoints were creating ContextManager without config, preventing Claude analysis from running. Now properly configured with ContextManagerConfig enabling Claude with fallback.
+
 ### Architecture Patterns Emerging
 - Bootstrap methodology working: CM suggested documenting decisions after detecting pattern
 - Multi-project support built in from start with project_id

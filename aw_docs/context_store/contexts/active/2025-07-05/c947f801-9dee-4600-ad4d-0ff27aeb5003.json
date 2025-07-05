@@ -1,0 +1,20 @@
+{
+  "id": "c947f801-9dee-4600-ad4d-0ff27aeb5003",
+  "type": "error",
+  "source": "system",
+  "timestamp": "2025-07-05T12:33:23.117878",
+  "data": {
+    "error": "Claude task analysis failed: 'ClaudeTools' object has no attribute 'analyze_text_async'",
+    "context": {}
+  },
+  "project_id": "default",
+  "metadata": {},
+  "relationships": [],
+  "tags": [
+    "error",
+    "pattern-source"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

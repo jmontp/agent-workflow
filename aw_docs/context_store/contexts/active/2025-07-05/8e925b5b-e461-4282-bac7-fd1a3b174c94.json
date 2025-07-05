@@ -1,0 +1,22 @@
+{
+  "id": "8e925b5b-e461-4282-bac7-fd1a3b174c94",
+  "type": "decision",
+  "source": "human",
+  "timestamp": "2025-07-05T12:56:20.450132",
+  "data": {
+    "decision": "Fixed web UI to properly initialize ContextManager with Claude config",
+    "reasoning": "API endpoints were creating ContextManager without config, preventing Claude analysis from running. Now properly configured with ContextManagerConfig enabling Claude with fallback."
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 62
+  },
+  "relationships": [],
+  "tags": [
+    "bootstrap",
+    "decision"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

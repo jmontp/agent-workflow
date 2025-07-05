@@ -177,8 +177,16 @@ def handle_command(data):
             'message': f'Cannot transition from {current} to {target_state.value}'
         })
 
-# Initialize Context Manager
-cm = ContextManager()
+# Initialize Context Manager with config for Claude support
+from context_manager import ContextManagerConfig
+
+# Initialize with Claude enabled and proper configuration
+config = ContextManagerConfig(
+    use_claude_analysis=True,
+    fallback_to_heuristic=True,
+    claude_timeout_seconds=10  # Give Claude more time for web requests
+)
+cm = ContextManager(config=config)
 
 # Context Manager API endpoints
 @app.route('/api/context', methods=['POST'])

@@ -1,0 +1,22 @@
+{
+  "id": "952a9943-6d0a-4ac5-a508-86bf7fd85303",
+  "type": "decision",
+  "source": "human",
+  "timestamp": "2025-07-05T12:50:34.398950",
+  "data": {
+    "decision": "Web UI not using Claude for context collection",
+    "reasoning": "API endpoint creates ContextManager without config and Claude tools aren't loaded by default"
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 34
+  },
+  "relationships": [],
+  "tags": [
+    "bootstrap",
+    "decision"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}
