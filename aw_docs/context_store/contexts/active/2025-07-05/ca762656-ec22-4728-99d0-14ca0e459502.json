@@ -1,0 +1,19 @@
+{
+  "id": "ca762656-ec22-4728-99d0-14ca0e459502",
+  "type": "development",
+  "source": "claude_analysis",
+  "timestamp": "2025-07-05T17:01:22.793260",
+  "data": {
+    "task": "Fix authentication bug in login system",
+    "analysis": "claude"
+  },
+  "project_id": "default",
+  "metadata": {},
+  "relationships": [],
+  "tags": [
+    "ai_enhanced"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

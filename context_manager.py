@@ -6,7 +6,7 @@ Tracks all context, learns patterns, and coordinates documentation.
 
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Any, Tuple
+from typing import Dict, List, Optional, Any, Tuple, Union
 from enum import Enum
 from pathlib import Path
 import json
@@ -1997,16 +1997,25 @@ Return ONLY valid JSON, no additional text.'''
                 concept_lower = concept.lower()
                 if concept_lower in self.project_index.concepts:
                     file_paths = self.project_index.concepts[concept_lower]
+                    # Track already found relevant files for import analysis
+                    already_found = [item[0].path for item in items if hasattr(item[0], 'path')]
+                    
                     for file_path in file_paths:
                         # Check if it's a doc or code file
                         if file_path in self.project_index.doc_files and 'docs' in include_types:
                             doc_meta = self.project_index.doc_files[file_path]
                             if self._should_include_item(doc_meta, include_types, exclude_patterns):
-                                items.append((doc_meta, 0.9))  # High relevance for direct concept match
+                                relevance = self._calculate_dynamic_relevance(
+                                    doc_meta, task_analysis, 'concept', already_found
+                                )
+                                items.append((doc_meta, relevance))
                         elif file_path in self.project_index.code_files and 'code' in include_types:
                             code_meta = self.project_index.code_files[file_path]
                             if self._should_include_item(code_meta, include_types, exclude_patterns):
-                                items.append((code_meta, 0.9))  # High relevance for direct concept match
+                                relevance = self._calculate_dynamic_relevance(
+                                    code_meta, task_analysis, 'concept', already_found
+                                )
+                                items.append((code_meta, relevance))
         
         # Stage 3: Function/class name matches based on keywords
         if 'code' in include_types:
@@ -2033,27 +2042,42 @@ Return ONLY valid JSON, no additional text.'''
         
         # Stage 4: Description-based matches
         if 'docs' in include_types:
+            already_found = [item[0].path for item in items if hasattr(item[0], 'path')]
             for file_path, doc_meta in self.project_index.doc_files.items():
                 if doc_meta.description and self._should_include_item(doc_meta, include_types, exclude_patterns):
                     desc_lower = doc_meta.description.lower()
                     matching_terms = sum(1 for term in all_terms if term in desc_lower)
                     if matching_terms > 0:
-                        relevance = min(0.7, matching_terms * 0.2)  # Cap at 0.7 for description matches
+                        # Use dynamic relevance with description match type
+                        relevance = self._calculate_dynamic_relevance(
+                            doc_meta, task_analysis, 'description', already_found
+                        )
+                        # Apply term matching multiplier
+                        term_multiplier = min(1.4, 1 + (matching_terms * 0.2))
+                        relevance = min(1.0, relevance * term_multiplier)
                         if relevance >= min_relevance:
                             items.append((doc_meta, relevance))
         
         if 'code' in include_types:
+            already_found = [item[0].path for item in items if hasattr(item[0], 'path')]
             for file_path, code_meta in self.project_index.code_files.items():
                 if code_meta.description and self._should_include_item(code_meta, include_types, exclude_patterns):
                     desc_lower = code_meta.description.lower()
                     matching_terms = sum(1 for term in all_terms if term in desc_lower)
                     if matching_terms > 0:
-                        relevance = min(0.7, matching_terms * 0.2)
+                        # Use dynamic relevance with description match type
+                        relevance = self._calculate_dynamic_relevance(
+                            code_meta, task_analysis, 'description', already_found
+                        )
+                        # Apply term matching multiplier
+                        term_multiplier = min(1.4, 1 + (matching_terms * 0.2))
+                        relevance = min(1.0, relevance * term_multiplier)
                         if relevance >= min_relevance:
                             items.append((code_meta, relevance))
         
         # Stage 5: Include relevant folder descriptions
         if 'folders' in include_types:
+            already_found = [item[0].path for item in items if hasattr(item[0], 'path')]
             for folder_path, description in self.project_index.folder_descriptions.items():
                 if description:
                     desc_lower = description.lower()
@@ -2061,7 +2085,13 @@ Return ONLY valid JSON, no additional text.'''
                     if matching_terms > 0:
                         folder_item = (folder_path, description)
                         if self._should_include_item(folder_item, include_types, exclude_patterns):
-                            relevance = min(0.5, matching_terms * 0.15)  # Lower relevance for folders
+                            # Use dynamic relevance with folder match type
+                            relevance = self._calculate_dynamic_relevance(
+                                folder_item, task_analysis, 'folder', already_found
+                            )
+                            # Apply term matching multiplier
+                            term_multiplier = min(1.3, 1 + (matching_terms * 0.15))
+                            relevance = min(1.0, relevance * term_multiplier)
                             if relevance >= min_relevance:
                                 items.append((folder_item, relevance))
         
@@ -2088,42 +2118,102 @@ Return ONLY valid JSON, no additional text.'''
         return unique_items
     
     def _calculate_context_relevance(self, context: Context, task_analysis: TaskAnalysis) -> float:
-        """Calculate relevance score for a context based on task analysis."""
+        """Calculate relevance score for a context based on task analysis with dynamic weights."""
         relevance = 0.0
         
         # Check context data for keyword matches
         context_str = json.dumps(context.data).lower()
         
-        # Keyword matches (0.3 weight)
-        keyword_matches = sum(1 for keyword in task_analysis.keywords 
-                            if keyword.lower() in context_str)
+        # Dynamic weight calculation based on task characteristics
+        total_components = 0
+        weights = {}
+        
+        # Determine weights based on what information is available
         if task_analysis.keywords:
-            relevance += 0.3 * (keyword_matches / len(task_analysis.keywords))
+            weights['keywords'] = 0.3
+            total_components += 1
         
-        # Concept matches (0.4 weight)
-        concept_matches = sum(1 for concept in task_analysis.concepts 
-                            if concept.lower() in context_str)
         if task_analysis.concepts:
-            relevance += 0.4 * (concept_matches / len(task_analysis.concepts))
-        
-        # Action matches (0.2 weight)
-        action_matches = sum(1 for action in task_analysis.actions 
-                           if action.lower() in context_str)
+            weights['concepts'] = 0.4
+            total_components += 1
+            
         if task_analysis.actions:
-            relevance += 0.2 * (action_matches / len(task_analysis.actions))
-        
-        # Tag matches (0.1 weight)
-        tag_matches = sum(1 for tag in context.tags 
-                        if any(keyword.lower() in tag.lower() 
-                              for keyword in task_analysis.keywords))
+            weights['actions'] = 0.2
+            total_components += 1
+            
         if context.tags and task_analysis.keywords:
-            relevance += 0.1 * (tag_matches / len(context.tags))
+            weights['tags'] = 0.1
+            total_components += 1
         
-        # Boost for specific context types
-        if context.type == ContextType.DECISION and 'decision' in task_analysis.actions:
-            relevance += 0.1
-        elif context.type == ContextType.ERROR and 'debug' in task_analysis.actions:
-            relevance += 0.1
+        # Normalize weights if not all components are present
+        if total_components > 0 and sum(weights.values()) < 1.0:
+            weight_sum = sum(weights.values())
+            for key in weights:
+                weights[key] = weights[key] / weight_sum
+        
+        # Apply weighted scoring
+        if 'keywords' in weights:
+            keyword_matches = sum(1 for keyword in task_analysis.keywords 
+                                if keyword.lower() in context_str)
+            relevance += weights['keywords'] * (keyword_matches / len(task_analysis.keywords))
+        
+        if 'concepts' in weights:
+            concept_matches = sum(1 for concept in task_analysis.concepts 
+                                if concept.lower() in context_str)
+            relevance += weights['concepts'] * (concept_matches / len(task_analysis.concepts))
+        
+        if 'actions' in weights:
+            action_matches = sum(1 for action in task_analysis.actions 
+                               if action.lower() in context_str)
+            relevance += weights['actions'] * (action_matches / len(task_analysis.actions))
+        
+        if 'tags' in weights:
+            tag_matches = sum(1 for tag in context.tags 
+                            if any(keyword.lower() in tag.lower() 
+                                  for keyword in task_analysis.keywords))
+            relevance += weights['tags'] * (tag_matches / len(context.tags))
+        
+        # Context type boosts based on task analysis
+        context_type_boost = 0.0
+        
+        # Enhanced context type matching
+        if context.type == ContextType.DECISION:
+            if any(action in ['decide', 'decision', 'choose', 'select', 'evaluate'] 
+                   for action in task_analysis.actions):
+                context_type_boost = 0.15
+            elif any(keyword in ['decision', 'choice', 'option', 'alternative'] 
+                     for keyword in task_analysis.keywords):
+                context_type_boost = 0.1
+                
+        elif context.type == ContextType.ERROR:
+            if any(action in ['debug', 'fix', 'resolve', 'troubleshoot', 'investigate'] 
+                   for action in task_analysis.actions):
+                context_type_boost = 0.15
+            elif any(keyword in ['error', 'bug', 'issue', 'problem', 'exception'] 
+                     for keyword in task_analysis.keywords):
+                context_type_boost = 0.1
+                
+        elif context.type == ContextType.EXECUTION:
+            if any(action in ['implement', 'build', 'create', 'develop', 'code'] 
+                   for action in task_analysis.actions):
+                context_type_boost = 0.1
+                
+        elif context.type == ContextType.PLANNING:
+            if any(action in ['research', 'analyze', 'study', 'investigate', 'explore'] 
+                   for action in task_analysis.actions):
+                context_type_boost = 0.1
+        
+        relevance += context_type_boost
+        
+        # Recency boost for contexts (up to +0.1)
+        if hasattr(context, 'timestamp'):
+            days_old = (datetime.now() - context.timestamp).days
+            if days_old < 1:
+                relevance += 0.1  # Today
+            elif days_old < 7:
+                relevance += 0.07  # This week
+            elif days_old < 30:
+                relevance += 0.03  # This month
         
         return min(1.0, relevance)
     
@@ -2143,6 +2233,149 @@ Return ONLY valid JSON, no additional text.'''
                 relevance = max(relevance, 0.5 + (match_ratio * 0.3))
         
         return relevance
+    
+    def _calculate_dynamic_relevance(self, item: Union[DocMetadata, CodeMetadata, tuple], 
+                                   task_analysis: TaskAnalysis, 
+                                   match_type: str = 'concept',
+                                   related_items: List[str] = None) -> float:
+        """Calculate dynamic relevance score based on multiple factors.
+        
+        Args:
+            item: The item to score (DocMetadata, CodeMetadata, or folder tuple)
+            task_analysis: Analysis of the current task
+            match_type: Type of match ('concept', 'description', 'folder')
+            related_items: List of already found relevant file paths
+            
+        Returns:
+            Relevance score between 0.0 and 1.0
+        """
+        base_score = 0.0
+        
+        # 1. Base score by match type
+        if match_type == 'concept':
+            base_score = 0.7  # High base for direct concept matches
+        elif match_type == 'description':
+            base_score = 0.4  # Medium base for description matches
+        elif match_type == 'folder':
+            base_score = 0.25  # Lower base for folder matches
+        else:
+            base_score = 0.35  # Default
+        
+        # 2. Recency boost (up to +0.12)
+        if hasattr(item, 'last_modified'):
+            days_old = (datetime.now() - item.last_modified).days
+            if days_old < 1:
+                base_score += 0.12  # Modified today
+            elif days_old < 7:
+                base_score += 0.08  # Modified this week
+            elif days_old < 30:
+                base_score += 0.04  # Modified this month
+        
+        # 3. Import relationship scoring (up to +0.2)
+        if isinstance(item, CodeMetadata) and related_items:
+            import_boost = 0.0
+            
+            # Check if this file imports any of the already found relevant files
+            for imp in item.imports:
+                for related_path in related_items:
+                    if self._import_matches_file(imp, related_path):
+                        import_boost = max(import_boost, 0.1)
+                        break
+            
+            # Check if this file is imported by any relevant files
+            file_basename = os.path.basename(item.path).replace('.py', '')
+            for related_path in related_items:
+                if related_path in self.project_index.code_files:
+                    related_meta = self.project_index.code_files[related_path]
+                    for imp in related_meta.imports:
+                        if self._import_matches_file(imp, item.path):
+                            import_boost = max(import_boost, 0.15)
+                            break
+            
+            base_score += import_boost
+        
+        # 4. Directory proximity (up to +0.1)
+        if hasattr(item, 'path') and related_items:
+            proximity_boost = 0.0
+            item_dir = os.path.dirname(item.path)
+            
+            for related_path in related_items:
+                related_dir = os.path.dirname(related_path)
+                if item_dir == related_dir:
+                    proximity_boost = 0.1  # Same directory
+                    break
+                elif self._are_sibling_dirs(item_dir, related_dir):
+                    proximity_boost = max(proximity_boost, 0.05)  # Sibling directories
+            
+            base_score += proximity_boost
+        
+        # 5. Task-specific boosts (up to +0.12)
+        task_boost = 0.0
+        
+        if hasattr(item, 'path'):
+            path_lower = item.path.lower()
+            
+            # Bug fix tasks - boost test files
+            if any(action in ['fix', 'debug', 'resolve', 'patch'] for action in task_analysis.actions):
+                if 'test' in path_lower or 'spec' in path_lower:
+                    task_boost = max(task_boost, 0.12)
+            
+            # Implementation tasks - boost interfaces and base classes
+            if any(action in ['implement', 'create', 'build'] for action in task_analysis.actions):
+                if any(pattern in path_lower for pattern in ['interface', 'abstract', 'base', 'protocol']):
+                    task_boost = max(task_boost, 0.08)
+            
+            # Documentation tasks - boost doc files
+            if any(action in ['document', 'explain', 'describe'] for action in task_analysis.actions):
+                if isinstance(item, DocMetadata):
+                    task_boost = max(task_boost, 0.08)
+            
+            # Configuration tasks - boost config files
+            if any(keyword in ['config', 'setting', 'option', 'parameter'] for keyword in task_analysis.keywords):
+                if any(pattern in path_lower for pattern in ['config', 'settings', 'options', '.env', '.ini']):
+                    task_boost = max(task_boost, 0.12)
+        
+        base_score += task_boost
+        
+        # 6. Concept frequency weighting (multiplier 0.8-1.2)
+        if match_type == 'concept' and hasattr(item, 'path'):
+            # Count how many files contain each concept to weight by rarity
+            concept_multiplier = 1.0
+            
+            for concept in task_analysis.concepts:
+                if concept in self.project_index.concepts:
+                    file_count = len(self.project_index.concepts[concept])
+                    if file_count == 1:
+                        concept_multiplier = 1.2  # Very specific concept
+                    elif file_count < 5:
+                        concept_multiplier = max(concept_multiplier, 1.1)  # Relatively specific
+                    elif file_count > 20:
+                        concept_multiplier = min(concept_multiplier, 0.9)  # Very common
+            
+            base_score *= concept_multiplier
+        
+        # Cap at 1.0
+        return min(1.0, base_score)
+    
+    def _import_matches_file(self, import_str: str, file_path: str) -> bool:
+        """Check if an import string matches a file path."""
+        # Extract module name from import
+        if 'from ' in import_str:
+            module = import_str.split('from ')[1].split(' import')[0].strip()
+        elif 'import ' in import_str:
+            module = import_str.split('import ')[1].split(' as')[0].strip()
+        else:
+            return False
+        
+        # Convert module to path
+        module_path = module.replace('.', '/')
+        
+        # Check if file path matches
+        return module_path in file_path or file_path.endswith(f"{module_path}.py")
+    
+    def _are_sibling_dirs(self, dir1: str, dir2: str) -> bool:
+        """Check if two directories are siblings (same parent)."""
+        return os.path.dirname(dir1) == os.path.dirname(dir2)
     
     def _should_include_item(self, item: Any, include_types: List[str], 
                            exclude_patterns: List[str]) -> bool:
