@@ -10,11 +10,13 @@ Usage:
     cm query [--type TYPE] [--since HOURS] [--limit N] [query_text]
     cm list-projects
     cm use-project PROJECT_ID
+    cm collect "task description" [--agent AGENT] [--max-tokens N] [--include TYPES...]
 """
 
 import argparse
 import sys
 import json
+import time
 from datetime import datetime, timedelta
 from pathlib import Path
 from context_manager import ContextManager, ContextType
@@ -342,6 +344,131 @@ def cmd_explain(args):
             print(f"❌ Error: {e}")
 
 
+def cmd_collect(args):
+    """Collect context for a specific task."""
+    cm = ContextManager()
+    
+    print(f"🔍 Collecting context for: {args.description}\n")
+    
+    # Start timing
+    start_time = time.time()
+    
+    try:
+        # Collect context with the provided parameters
+        collection = cm.collect_context_for_task(
+            task_description=args.description,
+            agent_type=args.agent,
+            max_tokens=args.max_tokens,
+            include_types=args.include,
+            exclude_patterns=args.exclude,
+            min_relevance=args.min_relevance
+        )
+        
+        # Calculate collection time
+        duration = time.time() - start_time
+        
+        if args.output == 'json':
+            # JSON output - convert to dict for serialization
+            result_dict = {
+                'task_description': collection.task_description,
+                'task_analysis': {
+                    'keywords': collection.task_analysis.keywords,
+                    'actions': collection.task_analysis.actions,
+                    'concepts': collection.task_analysis.concepts,
+                    'file_patterns': collection.task_analysis.file_patterns,
+                    'estimated_scope': collection.task_analysis.estimated_scope
+                },
+                'items': [
+                    {
+                        'type': item.type,
+                        'path': item.path,
+                        'content': item.content,
+                        'relevance_score': item.relevance_score,
+                        'tokens': item.tokens,
+                        'metadata': item.metadata
+                    }
+                    for item in collection.items
+                ],
+                'total_tokens': collection.total_tokens,
+                'summary': collection.summary,
+                'suggestions': collection.suggestions,
+                'truncated': collection.truncated,
+                'collection_time_ms': collection.collection_time_ms,
+                'item_count': len(collection.items)
+            }
+            print(json.dumps(result_dict, indent=2, default=str))
+        elif args.output == 'full':
+            # Full output
+            print(f"📊 Collection Results:")
+            print(f"   Items collected: {len(collection.items)}")
+            print(f"   Total tokens: {collection.total_tokens:,}")
+            print(f"   Collection time: {duration:.2f}s")
+            
+            if args.explain and collection.suggestions:
+                print("\n💡 Selection Explanations:")
+                for suggestion in collection.suggestions:
+                    print(f"   - {suggestion}")
+            
+            print("\n📄 All Items:")
+            for item in collection.items:
+                print(f"\n{'='*60}")
+                print(f"Path: {item.path}")
+                print(f"Type: {item.type}")
+                print(f"Relevance: {item.relevance_score:.2f}")
+                if item.metadata.get('description'):
+                    print(f"Description: {item.metadata['description']}")
+                print(f"Tokens: {item.tokens:,}")
+        else:
+            # Summary output (default)
+            print(f"📊 Collection Summary:")
+            print(f"   Items collected: {len(collection.items)}")
+            print(f"   Total tokens: {collection.total_tokens:,}")
+            print(f"   Collection time: {duration:.2f}s")
+            
+            if args.explain and collection.suggestions:
+                print("\n💡 Selection Explanations:")
+                for suggestion in collection.suggestions[:3]:
+                    print(f"   - {suggestion}")
+                if len(collection.suggestions) > 3:
+                    print(f"   ... and {len(collection.suggestions) - 3} more")
+            
+            # Show top 5 most relevant items
+            if collection.items:
+                print("\n📌 Top 5 Most Relevant Items:")
+                sorted_items = sorted(
+                    collection.items, 
+                    key=lambda x: x.relevance_score, 
+                    reverse=True
+                )[:5]
+                
+                for i, item in enumerate(sorted_items, 1):
+                    print(f"\n{i}. {item.path}")
+                    print(f"   Type: {item.type}")
+                    print(f"   Relevance: {item.relevance_score:.2f}")
+                    if item.metadata.get('description'):
+                        description = item.metadata['description']
+                        if len(description) > 100:
+                            description = description[:97] + "..."
+                        print(f"   Description: {description}")
+            
+            # Suggest next steps
+            print("\n💡 Next Steps:")
+            print(f"   - Use --output=full to see all collected items")
+            print(f"   - Use --output=json to get machine-readable output")
+            if not args.explain:
+                print(f"   - Add --explain to see why items were selected")
+            
+    except Exception as e:
+        print(f"❌ Error collecting context: {e}")
+        import traceback
+        if args.output == 'json':
+            error_result = {
+                'error': str(e),
+                'traceback': traceback.format_exc()
+            }
+            print(json.dumps(error_result, indent=2))
+
+
 def main():
     """Main CLI entry point."""
     parser = argparse.ArgumentParser(
@@ -423,6 +550,18 @@ def main():
     p_explain.add_argument('query', nargs='+', help='What to explain')
     p_explain.add_argument('--ai', action='store_true', help='Include AI-enhanced explanation')
     p_explain.set_defaults(func=cmd_explain)
+    
+    # collect command
+    p_collect = subparsers.add_parser('collect', help='Collect context for a specific task')
+    p_collect.add_argument('description', help='Task description')
+    p_collect.add_argument('--agent', '-a', default='general', help='Agent type (default: general)')
+    p_collect.add_argument('--max-tokens', '-t', type=int, default=10000, help='Maximum tokens (default: 10000)')
+    p_collect.add_argument('--include', nargs='*', help='Types to include: code docs contexts folders all')
+    p_collect.add_argument('--exclude', nargs='*', help='Patterns to exclude')
+    p_collect.add_argument('--min-relevance', '-r', type=float, default=0.3, help='Minimum relevance score (default: 0.3)')
+    p_collect.add_argument('--explain', '-e', action='store_true', help='Explain selections')
+    p_collect.add_argument('--output', '-o', choices=['summary', 'full', 'json'], default='summary', help='Output format')
+    p_collect.set_defaults(func=cmd_collect)
     
     # Parse arguments
     args = parser.parse_args()

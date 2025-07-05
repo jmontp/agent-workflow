@@ -1,0 +1,22 @@
+{
+  "id": "b27b338c-dd92-4635-9d71-7968e7ef09a9",
+  "type": "decision",
+  "source": "human",
+  "timestamp": "2025-07-05T01:04:50.926042",
+  "data": {
+    "decision": "Implemented collect_context_for_task as primary agent interface",
+    "reasoning": "Created intelligent context collection that analyzes tasks, scores relevance, and optimizes token usage"
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 41
+  },
+  "relationships": [],
+  "tags": [
+    "bootstrap",
+    "decision"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

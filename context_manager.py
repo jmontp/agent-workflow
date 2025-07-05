@@ -16,6 +16,7 @@ import re
 from collections import Counter
 import ast
 import sys
+import time
 
 
 # Schema definitions
@@ -196,8 +197,60 @@ class DocPattern:
     optional_sections: List[str] = field(default_factory=list)       # Sections that might exist
 
 
+@dataclass
+class TaskAnalysis:
+    """Analysis of a task to determine what context is needed."""
+    
+    keywords: List[str]          # Key terms extracted from the task
+    actions: List[str]           # Verbs/actions to be performed
+    concepts: List[str]          # Domain concepts mentioned
+    file_patterns: List[str]     # File types/patterns likely needed
+    estimated_scope: str         # 'small', 'medium', 'large', 'unknown'
+
+
+@dataclass
+class ContextItem:
+    """Individual item of context for an agent task."""
+    
+    type: str                    # 'file', 'function', 'class', 'context', 'doc_section', 'folder_desc'
+    path: str                    # File path or identifier
+    content: str                 # Actual content
+    relevance_score: float       # How relevant to the task (0-1)
+    tokens: int                  # Token count for context management
+    metadata: Dict[str, Any]     # Additional item-specific metadata
+
+
+@dataclass
+class ContextCollection:
+    """Complete context collection for a specific task."""
+    
+    task_description: str        # Original task description
+    task_analysis: TaskAnalysis  # Analysis of the task
+    items: List[ContextItem]     # All context items
+    total_tokens: int            # Total token count
+    summary: str                 # Executive summary of context
+    suggestions: List[str]       # Suggestions for agent
+    truncated: bool              # Whether context was truncated
+    collection_time_ms: int      # Time taken to collect context
+
+
 class ContextManager:
     """Central context orchestration for agent-workflow system."""
+    
+    STOPWORDS = {
+        'the', 'is', 'at', 'which', 'on', 'a', 'an', 'as', 'are', 'was', 'were', 
+        'been', 'be', 'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 
+        'should', 'could', 'may', 'might', 'must', 'can', 'this', 'that', 'these', 
+        'those', 'i', 'you', 'he', 'she', 'it', 'we', 'they', 'them', 'their', 
+        'what', 'which', 'who', 'when', 'where', 'why', 'how', 'all', 'each', 
+        'every', 'some', 'any', 'few', 'more', 'most', 'other', 'into', 'through', 
+        'during', 'before', 'after', 'above', 'below', 'to', 'from', 'up', 'down', 
+        'in', 'out', 'on', 'off', 'over', 'under', 'again', 'further', 'then', 
+        'once', 'and', 'or', 'but', 'if', 'because', 'as', 'until', 'while', 'of', 
+        'at', 'by', 'for', 'with', 'about', 'against', 'between', 'into', 'through', 
+        'during', 'before', 'after', 'above', 'below', 'to', 'from', 'up', 'down', 
+        'in', 'out', 'on', 'off', 'over', 'under', 'again', 'further', 'then', 'once'
+    }
     
     def __init__(self, base_dir: str = None):
         """Initialize Context Manager with storage directory."""
@@ -218,6 +271,7 @@ class ContextManager:
         # Initialize storage
         self._init_storage()
         self._load_existing_data()
+        self._load_project_index()
         
         # Optional AI tools
         self._claude_tools = None
@@ -1412,6 +1466,902 @@ class ContextManager:
                 "initialized": False,
                 "message": "Project not initialized. Run 'cm init' to scan project."
             }
+    
+    def _analyze_task(self, task_description: str) -> TaskAnalysis:
+        """Analyze a task description to extract key information."""
+        # Convert to lowercase for analysis
+        task_lower = task_description.lower()
+        words = task_lower.split()
+        
+        # Extract keywords (non-stopwords > 3 chars)
+        keywords = []
+        for word in words:
+            # Remove common punctuation
+            clean_word = word.strip('.,!?;:"\'()')
+            if len(clean_word) > 3 and clean_word not in self.STOPWORDS:
+                keywords.append(clean_word)
+        
+        # Identify action verbs
+        action_indicators = {
+            'fix': ['fix', 'repair', 'resolve', 'debug', 'patch'],
+            'implement': ['implement', 'add', 'create', 'build', 'develop'],
+            'refactor': ['refactor', 'restructure', 'reorganize', 'optimize', 'clean'],
+            'test': ['test', 'verify', 'check', 'validate', 'ensure'],
+            'document': ['document', 'write', 'update', 'describe', 'explain']
+        }
+        
+        actions = []
+        for action_type, indicators in action_indicators.items():
+            if any(indicator in task_lower for indicator in indicators):
+                actions.append(action_type)
+        
+        # Map keywords to existing concepts if project is initialized
+        concepts = []
+        if self.project_index and self.project_index.concepts:
+            for keyword in keywords:
+                # Check if keyword matches any concept (case-insensitive)
+                for concept in self.project_index.concepts:
+                    if keyword in concept.lower() or concept.lower() in keyword:
+                        concepts.append(concept)
+                        break
+        
+        # Infer file patterns based on task
+        file_patterns = self._infer_file_patterns(keywords, actions, concepts)
+        
+        # Estimate scope based on concept count and actions
+        if len(concepts) == 0:
+            estimated_scope = 'narrow'  # No concepts found, probably specific
+        elif len(concepts) <= 2:
+            estimated_scope = 'narrow'
+        elif len(concepts) <= 5:
+            estimated_scope = 'medium'
+        else:
+            estimated_scope = 'broad'
+        
+        # If multiple actions or refactoring, increase scope
+        if len(actions) > 2 or 'refactor' in actions:
+            if estimated_scope == 'narrow':
+                estimated_scope = 'medium'
+            elif estimated_scope == 'medium':
+                estimated_scope = 'broad'
+        
+        return TaskAnalysis(
+            keywords=keywords,
+            actions=actions,
+            concepts=concepts,
+            file_patterns=file_patterns,
+            estimated_scope=estimated_scope
+        )
+    
+    def _infer_file_patterns(self, keywords: List[str], actions: List[str], concepts: List[str]) -> List[str]:
+        """Infer likely file patterns based on task analysis."""
+        patterns = []
+        
+        # Add patterns based on actions
+        if 'test' in actions:
+            patterns.extend(['*test*.py', '*_test.py', 'test_*.py', '*spec.js'])
+        
+        if 'document' in actions:
+            patterns.extend(['*.md', 'README*', 'CHANGELOG*', 'docs/*'])
+        
+        # Add patterns based on keywords
+        keyword_patterns = {
+            'api': ['*api*.py', '*endpoint*.py', '*route*.py', '*controller*.js'],
+            'ui': ['*.html', '*.css', '*.jsx', '*.tsx', '*component*.js'],
+            'database': ['*model*.py', '*schema*.py', '*migration*.sql', '*.sql'],
+            'config': ['*config*.py', '*.json', '*.yaml', '*.yml', '.env*'],
+            'script': ['*.sh', '*.bash', '*script*.py'],
+            'build': ['*build*.py', 'Makefile', '*.gradle', 'package.json'],
+            'deploy': ['*deploy*.py', 'Dockerfile', '*.yaml', '*.yml', '.github/*']
+        }
+        
+        for keyword in keywords:
+            for pattern_key, pattern_list in keyword_patterns.items():
+                if pattern_key in keyword:
+                    patterns.extend(pattern_list)
+        
+        # Add patterns based on specific file mentions
+        for keyword in keywords:
+            # Check if keyword looks like a filename
+            if '.' in keyword or keyword.endswith('.py') or keyword.endswith('.js'):
+                patterns.append(f'*{keyword}*')
+            elif keyword.endswith('er') or keyword.endswith('or'):  # likely a module name
+                patterns.append(f'*{keyword}*.py')
+                patterns.append(f'*{keyword}*.js')
+        
+        # Remove duplicates while preserving order
+        seen = set()
+        unique_patterns = []
+        for pattern in patterns:
+            if pattern not in seen:
+                seen.add(pattern)
+                unique_patterns.append(pattern)
+        
+        return unique_patterns
+    
+    def collect_context_for_task(self, task_description: str, agent_type: str = None, 
+                                max_tokens: int = 50000, include_types: List[str] = None, 
+                                exclude_patterns: List[str] = None, agent_template: Dict[str, Any] = None, 
+                                explain_selection: bool = False, min_relevance: float = 0.3) -> ContextCollection:
+        """
+        Intelligent context collection based on task description.
+        
+        This method analyzes a task description and collects all relevant context 
+        from the project, including documentation, code files, and previous contexts.
+        It uses pattern matching and relevance scoring to prioritize the most useful
+        information while staying within token limits.
+        
+        Args:
+            task_description: Description of the task to collect context for
+            agent_type: Type of agent requesting context (affects prioritization)
+            max_tokens: Maximum tokens to include in context (default: 50000)
+            include_types: List of context types to include (default: ['all'])
+            exclude_patterns: List of file patterns to exclude (e.g., ['*.test.js'])
+            agent_template: Custom template for context organization
+            explain_selection: If True, include explanations for why items were selected
+            min_relevance: Minimum relevance score to include an item (0-1, default: 0.3)
+        
+        Returns:
+            ContextCollection: Complete context collection with items, analysis, and suggestions
+        
+        Raises:
+            ValueError: If task_description is empty or project not initialized
+            
+        Example:
+            >>> cm = ContextManager()
+            >>> context = cm.collect_context_for_task(
+            ...     "Fix the authentication bug in the login endpoint",
+            ...     agent_type="code",
+            ...     max_tokens=30000
+            ... )
+            >>> print(f"Collected {len(context.items)} items totaling {context.total_tokens} tokens")
+        """
+        # Record start time for performance tracking
+        start_time = time.time()
+        
+        # Validate inputs
+        if not task_description or not task_description.strip():
+            raise ValueError("Task description cannot be empty")
+        
+        if self.project_index is None:
+            raise ValueError("Project not initialized. Run 'cm init' first.")
+        
+        # Analyze the task
+        task_analysis = self._analyze_task(task_description)
+        
+        # Set default include_types if not provided
+        if include_types is None:
+            include_types = ['all']
+        
+        # Collect relevant items based on task analysis
+        raw_items = self._collect_relevant_items(
+            task_analysis=task_analysis,
+            include_types=include_types,
+            exclude_patterns=exclude_patterns or [],
+            min_relevance=min_relevance,
+            explain_selection=explain_selection
+        )
+        
+        # Convert raw items to ContextItem objects
+        context_items = []
+        for item, relevance_score in raw_items:
+            context_item = self._convert_to_context_item(item, relevance_score)
+            if context_item:
+                context_items.append(context_item)
+        
+        # Optimize for token limit
+        items, truncated = self._optimize_for_tokens(context_items, max_tokens)
+        
+        # Generate summary (simple version for now)
+        summary = task_description[:200] + "..." if len(task_description) > 200 else task_description
+        
+        # Generate suggestions (empty for now, will be enhanced later)
+        suggestions = []
+        
+        # Calculate total tokens
+        total_tokens = sum(item.tokens for item in items)
+        
+        # Calculate collection time
+        collection_time_ms = int((time.time() - start_time) * 1000)
+        
+        # Create and return the context collection
+        return ContextCollection(
+            task_description=task_description,
+            task_analysis=task_analysis,
+            items=items,
+            total_tokens=total_tokens,
+            summary=summary,
+            suggestions=suggestions,
+            truncated=truncated,
+            collection_time_ms=collection_time_ms
+        )
+    
+    def _collect_relevant_items(self, task_analysis: TaskAnalysis, include_types: List[str], 
+                               exclude_patterns: List[str], min_relevance: float, 
+                               explain_selection: bool) -> List[Tuple[Any, float]]:
+        """
+        Collect relevant context items based on task analysis.
+        
+        Returns:
+            List of tuples (item, relevance_score) where item can be:
+            - Context object
+            - DocMetadata object
+            - CodeMetadata object
+            - Tuple of (folder_path, description) for folders
+        """
+        items = []
+        
+        # Handle 'all' type
+        if 'all' in include_types:
+            include_types = ['contexts', 'docs', 'code', 'folders']
+        
+        # Stage 1: Recent contexts (last 48 hours)
+        if 'contexts' in include_types:
+            cutoff_time = datetime.now() - timedelta(hours=48)
+            for context_id, context in self.contexts.items():
+                if context.timestamp >= cutoff_time:
+                    if self._should_include_item(context, include_types, exclude_patterns):
+                        relevance = self._calculate_context_relevance(context, task_analysis)
+                        if relevance >= min_relevance:
+                            items.append((context, relevance))
+        
+        # Check if project index exists
+        if not self.project_index:
+            return items
+        
+        # Prepare keyword sets for matching
+        all_keywords = set(k.lower() for k in task_analysis.keywords)
+        all_concepts = set(c.lower() for c in task_analysis.concepts)
+        all_terms = all_keywords | all_concepts
+        
+        # Stage 2: Direct concept matches from project index
+        if 'docs' in include_types or 'code' in include_types:
+            for concept in task_analysis.concepts:
+                concept_lower = concept.lower()
+                if concept_lower in self.project_index.concepts:
+                    file_paths = self.project_index.concepts[concept_lower]
+                    for file_path in file_paths:
+                        # Check if it's a doc or code file
+                        if file_path in self.project_index.doc_files and 'docs' in include_types:
+                            doc_meta = self.project_index.doc_files[file_path]
+                            if self._should_include_item(doc_meta, include_types, exclude_patterns):
+                                items.append((doc_meta, 0.9))  # High relevance for direct concept match
+                        elif file_path in self.project_index.code_files and 'code' in include_types:
+                            code_meta = self.project_index.code_files[file_path]
+                            if self._should_include_item(code_meta, include_types, exclude_patterns):
+                                items.append((code_meta, 0.9))  # High relevance for direct concept match
+        
+        # Stage 3: Function/class name matches based on keywords
+        if 'code' in include_types:
+            # Check function names
+            for func_name, file_path in self.project_index.functions.items():
+                if any(keyword.lower() in func_name.lower() for keyword in task_analysis.keywords):
+                    if file_path in self.project_index.code_files:
+                        code_meta = self.project_index.code_files[file_path]
+                        if self._should_include_item(code_meta, include_types, exclude_patterns):
+                            # Calculate relevance based on keyword match strength
+                            relevance = self._calculate_name_match_relevance(func_name, task_analysis.keywords)
+                            if relevance >= min_relevance:
+                                items.append((code_meta, relevance))
+            
+            # Check class names
+            for class_name, file_path in self.project_index.classes.items():
+                if any(keyword.lower() in class_name.lower() for keyword in task_analysis.keywords):
+                    if file_path in self.project_index.code_files:
+                        code_meta = self.project_index.code_files[file_path]
+                        if self._should_include_item(code_meta, include_types, exclude_patterns):
+                            relevance = self._calculate_name_match_relevance(class_name, task_analysis.keywords)
+                            if relevance >= min_relevance:
+                                items.append((code_meta, relevance))
+        
+        # Stage 4: Description-based matches
+        if 'docs' in include_types:
+            for file_path, doc_meta in self.project_index.doc_files.items():
+                if doc_meta.description and self._should_include_item(doc_meta, include_types, exclude_patterns):
+                    desc_lower = doc_meta.description.lower()
+                    matching_terms = sum(1 for term in all_terms if term in desc_lower)
+                    if matching_terms > 0:
+                        relevance = min(0.7, matching_terms * 0.2)  # Cap at 0.7 for description matches
+                        if relevance >= min_relevance:
+                            items.append((doc_meta, relevance))
+        
+        if 'code' in include_types:
+            for file_path, code_meta in self.project_index.code_files.items():
+                if code_meta.description and self._should_include_item(code_meta, include_types, exclude_patterns):
+                    desc_lower = code_meta.description.lower()
+                    matching_terms = sum(1 for term in all_terms if term in desc_lower)
+                    if matching_terms > 0:
+                        relevance = min(0.7, matching_terms * 0.2)
+                        if relevance >= min_relevance:
+                            items.append((code_meta, relevance))
+        
+        # Stage 5: Include relevant folder descriptions
+        if 'folders' in include_types:
+            for folder_path, description in self.project_index.folder_descriptions.items():
+                if description:
+                    desc_lower = description.lower()
+                    matching_terms = sum(1 for term in all_terms if term in desc_lower)
+                    if matching_terms > 0:
+                        folder_item = (folder_path, description)
+                        if self._should_include_item(folder_item, include_types, exclude_patterns):
+                            relevance = min(0.5, matching_terms * 0.15)  # Lower relevance for folders
+                            if relevance >= min_relevance:
+                                items.append((folder_item, relevance))
+        
+        # Remove duplicates based on path (for files) or id (for contexts)
+        seen_paths = set()
+        unique_items = []
+        for item, score in items:
+            if isinstance(item, Context):
+                if item.id not in seen_paths:
+                    seen_paths.add(item.id)
+                    unique_items.append((item, score))
+            elif isinstance(item, (DocMetadata, CodeMetadata)):
+                if item.path not in seen_paths:
+                    seen_paths.add(item.path)
+                    unique_items.append((item, score))
+            elif isinstance(item, tuple):  # Folder items
+                if item[0] not in seen_paths:
+                    seen_paths.add(item[0])
+                    unique_items.append((item, score))
+        
+        # Sort by relevance score (highest first)
+        unique_items.sort(key=lambda x: x[1], reverse=True)
+        
+        return unique_items
+    
+    def _calculate_context_relevance(self, context: Context, task_analysis: TaskAnalysis) -> float:
+        """Calculate relevance score for a context based on task analysis."""
+        relevance = 0.0
+        
+        # Check context data for keyword matches
+        context_str = json.dumps(context.data).lower()
+        
+        # Keyword matches (0.3 weight)
+        keyword_matches = sum(1 for keyword in task_analysis.keywords 
+                            if keyword.lower() in context_str)
+        if task_analysis.keywords:
+            relevance += 0.3 * (keyword_matches / len(task_analysis.keywords))
+        
+        # Concept matches (0.4 weight)
+        concept_matches = sum(1 for concept in task_analysis.concepts 
+                            if concept.lower() in context_str)
+        if task_analysis.concepts:
+            relevance += 0.4 * (concept_matches / len(task_analysis.concepts))
+        
+        # Action matches (0.2 weight)
+        action_matches = sum(1 for action in task_analysis.actions 
+                           if action.lower() in context_str)
+        if task_analysis.actions:
+            relevance += 0.2 * (action_matches / len(task_analysis.actions))
+        
+        # Tag matches (0.1 weight)
+        tag_matches = sum(1 for tag in context.tags 
+                        if any(keyword.lower() in tag.lower() 
+                              for keyword in task_analysis.keywords))
+        if context.tags and task_analysis.keywords:
+            relevance += 0.1 * (tag_matches / len(context.tags))
+        
+        # Boost for specific context types
+        if context.type == ContextType.DECISION and 'decision' in task_analysis.actions:
+            relevance += 0.1
+        elif context.type == ContextType.ERROR and 'debug' in task_analysis.actions:
+            relevance += 0.1
+        
+        return min(1.0, relevance)
+    
+    def _calculate_name_match_relevance(self, name: str, keywords: List[str]) -> float:
+        """Calculate relevance score for function/class name matches."""
+        name_lower = name.lower()
+        relevance = 0.0
+        
+        # Exact match gets highest score
+        for keyword in keywords:
+            keyword_lower = keyword.lower()
+            if keyword_lower == name_lower:
+                return 0.85
+            elif keyword_lower in name_lower:
+                # Partial match - score based on match quality
+                match_ratio = len(keyword_lower) / len(name_lower)
+                relevance = max(relevance, 0.5 + (match_ratio * 0.3))
+        
+        return relevance
+    
+    def _should_include_item(self, item: Any, include_types: List[str], 
+                           exclude_patterns: List[str]) -> bool:
+        """Check if an item should be included based on filters."""
+        # If no exclude patterns, include everything
+        if not exclude_patterns:
+            return True
+        
+        # Get the path or identifier to check
+        path = None
+        if isinstance(item, (DocMetadata, CodeMetadata)):
+            path = item.path
+        elif isinstance(item, Context):
+            # Check context source and tags
+            for pattern in exclude_patterns:
+                if pattern in item.source or any(pattern in tag for tag in item.tags):
+                    return False
+            return True
+        elif isinstance(item, tuple):  # Folder item
+            path = item[0]
+        
+        # Check path against exclude patterns
+        if path:
+            for pattern in exclude_patterns:
+                if pattern in path:
+                    return False
+        
+        return True
+    
+    def _convert_to_context_item(self, item: Any, relevance_score: float) -> Optional[ContextItem]:
+        """Convert various item types to ContextItem format."""
+        try:
+            if isinstance(item, Context):
+                # Convert Context to ContextItem
+                content = json.dumps(item.data, indent=2)
+                return ContextItem(
+                    type='context',
+                    path=f"context/{item.id}",
+                    content=content,
+                    relevance_score=relevance_score,
+                    tokens=len(content.split()),  # Simple token estimate
+                    metadata={
+                        'context_type': item.type.value,
+                        'source': item.source,
+                        'timestamp': item.timestamp.isoformat(),
+                        'tags': item.tags
+                    }
+                )
+            
+            elif isinstance(item, DocMetadata):
+                # Read doc file content
+                try:
+                    content = Path(item.path).read_text()
+                    # Truncate if too long
+                    if len(content) > 10000:
+                        content = content[:10000] + "\n... [truncated]"
+                    
+                    return ContextItem(
+                        type='doc_section',
+                        path=item.path,
+                        content=content,
+                        relevance_score=relevance_score,
+                        tokens=len(content.split()),
+                        metadata={
+                            'doc_type': item.doc_type,
+                            'description': item.description,
+                            'needs_update': item.needs_update()
+                        }
+                    )
+                except Exception as e:
+                    print(f"Error reading doc file {item.path}: {e}")
+                    return None
+            
+            elif isinstance(item, CodeMetadata):
+                # Read code file content
+                try:
+                    content = Path(item.path).read_text()
+                    # Truncate if too long
+                    if len(content) > 10000:
+                        content = content[:10000] + "\n... [truncated]"
+                    
+                    return ContextItem(
+                        type='file',
+                        path=item.path,
+                        content=content,
+                        relevance_score=relevance_score,
+                        tokens=len(content.split()),
+                        metadata={
+                            'language': item.language,
+                            'description': item.description,
+                            'functions': item.functions[:10],  # Limit functions listed
+                            'classes': item.classes[:10]       # Limit classes listed
+                        }
+                    )
+                except Exception as e:
+                    print(f"Error reading code file {item.path}: {e}")
+                    return None
+            
+            elif isinstance(item, tuple) and len(item) == 2:
+                # Folder description tuple
+                folder_path, description = item
+                return ContextItem(
+                    type='folder_desc',
+                    path=folder_path,
+                    content=f"Folder: {folder_path}\nDescription: {description}",
+                    relevance_score=relevance_score,
+                    tokens=len(description.split()) + 10,  # Add some for formatting
+                    metadata={'folder_path': folder_path}
+                )
+            
+            else:
+                print(f"Unknown item type: {type(item)}")
+                return None
+                
+        except Exception as e:
+            print(f"Error converting item to ContextItem: {e}")
+            return None
+    
+    def _optimize_for_tokens(self, items: List[ContextItem], max_tokens: int) -> Tuple[List[ContextItem], bool]:
+        """
+        Sophisticated token optimization with balanced representation across types.
+        
+        Groups items by type and allocates proportional token budgets:
+        - 30% for contexts (recent decisions, errors, patterns)
+        - 40% for code (implementation details)
+        - 20% for docs (specifications, guides)
+        - 10% for folders (structural overview)
+        
+        Supports smart truncation for large high-relevance items and redistribution
+        of unused budget between categories.
+        
+        Args:
+            items: List of context items sorted by relevance
+            max_tokens: Maximum allowed tokens
+            
+        Returns:
+            Tuple of (optimized items, whether truncation occurred)
+        """
+        # Edge case: very small token limit
+        if max_tokens < 100:
+            # Just include the most relevant item if possible
+            if items and items[0].tokens <= max_tokens:
+                return [items[0]], True
+            return [], True
+        
+        # Group items by type
+        contexts = []
+        code_files = []
+        doc_files = []
+        folder_descs = []
+        
+        for item in items:
+            if item.type == 'context':
+                contexts.append(item)
+            elif item.type == 'file':
+                code_files.append(item)
+            elif item.type == 'doc_section':
+                doc_files.append(item)
+            elif item.type == 'folder_desc':
+                folder_descs.append(item)
+        
+        # Calculate initial budgets (with some buffer for overhead)
+        overhead = min(500, int(max_tokens * 0.02))  # 2% overhead, max 500 tokens
+        available_tokens = max_tokens - overhead
+        
+        budget_contexts = int(available_tokens * 0.30)
+        budget_code = int(available_tokens * 0.40)
+        budget_docs = int(available_tokens * 0.20)
+        budget_folders = int(available_tokens * 0.10)
+        
+        # Process each category
+        selected_contexts, used_contexts, trunc_contexts = self._add_items_within_budget(
+            contexts, budget_contexts, "contexts"
+        )
+        selected_code, used_code, trunc_code = self._add_items_within_budget(
+            code_files, budget_code, "code"
+        )
+        selected_docs, used_docs, trunc_docs = self._add_items_within_budget(
+            doc_files, budget_docs, "docs"
+        )
+        selected_folders, used_folders, trunc_folders = self._add_items_within_budget(
+            folder_descs, budget_folders, "folders"
+        )
+        
+        # Calculate unused tokens
+        unused_contexts = budget_contexts - used_contexts
+        unused_code = budget_code - used_code
+        unused_docs = budget_docs - used_docs
+        unused_folders = budget_folders - used_folders
+        total_unused = unused_contexts + unused_code + unused_docs + unused_folders
+        
+        # Redistribute unused budget proportionally to categories that need more
+        redistribution_items = []
+        
+        # Check which categories have items left
+        remaining_contexts = contexts[len(selected_contexts):]
+        remaining_code = code_files[len(selected_code):]
+        remaining_docs = doc_files[len(selected_docs):]
+        remaining_folders = folder_descs[len(selected_folders):]
+        
+        # Prioritize redistribution to code and docs
+        if total_unused > 100:  # Only redistribute if significant unused budget
+            # Try to add more code files first (highest priority)
+            if remaining_code and unused_contexts + unused_docs + unused_folders > 0:
+                extra_budget = int(total_unused * 0.5)  # Use 50% of unused for code
+                extra_code, extra_used, _ = self._add_items_within_budget(
+                    remaining_code, extra_budget, "code"
+                )
+                redistribution_items.extend(extra_code)
+                total_unused -= extra_used
+            
+            # Then try docs
+            if remaining_docs and total_unused > 100:
+                extra_budget = int(total_unused * 0.6)  # Use 60% of remaining for docs
+                extra_docs, extra_used, _ = self._add_items_within_budget(
+                    remaining_docs, extra_budget, "docs"
+                )
+                redistribution_items.extend(extra_docs)
+                total_unused -= extra_used
+            
+            # Then contexts
+            if remaining_contexts and total_unused > 100:
+                extra_budget = int(total_unused * 0.8)  # Use 80% of remaining for contexts
+                extra_contexts, extra_used, _ = self._add_items_within_budget(
+                    remaining_contexts, extra_budget, "contexts"
+                )
+                redistribution_items.extend(extra_contexts)
+        
+        # Combine all selected items
+        all_selected = (
+            selected_contexts + selected_code + selected_docs + 
+            selected_folders + redistribution_items
+        )
+        
+        # Sort by relevance to maintain quality
+        all_selected.sort(key=lambda x: x.relevance_score, reverse=True)
+        
+        # Determine if truncation occurred
+        truncated = (
+            trunc_contexts or trunc_code or trunc_docs or trunc_folders or
+            len(contexts) > len(selected_contexts) or
+            len(code_files) > len(selected_code) or
+            len(doc_files) > len(selected_docs) or
+            len(folder_descs) > len(selected_folders)
+        )
+        
+        # Ensure at least one item is included if possible
+        if not all_selected and items:
+            # Try to include at least the most relevant item
+            most_relevant = max(items, key=lambda x: x.relevance_score)
+            if most_relevant.tokens <= max_tokens:
+                return [most_relevant], True
+            else:
+                # Try to truncate it
+                truncated_item = self._truncate_item(most_relevant, max_tokens)
+                if truncated_item:
+                    return [truncated_item], True
+        
+        return all_selected, truncated
+    
+    def _add_items_within_budget(self, items: List[ContextItem], budget: int, 
+                                 category: str) -> Tuple[List[ContextItem], int, bool]:
+        """
+        Add items from a category while staying within budget.
+        
+        Supports smart truncation for large items with high relevance.
+        
+        Args:
+            items: List of items in this category (already sorted by relevance)
+            budget: Token budget for this category
+            category: Category name for logging
+            
+        Returns:
+            Tuple of (selected items, tokens used, whether any items were truncated)
+        """
+        selected = []
+        used_tokens = 0
+        any_truncated = False
+        
+        for item in items:
+            if used_tokens >= budget:
+                break
+            
+            # Check if item fits
+            if used_tokens + item.tokens <= budget:
+                selected.append(item)
+                used_tokens += item.tokens
+            else:
+                # Item doesn't fit - check if it's worth truncating
+                remaining_budget = budget - used_tokens
+                
+                # Only truncate if:
+                # 1. Item has high relevance (>0.6)
+                # 2. We can include at least 20% of the item
+                # 3. Remaining budget is substantial (>500 tokens)
+                if (item.relevance_score > 0.6 and 
+                    remaining_budget > 500 and 
+                    remaining_budget >= item.tokens * 0.2):
+                    
+                    # Try to truncate the item
+                    truncated_item = self._truncate_item(item, remaining_budget)
+                    if truncated_item:
+                        selected.append(truncated_item)
+                        used_tokens += truncated_item.tokens
+                        any_truncated = True
+        
+        return selected, used_tokens, any_truncated
+    
+    def _truncate_item(self, item: ContextItem, max_tokens: int) -> Optional[ContextItem]:
+        """
+        Intelligently truncate a context item to fit within token limit.
+        
+        Args:
+            item: The item to truncate
+            max_tokens: Maximum tokens allowed
+            
+        Returns:
+            Truncated ContextItem or None if truncation not possible
+        """
+        if max_tokens < 100:  # Too small to truncate meaningfully
+            return None
+        
+        # Estimate how much content we can keep
+        original_tokens = self._estimate_tokens(item.content)
+        if original_tokens <= max_tokens:
+            return item  # No truncation needed
+        
+        # Calculate truncation ratio
+        keep_ratio = max_tokens / original_tokens
+        
+        # Different truncation strategies based on item type
+        if item.type == 'file' or item.type == 'doc_section':
+            # For files, try to keep the beginning (imports, class definitions)
+            # and some from the middle
+            lines = item.content.split('\n')
+            total_lines = len(lines)
+            
+            if total_lines < 10:
+                # Very short file, just truncate by character count
+                char_limit = int(len(item.content) * keep_ratio * 0.9)  # 90% to be safe
+                truncated_content = item.content[:char_limit] + "\n\n... [truncated]"
+            else:
+                # Keep first 30% and last 10% of lines
+                keep_start = int(total_lines * keep_ratio * 0.7)
+                keep_end = int(total_lines * keep_ratio * 0.1)
+                
+                truncated_lines = (
+                    lines[:keep_start] + 
+                    ["\n... [truncated middle section] ...\n"] + 
+                    lines[-keep_end:] if keep_end > 0 else []
+                )
+                truncated_content = '\n'.join(truncated_lines)
+        
+        elif item.type == 'context':
+            # For contexts, truncate the data portion
+            try:
+                # Parse the JSON content
+                context_data = json.loads(item.content)
+                
+                # Truncate string values in the data
+                for key, value in context_data.items():
+                    if isinstance(value, str) and len(value) > 200:
+                        max_len = int(200 * keep_ratio)
+                        context_data[key] = value[:max_len] + "... [truncated]"
+                
+                truncated_content = json.dumps(context_data, indent=2)
+            except:
+                # Fallback to simple truncation
+                char_limit = int(len(item.content) * keep_ratio * 0.9)
+                truncated_content = item.content[:char_limit] + "\n... [truncated]"
+        
+        else:
+            # Default truncation for other types
+            char_limit = int(len(item.content) * keep_ratio * 0.9)
+            truncated_content = item.content[:char_limit] + "\n... [truncated]"
+        
+        # Create new truncated item
+        truncated_item = ContextItem(
+            type=item.type,
+            path=item.path,
+            content=truncated_content,
+            relevance_score=item.relevance_score,
+            tokens=self._estimate_tokens(truncated_content),
+            metadata={**item.metadata, 'truncated': True, 'original_tokens': item.tokens}
+        )
+        
+        # Verify it actually fits
+        if truncated_item.tokens <= max_tokens:
+            return truncated_item
+        
+        # If still too big, do a more aggressive truncation
+        final_char_limit = int(max_tokens * 3.5)  # Rough estimate: 3.5 chars per token
+        final_content = item.content[:final_char_limit] + "\n... [heavily truncated]"
+        
+        return ContextItem(
+            type=item.type,
+            path=item.path,
+            content=final_content,
+            relevance_score=item.relevance_score,
+            tokens=self._estimate_tokens(final_content),
+            metadata={**item.metadata, 'truncated': True, 'heavily_truncated': True, 
+                     'original_tokens': item.tokens}
+        )
+    
+    def _estimate_tokens(self, content: str) -> int:
+        """
+        Estimate token count for a piece of content.
+        
+        Uses a simple heuristic of ~4 characters per token, which is
+        reasonable for English text and code.
+        
+        Args:
+            content: The content to estimate tokens for
+            
+        Returns:
+            Estimated token count
+        """
+        if not content:
+            return 0
+        
+        # Simple estimation: ~4 characters per token
+        # This is a reasonable approximation for English text and code
+        char_count = len(content)
+        
+        # Adjust based on content type heuristics
+        # Code tends to have more tokens due to symbols
+        if '{' in content or ';' in content or 'def ' in content or 'function ' in content:
+            # Likely code - slightly more tokens per character
+            return int(char_count / 3.5)
+        else:
+            # Likely text - standard ratio
+            return int(char_count / 4)
+    
+    def _get_item_content(self, item: Any, item_type: str) -> str:
+        """
+        Extract content from different item types.
+        
+        Args:
+            item: The item to extract content from
+            item_type: Type hint for the item
+            
+        Returns:
+            String content or empty string if extraction fails
+        """
+        try:
+            if isinstance(item, ContextItem):
+                return item.content
+            elif isinstance(item, Context):
+                return json.dumps(item.data, indent=2)
+            elif isinstance(item, (DocMetadata, CodeMetadata)):
+                # Try to read file content
+                try:
+                    return Path(item.path).read_text()
+                except:
+                    return f"[Unable to read {item.path}]"
+            elif isinstance(item, tuple) and len(item) == 2:
+                # Folder description
+                return f"Folder: {item[0]}\nDescription: {item[1]}"
+            elif isinstance(item, dict):
+                return json.dumps(item, indent=2)
+            elif isinstance(item, str):
+                return item
+            else:
+                return str(item)
+        except Exception as e:
+            return f"[Error extracting content: {e}]"
+    
+    def _get_item_path(self, item: Any, item_type: str) -> str:
+        """
+        Extract path or identifier from different item types.
+        
+        Args:
+            item: The item to extract path from
+            item_type: Type hint for the item
+            
+        Returns:
+            Path string or identifier
+        """
+        try:
+            if isinstance(item, ContextItem):
+                return item.path
+            elif isinstance(item, Context):
+                return f"context/{item.id}"
+            elif isinstance(item, (DocMetadata, CodeMetadata)):
+                return item.path
+            elif isinstance(item, tuple) and len(item) == 2:
+                # Folder description
+                return item[0]
+            elif isinstance(item, dict) and 'path' in item:
+                return item['path']
+            elif isinstance(item, dict) and 'id' in item:
+                return f"item/{item['id']}"
+            else:
+                return f"unknown/{hash(str(item))}"
+        except Exception:
+            return "unknown/error"
     
     # AI-Enhanced Methods (optional)
     def get_claude_tools(self):

@@ -2,7 +2,7 @@
   "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/CLAUDE.md": {
     "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/CLAUDE.md",
     "doc_type": "general",
-    "last_analyzed": "2025-07-04T23:10:25.749588",
+    "last_analyzed": "2025-07-05T00:53:44.472210",
     "description": "Documentation file: CLAUDE.md",
     "quality_scores": {
       "completeness": 1.0,
@@ -20,7 +20,7 @@
   "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/DIRECTORY_TREE_IMPLEMENTATION.md": {
     "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/DIRECTORY_TREE_IMPLEMENTATION.md",
     "doc_type": "general",
-    "last_analyzed": "2025-07-04T23:10:25.759378",
+    "last_analyzed": "2025-07-05T00:53:44.480396",
     "description": "Documentation file: DIRECTORY_TREE_IMPLEMENTATION.md",
     "quality_scores": {
       "completeness": 0.5,
@@ -38,7 +38,7 @@
   "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/README.md": {
     "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/README.md",
     "doc_type": "readme",
-    "last_analyzed": "2025-07-04T23:10:25.767226",
+    "last_analyzed": "2025-07-05T00:53:44.487045",
     "description": "Documentation file: README.md",
     "quality_scores": {
       "completeness": 0.0,
@@ -58,7 +58,7 @@
   "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/VISUALIZATION_IMPLEMENTATION_SUMMARY.md": {
     "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/VISUALIZATION_IMPLEMENTATION_SUMMARY.md",
     "doc_type": "general",
-    "last_analyzed": "2025-07-04T23:10:25.774210",
+    "last_analyzed": "2025-07-05T00:53:44.493941",
     "description": "Documentation file: VISUALIZATION_IMPLEMENTATION_SUMMARY.md",
     "quality_scores": {
       "completeness": 0.75,
@@ -76,7 +76,7 @@
   "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/VISUALIZATION_METHODS.md": {
     "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/VISUALIZATION_METHODS.md",
     "doc_type": "general",
-    "last_analyzed": "2025-07-04T23:10:25.781667",
+    "last_analyzed": "2025-07-05T00:53:44.500683",
     "description": "Documentation file: VISUALIZATION_METHODS.md",
     "quality_scores": {
       "completeness": 1.0,
@@ -94,7 +94,7 @@
   "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/aw_docs/README.md": {
     "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/aw_docs/README.md",
     "doc_type": "readme",
-    "last_analyzed": "2025-07-04T23:10:25.793526",
+    "last_analyzed": "2025-07-05T00:53:44.510602",
     "description": "Documentation file: README.md",
     "quality_scores": {
       "completeness": 0.25,
@@ -112,7 +112,7 @@
   "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/README.md": {
     "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/README.md",
     "doc_type": "readme",
-    "last_analyzed": "2025-07-04T23:10:25.801815",
+    "last_analyzed": "2025-07-05T00:53:44.518937",
     "description": "Documentation file: README.md",
     "quality_scores": {
       "completeness": 0.5,
@@ -130,7 +130,7 @@
   "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/README.md": {
     "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/README.md",
     "doc_type": "readme",
-    "last_analyzed": "2025-07-04T23:10:26.619077",
+    "last_analyzed": "2025-07-05T00:53:45.297343",
     "description": "Documentation file: README.md",
     "quality_scores": {
       "completeness": 0.75,
@@ -148,7 +148,7 @@
   "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/01_AUTONOMOUS_SOFTWARE_COMPANY_VISION.md": {
     "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/01_AUTONOMOUS_SOFTWARE_COMPANY_VISION.md",
     "doc_type": "guide",
-    "last_analyzed": "2025-07-04T23:10:26.630198",
+    "last_analyzed": "2025-07-05T00:53:45.306662",
     "description": "Documentation file: 01_AUTONOMOUS_SOFTWARE_COMPANY_VISION.md",
     "quality_scores": {
       "completeness": 0.25,
@@ -166,7 +166,7 @@
   "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/02_IMPLEMENTATION_ROADMAP.md": {
     "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/02_IMPLEMENTATION_ROADMAP.md",
     "doc_type": "guide",
-    "last_analyzed": "2025-07-04T23:10:26.640762",
+    "last_analyzed": "2025-07-05T00:53:45.314935",
     "description": "Documentation file: 02_IMPLEMENTATION_ROADMAP.md",
     "quality_scores": {
       "completeness": 0.75,
@@ -186,7 +186,7 @@
   "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/03_CONTEXT_MANAGER_DEVELOPMENT_GUIDE.md": {
     "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/03_CONTEXT_MANAGER_DEVELOPMENT_GUIDE.md",
     "doc_type": "guide",
-    "last_analyzed": "2025-07-04T23:10:26.649545",
+    "last_analyzed": "2025-07-05T00:53:45.325398",
     "description": "Documentation file: 03_CONTEXT_MANAGER_DEVELOPMENT_GUIDE.md",
     "quality_scores": {
       "completeness": 0.25,
@@ -204,7 +204,7 @@
   "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/04_CONTEXT_MANAGER_V1_PLAN.md": {
     "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/04_CONTEXT_MANAGER_V1_PLAN.md",
     "doc_type": "guide",
-    "last_analyzed": "2025-07-04T23:10:26.657667",
+    "last_analyzed": "2025-07-05T00:53:45.333924",
     "description": "Documentation file: 04_CONTEXT_MANAGER_V1_PLAN.md",
     "quality_scores": {
       "completeness": 0.5,
@@ -222,7 +222,7 @@
   "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/05_AGENT_SPECIFICATIONS_EXPANDED.md": {
     "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/05_AGENT_SPECIFICATIONS_EXPANDED.md",
     "doc_type": "api_spec",
-    "last_analyzed": "2025-07-04T23:10:26.665208",
+    "last_analyzed": "2025-07-05T00:53:45.341816",
     "description": "Documentation file: 05_AGENT_SPECIFICATIONS_EXPANDED.md",
     "quality_scores": {
       "completeness": 0.25,
@@ -240,7 +240,7 @@
   "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/06_CONTEXT_MANAGER_V1_DESIGN.md": {
     "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/06_CONTEXT_MANAGER_V1_DESIGN.md",
     "doc_type": "guide",
-    "last_analyzed": "2025-07-04T23:10:26.673813",
+    "last_analyzed": "2025-07-05T00:53:45.349816",
     "description": "Documentation file: 06_CONTEXT_MANAGER_V1_DESIGN.md",
     "quality_scores": {
       "completeness": 0.75,
@@ -258,7 +258,7 @@
   "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/07_AGENT_DOCUMENTATION_STANDARD.md": {
     "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/07_AGENT_DOCUMENTATION_STANDARD.md",
     "doc_type": "guide",
-    "last_analyzed": "2025-07-04T23:10:26.682115",
+    "last_analyzed": "2025-07-05T00:53:45.358787",
     "description": "Documentation file: 07_AGENT_DOCUMENTATION_STANDARD.md",
     "quality_scores": {
       "completeness": 1.0,
@@ -279,7 +279,7 @@
   "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/README.md": {
     "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/README.md",
     "doc_type": "readme",
-    "last_analyzed": "2025-07-04T23:10:26.690578",
+    "last_analyzed": "2025-07-05T00:53:45.367510",
     "description": "Documentation file: README.md",
     "quality_scores": {
       "completeness": 0.0,
@@ -297,7 +297,7 @@
   "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/README.md": {
     "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/README.md",
     "doc_type": "readme",
-    "last_analyzed": "2025-07-04T23:10:26.700740",
+    "last_analyzed": "2025-07-05T00:53:45.378482",
     "description": "Documentation file: README.md",
     "quality_scores": {
       "completeness": 0.25,
@@ -315,7 +315,7 @@
   "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/WORKFLOW_STANDARD.md": {
     "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/WORKFLOW_STANDARD.md",
     "doc_type": "general",
-    "last_analyzed": "2025-07-04T23:10:26.708356",
+    "last_analyzed": "2025-07-05T00:53:45.386685",
     "description": "Documentation file: WORKFLOW_STANDARD.md",
     "quality_scores": {
       "completeness": 0.75,
@@ -333,7 +333,7 @@
   "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md": {
     "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md",
     "doc_type": "api_spec",
-    "last_analyzed": "2025-07-04T23:10:26.719091",
+    "last_analyzed": "2025-07-05T00:53:45.397839",
     "description": "Documentation file: AGENT_SPECIFICATION.md",
     "quality_scores": {
       "completeness": 0.75,
@@ -351,7 +351,7 @@
   "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/BOOTSTRAP_GUIDE.md": {
     "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/BOOTSTRAP_GUIDE.md",
     "doc_type": "guide",
-    "last_analyzed": "2025-07-04T23:10:26.729352",
+    "last_analyzed": "2025-07-05T00:53:45.407821",
     "description": "Documentation file: BOOTSTRAP_GUIDE.md",
     "quality_scores": {
       "completeness": 1.0,
@@ -369,7 +369,7 @@
   "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/IMPLEMENTATION_NOTES.md": {
     "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/IMPLEMENTATION_NOTES.md",
     "doc_type": "general",
-    "last_analyzed": "2025-07-04T23:10:26.738467",
+    "last_analyzed": "2025-07-05T00:53:45.416335",
     "description": "Documentation file: IMPLEMENTATION_NOTES.md",
     "quality_scores": {
       "completeness": 0.5,
@@ -387,7 +387,7 @@
   "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/IMPLEMENTATION_PLAN.md": {
     "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/IMPLEMENTATION_PLAN.md",
     "doc_type": "general",
-    "last_analyzed": "2025-07-04T23:10:26.749293",
+    "last_analyzed": "2025-07-05T00:53:45.425058",
     "description": "Documentation file: IMPLEMENTATION_PLAN.md",
     "quality_scores": {
       "completeness": 0.75,
@@ -407,7 +407,7 @@
   "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/INITIALIZE_PROJECT_ALGORITHMS.md": {
     "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/INITIALIZE_PROJECT_ALGORITHMS.md",
     "doc_type": "general",
-    "last_analyzed": "2025-07-04T23:10:26.758111",
+    "last_analyzed": "2025-07-05T00:53:45.433842",
     "description": "Documentation file: INITIALIZE_PROJECT_ALGORITHMS.md",
     "quality_scores": {
       "completeness": 0.5,
@@ -425,7 +425,7 @@
   "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/INITIALIZE_PROJECT_DESIGN.md": {
     "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/INITIALIZE_PROJECT_DESIGN.md",
     "doc_type": "general",
-    "last_analyzed": "2025-07-04T23:10:26.769008",
+    "last_analyzed": "2025-07-05T00:53:45.442529",
     "description": "Documentation file: INITIALIZE_PROJECT_DESIGN.md",
     "quality_scores": {
       "completeness": 1.0,
@@ -443,7 +443,7 @@
   "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/METADATA_VISUALIZATION_DESIGN.md": {
     "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/METADATA_VISUALIZATION_DESIGN.md",
     "doc_type": "general",
-    "last_analyzed": "2025-07-04T23:10:26.779773",
+    "last_analyzed": "2025-07-05T00:53:45.451371",
     "description": "Documentation file: METADATA_VISUALIZATION_DESIGN.md",
     "quality_scores": {
       "completeness": 0.5,
@@ -461,7 +461,7 @@
   "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/README.md": {
     "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/README.md",
     "doc_type": "readme",
-    "last_analyzed": "2025-07-04T23:10:26.790631",
+    "last_analyzed": "2025-07-05T00:53:45.461290",
     "description": "Documentation file: README.md",
     "quality_scores": {
       "completeness": 0.25,
@@ -479,7 +479,7 @@
   "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/TECHNICAL_DESIGN.md": {
     "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/TECHNICAL_DESIGN.md",
     "doc_type": "general",
-    "last_analyzed": "2025-07-04T23:10:26.800007",
+    "last_analyzed": "2025-07-05T00:53:45.469998",
     "description": "Documentation file: TECHNICAL_DESIGN.md",
     "quality_scores": {
       "completeness": 0.5,
@@ -497,7 +497,7 @@
   "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/swiss-army-knife/AGENT_SPECIFICATION.md": {
     "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/swiss-army-knife/AGENT_SPECIFICATION.md",
     "doc_type": "api_spec",
-    "last_analyzed": "2025-07-04T23:10:26.812345",
+    "last_analyzed": "2025-07-05T00:53:45.482074",
     "description": "Documentation file: AGENT_SPECIFICATION.md",
     "quality_scores": {
       "completeness": 1.0,
@@ -517,7 +517,7 @@
   "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/swiss-army-knife/README.md": {
     "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/swiss-army-knife/README.md",
     "doc_type": "readme",
-    "last_analyzed": "2025-07-04T23:10:26.822201",
+    "last_analyzed": "2025-07-05T00:53:45.493032",
     "description": "Documentation file: README.md",
     "quality_scores": {
       "completeness": 0.5,
@@ -535,7 +535,7 @@
   "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/01_enterprise_perspective.md": {
     "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/01_enterprise_perspective.md",
     "doc_type": "general",
-    "last_analyzed": "2025-07-04T23:10:26.839547",
+    "last_analyzed": "2025-07-05T00:53:45.511764",
     "description": "Documentation file: 01_enterprise_perspective.md",
     "quality_scores": {
       "completeness": 0.75,
@@ -553,7 +553,7 @@
   "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/02_medical_regulatory_perspective.md": {
     "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/02_medical_regulatory_perspective.md",
     "doc_type": "general",
-    "last_analyzed": "2025-07-04T23:10:26.849730",
+    "last_analyzed": "2025-07-05T00:53:45.520406",
     "description": "Documentation file: 02_medical_regulatory_perspective.md",
     "quality_scores": {
       "completeness": 0.25,
@@ -571,7 +571,7 @@
   "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/03_agile_startup_perspective.md": {
     "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/03_agile_startup_perspective.md",
     "doc_type": "general",
-    "last_analyzed": "2025-07-04T23:10:26.858519",
+    "last_analyzed": "2025-07-05T00:53:45.529328",
     "description": "Documentation file: 03_agile_startup_perspective.md",
     "quality_scores": {
       "completeness": 0.5,
@@ -591,7 +591,7 @@
   "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/04_academic_research_perspective.md": {
     "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/04_academic_research_perspective.md",
     "doc_type": "general",
-    "last_analyzed": "2025-07-04T23:10:26.868379",
+    "last_analyzed": "2025-07-05T00:53:45.540780",
     "description": "Documentation file: 04_academic_research_perspective.md",
     "quality_scores": {
       "completeness": 0.75,
@@ -609,7 +609,7 @@
   "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/05_ai_ml_systems_perspective.md": {
     "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/05_ai_ml_systems_perspective.md",
     "doc_type": "general",
-    "last_analyzed": "2025-07-04T23:10:26.879331",
+    "last_analyzed": "2025-07-05T00:53:45.551068",
     "description": "Documentation file: 05_ai_ml_systems_perspective.md",
     "quality_scores": {
       "completeness": 0.5,
@@ -629,7 +629,7 @@
   "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_agent_architectures.md": {
     "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_agent_architectures.md",
     "doc_type": "general",
-    "last_analyzed": "2025-07-04T23:10:26.897039",
+    "last_analyzed": "2025-07-05T00:53:45.571432",
     "description": "Documentation file: autonomous_agent_architectures.md",
     "quality_scores": {
       "completeness": 0.75,
@@ -649,7 +649,7 @@
   "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_coding_systems_analysis.md": {
     "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_coding_systems_analysis.md",
     "doc_type": "general",
-    "last_analyzed": "2025-07-04T23:10:26.909888",
+    "last_analyzed": "2025-07-05T00:53:45.581882",
     "description": "Documentation file: autonomous_coding_systems_analysis.md",
     "quality_scores": {
       "completeness": 0.25,
@@ -667,7 +667,7 @@
   "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/future-advanced/docs/academic_mas_research.md": {
     "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/future-advanced/docs/academic_mas_research.md",
     "doc_type": "general",
-    "last_analyzed": "2025-07-04T23:10:26.930999",
+    "last_analyzed": "2025-07-05T00:53:45.605422",
     "description": "Documentation file: academic_mas_research.md",
     "quality_scores": {
       "completeness": 0.5,
@@ -685,7 +685,7 @@
   "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/architecture/bootstrapping_analysis.md": {
     "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/architecture/bootstrapping_analysis.md",
     "doc_type": "general",
-    "last_analyzed": "2025-07-04T23:10:26.951592",
+    "last_analyzed": "2025-07-05T00:53:45.629140",
     "description": "Documentation file: bootstrapping_analysis.md",
     "quality_scores": {
       "completeness": 0.25,
@@ -703,7 +703,7 @@
   "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/architecture/context_manager_stopping_point_analysis.md": {
     "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/architecture/context_manager_stopping_point_analysis.md",
     "doc_type": "general",
-    "last_analyzed": "2025-07-04T23:10:26.962795",
+    "last_analyzed": "2025-07-05T00:53:45.639856",
     "description": "Documentation file: context_manager_stopping_point_analysis.md",
     "quality_scores": {
       "completeness": 0.75,
@@ -721,7 +721,7 @@
   "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_DEPENDENCY_MAP.md": {
     "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_DEPENDENCY_MAP.md",
     "doc_type": "general",
-    "last_analyzed": "2025-07-04T23:10:26.974132",
+    "last_analyzed": "2025-07-05T00:53:45.650470",
     "description": "Documentation file: CONTEXT_DEPENDENCY_MAP.md",
     "quality_scores": {
       "completeness": 0.75,
@@ -739,7 +739,7 @@
   "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_ENGINEERING_INSIGHTS.md": {
     "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_ENGINEERING_INSIGHTS.md",
     "doc_type": "general",
-    "last_analyzed": "2025-07-04T23:10:26.983305",
+    "last_analyzed": "2025-07-05T00:53:45.662633",
     "description": "Documentation file: CONTEXT_ENGINEERING_INSIGHTS.md",
     "quality_scores": {
       "completeness": 0.25,
@@ -757,7 +757,7 @@
   "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/IMPLEMENTATION_PLAN.md": {
     "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/IMPLEMENTATION_PLAN.md",
     "doc_type": "general",
-    "last_analyzed": "2025-07-04T23:10:26.992685",
+    "last_analyzed": "2025-07-05T00:53:45.673529",
     "description": "Documentation file: IMPLEMENTATION_PLAN.md",
     "quality_scores": {
       "completeness": 0.5,
@@ -775,7 +775,7 @@
   "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/NEXT_STEPS_SUMMARY.md": {
     "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/NEXT_STEPS_SUMMARY.md",
     "doc_type": "general",
-    "last_analyzed": "2025-07-04T23:10:27.001649",
+    "last_analyzed": "2025-07-05T00:53:45.683041",
     "description": "Documentation file: NEXT_STEPS_SUMMARY.md",
     "quality_scores": {
       "completeness": 0.25,
@@ -793,7 +793,7 @@
   "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/theoretical-limits/docs/enterprise_scalability_analysis.md": {
     "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/theoretical-limits/docs/enterprise_scalability_analysis.md",
     "doc_type": "general",
-    "last_analyzed": "2025-07-04T23:10:27.020913",
+    "last_analyzed": "2025-07-05T00:53:45.705807",
     "description": "Documentation file: enterprise_scalability_analysis.md",
     "quality_scores": {
       "completeness": 0.25,
@@ -811,7 +811,7 @@
   "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/theoretical-limits/docs/future_technology_assessment.md": {
     "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/theoretical-limits/docs/future_technology_assessment.md",
     "doc_type": "general",
-    "last_analyzed": "2025-07-04T23:10:27.029998",
+    "last_analyzed": "2025-07-05T00:53:45.718541",
     "description": "Documentation file: future_technology_assessment.md",
     "quality_scores": {
       "completeness": 0.0,
@@ -829,7 +829,7 @@
   "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/AGENT_INTERACTIONS.md": {
     "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/AGENT_INTERACTIONS.md",
     "doc_type": "general",
-    "last_analyzed": "2025-07-04T23:10:27.052640",
+    "last_analyzed": "2025-07-05T00:53:45.744887",
     "description": "Documentation file: AGENT_INTERACTIONS.md",
     "quality_scores": {
       "completeness": 0.5,
@@ -847,7 +847,7 @@
   "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/EXAMPLES.md": {
     "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/EXAMPLES.md",
     "doc_type": "general",
-    "last_analyzed": "2025-07-04T23:10:27.061546",
+    "last_analyzed": "2025-07-05T00:53:45.757174",
     "description": "Documentation file: EXAMPLES.md",
     "quality_scores": {
       "completeness": 0.75,
@@ -865,7 +865,7 @@
   "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/METRICS.md": {
     "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/METRICS.md",
     "doc_type": "general",
-    "last_analyzed": "2025-07-04T23:10:27.073637",
+    "last_analyzed": "2025-07-05T00:53:45.767034",
     "description": "Documentation file: METRICS.md",
     "quality_scores": {
       "completeness": 0.5,
@@ -883,7 +883,7 @@
   "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/SPECIFICATION.md": {
     "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/SPECIFICATION.md",
     "doc_type": "api_spec",
-    "last_analyzed": "2025-07-04T23:10:27.082857",
+    "last_analyzed": "2025-07-05T00:53:45.777757",
     "description": "Documentation file: SPECIFICATION.md",
     "quality_scores": {
       "completeness": 1.0,
@@ -903,7 +903,7 @@
   "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/STATE_MACHINE.md": {
     "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/STATE_MACHINE.md",
     "doc_type": "general",
-    "last_analyzed": "2025-07-04T23:10:27.092133",
+    "last_analyzed": "2025-07-05T00:53:45.788677",
     "description": "Documentation file: STATE_MACHINE.md",
     "quality_scores": {
       "completeness": 0.5,

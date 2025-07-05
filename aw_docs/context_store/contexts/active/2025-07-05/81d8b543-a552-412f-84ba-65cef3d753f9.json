@@ -1,0 +1,22 @@
+{
+  "id": "81d8b543-a552-412f-84ba-65cef3d753f9",
+  "type": "decision",
+  "source": "human",
+  "timestamp": "2025-07-05T01:05:27.690576",
+  "data": {
+    "decision": "Fixed Context Manager to auto-load project index on initialization",
+    "reasoning": "Essential for CLI usage where new instances are created per command"
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 33
+  },
+  "relationships": [],
+  "tags": [
+    "bootstrap",
+    "decision"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

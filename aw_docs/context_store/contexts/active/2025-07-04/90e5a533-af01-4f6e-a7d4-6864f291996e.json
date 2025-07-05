@@ -1,0 +1,22 @@
+{
+  "id": "90e5a533-af01-4f6e-a7d4-6864f291996e",
+  "type": "decision",
+  "source": "human",
+  "timestamp": "2025-07-04T23:19:38.738035",
+  "data": {
+    "decision": "Implemented batch processing for Claude descriptions",
+    "reasoning": "Reduced API calls from 100+ to ~20 for large projects by processing multiple files per Claude call with smart batching (10 files/20KB per batch)"
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 49
+  },
+  "relationships": [],
+  "tags": [
+    "bootstrap",
+    "decision"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

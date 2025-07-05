@@ -341,6 +341,75 @@ def find_info():
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
+@app.route('/api/context/collect', methods=['POST'])
+def collect_context():
+    """Collect context for a specific task."""
+    try:
+        data = request.json
+        task_description = data.get('task_description')
+        
+        if not task_description:
+            return jsonify({"error": "task_description is required"}), 400
+        
+        # Extract optional parameters
+        agent_type = data.get('agent_type', 'general')
+        max_tokens = data.get('max_tokens', 10000)
+        include_types = data.get('include_types', [])
+        exclude_patterns = data.get('exclude_patterns', [])
+        agent_template = data.get('agent_template')
+        explain_selection = data.get('explain_selection', False)
+        min_relevance = data.get('min_relevance', 0.3)
+        
+        # Call the context collection method
+        context_collection = cm.collect_context_for_task(
+            task_description=task_description,
+            agent_type=agent_type,
+            max_tokens=max_tokens,
+            include_types=include_types,
+            exclude_patterns=exclude_patterns,
+            agent_template=agent_template,
+            explain_selection=explain_selection,
+            min_relevance=min_relevance
+        )
+        
+        # Convert ContextCollection to JSON-serializable format
+        response_data = {
+            "task_description": context_collection.task_description,
+            "task_analysis": {
+                "keywords": context_collection.task_analysis.keywords,
+                "actions": context_collection.task_analysis.actions,
+                "concepts": context_collection.task_analysis.concepts,
+                "file_patterns": context_collection.task_analysis.file_patterns,
+                "estimated_scope": context_collection.task_analysis.estimated_scope
+            },
+            "items": [
+                {
+                    "file_path": item.file_path,
+                    "type": item.type,
+                    "relevance": item.relevance,
+                    "content": item.content,
+                    "metadata": item.metadata,
+                    "explanation": item.explanation
+                }
+                for item in context_collection.items
+            ],
+            "total_tokens": context_collection.total_tokens,
+            "summary": context_collection.summary,
+            "suggestions": context_collection.suggestions,
+            "truncated": context_collection.truncated,
+            "collection_time_ms": context_collection.collection_time_ms
+        }
+        
+        return jsonify(response_data)
+        
+    except ValueError as e:
+        # Handle case where project is not initialized
+        if "Project not initialized" in str(e):
+            return jsonify({"error": str(e), "not_initialized": True}), 400
+        return jsonify({"error": str(e)}), 400
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
 @app.route('/api/context/project-status')
 def project_status():
     """Get project initialization status."""

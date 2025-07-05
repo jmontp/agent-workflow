@@ -6,68 +6,68 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/CLAUDE.md"
   ],
   "Context Manager": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/06_CONTEXT_MANAGER_V1_DESIGN.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/AGENT_INTERACTIONS.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/02_IMPLEMENTATION_ROADMAP.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/IMPLEMENTATION_PLAN.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/04_CONTEXT_MANAGER_V1_PLAN.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/METADATA_VISUALIZATION_DESIGN.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/NEXT_STEPS_SUMMARY.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/01_AUTONOMOUS_SOFTWARE_COMPANY_VISION.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/README.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/VISUALIZATION_METHODS.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/VISUALIZATION_IMPLEMENTATION_SUMMARY.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_DEPENDENCY_MAP.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/architecture/context_manager_stopping_point_analysis.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/05_AGENT_SPECIFICATIONS_EXPANDED.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/README.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/swiss-army-knife/AGENT_SPECIFICATION.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/STATE_MACHINE.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/WORKFLOW_STANDARD.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/METRICS.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/INITIALIZE_PROJECT_DESIGN.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/CLAUDE.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/03_CONTEXT_MANAGER_DEVELOPMENT_GUIDE.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/IMPLEMENTATION_NOTES.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/IMPLEMENTATION_PLAN.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/swiss-army-knife/README.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/README.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/BOOTSTRAP_GUIDE.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/README.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/SPECIFICATION.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/BOOTSTRAP_GUIDE.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/IMPLEMENTATION_NOTES.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/README.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/06_CONTEXT_MANAGER_V1_DESIGN.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/02_IMPLEMENTATION_ROADMAP.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/VISUALIZATION_METHODS.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/07_AGENT_DOCUMENTATION_STANDARD.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/05_AGENT_SPECIFICATIONS_EXPANDED.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/METADATA_VISUALIZATION_DESIGN.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/swiss-army-knife/AGENT_SPECIFICATION.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/01_AUTONOMOUS_SOFTWARE_COMPANY_VISION.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/aw_docs/README.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/AGENT_INTERACTIONS.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/VISUALIZATION_IMPLEMENTATION_SUMMARY.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/README.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/METRICS.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/NEXT_STEPS_SUMMARY.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/architecture/context_manager_stopping_point_analysis.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/README.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/03_CONTEXT_MANAGER_DEVELOPMENT_GUIDE.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/IMPLEMENTATION_PLAN.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/WORKFLOW_STANDARD.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/04_CONTEXT_MANAGER_V1_PLAN.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/swiss-army-knife/README.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/IMPLEMENTATION_PLAN.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/INITIALIZE_PROJECT_DESIGN.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/architecture/bootstrapping_analysis.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/README.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/CLAUDE.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/TECHNICAL_DESIGN.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/07_AGENT_DOCUMENTATION_STANDARD.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_DEPENDENCY_MAP.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/STATE_MACHINE.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/SPECIFICATION.md"
   ],
   "Project Structure": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/CLAUDE.md"
   ],
   "Current Status": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/README.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/swiss-army-knife/README.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/README.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/CLAUDE.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/METRICS.md"
   ],
   "Agent Documentation Standard": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/07_AGENT_DOCUMENTATION_STANDARD.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/CLAUDE.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/README.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/swiss-army-knife/README.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/README.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/README.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/README.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/CLAUDE.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/07_AGENT_DOCUMENTATION_STANDARD.md"
   ],
   "Swiss Army Knife": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/AGENT_INTERACTIONS.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/README.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/SPECIFICATION.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/METRICS.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/TECHNICAL_DESIGN.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/EXAMPLES.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/swiss-army-knife/AGENT_SPECIFICATION.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/AGENT_INTERACTIONS.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/CLAUDE.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/TECHNICAL_DESIGN.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/STATE_MACHINE.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/swiss-army-knife/AGENT_SPECIFICATION.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/SPECIFICATION.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/EXAMPLES.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/METRICS.md"
   ],
   "Implementation Status": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/CLAUDE.md"
@@ -76,11 +76,11 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/CLAUDE.md"
   ],
   "Pattern Detection": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/IMPLEMENTATION_PLAN.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/TECHNICAL_DESIGN.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/BOOTSTRAP_GUIDE.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/CLAUDE.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/BOOTSTRAP_GUIDE.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/TECHNICAL_DESIGN.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/IMPLEMENTATION_PLAN.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md"
   ],
   "Documentation Structure\nAll Context Manager": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/CLAUDE.md"
@@ -102,11 +102,11 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/CLAUDE.md"
   ],
   "Progressive Complexity": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/architecture/bootstrapping_analysis.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/architecture/context_manager_stopping_point_analysis.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/CLAUDE.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/NEXT_STEPS_SUMMARY.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/README.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/architecture/context_manager_stopping_point_analysis.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/README.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/architecture/bootstrapping_analysis.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/CLAUDE.md"
   ],
   "Compliance Ready": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/IMPLEMENTATION_PLAN.md",
@@ -115,10 +115,10 @@
   ],
   "Quick Start": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/README.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/README.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/03_agile_startup_perspective.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/CLAUDE.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/README.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/README.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/CLAUDE.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/07_AGENT_DOCUMENTATION_STANDARD.md"
   ],
   "Review Implementation Plan": [
@@ -164,42 +164,42 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/CLAUDE.md"
   ],
   "Agent Types": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_agent_architectures.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/CLAUDE.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/CLAUDE.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_agent_architectures.md"
   ],
   "By Priority": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/CLAUDE.md"
   ],
   "Documentation Agent": [
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/05_AGENT_SPECIFICATIONS_EXPANDED.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/BOOTSTRAP_GUIDE.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/README.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/README.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/CLAUDE.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/IMPLEMENTATION_PLAN.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/README.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/CLAUDE.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/05_AGENT_SPECIFICATIONS_EXPANDED.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/07_AGENT_DOCUMENTATION_STANDARD.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/README.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/README.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/07_AGENT_DOCUMENTATION_STANDARD.md"
   ],
   "Design Agent": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/02_IMPLEMENTATION_ROADMAP.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/NEXT_STEPS_SUMMARY.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_DEPENDENCY_MAP.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/CLAUDE.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/03_CONTEXT_MANAGER_DEVELOPMENT_GUIDE.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/04_academic_research_perspective.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/IMPLEMENTATION_PLAN.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/05_AGENT_SPECIFICATIONS_EXPANDED.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/NEXT_STEPS_SUMMARY.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_ENGINEERING_INSIGHTS.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/IMPLEMENTATION_PLAN.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/README.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_ENGINEERING_INSIGHTS.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/CLAUDE.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/04_academic_research_perspective.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/03_CONTEXT_MANAGER_DEVELOPMENT_GUIDE.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_DEPENDENCY_MAP.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/02_IMPLEMENTATION_ROADMAP.md"
   ],
   "Code Agent": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/NEXT_STEPS_SUMMARY.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_DEPENDENCY_MAP.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/CLAUDE.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/IMPLEMENTATION_PLAN.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/05_AGENT_SPECIFICATIONS_EXPANDED.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/NEXT_STEPS_SUMMARY.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_ENGINEERING_INSIGHTS.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/IMPLEMENTATION_PLAN.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/README.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_ENGINEERING_INSIGHTS.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/CLAUDE.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_DEPENDENCY_MAP.md"
   ],
   "Key Decisions Made": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/CLAUDE.md"
@@ -217,20 +217,20 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/CLAUDE.md"
   ],
   "Context Manager Spec": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/CLAUDE.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/README.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/README.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/CLAUDE.md"
   ],
   "Technical Design": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/06_CONTEXT_MANAGER_V1_DESIGN.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/CLAUDE.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/04_CONTEXT_MANAGER_V1_PLAN.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/04_CONTEXT_MANAGER_V1_PLAN.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/CLAUDE.md"
   ],
   "Implementation Plan": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/06_CONTEXT_MANAGER_V1_DESIGN.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/04_CONTEXT_MANAGER_V1_PLAN.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/TECHNICAL_DESIGN.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/IMPLEMENTATION_PLAN.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/06_CONTEXT_MANAGER_V1_DESIGN.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/CLAUDE.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/IMPLEMENTATION_PLAN.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/TECHNICAL_DESIGN.md"
   ],
   "Start Coding\nWith": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/CLAUDE.md"
@@ -245,10 +245,10 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/CLAUDE.md"
   ],
   "Documentation Intelligence": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/IMPLEMENTATION_PLAN.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/TECHNICAL_DESIGN.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/CLAUDE.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/CLAUDE.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/TECHNICAL_DESIGN.md"
   ],
   "Implement Doc": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/CLAUDE.md"
@@ -453,10 +453,10 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/DIRECTORY_TREE_IMPLEMENTATION.md"
   ],
   "Quality Heatmap": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/METADATA_VISUALIZATION_DESIGN.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/VISUALIZATION_IMPLEMENTATION_SUMMARY.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/DIRECTORY_TREE_IMPLEMENTATION.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/VISUALIZATION_METHODS.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/VISUALIZATION_METHODS.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/METADATA_VISUALIZATION_DESIGN.md"
   ],
   "What Was Added": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/DIRECTORY_TREE_IMPLEMENTATION.md"
@@ -548,8 +548,8 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/DIRECTORY_TREE_IMPLEMENTATION.md"
   ],
   "cm init": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/aw_docs/README.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/DIRECTORY_TREE_IMPLEMENTATION.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/DIRECTORY_TREE_IMPLEMENTATION.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/aw_docs/README.md"
   ],
   "aw_docs/": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/DIRECTORY_TREE_IMPLEMENTATION.md"
@@ -562,15 +562,15 @@
   ],
   "State Machine": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/README.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/02_IMPLEMENTATION_ROADMAP.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/README.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_DEPENDENCY_MAP.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/02_IMPLEMENTATION_ROADMAP.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/07_AGENT_DOCUMENTATION_STANDARD.md"
   ],
   "State Machines": [
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_DEPENDENCY_MAP.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/README.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_DEPENDENCY_MAP.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/04_academic_research_perspective.md"
   ],
   "Workflow States": [
@@ -594,14 +594,14 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/README.md"
   ],
   "Error Handling": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/07_AGENT_DOCUMENTATION_STANDARD.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/SPECIFICATION.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/swiss-army-knife/AGENT_SPECIFICATION.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/README.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/IMPLEMENTATION_PLAN.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/SPECIFICATION.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_agent_architectures.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/IMPLEMENTATION_PLAN.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/STATE_MACHINE.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/swiss-army-knife/AGENT_SPECIFICATION.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/07_AGENT_DOCUMENTATION_STANDARD.md"
   ],
   "Why This Exists\n\nThis": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/README.md"
@@ -670,8 +670,8 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/VISUALIZATION_IMPLEMENTATION_SUMMARY.md"
   ],
   "Project Treemap": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/METADATA_VISUALIZATION_DESIGN.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/VISUALIZATION_IMPLEMENTATION_SUMMARY.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/METADATA_VISUALIZATION_DESIGN.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/VISUALIZATION_METHODS.md"
   ],
   "Technical Implementation": [
@@ -688,14 +688,14 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/VISUALIZATION_IMPLEMENTATION_SUMMARY.md"
   ],
   "Knowledge Graph": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/METADATA_VISUALIZATION_DESIGN.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/VISUALIZATION_IMPLEMENTATION_SUMMARY.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/METADATA_VISUALIZATION_DESIGN.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/VISUALIZATION_METHODS.md"
   ],
   "Key Features": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/05_AGENT_SPECIFICATIONS_EXPANDED.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/VISUALIZATION_IMPLEMENTATION_SUMMARY.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_coding_systems_analysis.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_coding_systems_analysis.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/05_AGENT_SPECIFICATIONS_EXPANDED.md"
   ],
   "/api/context/visualization/treemap": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/VISUALIZATION_IMPLEMENTATION_SUMMARY.md"
@@ -768,8 +768,8 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/aw_docs/README.md"
   ],
   "Context Manager\n\nThe Context Manager": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/aw_docs/README.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/README.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/README.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/aw_docs/README.md"
   ],
   "Integration\n\nThis": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/aw_docs/README.md"
@@ -809,14 +809,14 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/README.md"
   ],
   "Context Engineering": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/IMPLEMENTATION_PLAN.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/NEXT_STEPS_SUMMARY.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/README.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_ENGINEERING_INSIGHTS.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/architecture/context_manager_stopping_point_analysis.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/03_CONTEXT_MANAGER_DEVELOPMENT_GUIDE.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/IMPLEMENTATION_PLAN.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/README.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_ENGINEERING_INSIGHTS.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/IMPLEMENTATION_PLAN.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/03_CONTEXT_MANAGER_DEVELOPMENT_GUIDE.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/IMPLEMENTATION_PLAN.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/README.md"
   ],
   "Quick Start\n\nIf": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/README.md"
@@ -825,11 +825,11 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/README.md"
   ],
   "The Context Manager": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/02_IMPLEMENTATION_ROADMAP.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/BOOTSTRAP_GUIDE.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/README.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/architecture/bootstrapping_analysis.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/INITIALIZE_PROJECT_DESIGN.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/README.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/BOOTSTRAP_GUIDE.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/02_IMPLEMENTATION_ROADMAP.md"
   ],
   "The Agent Specifications": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/README.md"
@@ -844,13 +844,13 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/README.md"
   ],
   "Key Concepts": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/README.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/swiss-army-knife/README.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/README.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/README.md"
   ],
   "Bootstrap Approach": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/TECHNICAL_DESIGN.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/README.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/README.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/TECHNICAL_DESIGN.md"
   ],
   "First Design": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/NEXT_STEPS_SUMMARY.md",
@@ -867,12 +867,12 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/README.md"
   ],
   "Data Agent": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/NEXT_STEPS_SUMMARY.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_DEPENDENCY_MAP.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/IMPLEMENTATION_PLAN.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/05_AGENT_SPECIFICATIONS_EXPANDED.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/NEXT_STEPS_SUMMARY.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_ENGINEERING_INSIGHTS.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/IMPLEMENTATION_PLAN.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/README.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_ENGINEERING_INSIGHTS.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_DEPENDENCY_MAP.md"
   ],
   "Documentation Structure\n\nEach": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/README.md"
@@ -887,14 +887,14 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/README.md"
   ],
   "In Development": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/README.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/swiss-army-knife/AGENT_SPECIFICATION.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/README.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md"
   ],
   "Documentation Level": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/README.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/swiss-army-knife/AGENT_SPECIFICATION.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/README.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md"
   ],
   "Agent Specification": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/README.md"
@@ -912,34 +912,34 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/README.md"
   ],
   "Documentation Levels": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/07_AGENT_DOCUMENTATION_STANDARD.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/README.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/README.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/07_AGENT_DOCUMENTATION_STANDARD.md"
   ],
   "Minimal Viable": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/07_AGENT_DOCUMENTATION_STANDARD.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/README.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/README.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/07_AGENT_DOCUMENTATION_STANDARD.md"
   ],
   "Required Sections": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/README.md"
   ],
   "Behavioral Characteristics": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/README.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/swiss-army-knife/AGENT_SPECIFICATION.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/07_AGENT_DOCUMENTATION_STANDARD.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/README.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/07_AGENT_DOCUMENTATION_STANDARD.md"
   ],
   "Integration Guide": [
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/README.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/07_AGENT_DOCUMENTATION_STANDARD.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/README.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/07_AGENT_DOCUMENTATION_STANDARD.md"
   ],
   "Testing Strategy": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/IMPLEMENTATION_PLAN.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/TECHNICAL_DESIGN.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/IMPLEMENTATION_NOTES.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/swiss-army-knife/AGENT_SPECIFICATION.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/README.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/README.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/IMPLEMENTATION_NOTES.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/TECHNICAL_DESIGN.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/IMPLEMENTATION_PLAN.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md"
   ],
   "Implementation Timeline": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/README.md"
@@ -957,30 +957,30 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/README.md"
   ],
   "Use Context Manager": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/architecture/bootstrapping_analysis.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/README.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/README.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/architecture/bootstrapping_analysis.md"
   ],
   "Test Everything": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/README.md"
   ],
   "Quick Links": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/TECHNICAL_DESIGN.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/README.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/README.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/TECHNICAL_DESIGN.md"
   ],
   "Documentation Standard": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/README.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/README.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md"
   ],
   "Agent Specifications Overview": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/README.md"
   ],
   "Implementation Roadmap": [
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_ENGINEERING_INSIGHTS.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/01_AUTONOMOUS_SOFTWARE_COMPANY_VISION.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/README.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/02_IMPLEMENTATION_ROADMAP.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/README.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/07_AGENT_DOCUMENTATION_STANDARD.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/README.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_ENGINEERING_INSIGHTS.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/07_AGENT_DOCUMENTATION_STANDARD.md"
   ],
   "mermaid\ngraph TD\n    CM[Context Manager<br/>The Nervous System] --> DA[Documentation Agent<br/>Compliance & Knowledge]\n    CM --> DSA[Design Agent<br/>Architecture & Specs]\n    CM --> CA[Code Agent<br/>Implementation]\n    CM --> QA[QA Agent<br/>Testing & Validation]\n    CM --> DTA[Data Agent<br/>Analytics & Insights]\n    \n    style CM fill:#0066ff,stroke:#fff,stroke-width:3px\n    style DA fill:#28a745,stroke:#fff,stroke-width:2px\n": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/README.md"
@@ -1026,8 +1026,8 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/01_AUTONOMOUS_SOFTWARE_COMPANY_VISION.md"
   ],
   "Product Manager": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_agent_architectures.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/01_AUTONOMOUS_SOFTWARE_COMPANY_VISION.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/01_AUTONOMOUS_SOFTWARE_COMPANY_VISION.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_agent_architectures.md"
   ],
   "Product Requirement Document": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/01_AUTONOMOUS_SOFTWARE_COMPANY_VISION.md"
@@ -1036,10 +1036,10 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/01_AUTONOMOUS_SOFTWARE_COMPANY_VISION.md"
   ],
   "Agent Systems": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/05_ai_ml_systems_perspective.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/01_AUTONOMOUS_SOFTWARE_COMPANY_VISION.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/future-advanced/docs/academic_mas_research.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_coding_systems_analysis.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_coding_systems_analysis.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/01_AUTONOMOUS_SOFTWARE_COMPANY_VISION.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/05_ai_ml_systems_perspective.md"
   ],
   "True Autonomy": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/01_AUTONOMOUS_SOFTWARE_COMPANY_VISION.md"
@@ -1049,8 +1049,8 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/theoretical-limits/docs/enterprise_scalability_analysis.md"
   ],
   "Computer Interfaces": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/theoretical-limits/docs/future_technology_assessment.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/01_AUTONOMOUS_SOFTWARE_COMPANY_VISION.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/01_AUTONOMOUS_SOFTWARE_COMPANY_VISION.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/theoretical-limits/docs/future_technology_assessment.md"
   ],
   "Risk Analysis": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/02_medical_regulatory_perspective.md",
@@ -1068,13 +1068,13 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/01_AUTONOMOUS_SOFTWARE_COMPANY_VISION.md"
   ],
   "Technical Risks": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/IMPLEMENTATION_PLAN.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/01_AUTONOMOUS_SOFTWARE_COMPANY_VISION.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/01_AUTONOMOUS_SOFTWARE_COMPANY_VISION.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/IMPLEMENTATION_PLAN.md"
   ],
   "Context Explosion": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/IMPLEMENTATION_PLAN.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/IMPLEMENTATION_NOTES.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/01_AUTONOMOUS_SOFTWARE_COMPANY_VISION.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/IMPLEMENTATION_NOTES.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/IMPLEMENTATION_PLAN.md"
   ],
   "Strategic Risks": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/01_AUTONOMOUS_SOFTWARE_COMPANY_VISION.md"
@@ -1083,8 +1083,8 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/01_AUTONOMOUS_SOFTWARE_COMPANY_VISION.md"
   ],
   "Immediate Next Steps": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/IMPLEMENTATION_PLAN.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/01_AUTONOMOUS_SOFTWARE_COMPANY_VISION.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/01_AUTONOMOUS_SOFTWARE_COMPANY_VISION.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/IMPLEMENTATION_PLAN.md"
   ],
   "Define Core Context Schema": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/01_AUTONOMOUS_SOFTWARE_COMPANY_VISION.md"
@@ -1096,12 +1096,12 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/01_AUTONOMOUS_SOFTWARE_COMPANY_VISION.md"
   ],
   "Cognition Labs": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/01_AUTONOMOUS_SOFTWARE_COMPANY_VISION.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_coding_systems_analysis.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_coding_systems_analysis.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/01_AUTONOMOUS_SOFTWARE_COMPANY_VISION.md"
   ],
   "Hub Copilot Workspace": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/01_AUTONOMOUS_SOFTWARE_COMPANY_VISION.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_coding_systems_analysis.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_coding_systems_analysis.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/01_AUTONOMOUS_SOFTWARE_COMPANY_VISION.md"
   ],
   "Academic Research": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/01_AUTONOMOUS_SOFTWARE_COMPANY_VISION.md",
@@ -1139,8 +1139,8 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/01_AUTONOMOUS_SOFTWARE_COMPANY_VISION.md"
   ],
   "context_schema.json": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/IMPLEMENTATION_PLAN.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/01_AUTONOMOUS_SOFTWARE_COMPANY_VISION.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/01_AUTONOMOUS_SOFTWARE_COMPANY_VISION.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/IMPLEMENTATION_PLAN.md"
   ],
   "Executive Summary\n\nYour": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/02_IMPLEMENTATION_ROADMAP.md"
@@ -1161,15 +1161,15 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/02_IMPLEMENTATION_ROADMAP.md"
   ],
   "Current State": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/theoretical-limits/docs/future_technology_assessment.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/02_IMPLEMENTATION_ROADMAP.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/02_IMPLEMENTATION_ROADMAP.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/theoretical-limits/docs/future_technology_assessment.md"
   ],
   "Working Web": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/02_IMPLEMENTATION_ROADMAP.md"
   ],
   "Minimal Context Manager": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/architecture/bootstrapping_analysis.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/02_IMPLEMENTATION_ROADMAP.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/02_IMPLEMENTATION_ROADMAP.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/architecture/bootstrapping_analysis.md"
   ],
   "Immediate Use Cases": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/02_IMPLEMENTATION_ROADMAP.md"
@@ -1197,8 +1197,8 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/02_IMPLEMENTATION_ROADMAP.md"
   ],
   "Agent Orchestration": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_agent_architectures.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/02_IMPLEMENTATION_ROADMAP.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/02_IMPLEMENTATION_ROADMAP.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_agent_architectures.md"
   ],
   "Production Level": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/02_IMPLEMENTATION_ROADMAP.md"
@@ -1207,8 +1207,8 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/02_IMPLEMENTATION_ROADMAP.md"
   ],
   "Progressive Enhancement Path": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/02_IMPLEMENTATION_ROADMAP.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/03_CONTEXT_MANAGER_DEVELOPMENT_GUIDE.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/03_CONTEXT_MANAGER_DEVELOPMENT_GUIDE.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/02_IMPLEMENTATION_ROADMAP.md"
   ],
   "The Bootstrap Advantage\n\nEach": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/02_IMPLEMENTATION_ROADMAP.md"
@@ -1232,8 +1232,8 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/02_IMPLEMENTATION_ROADMAP.md"
   ],
   "Risk Mitigation": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/IMPLEMENTATION_PLAN.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/02_IMPLEMENTATION_ROADMAP.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/02_IMPLEMENTATION_ROADMAP.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/IMPLEMENTATION_PLAN.md"
   ],
   "Avoiding Circular Dependencies": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/02_IMPLEMENTATION_ROADMAP.md"
@@ -1246,28 +1246,28 @@
   ],
   "Success Metrics": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/01_enterprise_perspective.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/02_IMPLEMENTATION_ROADMAP.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/IMPLEMENTATION_PLAN.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/architecture/bootstrapping_analysis.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/03_CONTEXT_MANAGER_DEVELOPMENT_GUIDE.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/IMPLEMENTATION_PLAN.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/02_IMPLEMENTATION_ROADMAP.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/07_AGENT_DOCUMENTATION_STANDARD.md"
   ],
   "Bootstrap Phase": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/02_IMPLEMENTATION_ROADMAP.md"
   ],
   "Integration Phase": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/theoretical-limits/docs/future_technology_assessment.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/02_IMPLEMENTATION_ROADMAP.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/02_IMPLEMENTATION_ROADMAP.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/theoretical-limits/docs/future_technology_assessment.md"
   ],
   "Production Phase": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/02_IMPLEMENTATION_ROADMAP.md"
   ],
   "Implementation Priority": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/02_IMPLEMENTATION_ROADMAP.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/05_AGENT_SPECIFICATIONS_EXPANDED.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/METADATA_VISUALIZATION_DESIGN.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_DEPENDENCY_MAP.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/INITIALIZE_PROJECT_DESIGN.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/05_AGENT_SPECIFICATIONS_EXPANDED.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_DEPENDENCY_MAP.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/02_IMPLEMENTATION_ROADMAP.md"
   ],
   "Conclusion\n\nYour": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/02_IMPLEMENTATION_ROADMAP.md"
@@ -1333,8 +1333,8 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/02_IMPLEMENTATION_ROADMAP.md"
   ],
   "Context Manager Development Guide": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/README.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/03_CONTEXT_MANAGER_DEVELOPMENT_GUIDE.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/03_CONTEXT_MANAGER_DEVELOPMENT_GUIDE.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/README.md"
   ],
   "Executive Summary\n\nAfter": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/architecture/context_manager_stopping_point_analysis.md",
@@ -1345,8 +1345,8 @@
   ],
   "Neural Fields": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/architecture/context_manager_stopping_point_analysis.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/README.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/03_CONTEXT_MANAGER_DEVELOPMENT_GUIDE.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/03_CONTEXT_MANAGER_DEVELOPMENT_GUIDE.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/README.md"
   ],
   "The Context Engineering Hierarchy\n\nThe": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/03_CONTEXT_MANAGER_DEVELOPMENT_GUIDE.md"
@@ -1388,9 +1388,9 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/03_CONTEXT_MANAGER_DEVELOPMENT_GUIDE.md"
   ],
   "Audit Trail": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/03_CONTEXT_MANAGER_DEVELOPMENT_GUIDE.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/README.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/03_CONTEXT_MANAGER_DEVELOPMENT_GUIDE.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md"
   ],
   "Bootstrap Helper": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/03_CONTEXT_MANAGER_DEVELOPMENT_GUIDE.md"
@@ -1437,8 +1437,8 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/03_CONTEXT_MANAGER_DEVELOPMENT_GUIDE.md"
   ],
   "Production Ready": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/IMPLEMENTATION_PLAN.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/03_CONTEXT_MANAGER_DEVELOPMENT_GUIDE.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/03_CONTEXT_MANAGER_DEVELOPMENT_GUIDE.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/IMPLEMENTATION_PLAN.md"
   ],
   "Build Agents": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/03_CONTEXT_MANAGER_DEVELOPMENT_GUIDE.md"
@@ -1556,12 +1556,12 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/03_CONTEXT_MANAGER_DEVELOPMENT_GUIDE.md"
   ],
   "Current Documentation\n\nThe": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/06_CONTEXT_MANAGER_V1_DESIGN.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/04_CONTEXT_MANAGER_V1_PLAN.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/04_CONTEXT_MANAGER_V1_PLAN.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/06_CONTEXT_MANAGER_V1_DESIGN.md"
   ],
   "Historical Context\n\nThis": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/06_CONTEXT_MANAGER_V1_DESIGN.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/04_CONTEXT_MANAGER_V1_PLAN.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/04_CONTEXT_MANAGER_V1_PLAN.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/06_CONTEXT_MANAGER_V1_DESIGN.md"
   ],
   "Expanded Agent Specifications\n\nThis": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/05_AGENT_SPECIFICATIONS_EXPANDED.md"
@@ -1645,10 +1645,10 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/05_AGENT_SPECIFICATIONS_EXPANDED.md"
   ],
   "Human Oversight": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/theoretical-limits/docs/future_technology_assessment.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/05_AGENT_SPECIFICATIONS_EXPANDED.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_coding_systems_analysis.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/theoretical-limits/docs/enterprise_scalability_analysis.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_coding_systems_analysis.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/theoretical-limits/docs/future_technology_assessment.md"
   ],
   "\nYou are a Documentation Agent responsible for creating and maintaining all project documentation.\nYour role is critical for compliance, knowledge transfer, and system understanding.\n\nCore responsibilities:\n- Generate technical documentation from code and designs\n- Maintain compliance documentation (FDA, ISO, etc.)\n- Create user guides and API documentation\n- Track decision rationale and change history\n- Ensure documentation stays synchronized with implementation\n- Generate reports for stakeholders\n\nYou must:\n- Follow documentation standards for the domain\n- Maintain traceability between requirements and implementation\n- Flag when documentation is out of sync with code\n- Create both human and machine-readable formats\n": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/05_AGENT_SPECIFICATIONS_EXPANDED.md"
@@ -1669,16 +1669,16 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/07_AGENT_DOCUMENTATION_STANDARD.md"
   ],
   "Executive Summary\n\nThis": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/05_ai_ml_systems_perspective.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_coding_systems_analysis.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/theoretical-limits/docs/future_technology_assessment.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/01_enterprise_perspective.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/future-advanced/docs/academic_mas_research.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/04_academic_research_perspective.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_coding_systems_analysis.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/02_medical_regulatory_perspective.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/future-advanced/docs/academic_mas_research.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/theoretical-limits/docs/enterprise_scalability_analysis.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_agent_architectures.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/07_AGENT_DOCUMENTATION_STANDARD.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/theoretical-limits/docs/enterprise_scalability_analysis.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/04_academic_research_perspective.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/05_ai_ml_systems_perspective.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/07_AGENT_DOCUMENTATION_STANDARD.md"
   ],
   "Common Themes Across All Perspectives": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/07_AGENT_DOCUMENTATION_STANDARD.md"
@@ -1691,9 +1691,9 @@
   ],
   "Living Documentation": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/02_medical_regulatory_perspective.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/04_academic_research_perspective.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/01_enterprise_perspective.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/07_AGENT_DOCUMENTATION_STANDARD.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/04_academic_research_perspective.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/07_AGENT_DOCUMENTATION_STANDARD.md"
   ],
   "Aware Content": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/07_AGENT_DOCUMENTATION_STANDARD.md"
@@ -1738,8 +1738,8 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/07_AGENT_DOCUMENTATION_STANDARD.md"
   ],
   "Agent Name": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/07_AGENT_DOCUMENTATION_STANDARD.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/03_agile_startup_perspective.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/03_agile_startup_perspective.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/07_AGENT_DOCUMENTATION_STANDARD.md"
   ],
   "Most Cases": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/07_AGENT_DOCUMENTATION_STANDARD.md"
@@ -1757,8 +1757,8 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/07_AGENT_DOCUMENTATION_STANDARD.md"
   ],
   "Recommended Level": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/07_AGENT_DOCUMENTATION_STANDARD.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/04_academic_research_perspective.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/04_academic_research_perspective.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/07_AGENT_DOCUMENTATION_STANDARD.md"
   ],
   "Utility Agents": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/07_AGENT_DOCUMENTATION_STANDARD.md"
@@ -1794,9 +1794,9 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/07_AGENT_DOCUMENTATION_STANDARD.md"
   ],
   "Key Metrics": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/SPECIFICATION.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/swiss-army-knife/AGENT_SPECIFICATION.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/07_AGENT_DOCUMENTATION_STANDARD.md"
   ],
   "Data Handling": [
@@ -1841,8 +1841,8 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/07_AGENT_DOCUMENTATION_STANDARD.md"
   ],
   "Specific Recommendations": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/07_AGENT_DOCUMENTATION_STANDARD.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/architecture/context_manager_stopping_point_analysis.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/architecture/context_manager_stopping_point_analysis.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/07_AGENT_DOCUMENTATION_STANDARD.md"
   ],
   "Context Manager Documentation\n\nGiven": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/07_AGENT_DOCUMENTATION_STANDARD.md"
@@ -1872,12 +1872,12 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/07_AGENT_DOCUMENTATION_STANDARD.md"
   ],
   "Formal Specification": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/07_AGENT_DOCUMENTATION_STANDARD.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/04_academic_research_perspective.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/04_academic_research_perspective.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/07_AGENT_DOCUMENTATION_STANDARD.md"
   ],
   "Performance Characteristics": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/INITIALIZE_PROJECT_ALGORITHMS.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/07_AGENT_DOCUMENTATION_STANDARD.md"
   ],
   "Documentation Agent Specifications\n\nThe Documentation Agent": [
@@ -2061,8 +2061,8 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/SPECIFICATION.md"
   ],
   "Context Flow": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/README.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_DEPENDENCY_MAP.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/README.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/README.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/04_academic_research_perspective.md"
   ],
@@ -2124,9 +2124,9 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/README.md"
   ],
   "Pattern Recognition": [
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/README.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/INITIALIZE_PROJECT_DESIGN.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/README.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/INITIALIZE_PROJECT_DESIGN.md"
   ],
   "Knowledge Base": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/README.md"
@@ -2168,8 +2168,8 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/README.md"
   ],
   "Context Utilization": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/SPECIFICATION.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/README.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/SPECIFICATION.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/METRICS.md"
   ],
   "Workflow Documentation Standard\n\nThis": [
@@ -2197,16 +2197,16 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/WORKFLOW_STANDARD.md"
   ],
   "Entry Conditions": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/STATE_MACHINE.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/WORKFLOW_STANDARD.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/WORKFLOW_STANDARD.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/STATE_MACHINE.md"
   ],
   "Exit Conditions": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/STATE_MACHINE.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/WORKFLOW_STANDARD.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/WORKFLOW_STANDARD.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/STATE_MACHINE.md"
   ],
   "Context Updates": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/STATE_MACHINE.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/WORKFLOW_STANDARD.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/WORKFLOW_STANDARD.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/STATE_MACHINE.md"
   ],
   "Mermaid Diagram Requirements\n\nEvery": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/WORKFLOW_STANDARD.md"
@@ -2221,18 +2221,18 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/WORKFLOW_STANDARD.md"
   ],
   "Generate Fibonacci Function": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/EXAMPLES.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/WORKFLOW_STANDARD.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/WORKFLOW_STANDARD.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/EXAMPLES.md"
   ],
   "Execution Flow": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/EXAMPLES.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/WORKFLOW_STANDARD.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/WORKFLOW_STANDARD.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/EXAMPLES.md"
   ],
   "Swiss Army": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/SPECIFICATION.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/swiss-army-knife/README.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/WORKFLOW_STANDARD.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/WORKFLOW_STANDARD.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/SPECIFICATION.md"
   ],
   "Total Time": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/WORKFLOW_STANDARD.md"
@@ -2253,11 +2253,11 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/WORKFLOW_STANDARD.md"
   ],
   "Best Practices": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/05_ai_ml_systems_perspective.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/WORKFLOW_STANDARD.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/04_academic_research_perspective.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/theoretical-limits/docs/enterprise_scalability_analysis.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_agent_architectures.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/theoretical-limits/docs/enterprise_scalability_analysis.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/05_ai_ml_systems_perspective.md"
   ],
   "Be Specific": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/WORKFLOW_STANDARD.md"
@@ -2314,24 +2314,24 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md"
   ],
   "Safety Classification": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/02_medical_regulatory_perspective.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/swiss-army-knife/AGENT_SPECIFICATION.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/swiss-army-knife/AGENT_SPECIFICATION.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md"
   ],
   "Primary Purpose\nServe": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md"
   ],
   "Key Capabilities": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/swiss-army-knife/AGENT_SPECIFICATION.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/swiss-army-knife/AGENT_SPECIFICATION.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md"
   ],
   "Context Routing": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md"
   ],
   "Memory Management": [
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/IMPLEMENTATION_NOTES.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_agent_architectures.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/IMPLEMENTATION_NOTES.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_agent_architectures.md"
   ],
   "Bootstrap Learning": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md"
@@ -2487,15 +2487,15 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md"
   ],
   "Unit Tests": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/swiss-army-knife/AGENT_SPECIFICATION.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/swiss-army-knife/AGENT_SPECIFICATION.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md"
   ],
   "Test Context Manager": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md"
   ],
   "Integration Tests": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/swiss-army-knife/AGENT_SPECIFICATION.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/swiss-army-knife/AGENT_SPECIFICATION.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md"
   ],
   "Performance Tests": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md",
@@ -2574,13 +2574,13 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md"
   ],
   "python\ndef detect_patterns(self, time_window: timedelta = timedelta(hours=24)):\n    \"\"\"Simple pattern detection for v1.\"\"\"\n    recent_contexts = self.get_contexts_since(datetime.now() - time_window)\n    \n    # Extract features\n    features = self.extract_features(recent_contexts)\n    \n    # Count frequencies\n    pattern_counts = Counter(features)\n    \n    # Identify significant patterns (>3 occurrences)\n    significant_patterns = {\n        pattern: count \n        for pattern, count in pattern_counts.items() \n        if count >= 3\n    }\n    \n    # Generate suggestions\n    return self.patterns_to_suggestions(significant_patterns)\n": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/IMPLEMENTATION_PLAN.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/TECHNICAL_DESIGN.md"
   ],
   "\n\n## Monitoring & Metrics\n\n### Key Metrics\n\n": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/swiss-army-knife/AGENT_SPECIFICATION.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/swiss-army-knife/AGENT_SPECIFICATION.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md"
   ],
   "python\n@dataclass\nclass ContextMetrics:\n    # Performance\n    avg_response_time: float\n    p95_response_time: float\n    throughput: float\n    \n    # Storage\n    total_contexts: int\n    active_contexts: int\n    storage_size_mb: float\n    \n    # Patterns\n    patterns_detected: int\n    suggestions_generated: int\n    suggestion_acceptance_rate: float\n    \n    # Documentation\n    total_documents: int\n    doc_versions_tracked: int\n    avg_doc_consistency_score: float\n    doc_update_frequency: float\n    \n    # Health\n    error_rate: float\n    last_error: Optional[str]\n    uptime_seconds: float\n": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md"
@@ -2616,8 +2616,8 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md"
   ],
   "\n\n### Integration Tests\n\n": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/swiss-army-knife/AGENT_SPECIFICATION.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/swiss-army-knife/AGENT_SPECIFICATION.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md"
   ],
   "python\n# tests/test_context_integration.py\nclass TestContextIntegration:\n    def test_state_machine_integration(self):\n        \"\"\"Test context flows with state transitions.\"\"\"\n        \n    def test_multi_agent_routing(self):\n        \"\"\"Test routing between multiple agents.\"\"\"\n        \n    def test_storage_persistence(self):\n        \"\"\"Test contexts persist across restarts.\"\"\"\n        \n    def test_doc_intelligence_flow(self):\n        \"\"\"Test documentation intelligence workflow end-to-end.\"\"\"\n": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md"
@@ -2633,9 +2633,9 @@
   ],
   "Overview\n\nThis": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/IMPLEMENTATION_PLAN.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/BOOTSTRAP_GUIDE.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/INITIALIZE_PROJECT_ALGORITHMS.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/TECHNICAL_DESIGN.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/BOOTSTRAP_GUIDE.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/TECHNICAL_DESIGN.md"
   ],
   "Bootstrap Philosophy": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/BOOTSTRAP_GUIDE.md"
@@ -2657,8 +2657,8 @@
   ],
   "Bootstrap Features": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/IMPLEMENTATION_PLAN.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/TECHNICAL_DESIGN.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/BOOTSTRAP_GUIDE.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/BOOTSTRAP_GUIDE.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/TECHNICAL_DESIGN.md"
   ],
   "Decision Logging\n\nEvery": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/BOOTSTRAP_GUIDE.md"
@@ -2676,8 +2676,8 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/BOOTSTRAP_GUIDE.md"
   ],
   "Log Decision": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/AGENT_INTERACTIONS.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/BOOTSTRAP_GUIDE.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/BOOTSTRAP_GUIDE.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/AGENT_INTERACTIONS.md"
   ],
   "Detect Patterns": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/BOOTSTRAP_GUIDE.md"
@@ -2765,13 +2765,13 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/BOOTSTRAP_GUIDE.md"
   ],
   "Architecture Decision Records": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/03_agile_startup_perspective.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/BOOTSTRAP_GUIDE.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/01_enterprise_perspective.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/BOOTSTRAP_GUIDE.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/03_agile_startup_perspective.md"
   ],
   "Context Schema Design": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/TECHNICAL_DESIGN.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/BOOTSTRAP_GUIDE.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/BOOTSTRAP_GUIDE.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/TECHNICAL_DESIGN.md"
   ],
   "Storage Backend Selection": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/BOOTSTRAP_GUIDE.md"
@@ -2783,10 +2783,10 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/BOOTSTRAP_GUIDE.md"
   ],
   "Conclusion\n\nThe": [
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/BOOTSTRAP_GUIDE.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/theoretical-limits/docs/future_technology_assessment.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_agent_architectures.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_coding_systems_analysis.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/BOOTSTRAP_GUIDE.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_coding_systems_analysis.md"
   ],
   "python\n# When choosing storage format\ncm.log_decision(\n    decision=\"Use JSON instead of SQLite for v1\",\n    reasoning=\"Prioritizing human readability and debugging ease over performance\"\n)\n\n# When implementing a feature\ncm.log_decision(\n    decision=\"Implement simple keyword pattern detection first\",\n    reasoning=\"ML-based patterns premature; need data to train on\"\n)\n": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/BOOTSTRAP_GUIDE.md"
@@ -2894,8 +2894,8 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/IMPLEMENTATION_NOTES.md"
   ],
   "Implementation Patterns": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_agent_architectures.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/IMPLEMENTATION_NOTES.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/IMPLEMENTATION_NOTES.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_agent_architectures.md"
   ],
   "Immutable Record": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/IMPLEMENTATION_NOTES.md"
@@ -2916,9 +2916,9 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/IMPLEMENTATION_NOTES.md"
   ],
   "Performance Considerations": [
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/IMPLEMENTATION_NOTES.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/METADATA_VISUALIZATION_DESIGN.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_agent_architectures.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/IMPLEMENTATION_NOTES.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_agent_architectures.md"
   ],
   "Batch Operations": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/IMPLEMENTATION_NOTES.md"
@@ -2988,8 +2988,8 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/IMPLEMENTATION_NOTES.md"
   ],
   "Conclusion\n\nThe Context Manager": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/architecture/bootstrapping_analysis.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/IMPLEMENTATION_NOTES.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/IMPLEMENTATION_NOTES.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/architecture/bootstrapping_analysis.md"
   ],
   "context_manager.py": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/IMPLEMENTATION_NOTES.md"
@@ -3113,9 +3113,9 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/IMPLEMENTATION_PLAN.md"
   ],
   "Advanced Features": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_DEPENDENCY_MAP.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_ENGINEERING_INSIGHTS.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/IMPLEMENTATION_PLAN.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_ENGINEERING_INSIGHTS.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_DEPENDENCY_MAP.md"
   ],
   "Advanced Patterns": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/IMPLEMENTATION_PLAN.md"
@@ -3133,11 +3133,11 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/IMPLEMENTATION_PLAN.md"
   ],
   "Performance Optimization": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/SPECIFICATION.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_coding_systems_analysis.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_agent_architectures.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/IMPLEMENTATION_PLAN.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_DEPENDENCY_MAP.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_coding_systems_analysis.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_agent_architectures.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/SPECIFICATION.md"
   ],
   "Release Prep": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/IMPLEMENTATION_PLAN.md"
@@ -3170,8 +3170,8 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/IMPLEMENTATION_PLAN.md"
   ],
   "Start Ultra": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/architecture/bootstrapping_analysis.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/IMPLEMENTATION_PLAN.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/IMPLEMENTATION_PLAN.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/architecture/bootstrapping_analysis.md"
   ],
   "Test Structure": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/IMPLEMENTATION_PLAN.md",
@@ -3231,8 +3231,8 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/IMPLEMENTATION_PLAN.md"
   ],
   "Initialize Project": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/INITIALIZE_PROJECT_DESIGN.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/INITIALIZE_PROJECT_ALGORITHMS.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/INITIALIZE_PROJECT_ALGORITHMS.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/INITIALIZE_PROJECT_DESIGN.md"
   ],
   "Algorithm Analysis": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/INITIALIZE_PROJECT_ALGORITHMS.md"
@@ -3322,8 +3322,8 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/INITIALIZE_PROJECT_ALGORITHMS.md"
   ],
   "Data Structures": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/INITIALIZE_PROJECT_DESIGN.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/INITIALIZE_PROJECT_ALGORITHMS.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/INITIALIZE_PROJECT_ALGORITHMS.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/INITIALIZE_PROJECT_DESIGN.md"
   ],
   "Index Design": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/INITIALIZE_PROJECT_ALGORITHMS.md"
@@ -3371,8 +3371,8 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/INITIALIZE_PROJECT_ALGORITHMS.md"
   ],
   "initialize_project": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/INITIALIZE_PROJECT_DESIGN.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/INITIALIZE_PROJECT_ALGORITHMS.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/INITIALIZE_PROJECT_ALGORITHMS.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/INITIALIZE_PROJECT_DESIGN.md"
   ],
   "python\ndef scan_project(root_path):\n    for file in recursive_walk(root_path):\n        if passes_filters(file):\n            process_file(file)\n": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/INITIALIZE_PROJECT_ALGORITHMS.md"
@@ -3696,8 +3696,8 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/README.md"
   ],
   "Documentation Structure": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/README.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/swiss-army-knife/README.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/swiss-army-knife/README.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/README.md"
   ],
   "Core Documentation": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/README.md"
@@ -3718,8 +3718,8 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/README.md"
   ],
   "Related Documentation": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/README.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/swiss-army-knife/README.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/swiss-army-knife/README.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/README.md"
   ],
   "Context Engineering Research": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/README.md"
@@ -3826,9 +3826,9 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/TECHNICAL_DESIGN.md"
   ],
   "Context Boundaries": [
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_ENGINEERING_INSIGHTS.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/NEXT_STEPS_SUMMARY.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/TECHNICAL_DESIGN.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_ENGINEERING_INSIGHTS.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/TECHNICAL_DESIGN.md"
   ],
   "Summary\n\nThis": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/TECHNICAL_DESIGN.md"
@@ -3948,9 +3948,9 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/swiss-army-knife/AGENT_SPECIFICATION.md"
   ],
   "Code Generation": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/SPECIFICATION.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/swiss-army-knife/README.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/swiss-army-knife/AGENT_SPECIFICATION.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/SPECIFICATION.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/EXAMPLES.md"
   ],
   "Bug Fixing": [
@@ -3960,14 +3960,14 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/swiss-army-knife/AGENT_SPECIFICATION.md"
   ],
   "Swiss Army Agent": [
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/swiss-army-knife/AGENT_SPECIFICATION.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/SPECIFICATION.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/AGENT_INTERACTIONS.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/swiss-army-knife/AGENT_SPECIFICATION.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/AGENT_INTERACTIONS.md"
   ],
   "Query Context Manager": [
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/swiss-army-knife/AGENT_SPECIFICATION.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/SPECIFICATION.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/STATE_MACHINE.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/swiss-army-knife/AGENT_SPECIFICATION.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/STATE_MACHINE.md"
   ],
   "Request Processing Flow": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/swiss-army-knife/AGENT_SPECIFICATION.md"
@@ -4054,8 +4054,8 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/swiss-army-knife/AGENT_SPECIFICATION.md"
   ],
   "Evolution Path": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/SPECIFICATION.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/swiss-army-knife/AGENT_SPECIFICATION.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/swiss-army-knife/AGENT_SPECIFICATION.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/SPECIFICATION.md"
   ],
   "What Swiss Army Agent": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/swiss-army-knife/AGENT_SPECIFICATION.md"
@@ -4133,9 +4133,9 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/swiss-army-knife/README.md"
   ],
   "Bug Fixes": [
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/swiss-army-knife/README.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/SPECIFICATION.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/EXAMPLES.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/swiss-army-knife/README.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/EXAMPLES.md"
   ],
   "Integration Flow": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/swiss-army-knife/README.md"
@@ -4324,8 +4324,8 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/02_medical_regulatory_perspective.md"
   ],
   "Documentation Requirements": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/05_ai_ml_systems_perspective.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/02_medical_regulatory_perspective.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/05_ai_ml_systems_perspective.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/04_academic_research_perspective.md"
   ],
   "Legally Required Documentation": [
@@ -4624,8 +4624,8 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/03_agile_startup_perspective.md"
   ],
   "Driven Development": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/IMPLEMENTATION_PLAN.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/03_agile_startup_perspective.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/03_agile_startup_perspective.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/IMPLEMENTATION_PLAN.md"
   ],
   "Agents\n\nDrawing": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/03_agile_startup_perspective.md"
@@ -4706,8 +4706,8 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/03_agile_startup_perspective.md"
   ],
   "Progressive Disclosure": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/architecture/bootstrapping_analysis.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/03_agile_startup_perspective.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/03_agile_startup_perspective.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/architecture/bootstrapping_analysis.md"
   ],
   "Turbopack\n\nKey": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/03_agile_startup_perspective.md"
@@ -4722,8 +4722,8 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/03_agile_startup_perspective.md"
   ],
   "Model Context Protocol": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/05_ai_ml_systems_perspective.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/03_agile_startup_perspective.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/03_agile_startup_perspective.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/05_ai_ml_systems_perspective.md"
   ],
   "Practical Implementation Plan": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/03_agile_startup_perspective.md"
@@ -4798,8 +4798,8 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/04_academic_research_perspective.md"
   ],
   "Emergent Behaviors": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/05_ai_ml_systems_perspective.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/future-advanced/docs/academic_mas_research.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/05_ai_ml_systems_perspective.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/04_academic_research_perspective.md"
   ],
   "Safety Constraints": [
@@ -5152,8 +5152,8 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/05_ai_ml_systems_perspective.md"
   ],
   "Context Management": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/05_ai_ml_systems_perspective.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_coding_systems_analysis.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_coding_systems_analysis.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/05_ai_ml_systems_perspective.md"
   ],
   "Prompt Template Versioning\n\nModern": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/05_ai_ml_systems_perspective.md"
@@ -5180,8 +5180,8 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/05_ai_ml_systems_perspective.md"
   ],
   "Communication Protocols": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/05_ai_ml_systems_perspective.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_agent_architectures.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_agent_architectures.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/05_ai_ml_systems_perspective.md"
   ],
   "Emergent Behavior Catalog": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/05_ai_ml_systems_perspective.md"
@@ -5211,13 +5211,13 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/05_ai_ml_systems_perspective.md"
   ],
   "Performance Metrics": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/05_ai_ml_systems_perspective.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_coding_systems_analysis.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/EXAMPLES.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_coding_systems_analysis.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/05_ai_ml_systems_perspective.md"
   ],
   "Quality Metrics": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/05_ai_ml_systems_perspective.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/METRICS.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/METRICS.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/05_ai_ml_systems_perspective.md"
   ],
   "Cost Metrics": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/05_ai_ml_systems_perspective.md"
@@ -5385,8 +5385,8 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_agent_architectures.md"
   ],
   "Future Directions": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_agent_architectures.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_coding_systems_analysis.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_coding_systems_analysis.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_agent_architectures.md"
   ],
   "Architecture Overview\n\nAuto": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_agent_architectures.md"
@@ -5456,8 +5456,8 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_agent_architectures.md"
   ],
   "Resource Usage": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_agent_architectures.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/METRICS.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/METRICS.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_agent_architectures.md"
   ],
   "Memory Efficiency": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_agent_architectures.md"
@@ -5574,8 +5574,8 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_agent_architectures.md"
   ],
   "Improving Systems": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_agent_architectures.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_coding_systems_analysis.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_coding_systems_analysis.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_agent_architectures.md"
   ],
   "Implementation Highlights": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_agent_architectures.md"
@@ -6290,9 +6290,9 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/architecture/bootstrapping_analysis.md"
   ],
   "Agent Integration": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/architecture/bootstrapping_analysis.md",
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_DEPENDENCY_MAP.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/IMPLEMENTATION_PLAN.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/IMPLEMENTATION_PLAN.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/architecture/bootstrapping_analysis.md"
   ],
   "Full System": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/architecture/bootstrapping_analysis.md"
@@ -6388,8 +6388,8 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/architecture/bootstrapping_analysis.md"
   ],
   "Next Steps": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/architecture/bootstrapping_analysis.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_ENGINEERING_INSIGHTS.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_ENGINEERING_INSIGHTS.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/architecture/bootstrapping_analysis.md"
   ],
   "Implement Minimal Bootstrap": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/architecture/bootstrapping_analysis.md"
@@ -6458,8 +6458,8 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/architecture/context_manager_stopping_point_analysis.md"
   ],
   "Key Insights": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/theoretical-limits/docs/enterprise_scalability_analysis.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/architecture/context_manager_stopping_point_analysis.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/architecture/context_manager_stopping_point_analysis.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/theoretical-limits/docs/enterprise_scalability_analysis.md"
   ],
   "Neural Fields Are Advanced": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/architecture/context_manager_stopping_point_analysis.md"
@@ -6658,12 +6658,12 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/workflows/active/01_swiss-army-knife/EXAMPLES.md"
   ],
   "Project Context": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_DEPENDENCY_MAP.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_ENGINEERING_INSIGHTS.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_ENGINEERING_INSIGHTS.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_DEPENDENCY_MAP.md"
   ],
   "Design Context": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_DEPENDENCY_MAP.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_ENGINEERING_INSIGHTS.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_ENGINEERING_INSIGHTS.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_DEPENDENCY_MAP.md"
   ],
   "Story Context": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_DEPENDENCY_MAP.md"
@@ -6705,8 +6705,8 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_DEPENDENCY_MAP.md"
   ],
   "Redis Persistent": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/NEXT_STEPS_SUMMARY.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_DEPENDENCY_MAP.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_DEPENDENCY_MAP.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/NEXT_STEPS_SUMMARY.md"
   ],
   "Relational Database": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_DEPENDENCY_MAP.md"
@@ -6955,22 +6955,22 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_ENGINEERING_INSIGHTS.md"
   ],
   "Andrej Karpathy": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/NEXT_STEPS_SUMMARY.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_ENGINEERING_INSIGHTS.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_ENGINEERING_INSIGHTS.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/NEXT_STEPS_SUMMARY.md"
   ],
   "Refined State Machine Design": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_ENGINEERING_INSIGHTS.md"
   ],
   "Primary State Machine": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/NEXT_STEPS_SUMMARY.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_ENGINEERING_INSIGHTS.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_ENGINEERING_INSIGHTS.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/NEXT_STEPS_SUMMARY.md"
   ],
   "Workflow Level": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_ENGINEERING_INSIGHTS.md"
   ],
   "Secondary State Machine": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/NEXT_STEPS_SUMMARY.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_ENGINEERING_INSIGHTS.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_ENGINEERING_INSIGHTS.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/NEXT_STEPS_SUMMARY.md"
   ],
   "Based Context Management": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_ENGINEERING_INSIGHTS.md"
@@ -6991,20 +6991,20 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_ENGINEERING_INSIGHTS.md"
   ],
   "Immediate Context": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/NEXT_STEPS_SUMMARY.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_ENGINEERING_INSIGHTS.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_ENGINEERING_INSIGHTS.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/NEXT_STEPS_SUMMARY.md"
   ],
   "Working Context": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/NEXT_STEPS_SUMMARY.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_ENGINEERING_INSIGHTS.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_ENGINEERING_INSIGHTS.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/NEXT_STEPS_SUMMARY.md"
   ],
   "Historical Context": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/NEXT_STEPS_SUMMARY.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_ENGINEERING_INSIGHTS.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_ENGINEERING_INSIGHTS.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/NEXT_STEPS_SUMMARY.md"
   ],
   "Learned Context": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/NEXT_STEPS_SUMMARY.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_ENGINEERING_INSIGHTS.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_ENGINEERING_INSIGHTS.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/NEXT_STEPS_SUMMARY.md"
   ],
   "Storage Schema Design": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_ENGINEERING_INSIGHTS.md"
@@ -7016,8 +7016,8 @@
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_ENGINEERING_INSIGHTS.md"
   ],
   "Implement Context": [
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/NEXT_STEPS_SUMMARY.md",
-    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_ENGINEERING_INSIGHTS.md"
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_ENGINEERING_INSIGHTS.md",
+    "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/NEXT_STEPS_SUMMARY.md"
   ],
   "Enhance State Machines": [
     "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/CONTEXT_ENGINEERING_INSIGHTS.md"

@@ -1,0 +1,22 @@
+{
+  "id": "47faf731-8037-4661-a0d8-2cd4f4bb8c6d",
+  "type": "decision",
+  "source": "human",
+  "timestamp": "2025-07-05T01:04:59.001326",
+  "data": {
+    "decision": "Used multi-stage collection pipeline for context gathering",
+    "reasoning": "Stages: recent contexts, concept matches, function/class matches, description matches, and folder descriptions"
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 42
+  },
+  "relationships": [],
+  "tags": [
+    "bootstrap",
+    "decision"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

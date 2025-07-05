@@ -1,0 +1,22 @@
+{
+  "id": "b1719313-e40e-4f92-9e0e-cf90eec364fd",
+  "type": "decision",
+  "source": "human",
+  "timestamp": "2025-07-04T23:20:19.077353",
+  "data": {
+    "decision": "Next priority: Create Swiss Army Knife Agent",
+    "reasoning": "Context Manager is feature-complete. Swiss Army Knife will demonstrate value of context-aware development by handling general tasks (bugs, features, refactoring) using Context Manager for intelligent routing"
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 62
+  },
+  "relationships": [],
+  "tags": [
+    "bootstrap",
+    "decision"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

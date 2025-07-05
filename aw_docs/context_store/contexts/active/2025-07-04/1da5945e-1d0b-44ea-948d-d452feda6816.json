@@ -1,0 +1,22 @@
+{
+  "id": "1da5945e-1d0b-44ea-948d-d452feda6816",
+  "type": "decision",
+  "source": "human",
+  "timestamp": "2025-07-04T23:20:05.981871",
+  "data": {
+    "decision": "Implemented directory tree visualization with Claude descriptions",
+    "reasoning": "Created interactive tree view showing project structure with AI-generated descriptions for each file and folder, persisted in git-trackable JSON"
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 52
+  },
+  "relationships": [],
+  "tags": [
+    "bootstrap",
+    "decision"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

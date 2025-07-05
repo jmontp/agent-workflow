@@ -1,0 +1,22 @@
+{
+  "id": "e0b18253-d91a-48e1-be69-fc2091560944",
+  "type": "decision",
+  "source": "human",
+  "timestamp": "2025-07-04T23:19:47.801906",
+  "data": {
+    "decision": "Added --skip-descriptions flag for fast indexing",
+    "reasoning": "Allows users to index projects in seconds (6s vs 5+ min) by skipping Claude-generated descriptions, useful for large projects or quick scans"
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 47
+  },
+  "relationships": [],
+  "tags": [
+    "bootstrap",
+    "decision"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

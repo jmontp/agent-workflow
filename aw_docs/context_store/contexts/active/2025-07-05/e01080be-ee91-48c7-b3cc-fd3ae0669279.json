@@ -1,0 +1,22 @@
+{
+  "id": "e01080be-ee91-48c7-b3cc-fd3ae0669279",
+  "type": "decision",
+  "source": "human",
+  "timestamp": "2025-07-05T01:05:06.021560",
+  "data": {
+    "decision": "Implemented intelligent token optimization with balanced allocation",
+    "reasoning": "30% contexts, 40% code, 20% docs, 10% folders with smart truncation and redistribution"
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 38
+  },
+  "relationships": [],
+  "tags": [
+    "bootstrap",
+    "decision"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

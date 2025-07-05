@@ -1,0 +1,22 @@
+{
+  "id": "af82c48b-9e51-401e-8da9-99b36a25f4b6",
+  "type": "decision",
+  "source": "human",
+  "timestamp": "2025-07-05T00:53:51.509265",
+  "data": {
+    "decision": "Initialized project at /mnt/c/Users/jmontp/Documents/workspace/agent-workflow",
+    "reasoning": "Scanned 50 docs, 7 code files, found 2706 concepts"
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 31
+  },
+  "relationships": [],
+  "tags": [
+    "bootstrap",
+    "decision"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

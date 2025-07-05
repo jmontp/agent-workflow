@@ -1,0 +1,22 @@
+{
+  "id": "a107d595-7b5d-450c-bb0a-85854a225c64",
+  "type": "decision",
+  "source": "human",
+  "timestamp": "2025-07-04T23:19:56.009950",
+  "data": {
+    "decision": "Removed 3D explorer and quality heatmap visualizations",
+    "reasoning": "User feedback indicated no value in 3D visualization and quality heatmap, replaced with Claude-powered directory tree view"
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 44
+  },
+  "relationships": [],
+  "tags": [
+    "bootstrap",
+    "decision"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

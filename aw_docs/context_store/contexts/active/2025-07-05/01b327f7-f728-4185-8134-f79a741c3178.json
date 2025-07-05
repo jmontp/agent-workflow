@@ -1,0 +1,22 @@
+{
+  "id": "01b327f7-f728-4185-8134-f79a741c3178",
+  "type": "decision",
+  "source": "human",
+  "timestamp": "2025-07-05T01:02:16.222490",
+  "data": {
+    "decision": "Need to implement JWT authentication for secure API access",
+    "reasoning": "Security requirement for protecting user data and API endpoints"
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 30
+  },
+  "relationships": [],
+  "tags": [
+    "bootstrap",
+    "decision"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}
