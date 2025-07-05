@@ -1,0 +1,19 @@
+{
+  "id": "920c4ad7-402e-4e33-b2d8-b33f4bd1a684",
+  "type": "development",
+  "source": "claude_analysis",
+  "timestamp": "2025-07-05T16:50:27.500546",
+  "data": {
+    "task": "Improve relevance scoring for context collection",
+    "analysis": "claude"
+  },
+  "project_id": "default",
+  "metadata": {},
+  "relationships": [],
+  "tags": [
+    "ai_enhanced"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

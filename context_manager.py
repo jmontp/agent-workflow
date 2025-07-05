@@ -6,7 +6,7 @@ Tracks all context, learns patterns, and coordinates documentation.
 
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Any, Set, Tuple
+from typing import Dict, List, Optional, Any, Tuple
 from enum import Enum
 from pathlib import Path
 import json
@@ -17,6 +17,10 @@ from collections import Counter
 import ast
 import sys
 import time
+import logging
+
+# Configure logger
+logger = logging.getLogger(__name__)
 
 
 # Schema definitions
@@ -374,7 +378,7 @@ class ContextManager:
                             context = Context.from_dict(data)
                             self.contexts[context.id] = context
                     except Exception as e:
-                        print(f"Error loading context {context_file}: {e}")
+                        logger.error(f"Error loading context {context_file}: {e}")
     
     # Core context operations
     def add_context(self, context: Context) -> str:
@@ -652,7 +656,7 @@ class ContextManager:
                         patterns.common_phrases[phrase] = patterns.common_phrases.get(phrase, 0) + 1
                 
             except Exception as e:
-                print(f"Error analyzing {doc_path}: {e}")
+                logger.error(f"Error analyzing {doc_path}: {e}")
         
         # Filter common phrases to significant ones
         patterns.common_phrases = {k: v for k, v in patterns.common_phrases.items() if v >= 3}
@@ -740,7 +744,7 @@ class ContextManager:
             return scores
             
         except Exception as e:
-            print(f"Error calculating quality for {doc_path}: {e}")
+            logger.error(f"Error calculating quality for {doc_path}: {e}")
             return {'error': 1.0}
     
     # Helper methods for documentation intelligence
@@ -819,48 +823,33 @@ class ContextManager:
         else:
             return ['Overview', 'Implementation']
     
+    def _save_json(self, data: Any, filename: str, subdir: str = ""):
+        """Generic JSON save method."""
+        save_path = self.storage_dir / subdir / filename
+        save_path.parent.mkdir(parents=True, exist_ok=True)
+        
+        # Convert to dict if has to_dict method
+        if hasattr(data, 'to_dict'):
+            data = data.to_dict()
+        elif hasattr(data, '__dict__'):
+            # Convert dataclass/object to dict
+            data = {k: v for k, v in data.__dict__.items() if not k.startswith('_')}
+            # Handle datetime objects
+            for k, v in data.items():
+                if isinstance(v, datetime):
+                    data[k] = v.isoformat()
+        
+        with open(save_path, 'w') as f:
+            json.dump(data, f, indent=2, default=str)
+    
     def _save_doc_metadata(self, metadata: DocMetadata):
         """Save document metadata to disk."""
-        metadata_file = self.storage_dir / "doc_metadata" / "metadata" / f"{Path(metadata.path).stem}.json"
-        metadata_file.parent.mkdir(parents=True, exist_ok=True)
-        
-        data = {
-            'path': metadata.path,
-            'doc_type': metadata.doc_type,
-            'last_analyzed': metadata.last_analyzed.isoformat(),
-            'quality_scores': metadata.quality_scores,
-            'staleness_indicators': metadata.staleness_indicators,
-            'linked_contexts': metadata.linked_contexts,
-            'linked_docs': metadata.linked_docs,
-            'dependencies': metadata.dependencies,
-            'pending_updates': metadata.pending_updates
-        }
-        
-        with open(metadata_file, 'w') as f:
-            json.dump(data, f, indent=2)
+        filename = f"{Path(metadata.path).stem}.json"
+        self._save_json(metadata, filename, "doc_metadata/metadata")
     
     def _save_patterns(self, patterns: DocPattern):
         """Save learned patterns to disk."""
-        patterns_file = self.storage_dir / "doc_metadata" / "patterns" / "global_patterns.json"
-        patterns_file.parent.mkdir(parents=True, exist_ok=True)
-        
-        data = {
-            'file_naming': patterns.file_naming,
-            'section_headers': patterns.section_headers,
-            'section_patterns': patterns.section_patterns,
-            'markdown_style': patterns.markdown_style,
-            'code_block_style': patterns.code_block_style,
-            'list_style': patterns.list_style,
-            'common_phrases': patterns.common_phrases,
-            'terminology': patterns.terminology,
-            'update_triggers': patterns.update_triggers,
-            'avg_section_length': patterns.avg_section_length,
-            'required_sections': patterns.required_sections,
-            'optional_sections': patterns.optional_sections
-        }
-        
-        with open(patterns_file, 'w') as f:
-            json.dump(data, f, indent=2)
+        self._save_json(patterns, "global_patterns.json", "doc_metadata/patterns")
     
     # Project Initialization Features
     def initialize_project(self, project_root: str = ".", skip_descriptions: bool = False) -> Dict[str, Any]:
@@ -957,7 +946,7 @@ class ContextManager:
                 
                 doc_count += 1
             except Exception as e:
-                print(f"Error scanning {md_file}: {e}")
+                logger.error(f"Error scanning {md_file}: {e}")
         
         # Second pass: batch generate descriptions by folder
         if not getattr(self, 'skip_descriptions', False):
@@ -966,7 +955,7 @@ class ContextManager:
                 total_folders = len(files_by_folder)
                 
                 for idx, (folder_path, files) in enumerate(files_by_folder.items()):
-                    print(f"Generating descriptions for folder {idx+1}/{total_folders}: {Path(folder_path).name}")
+                    logger.info(f"Generating descriptions for folder {idx+1}/{total_folders}: {Path(folder_path).name}")
                     
                     try:
                         # Batch generate descriptions for all files in folder
@@ -978,7 +967,7 @@ class ContextManager:
                                 self.project_index.doc_files[file_path].description = description
                     
                     except Exception as e:
-                        print(f"Batch generation failed for {folder_path}, falling back to individual: {e}")
+                        logger.error(f"Batch generation failed for {folder_path}, falling back to individual: {e}")
                         # Fallback to individual generation
                         for file_info in files:
                             try:
@@ -1000,7 +989,7 @@ class ContextManager:
                         metadata.description = f"Documentation file: {Path(file_path).name}"
         else:
             # Skip descriptions - use simple ones
-            print("Skipping Claude descriptions for faster indexing...")
+            logger.info("Skipping Claude descriptions for faster indexing...")
             for file_path, metadata in self.project_index.doc_files.items():
                 metadata.description = f"Documentation file: {Path(file_path).name}"
         
@@ -1052,7 +1041,7 @@ class ContextManager:
                 
                 code_count += 1
             except Exception as e:
-                print(f"Error scanning {code_file}: {e}")
+                logger.error(f"Error scanning {code_file}: {e}")
         
         # Second pass: batch generate descriptions by folder
         if not getattr(self, 'skip_descriptions', False):
@@ -1061,7 +1050,7 @@ class ContextManager:
                 total_folders = len(files_by_folder)
                 
                 for idx, (folder_path, files) in enumerate(files_by_folder.items()):
-                    print(f"Generating code descriptions for folder {idx+1}/{total_folders}: {Path(folder_path).name}")
+                    logger.info(f"Generating code descriptions for folder {idx+1}/{total_folders}: {Path(folder_path).name}")
                     
                     try:
                         # Batch generate descriptions for all files in folder
@@ -1073,7 +1062,7 @@ class ContextManager:
                                 self.project_index.code_files[file_path].description = description
                     
                     except Exception as e:
-                        print(f"Batch generation failed for {folder_path}, falling back to individual: {e}")
+                        logger.error(f"Batch generation failed for {folder_path}, falling back to individual: {e}")
                         # Fallback to individual generation
                         for file_info in files:
                             try:
@@ -1340,7 +1329,7 @@ class ContextManager:
     def _generate_folder_descriptions(self, root_path: Path):
         """Generate descriptions for all directories in the project."""
         if getattr(self, 'skip_descriptions', False):
-            print("Skipping folder descriptions...")
+            logger.info("Skipping folder descriptions...")
             return
             
         try:
@@ -1402,45 +1391,23 @@ class ContextManager:
                 
         except Exception as e:
             # If Claude tools not available, generate simple descriptions
-            print(f"Generating simple folder descriptions: {e}")
+            logger.error(f"Generating simple folder descriptions: {e}")
             for dir_path in [root_path]:
                 self.project_index.folder_descriptions[str(dir_path)] = "Project root directory."
     
     def _save_project_index(self):
         """Save project index to disk."""
-        index_dir = self.storage_dir / "indices"
-        index_dir.mkdir(parents=True, exist_ok=True)
-        
+        if not self.project_index:
+            return
+            
         # Save main index
-        index_file = index_dir / "project_index.json"
-        index_data = {
-            "index_timestamp": self.project_index.index_timestamp.isoformat(),
-            "concepts": self.project_index.concepts,
-            "functions": self.project_index.functions,
-            "classes": self.project_index.classes,
-            "dependencies": self.project_index.dependencies,
-            "references": self.project_index.references,
-            "naming_conventions": self.project_index.naming_conventions,
-            "architectural_patterns": self.project_index.architectural_patterns,
-            "faq_mappings": self.project_index.faq_mappings,
-            "folder_descriptions": self.project_index.folder_descriptions
-        }
+        self._save_json(self.project_index, "project_index.json", "indices")
         
-        with open(index_file, 'w') as f:
-            json.dump(index_data, f, indent=2)
-        
-        # Save concept map
-        concept_file = index_dir / "concept_map.json"
-        with open(concept_file, 'w') as f:
-            json.dump(self.project_index.concepts, f, indent=2)
-        
-        # Save quick lookups
-        lookup_file = index_dir / "quick_lookups.json"
-        with open(lookup_file, 'w') as f:
-            json.dump(self.project_index.faq_mappings, f, indent=2)
+        # Save individual components
+        self._save_json(self.project_index.concepts, "concept_map.json", "indices")
+        self._save_json(self.project_index.faq_mappings, "quick_lookups.json", "indices")
         
         # Save doc metadata
-        doc_metadata_file = index_dir / "doc_metadata.json"
         doc_data = {}
         for path, meta in self.project_index.doc_files.items():
             doc_data[path] = {
@@ -1456,11 +1423,9 @@ class ContextManager:
                 'pending_updates': meta.pending_updates,
                 'needs_update': meta.needs_update()
             }
-        with open(doc_metadata_file, 'w') as f:
-            json.dump(doc_data, f, indent=2)
+        self._save_json(doc_data, "doc_metadata.json", "indices")
         
         # Save code metadata
-        code_metadata_file = index_dir / "code_metadata.json"
         code_data = {}
         for path, meta in self.project_index.code_files.items():
             code_data[path] = {
@@ -1477,8 +1442,7 @@ class ContextManager:
                 'lines_of_code': meta.lines_of_code,
                 'complexity_score': meta.complexity_score
             }
-        with open(code_metadata_file, 'w') as f:
-            json.dump(code_data, f, indent=2)
+        self._save_json(code_data, "code_metadata.json", "indices")
     
     def find_information(self, query: str) -> List[LocationResult]:
         """
@@ -2249,7 +2213,7 @@ Return ONLY valid JSON, no additional text.'''
                         }
                     )
                 except Exception as e:
-                    print(f"Error reading doc file {item.path}: {e}")
+                    logger.error(f"Error reading doc file {item.path}: {e}")
                     return None
             
             elif isinstance(item, CodeMetadata):
@@ -2274,7 +2238,7 @@ Return ONLY valid JSON, no additional text.'''
                         }
                     )
                 except Exception as e:
-                    print(f"Error reading code file {item.path}: {e}")
+                    logger.error(f"Error reading code file {item.path}: {e}")
                     return None
             
             elif isinstance(item, tuple) and len(item) == 2:
@@ -2290,11 +2254,11 @@ Return ONLY valid JSON, no additional text.'''
                 )
             
             else:
-                print(f"Unknown item type: {type(item)}")
+                logger.error(f"Unknown item type: {type(item)}")
                 return None
                 
         except Exception as e:
-            print(f"Error converting item to ContextItem: {e}")
+            logger.error(f"Error converting item to ContextItem: {e}")
             return None
     
     def _optimize_for_tokens(self, items: List[ContextItem], max_tokens: int) -> Tuple[List[ContextItem], bool]:

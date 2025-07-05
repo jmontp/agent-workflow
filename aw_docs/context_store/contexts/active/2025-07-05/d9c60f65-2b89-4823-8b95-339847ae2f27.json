@@ -1,0 +1,29 @@
+{
+  "id": "d9c60f65-2b89-4823-8b95-339847ae2f27",
+  "type": "project_management",
+  "source": "human",
+  "timestamp": "2025-07-05T14:37:45.005349",
+  "data": {
+    "title": "Implemented persistent Claude caching (v1.1 #1)",
+    "status": "completed",
+    "timestamp": "2025-07-05T14:37:45.005326",
+    "version": "v1.1",
+    "speedup": "99.7%",
+    "cache_ttl": "7 days",
+    "max_entries": 1000,
+    "quick_win": 1
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 56
+  },
+  "relationships": [],
+  "tags": [
+    "milestone",
+    "project-management",
+    "completed"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}
