@@ -132,6 +132,115 @@
                 <div id="doc-results" class="doc-results"></div>
             </section>
             
+            <!-- Context Collection Tester -->
+            <section class="cm-panel context-collection-panel">
+                <h2>Context Collection Tester</h2>
+                
+                <!-- Main Input Area -->
+                <div class="action-group">
+                    <h3>Task Description</h3>
+                    <textarea id="task-description" placeholder="Describe the task you want to test context collection for..." rows="4"></textarea>
+                    
+                    <div class="preset-examples">
+                        <label>Preset Examples:</label>
+                        <select id="preset-examples-select" onchange="loadPresetExample()">
+                            <option value="">Select an example...</option>
+                            <option value="Fix the authentication bug in the login system">Fix the authentication bug in the login system</option>
+                            <option value="Add dark mode support to the UI">Add dark mode support to the UI</option>
+                            <option value="Write unit tests for the Context Manager">Write unit tests for the Context Manager</option>
+                            <option value="Document the API endpoints">Document the API endpoints</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Advanced Options (collapsible) -->
+                <div class="action-group">
+                    <h3 class="collapsible" onclick="toggleAdvancedOptions()">
+                        Advanced Options 
+                        <span id="advanced-toggle" class="toggle-indicator">▶</span>
+                    </h3>
+                    <div id="advanced-options" class="advanced-options" style="display: none;">
+                        <div class="option-row">
+                            <label>Agent Type:</label>
+                            <select id="agent-type">
+                                <option value="general">General</option>
+                                <option value="code">Code</option>
+                                <option value="documentation">Documentation</option>
+                                <option value="qa">QA</option>
+                                <option value="design">Design</option>
+                            </select>
+                        </div>
+                        
+                        <div class="option-row">
+                            <label>Max Tokens: <span id="max-tokens-value">10000</span></label>
+                            <input type="range" id="max-tokens" min="1000" max="50000" value="10000" step="1000" 
+                                   oninput="document.getElementById('max-tokens-value').textContent = this.value">
+                        </div>
+                        
+                        <div class="option-row">
+                            <label>Include Types:</label>
+                            <div class="checkbox-group">
+                                <label><input type="checkbox" id="include-code" checked> Code</label>
+                                <label><input type="checkbox" id="include-docs" checked> Docs</label>
+                                <label><input type="checkbox" id="include-contexts" checked> Contexts</label>
+                                <label><input type="checkbox" id="include-folders" checked> Folders</label>
+                                <label><input type="checkbox" id="include-all"> All</label>
+                            </div>
+                        </div>
+                        
+                        <div class="option-row">
+                            <label>Exclude Patterns:</label>
+                            <input type="text" id="exclude-patterns" placeholder="e.g., test_*, *.pyc (comma-separated)">
+                        </div>
+                        
+                        <div class="option-row">
+                            <label>Min Relevance: <span id="min-relevance-value">0.3</span></label>
+                            <input type="range" id="min-relevance" min="0" max="1" value="0.3" step="0.1" 
+                                   oninput="document.getElementById('min-relevance-value').textContent = this.value">
+                        </div>
+                        
+                        <div class="option-row">
+                            <label><input type="checkbox" id="explain-selection"> Explain Selection</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="collectContext()">Collect Context</button>
+                    <button class="btn btn-secondary" onclick="clearContextCollection()">Clear</button>
+                    <button class="btn btn-secondary" onclick="loadExample()">Load Example</button>
+                </div>
+                
+                <!-- Results Area (initially hidden) -->
+                <div id="context-results" class="context-results" style="display: none;">
+                    <!-- Task Analysis -->
+                    <div class="result-section">
+                        <h3>Task Analysis</h3>
+                        <div id="task-analysis" class="analysis-content"></div>
+                    </div>
+                    
+                    <!-- Token Usage -->
+                    <div class="result-section">
+                        <h3>Token Usage</h3>
+                        <div id="token-usage-viz" class="token-usage-viz"></div>
+                    </div>
+                    
+                    <!-- Collected Items -->
+                    <div class="result-section">
+                        <h3>Collected Items</h3>
+                        <div id="collected-items" class="collected-items"></div>
+                    </div>
+                    
+                    <!-- Export Buttons -->
+                    <div class="export-buttons">
+                        <button class="btn btn-secondary" onclick="exportToJSON()">Export JSON</button>
+                        <button class="btn btn-secondary" onclick="exportToMarkdown()">Export Markdown</button>
+                        <button class="btn btn-secondary" onclick="copyToClipboard()">Copy to Clipboard</button>
+                    </div>
+                </div>
+            </section>
+            
             <!-- Patterns -->
             <section class="cm-panel patterns-panel">
                 <h2>Detected Patterns</h2>

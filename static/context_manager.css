@@ -821,3 +821,241 @@
         flex-wrap: wrap;
     }
 }
+
+/* Context Collection Tester Styles */
+.context-collection-panel {
+    grid-column: span 2;
+}
+
+.preset-examples {
+    margin-top: 10px;
+}
+
+.preset-examples label {
+    display: inline-block;
+    margin-right: 10px;
+    font-weight: 500;
+    color: #555;
+}
+
+.preset-examples select {
+    width: calc(100% - 120px);
+}
+
+/* Collapsible Advanced Options */
+.collapsible {
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+}
+
+.collapsible:hover {
+    color: var(--cm-primary);
+}
+
+.toggle-indicator {
+    display: inline-block;
+    margin-left: 5px;
+    transition: transform 0.3s;
+}
+
+.toggle-indicator.expanded {
+    transform: rotate(90deg);
+}
+
+.advanced-options {
+    margin-top: 15px;
+    padding: 15px;
+    background: var(--cm-light);
+    border-radius: 6px;
+}
+
+.option-row {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.option-row:last-child {
+    margin-bottom: 0;
+}
+
+.option-row label {
+    min-width: 120px;
+    font-weight: 500;
+    color: #555;
+}
+
+.option-row input[type="range"] {
+    flex: 1;
+}
+
+.option-row input[type="text"] {
+    flex: 1;
+}
+
+.checkbox-group {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.checkbox-group label {
+    min-width: auto;
+    font-weight: normal;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.checkbox-group input[type="checkbox"] {
+    margin: 0;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+/* Context Results */
+.context-results {
+    margin-top: 20px;
+    border-top: 2px solid var(--cm-border);
+    padding-top: 20px;
+}
+
+.result-section {
+    margin-bottom: 20px;
+}
+
+.result-section h3 {
+    margin-bottom: 10px;
+    color: var(--cm-primary);
+}
+
+.analysis-content {
+    background: var(--cm-light);
+    padding: 15px;
+    border-radius: 6px;
+}
+
+.analysis-content ul {
+    margin: 5px 0;
+    padding-left: 20px;
+}
+
+.analysis-content li {
+    margin: 3px 0;
+}
+
+/* Token Usage Visualization */
+.token-usage-viz {
+    height: 250px;
+    background: var(--cm-light);
+    border-radius: 6px;
+    padding: 15px;
+    position: relative;
+}
+
+/* Collected Items */
+.collected-items {
+    max-height: 400px;
+    overflow-y: auto;
+    background: var(--cm-light);
+    border-radius: 6px;
+    padding: 15px;
+}
+
+.collected-item {
+    background: white;
+    border: 1px solid var(--cm-border);
+    border-radius: 4px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.collected-item:last-child {
+    margin-bottom: 0;
+}
+
+.item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.item-type {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 0.85em;
+    font-weight: bold;
+    color: white;
+}
+
+.item-type.code { background: var(--cm-secondary); }
+.item-type.docs { background: var(--cm-info); }
+.item-type.context { background: var(--cm-primary); }
+.item-type.folder { background: var(--cm-warning); }
+
+.item-relevance {
+    color: #666;
+    font-size: 0.85em;
+}
+
+.item-path {
+    color: #555;
+    font-size: 0.9em;
+    margin-bottom: 5px;
+}
+
+.item-preview {
+    background: #f8f8f8;
+    border-left: 3px solid var(--cm-border);
+    padding: 8px;
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 0.85em;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    max-height: 100px;
+    overflow-y: auto;
+}
+
+/* Export Buttons */
+.export-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+    justify-content: center;
+}
+
+/* Responsive adjustments for Context Collection */
+@media (max-width: 1200px) {
+    .context-collection-panel {
+        grid-column: span 2;
+    }
+}
+
+@media (max-width: 768px) {
+    .context-collection-panel {
+        grid-column: span 1;
+    }
+    
+    .action-buttons,
+    .export-buttons {
+        flex-wrap: wrap;
+    }
+    
+    .option-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .option-row label {
+        margin-bottom: 5px;
+    }
+}

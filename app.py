@@ -8,6 +8,7 @@ from flask import Flask, render_template, jsonify, request
 from flask_socketio import SocketIO, emit
 from enum import Enum
 from dataclasses import dataclass
+import json
 from typing import Optional, Dict, Any, List
 from datetime import datetime
 from pathlib import Path
@@ -373,6 +374,33 @@ def collect_context():
         )
         
         # Convert ContextCollection to JSON-serializable format
+        # Group items by type for the frontend
+        contexts = []
+        code = []
+        docs = []
+        folders = []
+        
+        for item in context_collection.items:
+            item_dict = {
+                "path": item.path,
+                "type": item.type,
+                "relevance_score": item.relevance_score,
+                "content": item.content,
+                "metadata": item.metadata,
+                "token_count": item.tokens
+            }
+            
+            if item.type == 'context':
+                # Extract context-specific data from metadata
+                item_dict["data"] = json.loads(item.content) if item.content.startswith('{') else {"content": item.content}
+                contexts.append(item_dict)
+            elif item.type == 'file':
+                code.append(item_dict)
+            elif item.type == 'doc_section':
+                docs.append(item_dict)
+            elif item.type == 'folder_desc':
+                folders.append(item_dict)
+        
         response_data = {
             "task_description": context_collection.task_description,
             "task_analysis": {
@@ -380,24 +408,26 @@ def collect_context():
                 "actions": context_collection.task_analysis.actions,
                 "concepts": context_collection.task_analysis.concepts,
                 "file_patterns": context_collection.task_analysis.file_patterns,
-                "estimated_scope": context_collection.task_analysis.estimated_scope
+                "estimated_scope": context_collection.task_analysis.estimated_scope,
+                "complexity": context_collection.task_analysis.estimated_scope  # Frontend expects this
             },
-            "items": [
-                {
-                    "file_path": item.file_path,
-                    "type": item.type,
-                    "relevance": item.relevance,
-                    "content": item.content,
-                    "metadata": item.metadata,
-                    "explanation": item.explanation
+            "contexts": contexts,
+            "code": code,
+            "docs": docs,
+            "folders": folders,
+            "metadata": {
+                "agent_type": agent_type,
+                "max_tokens": max_tokens,
+                "token_usage": {
+                    "total": context_collection.total_tokens
                 }
-                for item in context_collection.items
-            ],
+            },
             "total_tokens": context_collection.total_tokens,
             "summary": context_collection.summary,
             "suggestions": context_collection.suggestions,
             "truncated": context_collection.truncated,
-            "collection_time_ms": context_collection.collection_time_ms
+            "collection_time_ms": context_collection.collection_time_ms,
+            "agent_formatted": context_collection.format_for_agent()  # Add the agent-formatted view
         }
         
         return jsonify(response_data)

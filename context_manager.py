@@ -232,6 +232,114 @@ class ContextCollection:
     suggestions: List[str]       # Suggestions for agent
     truncated: bool              # Whether context was truncated
     collection_time_ms: int      # Time taken to collect context
+    
+    def format_for_agent(self) -> str:
+        """Format all collected context into the exact format an agent would receive."""
+        lines = []
+        
+        # Header
+        lines.append(f"# Task: {self.task_description}")
+        lines.append("")
+        
+        # Task Analysis
+        lines.append("## Task Analysis")
+        lines.append(f"Keywords: {', '.join(self.task_analysis.keywords)}")
+        lines.append(f"Actions: {', '.join(self.task_analysis.actions)}")
+        lines.append(f"Concepts: {', '.join(self.task_analysis.concepts)}")
+        lines.append(f"Estimated Scope: {self.task_analysis.estimated_scope}")
+        lines.append("")
+        
+        # Group items by type
+        items_by_type = {
+            'context': [],
+            'file': [],
+            'function': [],
+            'class': [],
+            'doc_section': [],
+            'folder_desc': []
+        }
+        
+        for item in self.items:
+            if item.type in items_by_type:
+                items_by_type[item.type].append(item)
+        
+        # Format contexts
+        context_items = items_by_type['context']
+        if context_items:
+            total_tokens = sum(item.tokens for item in context_items)
+            lines.append(f"## Contexts ({len(context_items)} items, {total_tokens} tokens)")
+            for item in context_items:
+                lines.append(f"\n### {item.path}")
+                if 'timestamp' in item.metadata:
+                    lines.append(f"*Timestamp: {item.metadata['timestamp']}*")
+                lines.append(item.content.strip())
+            lines.append("")
+        
+        # Format code files (including functions and classes)
+        code_items = items_by_type['file'] + items_by_type['function'] + items_by_type['class']
+        if code_items:
+            total_tokens = sum(item.tokens for item in code_items)
+            lines.append(f"## Code Files ({len(code_items)} items, {total_tokens} tokens)")
+            
+            # Group by file path for better organization
+            by_file = {}
+            for item in code_items:
+                file_path = item.path.split('::')[0] if '::' in item.path else item.path
+                if file_path not in by_file:
+                    by_file[file_path] = []
+                by_file[file_path].append(item)
+            
+            for file_path, file_items in by_file.items():
+                lines.append(f"\n### {file_path}")
+                for item in file_items:
+                    if item.type in ['function', 'class']:
+                        # Extract the name from path (format: file::name)
+                        name = item.path.split('::')[1] if '::' in item.path else item.path
+                        lines.append(f"\n#### {item.type.capitalize()}: {name}")
+                    lines.append("```python" if file_path.endswith('.py') else "```")
+                    lines.append(item.content.strip())
+                    lines.append("```")
+            lines.append("")
+        
+        # Format documentation
+        doc_items = items_by_type['doc_section']
+        if doc_items:
+            total_tokens = sum(item.tokens for item in doc_items)
+            lines.append(f"## Documentation ({len(doc_items)} items, {total_tokens} tokens)")
+            for item in doc_items:
+                lines.append(f"\n### {item.path}")
+                if 'section' in item.metadata:
+                    lines.append(f"*Section: {item.metadata['section']}*")
+                lines.append(item.content.strip())
+            lines.append("")
+        
+        # Format folder descriptions
+        folder_items = items_by_type['folder_desc']
+        if folder_items:
+            total_tokens = sum(item.tokens for item in folder_items)
+            lines.append(f"## Folder Descriptions ({len(folder_items)} items, {total_tokens} tokens)")
+            for item in folder_items:
+                lines.append(f"\n### {item.path}")
+                lines.append(item.content.strip())
+            lines.append("")
+        
+        # Summary statistics
+        lines.append("---")
+        max_tokens = 8000  # Default max tokens for context
+        percentage_used = (self.total_tokens / max_tokens) * 100
+        lines.append(f"Total tokens: {self.total_tokens}/{max_tokens} ({percentage_used:.1f}% used)")
+        lines.append(f"Collection time: {self.collection_time_ms}ms")
+        
+        if self.truncated:
+            lines.append("\n**WARNING: Context was truncated to fit token limits. Some relevant information may have been omitted.**")
+        
+        # Add suggestions if any
+        if self.suggestions:
+            lines.append("\n## Suggestions")
+            for suggestion in self.suggestions:
+                lines.append(f"- {suggestion}")
+        
+        return "\n".join(lines)
 
 
 class ContextManager:
