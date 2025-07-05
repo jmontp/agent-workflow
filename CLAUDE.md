@@ -291,6 +291,7 @@ With comprehensive documentation in place, we're ready to begin Week 1 implement
 - [x] Implement documentation intelligence features
 - [x] Create web UI panel for Context Manager
 - [x] Implement initialize_project function
+- [x] Implement collect_context_for_task as agent interface
 - [ ] Implement Swiss Army Knife agent
 - [ ] Prune and consolidate codebase
 
@@ -315,7 +316,14 @@ With comprehensive documentation in place, we're ready to begin Week 1 implement
 - [x] Add CLI command `cm init`
 - [x] Add UI button for project initialization
 
-**Swiss Army Knife Agent**
+**Context Collection for Agents** ✅
+- [x] Implement collect_context_for_task method
+- [x] Create multi-stage collection pipeline
+- [x] Add intelligent token optimization
+- [x] Build relevance scoring system
+- [x] Fix auto-loading of project index
+
+**Swiss Army Knife Agent** 🎯 NEXT
 - [ ] Create agent with TaskRequest/TaskResult schema
 - [ ] Integrate with Context Manager for pattern learning
 - [ ] Implement simple code generation and bug fixes
@@ -341,6 +349,11 @@ As you implement, update these sections in CLAUDE.md:
 7. **Implemented initialize_project function** - Creates metadata layer by scanning all docs and code, enabling fast information retrieval. Agents can now ask 'where is X?' and get instant answers.
 8. **Implemented knowledge graph visualization** - Created interactive D3.js force-directed graph showing relationships between docs, code, and concepts. Includes node filtering, zoom, drag, and click interactions.
 9. **Reorganized to distributed aw_docs structure** - Each project now has its own aw_docs/ directory for git tracking. Removed project_id layer, fixed visualization metadata loading, and added optional Claude tools integration.
+10. **Implemented collect_context_for_task as primary agent interface** - Created intelligent context collection that analyzes tasks, scores relevance, and optimizes token usage
+11. **Used multi-stage collection pipeline for context gathering** - Stages: recent contexts, concept matches, function/class matches, description matches, and folder descriptions
+12. **Implemented intelligent token optimization with balanced allocation** - 30% contexts, 40% code, 20% docs, 10% folders with smart truncation and redistribution
+13. **Fixed Context Manager to auto-load project index on initialization** - Essential for CLI usage where new instances are created per command
+14. **Used agent spawning for parallel task execution** - Main agent acts as orchestrator while spawning specialized agents for implementation tasks
 
 ### Architecture Patterns Emerging
 - Bootstrap methodology working: CM suggested documenting decisions after detecting pattern
