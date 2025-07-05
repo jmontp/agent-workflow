@@ -1,0 +1,22 @@
+{
+  "id": "b7b682b6-6f8e-4a79-8011-ae29e4ec1193",
+  "type": "decision",
+  "source": "human",
+  "timestamp": "2025-07-05T13:20:19.073951",
+  "data": {
+    "decision": "Tagged v1.0 as first fully working Context Manager",
+    "reasoning": "All core features implemented: Claude integration, web UI, visualizations, and intelligent context collection. Ready for v1.1 polish phase focusing on performance, output format, and code pruning."
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 61
+  },
+  "relationships": [],
+  "tags": [
+    "bootstrap",
+    "decision"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

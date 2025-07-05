@@ -359,6 +359,8 @@ As you implement, update these sections in CLAUDE.md:
 15. **Web UI not using Claude for context collection** - API endpoint creates ContextManager without config and Claude tools aren't loaded by default
 16. **Fixed API endpoints to use Claude-enabled ContextManager** - Updated app.py to properly initialize ContextManager with ContextManagerConfig, enabling Claude analysis with fallback to heuristic
 17. **Fixed web UI to properly initialize ContextManager with Claude config** - API endpoints were creating ContextManager without config, preventing Claude analysis from running. Now properly configured with ContextManagerConfig enabling Claude with fallback.
+18. **Implemented Claude CLI integration using bash calls** - Claude is called via `claude -p` command with file input to avoid shell escaping issues. Set 30-second timeout for Claude responses.
+19. **Tagged v1.0 as first fully working Context Manager** - All core features implemented: Claude integration, web UI, visualizations, and intelligent context collection. Ready for v1.1 polish phase focusing on performance, output format, and code pruning.
 
 ### Architecture Patterns Emerging
 - Bootstrap methodology working: CM suggested documenting decisions after detecting pattern
@@ -377,3 +379,26 @@ cm.log_problem("issue", "attempted_solution")
 # Track successful patterns
 cm.log_pattern("pattern_name", "where_applied", "outcome")
 ```
+
+## Version 1.1 Plan (Initial Polish)
+
+Created comprehensive plan in `CONTEXT_MANAGER_V1.1_PLAN.md` focusing on:
+
+### Quick Wins (1-2 days)
+1. **Enhanced Claude caching** - 70% reduction in API calls
+2. **Lazy loading contexts** - 80% faster startup (10s → 1s)
+3. **Standard API response format** - Consistent error handling
+4. **Remove dead code** - ~300 lines identified
+5. **CLI format flag** - Support json/table/plain output
+
+### Performance Targets
+- Reduce Claude API calls by 50-70% through caching
+- Improve query performance by 10-100x with indices
+- Reduce startup time by 80% with lazy loading
+- Batch writes to reduce I/O overhead
+
+### Code Quality
+- Consolidate ~800 lines of redundant code
+- Break down methods over 50 lines
+- Centralize serialization logic
+- Create FileManager for all I/O operations
