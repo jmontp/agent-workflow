@@ -1,0 +1,26 @@
+{
+  "id": "de5493f4-e2fa-49ca-8079-b6667db46e0d",
+  "type": "project_management",
+  "source": "human",
+  "timestamp": "2025-07-05T13:56:57.263644",
+  "data": {
+    "title": "Fixed Context Manager to auto-load project index on initialization",
+    "status": "completed",
+    "timestamp": "2025-07-05T13:56:57.263632",
+    "decision_number": 13,
+    "reasoning": "Essential for CLI usage where new instances are created per command"
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 63
+  },
+  "relationships": [],
+  "tags": [
+    "milestone",
+    "project-management",
+    "completed"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

@@ -1,0 +1,26 @@
+{
+  "id": "95553414-fe92-4cc2-b28e-1e9351f684e6",
+  "type": "project_management",
+  "source": "human",
+  "timestamp": "2025-07-05T13:56:57.248200",
+  "data": {
+    "title": "Implemented collect_context_for_task as primary agent interface",
+    "status": "completed",
+    "timestamp": "2025-07-05T13:56:57.248188",
+    "decision_number": 10,
+    "reasoning": "Created intelligent context collection that analyzes tasks, scores relevance, and optimizes token usage"
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 71
+  },
+  "relationships": [],
+  "tags": [
+    "milestone",
+    "project-management",
+    "completed"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

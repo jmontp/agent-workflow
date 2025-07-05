@@ -1,0 +1,26 @@
+{
+  "id": "6e77db7b-88d1-4512-8d93-02fb42618c9d",
+  "type": "project_management",
+  "source": "human",
+  "timestamp": "2025-07-05T13:56:57.218426",
+  "data": {
+    "title": "Added Context Manager API endpoints to Flask app",
+    "status": "completed",
+    "timestamp": "2025-07-05T13:56:57.218415",
+    "decision_number": 4,
+    "reasoning": "Need web API for agents and UI to interact with Context Manager"
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 57
+  },
+  "relationships": [],
+  "tags": [
+    "milestone",
+    "project-management",
+    "completed"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

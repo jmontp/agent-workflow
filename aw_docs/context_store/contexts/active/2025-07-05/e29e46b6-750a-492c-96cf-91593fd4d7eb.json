@@ -1,0 +1,26 @@
+{
+  "id": "e29e46b6-750a-492c-96cf-91593fd4d7eb",
+  "type": "project_management",
+  "source": "human",
+  "timestamp": "2025-07-05T13:56:57.258428",
+  "data": {
+    "title": "Implemented intelligent token optimization with balanced allocation",
+    "status": "completed",
+    "timestamp": "2025-07-05T13:56:57.258415",
+    "decision_number": 12,
+    "reasoning": "30% contexts, 40% code, 20% docs, 10% folders with smart truncation and redistribution"
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 68
+  },
+  "relationships": [],
+  "tags": [
+    "milestone",
+    "project-management",
+    "completed"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

@@ -1,0 +1,24 @@
+{
+  "id": "6627b8f5-8ab6-42e3-98c6-3d325546c6dc",
+  "type": "project_management",
+  "source": "human",
+  "timestamp": "2025-07-05T13:56:57.173080",
+  "data": {
+    "title": "Next: Swiss Army Knife agent",
+    "status": "in_progress",
+    "timestamp": "2025-07-05T13:56:57.173070"
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 27
+  },
+  "relationships": [],
+  "tags": [
+    "milestone",
+    "project-management",
+    "in_progress"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

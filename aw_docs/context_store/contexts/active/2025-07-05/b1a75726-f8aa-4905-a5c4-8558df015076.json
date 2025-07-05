@@ -1,0 +1,25 @@
+{
+  "id": "b1a75726-f8aa-4905-a5c4-8558df015076",
+  "type": "project_management",
+  "source": "human",
+  "timestamp": "2025-07-05T13:56:57.374182",
+  "data": {
+    "title": "Create agent with TaskRequest/TaskResult schema",
+    "status": "in_progress",
+    "timestamp": "2025-07-05T13:56:57.374172",
+    "section": "Immediate Tasks (Context Manager suggested documenting decisions \u2713)\n- [x] Document key decisions in CLAUDE.md\n- [x] Implement documentation intelligence features\n- [x] Create web UI panel for Context Manager\n- [x] Implement initialize_project function\n- [x] Implement collect_context_for_task as agent interface\n- [ ] Implement Swiss Army Knife agent\n- [ ] Prune and consolidate codebase"
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 134
+  },
+  "relationships": [],
+  "tags": [
+    "milestone",
+    "project-management",
+    "in_progress"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

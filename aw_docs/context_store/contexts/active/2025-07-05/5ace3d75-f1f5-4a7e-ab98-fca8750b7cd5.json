@@ -1,0 +1,26 @@
+{
+  "id": "5ace3d75-f1f5-4a7e-ab98-fca8750b7cd5",
+  "type": "project_management",
+  "source": "human",
+  "timestamp": "2025-07-05T13:56:57.237434",
+  "data": {
+    "title": "Implemented knowledge graph visualization",
+    "status": "completed",
+    "timestamp": "2025-07-05T13:56:57.237423",
+    "decision_number": 8,
+    "reasoning": "Created interactive D3.js force-directed graph showing relationships between docs, code, and concepts. Includes node filtering, zoom, drag, and click interactions."
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 80
+  },
+  "relationships": [],
+  "tags": [
+    "milestone",
+    "project-management",
+    "completed"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

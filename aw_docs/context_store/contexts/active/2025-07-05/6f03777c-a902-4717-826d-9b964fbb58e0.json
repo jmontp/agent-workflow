@@ -1,0 +1,24 @@
+{
+  "id": "6f03777c-a902-4717-826d-9b964fbb58e0",
+  "type": "project_management",
+  "source": "human",
+  "timestamp": "2025-07-05T13:56:57.152526",
+  "data": {
+    "title": "Agent Documentation Standard established",
+    "status": "completed",
+    "timestamp": "2025-07-05T13:56:57.152514"
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 29
+  },
+  "relationships": [],
+  "tags": [
+    "milestone",
+    "project-management",
+    "completed"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

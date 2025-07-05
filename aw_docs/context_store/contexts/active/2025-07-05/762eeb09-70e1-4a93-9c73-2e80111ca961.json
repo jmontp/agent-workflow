@@ -1,0 +1,24 @@
+{
+  "id": "762eeb09-70e1-4a93-9c73-2e80111ca961",
+  "type": "project_management",
+  "source": "human",
+  "timestamp": "2025-07-05T13:56:57.157329",
+  "data": {
+    "title": "Context Manager v1 IMPLEMENTED with CLI, API, and bootstrap features",
+    "status": "completed",
+    "timestamp": "2025-07-05T13:56:57.157318"
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 36
+  },
+  "relationships": [],
+  "tags": [
+    "milestone",
+    "project-management",
+    "completed"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

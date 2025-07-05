@@ -1,0 +1,26 @@
+{
+  "id": "2e27b65c-ceb1-475e-a658-c1f7b158258d",
+  "type": "project_management",
+  "source": "human",
+  "timestamp": "2025-07-05T13:56:57.228222",
+  "data": {
+    "title": "Created web UI panel for Context Manager",
+    "status": "completed",
+    "timestamp": "2025-07-05T13:56:57.228212",
+    "decision_number": 6,
+    "reasoning": "Provides visual interface for viewing contexts, stats, patterns, and documentation intelligence features. Accessible at /context-manager endpoint."
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 76
+  },
+  "relationships": [],
+  "tags": [
+    "milestone",
+    "project-management",
+    "completed"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

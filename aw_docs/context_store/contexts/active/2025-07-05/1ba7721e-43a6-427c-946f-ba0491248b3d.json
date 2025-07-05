@@ -1,0 +1,26 @@
+{
+  "id": "1ba7721e-43a6-427c-946f-ba0491248b3d",
+  "type": "project_management",
+  "source": "human",
+  "timestamp": "2025-07-05T13:56:57.242833",
+  "data": {
+    "title": "Reorganized to distributed aw_docs structure",
+    "status": "completed",
+    "timestamp": "2025-07-05T13:56:57.242818",
+    "decision_number": 9,
+    "reasoning": "Each project now has its own aw_docs/ directory for git tracking. Removed project_id layer, fixed visualization metadata loading, and added optional Claude tools integration."
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 84
+  },
+  "relationships": [],
+  "tags": [
+    "milestone",
+    "project-management",
+    "completed"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

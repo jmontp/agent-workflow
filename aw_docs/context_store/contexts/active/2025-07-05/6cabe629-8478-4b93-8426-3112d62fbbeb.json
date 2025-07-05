@@ -1,0 +1,26 @@
+{
+  "id": "6cabe629-8478-4b93-8426-3112d62fbbeb",
+  "type": "project_management",
+  "source": "human",
+  "timestamp": "2025-07-05T13:56:57.252988",
+  "data": {
+    "title": "Used multi-stage collection pipeline for context gathering",
+    "status": "completed",
+    "timestamp": "2025-07-05T13:56:57.252977",
+    "decision_number": 11,
+    "reasoning": "Stages: recent contexts, concept matches, function/class matches, description matches, and folder descriptions"
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 71
+  },
+  "relationships": [],
+  "tags": [
+    "milestone",
+    "project-management",
+    "completed"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

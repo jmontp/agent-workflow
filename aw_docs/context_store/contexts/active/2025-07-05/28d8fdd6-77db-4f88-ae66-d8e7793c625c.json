@@ -1,0 +1,24 @@
+{
+  "id": "28d8fdd6-77db-4f88-ae66-d8e7793c625c",
+  "type": "project_management",
+  "source": "human",
+  "timestamp": "2025-07-05T13:56:57.168024",
+  "data": {
+    "title": "Web UI panel CREATED at `/contextmanager`",
+    "status": "completed",
+    "timestamp": "2025-07-05T13:56:57.168010"
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 30
+  },
+  "relationships": [],
+  "tags": [
+    "milestone",
+    "project-management",
+    "completed"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

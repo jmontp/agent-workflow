@@ -1,0 +1,25 @@
+{
+  "id": "f5f95a99-f68a-413b-9dd1-fb6c147207ad",
+  "type": "project_management",
+  "source": "human",
+  "timestamp": "2025-07-05T13:56:57.193337",
+  "data": {
+    "title": "Design Decision: Schema",
+    "status": "completed",
+    "timestamp": "2025-07-05T13:56:57.193326",
+    "reasoning": "Python dataclasses with type safety"
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 38
+  },
+  "relationships": [],
+  "tags": [
+    "milestone",
+    "project-management",
+    "completed"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

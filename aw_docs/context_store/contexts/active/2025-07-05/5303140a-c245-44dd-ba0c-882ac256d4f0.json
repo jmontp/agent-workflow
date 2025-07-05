@@ -1,0 +1,24 @@
+{
+  "id": "5303140a-c245-44dd-ba0c-882ac256d4f0",
+  "type": "project_management",
+  "source": "human",
+  "timestamp": "2025-07-05T13:56:57.178121",
+  "data": {
+    "title": "Future: Build full agent suite",
+    "status": "planned",
+    "timestamp": "2025-07-05T13:56:57.178111"
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 26
+  },
+  "relationships": [],
+  "tags": [
+    "milestone",
+    "project-management",
+    "planned"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

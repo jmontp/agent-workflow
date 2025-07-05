@@ -29,6 +29,7 @@ class ContextType(Enum):
     CODE_CHANGE = "code_change"
     ERROR = "error"
     DECISION = "decision"
+    PROJECT_MANAGEMENT = "project_management"
 
 
 @dataclass
@@ -460,6 +461,34 @@ class ContextManager:
                 "context": context_info or {}
             },
             tags=["error", "pattern-source"]
+        )
+        return self.add_context(context)
+    
+    def log_milestone(self, title: str, status: str = "completed", 
+                     details: Dict[str, Any] = None, version: str = None) -> str:
+        """Log project milestones and major achievements."""
+        data = {
+            "title": title,
+            "status": status,  # completed, in_progress, planned
+            "timestamp": datetime.now().isoformat()
+        }
+        
+        if version:
+            data["version"] = version
+        
+        if details:
+            data.update(details)
+        
+        context = Context(
+            id=str(uuid.uuid4()),
+            type=ContextType.PROJECT_MANAGEMENT,
+            source="human",
+            timestamp=datetime.now(),
+            data=data,
+            tags=["milestone", "project-management", status],
+            metadata={
+                "tokens": len(str(data)) // 4  # Rough estimate
+            }
         )
         return self.add_context(context)
     

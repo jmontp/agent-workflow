@@ -1,0 +1,25 @@
+{
+  "id": "4e6ba267-7911-4d71-a54b-06df1302df04",
+  "type": "project_management",
+  "source": "human",
+  "timestamp": "2025-07-05T13:56:57.198422",
+  "data": {
+    "title": "Design Decision: Pattern Detection",
+    "status": "completed",
+    "timestamp": "2025-07-05T13:56:57.198412",
+    "reasoning": "Simple keyword/decision tracking"
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 40
+  },
+  "relationships": [],
+  "tags": [
+    "milestone",
+    "project-management",
+    "completed"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

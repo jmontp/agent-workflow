@@ -1,0 +1,25 @@
+{
+  "id": "57ff1327-1501-4f85-af82-c8a2d495c13e",
+  "type": "project_management",
+  "source": "human",
+  "timestamp": "2025-07-05T13:56:57.188555",
+  "data": {
+    "title": "Design Decision: Storage",
+    "status": "completed",
+    "timestamp": "2025-07-05T13:56:57.188542",
+    "reasoning": "JSON files for v1 (human-readable, debuggable)"
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 41
+  },
+  "relationships": [],
+  "tags": [
+    "milestone",
+    "project-management",
+    "completed"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

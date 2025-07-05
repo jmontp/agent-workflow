@@ -1,0 +1,26 @@
+{
+  "id": "dc85a4b8-453c-4540-a93e-8a97fdc6fb65",
+  "type": "project_management",
+  "source": "human",
+  "timestamp": "2025-07-05T13:59:02.404237",
+  "data": {
+    "title": "Migrated project management to Context Manager",
+    "status": "completed",
+    "timestamp": "2025-07-05T13:59:02.404213",
+    "migrated_entries": 52,
+    "removed_from_claude_md": true
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 45
+  },
+  "relationships": [],
+  "tags": [
+    "milestone",
+    "project-management",
+    "completed"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

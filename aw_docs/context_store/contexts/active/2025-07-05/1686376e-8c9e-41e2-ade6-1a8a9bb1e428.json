@@ -1,0 +1,24 @@
+{
+  "id": "1686376e-8c9e-41e2-ade6-1a8a9bb1e428",
+  "type": "project_management",
+  "source": "human",
+  "timestamp": "2025-07-05T13:56:57.130907",
+  "data": {
+    "title": "Minimal state machine demo working (4 files)",
+    "status": "completed",
+    "timestamp": "2025-07-05T13:56:57.130885"
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 30
+  },
+  "relationships": [],
+  "tags": [
+    "milestone",
+    "project-management",
+    "completed"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

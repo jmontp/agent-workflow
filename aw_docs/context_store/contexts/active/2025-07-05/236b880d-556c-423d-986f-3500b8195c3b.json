@@ -1,0 +1,26 @@
+{
+  "id": "236b880d-556c-423d-986f-3500b8195c3b",
+  "type": "project_management",
+  "source": "human",
+  "timestamp": "2025-07-05T13:56:57.203650",
+  "data": {
+    "title": "Created Context Manager v1 with CLI interface",
+    "status": "completed",
+    "timestamp": "2025-07-05T13:56:57.203639",
+    "decision_number": 1,
+    "reasoning": "Need quick command-line access for logging decisions and bootstrap methodology requires self-documentation"
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 67
+  },
+  "relationships": [],
+  "tags": [
+    "milestone",
+    "project-management",
+    "completed"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

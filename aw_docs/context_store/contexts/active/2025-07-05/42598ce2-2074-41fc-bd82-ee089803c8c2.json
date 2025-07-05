@@ -1,0 +1,26 @@
+{
+  "id": "42598ce2-2074-41fc-bd82-ee089803c8c2",
+  "type": "project_management",
+  "source": "human",
+  "timestamp": "2025-07-05T13:56:57.223241",
+  "data": {
+    "title": "Keep project-wide contexts in git for team collaboration",
+    "status": "completed",
+    "timestamp": "2025-07-05T13:56:57.223231",
+    "decision_number": 5,
+    "reasoning": "Enables shared understanding and synchronized development across team members"
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 62
+  },
+  "relationships": [],
+  "tags": [
+    "milestone",
+    "project-management",
+    "completed"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

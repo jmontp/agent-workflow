@@ -1,0 +1,24 @@
+{
+  "id": "35ebc659-fd58-435a-8513-5774c686d4bf",
+  "type": "project_management",
+  "source": "human",
+  "timestamp": "2025-07-05T13:56:57.136863",
+  "data": {
+    "title": "Comprehensive research completed",
+    "status": "completed",
+    "timestamp": "2025-07-05T13:56:57.136846"
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 27
+  },
+  "relationships": [],
+  "tags": [
+    "milestone",
+    "project-management",
+    "completed"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

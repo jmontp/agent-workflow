@@ -81,6 +81,41 @@ def cmd_log_error(args):
     print(f"✓ Error logged: {context_id}")
 
 
+def cmd_log_milestone(args):
+    """Log a project milestone."""
+    cm = ContextManager()
+    
+    details = {}
+    if args.details:
+        try:
+            details = json.loads(args.details)
+        except:
+            details = {"raw": args.details}
+    
+    context_id = cm.log_milestone(
+        title=args.title,
+        status=args.status,
+        details=details,
+        version=args.version
+    )
+    print(f"✓ Milestone logged: {context_id}")
+    
+    # Show current milestones
+    recent_milestones = cm.query_contexts(
+        limit=5
+    )
+    # Filter for project_management type
+    recent_milestones = [ctx for ctx in recent_milestones if ctx.type == ContextType.PROJECT_MANAGEMENT]
+    if recent_milestones:
+        print("\n📊 Recent project milestones:")
+        for ctx in recent_milestones:
+            data = ctx.data
+            status_icon = "✅" if data.get('status') == 'completed' else "🔄" if data.get('status') == 'in_progress' else "📋"
+            print(f"  {status_icon} {data.get('title', 'Untitled')}")
+            if 'version' in data:
+                print(f"     Version: {data['version']}")
+
+
 def cmd_suggest(args):
     """Get task suggestions."""
     cm = ContextManager()
@@ -497,6 +532,15 @@ def main():
     p_error.add_argument('error', help='Error message')
     p_error.add_argument('--context', help='Additional context (JSON string)')
     p_error.set_defaults(func=cmd_log_error)
+    
+    # log-milestone command
+    p_milestone = subparsers.add_parser('log-milestone', help='Log a project milestone')
+    p_milestone.add_argument('title', help='Milestone title/description')
+    p_milestone.add_argument('--status', default='completed', choices=['completed', 'in_progress', 'planned'], 
+                           help='Milestone status (default: completed)')
+    p_milestone.add_argument('--version', help='Version tag (e.g., v1.0, v1.1)')
+    p_milestone.add_argument('--details', help='Additional details (JSON string)')
+    p_milestone.set_defaults(func=cmd_log_milestone)
     
     # suggest command
     p_suggest = subparsers.add_parser('suggest', help='Get task suggestions')

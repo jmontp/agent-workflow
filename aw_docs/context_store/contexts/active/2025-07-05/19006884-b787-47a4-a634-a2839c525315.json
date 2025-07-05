@@ -1,0 +1,25 @@
+{
+  "id": "19006884-b787-47a4-a634-a2839c525315",
+  "type": "project_management",
+  "source": "human",
+  "timestamp": "2025-07-05T13:56:57.183485",
+  "data": {
+    "title": "Design Decision: Architecture",
+    "status": "completed",
+    "timestamp": "2025-07-05T13:56:57.183469",
+    "reasoning": "Separate module with clean interfaces"
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 40
+  },
+  "relationships": [],
+  "tags": [
+    "milestone",
+    "project-management",
+    "completed"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

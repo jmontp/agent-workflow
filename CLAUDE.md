@@ -38,27 +38,41 @@ agent-workflow/
 └── CLAUDE.md               # This file
 ```
 
-## Current Status
+## Project Management & Status Tracking
 
-- ✅ Minimal state machine demo working (4 files)
-- ✅ Comprehensive research completed
-- ✅ Documentation organized with clear reading order
-- ✅ Context Manager v1 design completed (TDD approach)
-- ✅ Agent Documentation Standard established
-- ✅ **Context Manager v1 IMPLEMENTED** with CLI, API, and bootstrap features
-- ✅ **Documentation intelligence features IMPLEMENTED**
-- ✅ **Web UI panel CREATED** at `/context-manager`
-- 🎯 **Next**: Swiss Army Knife agent
-- ⏳ Future: Build full agent suite
+All project milestones, decisions, and progress tracking are now managed through the Context Manager.
 
-## Context Manager v1 Implementation Status
+### Viewing Project Status
+```bash
+# View recent milestones
+cm query --type project_management --limit 10
 
-### Design Decisions Made
-- **Architecture**: Separate module with clean interfaces
-- **Storage**: JSON files for v1 (human-readable, debuggable)
-- **Schema**: Python dataclasses with type safety
-- **Pattern Detection**: Simple keyword/decision tracking
-- **Testing**: TDD approach with tests written first
+# View all completed milestones
+cm query --type project_management completed
+
+# View in-progress tasks
+cm query --type project_management in_progress
+
+# Find specific versions
+cm query version
+```
+
+### Logging New Milestones
+```bash
+# Log a completed milestone
+cm log-milestone "Implemented new feature X"
+
+# Log with version tag
+cm log-milestone "Released v1.2" --version v1.2
+
+# Log in-progress work
+cm log-milestone "Working on Swiss Army Knife agent" --status in_progress
+
+# Log with additional details
+cm log-milestone "Major refactor completed" --details '{"files_changed": 42, "lines_modified": 1337}'
+```
+
+## Context Manager Documentation
 
 ### Documentation Structure
 All Context Manager documentation is organized in `docs/agents/context-manager/`:
@@ -245,11 +259,11 @@ This project will eventually build medical devices (ankle exoskeleton for OA), r
 5. **QA Agent** (Week 5-6) - Testing
 6. Future: Regulatory, Hardware, Clinical agents
 
-### Key Decisions Made
-1. Bootstrap approach: Context Manager builds itself
-2. Skip neural fields: Too complex for v1
-3. Documentation Agent early: Critical for medical devices
-4. Progressive complexity: Simple → Advanced → Future → Theoretical
+### Core Design Principles
+1. **Bootstrap approach**: Context Manager builds itself
+2. **Progressive complexity**: Simple → Advanced → Future → Theoretical
+3. **Compliance-ready**: Built for FDA/medical device requirements
+4. **Context-first**: All decisions and progress tracked in Context Manager
 
 ## Useful Commands
 
@@ -284,121 +298,89 @@ gemini -p "@docs/research/ What are the key findings from the research phase?"
 ### 🎯 Ready to Start Coding
 With comprehensive documentation in place, we're ready to begin Week 1 implementation following TDD principles and bootstrap methodology.
 
-## Next Actions
+## Development Workflow
 
-### Immediate Tasks (Context Manager suggested documenting decisions ✓)
-- [x] Document key decisions in CLAUDE.md
-- [x] Implement documentation intelligence features
-- [x] Create web UI panel for Context Manager
-- [x] Implement initialize_project function
-- [x] Implement collect_context_for_task as agent interface
-- [ ] Implement Swiss Army Knife agent
-- [ ] Prune and consolidate codebase
+### Tracking Progress
 
-### Week 2: Documentation Intelligence & Swiss Army Knife
+Use the Context Manager to track all development activities:
 
-**Documentation Intelligence** ✅
-- [x] Implement DocPattern learning from existing docs
-- [x] Add update detection from code changes
-- [x] Create routing system by complexity
-- [x] Build quality metrics calculation
+1. **Log decisions as you make them:**
+   ```bash
+   cm log-decision "Using WebSocket for real-time updates" "Better performance than polling"
+   ```
 
-**Web UI Panel** ✅
-- [x] Add Context Manager section to web interface
-- [x] Display recent contexts and patterns
-- [x] Show documentation health metrics
-- [x] Enable decision logging from UI
+2. **Track milestones and releases:**
+   ```bash
+   cm log-milestone "Swiss Army Knife agent implemented" --status completed
+   ```
 
-**Initialize Project Function** ✅
-- [x] Implement project scanning to build metadata layer
-- [x] Create ProjectIndex and CodeMetadata schemas
-- [x] Build concept mapping and smart routing
-- [x] Add CLI command `cm init`
-- [x] Add UI button for project initialization
+3. **Monitor project progress:**
+   ```bash
+   cm stats  # View overall statistics
+   cm query --type project_management --limit 20  # Recent milestones
+   ```
 
-**Context Collection for Agents** ✅
-- [x] Implement collect_context_for_task method
-- [x] Create multi-stage collection pipeline
-- [x] Add intelligent token optimization
-- [x] Build relevance scoring system
-- [x] Fix auto-loading of project index
+### Finding Information
 
-**Swiss Army Knife Agent** 🎯 NEXT
-- [ ] Create agent with TaskRequest/TaskResult schema
-- [ ] Integrate with Context Manager for pattern learning
-- [ ] Implement simple code generation and bug fixes
-- [ ] Add to workflow state machine
+```bash
+# Find where something is implemented
+cm find "Swiss Army Knife"
+cm find authentication
 
-### Documentation to Maintain
-As you implement, update these sections in CLAUDE.md:
-1. Design decisions made
-2. Patterns discovered
-3. Next features suggested by Context Manager
-4. Test coverage status
-5. Integration points completed
-
-## Key Decisions Made (Tracked by Context Manager)
-
-### Context Manager Implementation
-1. **Created Context Manager v1 with CLI interface** - Need quick command-line access for logging decisions and bootstrap methodology requires self-documentation
-2. **Use JSON storage for Context Manager** - Human-readable, debuggable, and sufficient for v1 performance requirements
-3. **Design Context Manager as documentation intelligence hub** - Avoids content duplication and respects existing documentation structure
-4. **Added Context Manager API endpoints to Flask app** - Need web API for agents and UI to interact with Context Manager
-5. **Keep project-wide contexts in git for team collaboration** - Enables shared understanding and synchronized development across team members
-6. **Created web UI panel for Context Manager** - Provides visual interface for viewing contexts, stats, patterns, and documentation intelligence features. Accessible at /context-manager endpoint.
-7. **Implemented initialize_project function** - Creates metadata layer by scanning all docs and code, enabling fast information retrieval. Agents can now ask 'where is X?' and get instant answers.
-8. **Implemented knowledge graph visualization** - Created interactive D3.js force-directed graph showing relationships between docs, code, and concepts. Includes node filtering, zoom, drag, and click interactions.
-9. **Reorganized to distributed aw_docs structure** - Each project now has its own aw_docs/ directory for git tracking. Removed project_id layer, fixed visualization metadata loading, and added optional Claude tools integration.
-10. **Implemented collect_context_for_task as primary agent interface** - Created intelligent context collection that analyzes tasks, scores relevance, and optimizes token usage
-11. **Used multi-stage collection pipeline for context gathering** - Stages: recent contexts, concept matches, function/class matches, description matches, and folder descriptions
-12. **Implemented intelligent token optimization with balanced allocation** - 30% contexts, 40% code, 20% docs, 10% folders with smart truncation and redistribution
-13. **Fixed Context Manager to auto-load project index on initialization** - Essential for CLI usage where new instances are created per command
-14. **Used agent spawning for parallel task execution** - Main agent acts as orchestrator while spawning specialized agents for implementation tasks
-
-### Phase 1 Context Collection Issues
-15. **Web UI not using Claude for context collection** - API endpoint creates ContextManager without config and Claude tools aren't loaded by default
-16. **Fixed API endpoints to use Claude-enabled ContextManager** - Updated app.py to properly initialize ContextManager with ContextManagerConfig, enabling Claude analysis with fallback to heuristic
-17. **Fixed web UI to properly initialize ContextManager with Claude config** - API endpoints were creating ContextManager without config, preventing Claude analysis from running. Now properly configured with ContextManagerConfig enabling Claude with fallback.
-18. **Implemented Claude CLI integration using bash calls** - Claude is called via `claude -p` command with file input to avoid shell escaping issues. Set 30-second timeout for Claude responses.
-19. **Tagged v1.0 as first fully working Context Manager** - All core features implemented: Claude integration, web UI, visualizations, and intelligent context collection. Ready for v1.1 polish phase focusing on performance, output format, and code pruning.
-
-### Architecture Patterns Emerging
-- Bootstrap methodology working: CM suggested documenting decisions after detecting pattern
-- Multi-project support built in from start with project_id
-- Four interfaces (CLI, Web API, Python API, Web UI) for maximum flexibility
-- Separation of project vs user contexts planned for future
-
-### Self-Documentation Examples
-```python
-# Track why each decision was made
-cm.log_decision("decision", "reasoning")
-
-# Track problems encountered
-cm.log_problem("issue", "attempted_solution")
-
-# Track successful patterns
-cm.log_pattern("pattern_name", "where_applied", "outcome")
+# Get explanations about concepts
+cm explain "Context Manager architecture"
+cm explain "agent communication" --ai
 ```
 
-## Version 1.1 Plan (Initial Polish)
+## Key Architecture Decisions
 
-Created comprehensive plan in `CONTEXT_MANAGER_V1.1_PLAN.md` focusing on:
+### Context Manager Design Philosophy
+- **Bootstrap methodology**: Context Manager helps build itself by tracking its own development
+- **Multi-interface approach**: CLI, Web API, Python API, and Web UI for flexibility
+- **Documentation intelligence**: Respects existing docs, adds metadata layer
+- **Progressive complexity**: Start simple, enhance based on usage patterns
 
-### Quick Wins (1-2 days)
-1. **Enhanced Claude caching** - 70% reduction in API calls
-2. **Lazy loading contexts** - 80% faster startup (10s → 1s)
-3. **Standard API response format** - Consistent error handling
-4. **Remove dead code** - ~300 lines identified
-5. **CLI format flag** - Support json/table/plain output
+### Viewing Historical Decisions
 
-### Performance Targets
-- Reduce Claude API calls by 50-70% through caching
-- Improve query performance by 10-100x with indices
-- Reduce startup time by 80% with lazy loading
-- Batch writes to reduce I/O overhead
+All key decisions and their reasoning are stored in the Context Manager:
 
-### Code Quality
-- Consolidate ~800 lines of redundant code
-- Break down methods over 50 lines
-- Centralize serialization logic
-- Create FileManager for all I/O operations
+```bash
+# View all logged decisions
+cm query --type decision
+
+# Search for specific decisions
+cm query "JSON storage"
+cm query "Claude integration"
+
+# View decisions with full context
+cm query --type decision --limit 50
+```
+
+### Self-Documentation in Practice
+
+The Context Manager tracks all development activities automatically:
+
+```python
+# In your code, track decisions
+cm.log_decision("Using async for API calls", "Better concurrency for multiple agents")
+
+# Track milestones programmatically
+cm.log_milestone("Feature X complete", status="completed", version="v1.2")
+
+# Log errors for pattern analysis
+cm.log_error("WebSocket connection failed", {"retry_count": 3})
+```
+
+### Accessing Project History
+
+```bash
+# View project timeline
+cm query --type project_management --limit 50
+
+# Find specific versions
+cm query "v1.0"
+cm query "v1.1"
+
+# Export project history
+cm query --type project_management > project_history.txt
+```

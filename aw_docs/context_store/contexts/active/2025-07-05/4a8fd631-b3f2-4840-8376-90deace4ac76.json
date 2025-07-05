@@ -1,0 +1,25 @@
+{
+  "id": "4a8fd631-b3f2-4840-8376-90deace4ac76",
+  "type": "project_management",
+  "source": "human",
+  "timestamp": "2025-07-05T13:56:57.369536",
+  "data": {
+    "title": "Fix auto-loading of project index",
+    "status": "completed",
+    "timestamp": "2025-07-05T13:56:57.369525",
+    "section": "Immediate Tasks (Context Manager suggested documenting decisions \u2713)\n- [x] Document key decisions in CLAUDE.md\n- [x] Implement documentation intelligence features\n- [x] Create web UI panel for Context Manager\n- [x] Implement initialize_project function\n- [x] Implement collect_context_for_task as agent interface\n- [ ] Implement Swiss Army Knife agent\n- [ ] Prune and consolidate codebase"
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 130
+  },
+  "relationships": [],
+  "tags": [
+    "milestone",
+    "project-management",
+    "completed"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}
