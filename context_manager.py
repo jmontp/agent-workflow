@@ -245,7 +245,7 @@ class ContextCollection:
         lines.append("## Task Analysis")
         lines.append(f"Keywords: {', '.join(self.task_analysis.keywords)}")
         lines.append(f"Actions: {', '.join(self.task_analysis.actions)}")
-        lines.append(f"Concepts: {', '.join(self.task_analysis.concepts)}")
+        lines.append(f"Concepts: {', '.join(self.task_analysis.concepts[:10])}")  # Limit concepts shown
         lines.append(f"Estimated Scope: {self.task_analysis.estimated_scope}")
         lines.append("")
         
@@ -260,86 +260,43 @@ class ContextCollection:
         }
         
         for item in self.items:
-            if item.type in items_by_type:
-                items_by_type[item.type].append(item)
+            items_by_type[item.type].append(item)
         
-        # Format contexts
-        context_items = items_by_type['context']
-        if context_items:
-            total_tokens = sum(item.tokens for item in context_items)
-            lines.append(f"## Contexts ({len(context_items)} items, {total_tokens} tokens)")
-            for item in context_items:
-                lines.append(f"\n### {item.path}")
-                if 'timestamp' in item.metadata:
-                    lines.append(f"*Timestamp: {item.metadata['timestamp']}*")
-                lines.append(item.content.strip())
-            lines.append("")
-        
-        # Format code files (including functions and classes)
+        # Add code files
         code_items = items_by_type['file'] + items_by_type['function'] + items_by_type['class']
         if code_items:
-            total_tokens = sum(item.tokens for item in code_items)
-            lines.append(f"## Code Files ({len(code_items)} items, {total_tokens} tokens)")
-            
-            # Group by file path for better organization
-            by_file = {}
+            lines.append(f"## Code Files ({len(code_items)} items, {sum(i.tokens for i in code_items)} tokens)")
             for item in code_items:
-                file_path = item.path.split('::')[0] if '::' in item.path else item.path
-                if file_path not in by_file:
-                    by_file[file_path] = []
-                by_file[file_path].append(item)
-            
-            for file_path, file_items in by_file.items():
-                lines.append(f"\n### {file_path}")
-                for item in file_items:
-                    if item.type in ['function', 'class']:
-                        # Extract the name from path (format: file::name)
-                        name = item.path.split('::')[1] if '::' in item.path else item.path
-                        lines.append(f"\n#### {item.type.capitalize()}: {name}")
-                    lines.append("```python" if file_path.endswith('.py') else "```")
-                    lines.append(item.content.strip())
-                    lines.append("```")
-            lines.append("")
-        
-        # Format documentation
-        doc_items = items_by_type['doc_section']
-        if doc_items:
-            total_tokens = sum(item.tokens for item in doc_items)
-            lines.append(f"## Documentation ({len(doc_items)} items, {total_tokens} tokens)")
-            for item in doc_items:
                 lines.append(f"\n### {item.path}")
-                if 'section' in item.metadata:
-                    lines.append(f"*Section: {item.metadata['section']}*")
-                lines.append(item.content.strip())
+                lines.append(item.content[:500] + "..." if len(item.content) > 500 else item.content)
             lines.append("")
         
-        # Format folder descriptions
-        folder_items = items_by_type['folder_desc']
-        if folder_items:
-            total_tokens = sum(item.tokens for item in folder_items)
-            lines.append(f"## Folder Descriptions ({len(folder_items)} items, {total_tokens} tokens)")
-            for item in folder_items:
-                lines.append(f"\n### {item.path}")
-                lines.append(item.content.strip())
-            lines.append("")
-        
-        # Summary statistics
+        # Add summary
         lines.append("---")
-        max_tokens = 8000  # Default max tokens for context
-        percentage_used = (self.total_tokens / max_tokens) * 100
-        lines.append(f"Total tokens: {self.total_tokens}/{max_tokens} ({percentage_used:.1f}% used)")
+        lines.append(f"Total tokens: {self.total_tokens}")
         lines.append(f"Collection time: {self.collection_time_ms}ms")
         
         if self.truncated:
-            lines.append("\n**WARNING: Context was truncated to fit token limits. Some relevant information may have been omitted.**")
-        
-        # Add suggestions if any
-        if self.suggestions:
-            lines.append("\n## Suggestions")
-            for suggestion in self.suggestions:
-                lines.append(f"- {suggestion}")
+            lines.append("\n⚠️ CONTEXT WAS TRUNCATED - Some relevant items may have been excluded")
         
         return "\n".join(lines)
+
+
+@dataclass 
+class ContextManagerConfig:
+    """Configuration for Context Manager behavior."""
+    
+    use_claude_analysis: bool = True          # Enable Claude-based task analysis
+    claude_timeout_seconds: int = 5           # Timeout for Claude API calls
+    claude_cache_ttl_hours: int = 24          # Cache TTL for Claude responses
+    max_claude_cost_per_task: float = 0.05    # Max cost per task in USD
+    fallback_to_heuristic: bool = True        # Fallback if Claude fails
+    enable_claude_reranking: bool = True      # Use Claude to re-rank results
+    claude_rerank_top_n: int = 20             # Number of items to re-rank
+    
+    # Cache settings
+    cache_claude_responses: bool = True       # Enable caching
+    cache_dir: Optional[Path] = None          # Cache directory (auto-set if None)
 
 
 class ContextManager:
@@ -360,7 +317,7 @@ class ContextManager:
         'in', 'out', 'on', 'off', 'over', 'under', 'again', 'further', 'then', 'once'
     }
     
-    def __init__(self, base_dir: str = None):
+    def __init__(self, base_dir: str = None, config: Optional[ContextManagerConfig] = None):
         """Initialize Context Manager with storage directory."""
         # Default to ./aw_docs in current project
         if base_dir is None:
@@ -369,12 +326,20 @@ class ContextManager:
         self.base_dir = Path(base_dir)
         self.storage_dir = self.base_dir / "context_store"
         
+        # Configuration
+        self.config = config or ContextManagerConfig()
+        if self.config.cache_dir is None:
+            self.config.cache_dir = self.storage_dir / "claude_cache"
+        
         # In-memory caches
         self.contexts: Dict[str, Context] = {}
         self.doc_metadata: Dict[str, DocMetadata] = {}
         self.patterns: Dict[str, int] = {}
         self.audit_log: List[Dict[str, Any]] = []
         self.project_index: Optional[ProjectIndex] = None
+        
+        # Claude response cache
+        self._claude_cache: Dict[str, Any] = {}
         
         # Initialize storage
         self._init_storage()
@@ -1036,8 +1001,12 @@ class ContextManager:
                 # Map functions and classes
                 for func in metadata.functions:
                     self.project_index.functions[func] = str(code_file)
+                    # Extract concepts from function names
+                    self._extract_concepts_from_identifier(func, str(code_file))
                 for cls in metadata.classes:
                     self.project_index.classes[cls] = str(code_file)
+                    # Extract concepts from class names
+                    self._extract_concepts_from_identifier(cls, str(code_file))
                 
                 # Read content for batch processing
                 content = code_file.read_text()
@@ -1179,18 +1148,84 @@ class ContextManager:
     
     def _extract_concepts_from_text(self, text: str, file_path: str):
         """Extract concepts from text content."""
-        # Extract capitalized multi-word phrases as potential concepts
-        concepts = re.findall(r'[A-Z][a-z]+(?:\s+[A-Z][a-z]+)+', text)
-        
-        # Also extract code-like terms
+        # Extract code-like terms in backticks
         code_terms = re.findall(r'`([^`]+)`', text)
         
-        # Common technical concepts
-        for concept in concepts + code_terms:
-            if len(concept) > 2:  # Skip very short concepts
+        # Extract capitalized phrases but limit to 5 words max
+        # This prevents capturing entire markdown sections
+        capitalized_phrases = re.findall(r'[A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,4}', text)
+        
+        # Extract technical terms that are commonly used
+        technical_patterns = [
+            r'\b([A-Z]+[a-z]*[A-Z]+[a-zA-Z]*)\b',  # CamelCase like "ContextManager"
+            r'\b([a-z]+_[a-z]+(?:_[a-z]+)*)\b',     # snake_case like "context_manager"
+            r'\b([A-Z]+(?:_[A-Z]+)+)\b',            # CONSTANTS like "MAX_TOKENS"
+        ]
+        
+        technical_terms = []
+        for pattern in technical_patterns:
+            technical_terms.extend(re.findall(pattern, text))
+        
+        # Combine all potential concepts
+        all_concepts = set()
+        
+        # Add code terms (limit length)
+        for term in code_terms:
+            if 2 < len(term) <= 50 and ' ' not in term.strip():
+                all_concepts.add(term.strip())
+        
+        # Add capitalized phrases (filter out common non-technical phrases)
+        common_phrases = {'The', 'This', 'These', 'Those', 'That', 'When', 'Where', 'What', 'How', 'Why'}
+        for phrase in capitalized_phrases:
+            words = phrase.split()
+            if (len(phrase) > 2 and 
+                len(phrase) <= 50 and 
+                len(words) <= 5 and
+                words[0] not in common_phrases):
+                all_concepts.add(phrase)
+        
+        # Add technical terms
+        for term in technical_terms:
+            if 2 < len(term) <= 50:
+                all_concepts.add(term)
+        
+        # Store concepts
+        for concept in all_concepts:
+            if concept not in self.project_index.concepts:
+                self.project_index.concepts[concept] = []
+            if file_path not in self.project_index.concepts[concept]:
+                self.project_index.concepts[concept].append(file_path)
+    
+    def _extract_concepts_from_identifier(self, identifier: str, file_path: str):
+        """Extract concepts from code identifiers (function/class names)."""
+        # The identifier itself is a concept if it's meaningful
+        if len(identifier) > 2:
+            if identifier not in self.project_index.concepts:
+                self.project_index.concepts[identifier] = []
+            if file_path not in self.project_index.concepts[identifier]:
+                self.project_index.concepts[identifier].append(file_path)
+        
+        # Split camelCase and PascalCase
+        parts = re.findall(r'[A-Z]?[a-z]+|[A-Z]+(?=[A-Z][a-z]|\b)', identifier)
+        
+        # Split snake_case
+        if '_' in identifier:
+            parts.extend(identifier.split('_'))
+        
+        # Add meaningful parts as concepts (filter out common words)
+        common_words = {'get', 'set', 'is', 'has', 'add', 'remove', 'update', 'delete', 
+                       'init', 'main', 'test', 'handle', 'process', 'to', 'from', 'of', 
+                       'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'for'}
+        
+        for part in parts:
+            part_lower = part.lower()
+            if len(part) > 2 and part_lower not in common_words:
+                # Store the part in its original case if it's meaningful
+                concept = part if part[0].isupper() else part_lower
                 if concept not in self.project_index.concepts:
                     self.project_index.concepts[concept] = []
-                self.project_index.concepts[concept].append(file_path)
+                if file_path not in self.project_index.concepts[concept]:
+                    self.project_index.concepts[concept].append(file_path)
     
     def _build_concept_mappings(self) -> int:
         """Build concept-to-location mappings."""
@@ -1575,6 +1610,75 @@ class ContextManager:
                 "message": "Project not initialized. Run 'cm init' to scan project."
             }
     
+    async def _analyze_task_with_claude(self, task_description: str) -> Optional[TaskAnalysis]:
+        """Use Claude to analyze task and extract meaningful information."""
+        if not self.config.use_claude_analysis:
+            return None
+            
+        # Check cache first
+        cache_key = f"task_analysis:{task_description}"
+        if self.config.cache_claude_responses and cache_key in self._claude_cache:
+            cached = self._claude_cache[cache_key]
+            # Check if cache is still valid
+            if (datetime.now() - cached['timestamp']).total_seconds() < self.config.claude_cache_ttl_hours * 3600:
+                return cached['result']
+        
+        try:
+            # Get Claude tools
+            tools = self.get_claude_tools()
+            if not tools:
+                return None
+                
+            # Create prompt for Claude
+            prompt = f'''Analyze this software development task and extract key information.
+
+Task: "{task_description}"
+
+Extract and return as JSON:
+1. primary_intent: What is the user trying to accomplish? (one sentence)
+2. keywords: List of important technical terms (max 10)
+3. actions: What actions need to be taken? (e.g., "fix", "implement", "refactor")
+4. concepts: Technical concepts and entities involved (e.g., "authentication", "database", "UI")
+5. file_patterns: Likely file types/patterns needed (e.g., "*test*.py", "*.config.js", "*controller*")
+6. estimated_scope: "narrow" (single file), "medium" (few files), or "broad" (many files)
+7. success_criteria: How would we know the task is complete?
+
+Return ONLY valid JSON, no additional text.'''
+
+            # Call Claude with timeout
+            import asyncio
+            response = await asyncio.wait_for(
+                tools.analyze_text_async(prompt),
+                timeout=self.config.claude_timeout_seconds
+            )
+            
+            # Parse response
+            import json
+            data = json.loads(response)
+            
+            # Create TaskAnalysis from Claude's response
+            analysis = TaskAnalysis(
+                keywords=data.get('keywords', [])[:10],
+                actions=data.get('actions', []),
+                concepts=data.get('concepts', []),
+                file_patterns=data.get('file_patterns', []),
+                estimated_scope=data.get('estimated_scope', 'medium')
+            )
+            
+            # Cache the result
+            if self.config.cache_claude_responses:
+                self._claude_cache[cache_key] = {
+                    'result': analysis,
+                    'timestamp': datetime.now()
+                }
+            
+            return analysis
+            
+        except Exception as e:
+            # Log error but don't fail
+            self.log_error(f"Claude task analysis failed: {str(e)}")
+            return None
+    
     def _analyze_task(self, task_description: str) -> TaskAnalysis:
         """Analyze a task description to extract key information."""
         # Convert to lowercase for analysis
@@ -1734,8 +1838,35 @@ class ContextManager:
         if self.project_index is None:
             raise ValueError("Project not initialized. Run 'cm init' first.")
         
-        # Analyze the task
-        task_analysis = self._analyze_task(task_description)
+        # Analyze the task - try Claude first, fallback to heuristic
+        task_analysis = None
+        
+        # Try Claude analysis if enabled
+        if self.config.use_claude_analysis:
+            try:
+                # Run async Claude analysis in sync context
+                import asyncio
+                loop = asyncio.new_event_loop()
+                asyncio.set_event_loop(loop)
+                task_analysis = loop.run_until_complete(
+                    self._analyze_task_with_claude(task_description)
+                )
+                loop.close()
+                
+                if task_analysis:
+                    # Log that we used Claude
+                    self.log_context(
+                        ContextType.DEVELOPMENT,
+                        {"source": "claude_analysis", "task": task_description},
+                        tags=["ai_enhanced"]
+                    )
+            except Exception as e:
+                # Log error but continue
+                self.log_error(f"Claude analysis failed: {str(e)}")
+        
+        # Fallback to heuristic analysis if Claude failed or is disabled
+        if task_analysis is None:
+            task_analysis = self._analyze_task(task_description)
         
         # Set default include_types if not provided
         if include_types is None:

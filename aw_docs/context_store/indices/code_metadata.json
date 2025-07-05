@@ -2,7 +2,7 @@
   "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/app.py": {
     "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/app.py",
     "language": "python",
-    "last_modified": "2025-07-05T00:50:23.181461",
+    "last_modified": "2025-07-05T07:41:45.244373",
     "description": "python source file with 26 functions.",
     "classes": [
       "WorkflowState",
@@ -42,6 +42,7 @@
       "flask_socketio",
       "enum",
       "dataclasses",
+      "json",
       "typing",
       "datetime",
       "pathlib",
@@ -76,13 +77,13 @@
       "get_diagram": "Generate Mermaid diagram."
     },
     "comments": [],
-    "lines_of_code": 701,
+    "lines_of_code": 731,
     "complexity_score": 0.0
   },
   "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/cm.py": {
     "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/cm.py",
     "language": "python",
-    "last_modified": "2025-07-05T00:52:28.498920",
+    "last_modified": "2025-07-05T00:59:42.449625",
     "description": "python source file with 20 functions.",
     "classes": [],
     "functions": [
@@ -141,14 +142,14 @@
       "main": "Main CLI entry point."
     },
     "comments": [],
-    "lines_of_code": 555,
+    "lines_of_code": 582,
     "complexity_score": 0.0
   },
   "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/context_manager.py": {
     "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/context_manager.py",
     "language": "python",
-    "last_modified": "2025-07-05T00:45:57.782726",
-    "description": "python source file with 62 functions.",
+    "last_modified": "2025-07-05T08:34:46.326808",
+    "description": "python source file with 64 functions.",
     "classes": [
       "ContextType",
       "Context",
@@ -166,6 +167,7 @@
       "to_dict",
       "from_dict",
       "needs_update",
+      "format_for_agent",
       "__init__",
       "_init_storage",
       "_load_existing_data",
@@ -199,6 +201,7 @@
       "_analyze_js_file",
       "_detect_language",
       "_extract_concepts_from_text",
+      "_extract_concepts_from_identifier",
       "_build_concept_mappings",
       "_find_files_containing",
       "_extract_relationships",
@@ -258,6 +261,7 @@
       "to_dict": "Convert to dictionary for JSON serialization.",
       "from_dict": "Create Context from dictionary.",
       "needs_update": "Check if document likely needs updating.",
+      "format_for_agent": "Format all collected context into the exact format an agent would receive.",
       "__init__": "Initialize Context Manager with storage directory.",
       "_init_storage": "Initialize directory structure.",
       "_load_existing_data": "Load existing contexts and metadata from storage.",
@@ -291,6 +295,7 @@
       "_analyze_js_file": "Extract JavaScript/TypeScript metadata.",
       "_detect_language": "Detect programming language from file extension.",
       "_extract_concepts_from_text": "Extract concepts from text content.",
+      "_extract_concepts_from_identifier": "Extract concepts from code identifiers (function/class names).",
       "_build_concept_mappings": "Build concept-to-location mappings.",
       "_find_files_containing": "Find files containing any of the keywords.",
       "_extract_relationships": "Extract relationships between files.",
@@ -319,7 +324,7 @@
       "analyze_patterns_with_ai": "Deep pattern analysis using AI."
     },
     "comments": [],
-    "lines_of_code": 2391,
+    "lines_of_code": 2570,
     "complexity_score": 0.0
   },
   "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/aw_docs/claude_tools.py": {
@@ -412,8 +417,8 @@
   "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/static/context_manager.js": {
     "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/static/context_manager.js",
     "language": "javascript",
-    "last_modified": "2025-07-04T20:56:05.388752",
-    "description": "javascript source file with 30 functions.",
+    "last_modified": "2025-07-05T08:00:46.964094",
+    "description": "javascript source file with 58 functions.",
     "classes": [],
     "functions": [
       "initializeChart",
@@ -445,13 +450,41 @@
       "toggleNodeType",
       "updateVisibility",
       "resetZoom",
-      "switchVisualization"
+      "switchVisualization",
+      "toggleAdvancedOptions",
+      "loadPresetExample",
+      "loadExample",
+      "clearContextCollection",
+      "collectContext",
+      "displayContextResults",
+      "exportToJSON",
+      "exportToMarkdown",
+      "copyToClipboard",
+      "toggleAdvancedOptions",
+      "loadExample",
+      "clearContext",
+      "renderTaskAnalysis",
+      "renderTokenUsage",
+      "renderCollectedItems",
+      "renderItemCard",
+      "escapeHtml",
+      "showAgentView",
+      "lineNum",
+      "createAgentViewModal",
+      "closeAgentView",
+      "copyAgentView",
+      "showAgentView",
+      "escapeHandler",
+      "closeAgentView",
+      "copyAgentView",
+      "exportResults",
+      "toggleAllIncludes"
     ],
     "imports": [],
     "exports": [],
     "docstrings": {},
     "comments": [],
-    "lines_of_code": 822,
+    "lines_of_code": 1965,
     "complexity_score": 0.0
   },
   "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/static/context_visualizations.js": {
