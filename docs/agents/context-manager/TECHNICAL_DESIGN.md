@@ -1,16 +1,85 @@
-# Context Manager Technical Design
+# Context Manager Technical Design v2.0
 
-> **Note**: This document consolidates the technical design details from the project evolution phase. For the journey and decisions that led here, see the [project evolution guide](../../project-evolution-guide/).
+> **The Project Consciousness Model**: Context Manager acts as the cognitive system for autonomous software engineering, providing memory, pattern recognition, and coordination between agents.
 
-## Overview
+## Problem Statement
 
-This document contains the complete technical design for Context Manager v1, including schema, storage, API, and implementation details.
+During development, agents frequently create redundant documentation instead of updating existing files. This happens because:
+1. Agents lack awareness of existing documentation structure
+2. Keyword-based search misses semantic relationships
+3. No hierarchical understanding of project information
+4. Missing guidance on where information should live
 
-## Quick Links
+## Core Design Principles
 
-- **Week 1 Implementation Plan**: See [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md)
-- **API Reference**: See [AGENT_SPECIFICATION.md](AGENT_SPECIFICATION.md)
-- **Bootstrap Approach**: See [BOOTSTRAP_GUIDE.md](BOOTSTRAP_GUIDE.md)
+### 1. Project Consciousness Model
+The Context Manager provides three levels of awareness:
+- **Project Map**: High-level understanding of structure and purpose
+- **Task Focus**: Current objectives and relevant context
+- **Detail Access**: Specific information when needed
+
+### 2. Semantic Understanding
+Move beyond keyword matching to understand:
+- Document purpose and relationships
+- Code-to-documentation dependencies  
+- Information hierarchy and ownership
+- Update patterns and triggers
+
+### 3. Active Guidance
+Proactively guide agents to:
+- Update existing files instead of creating new ones
+- Find the canonical location for information
+- Understand what documentation already exists
+- Maintain consistency across the project
+
+## Architecture Overview
+
+### System Components
+
+```
+Context Manager v2.0
+├── Core Engine
+│   ├── Context Store (immutable events)
+│   ├── Project Index (semantic understanding)
+│   ├── Pattern Detector (learning system)
+│   └── Task Analyzer (intent understanding)
+├── Intelligence Layer  
+│   ├── Document Gateway (all docs go through here)
+│   ├── Semantic Search (understands relationships)
+│   ├── Quality Monitor (tracks documentation health)
+│   └── Update Router (decides who handles what)
+├── Agent Interface
+│   ├── Context Collection API
+│   ├── Documentation API
+│   ├── Search & Discovery API
+│   └── Guidance API
+└── Storage Backend
+    ├── Context Storage (JSON → Redis)
+    ├── Index Storage (semantic graphs)
+    └── Pattern Storage (learned behaviors)
+```
+
+### Key Innovation: Semantic Project Index
+
+```python
+@dataclass
+class ProjectIndex:
+    """Semantic understanding of project structure."""
+    
+    # Project understanding
+    project_purpose: str
+    key_components: Dict[str, ComponentInfo]
+    documentation_map: Dict[str, DocInfo]
+    
+    # Semantic relationships
+    concept_graph: Dict[str, List[str]]  # concept -> related concepts
+    doc_purposes: Dict[str, str]  # file -> purpose
+    information_ownership: Dict[str, str]  # topic -> canonical file
+    
+    # Update patterns
+    update_triggers: Dict[str, List[str]]  # code pattern -> affected docs
+    common_mistakes: List[DocumentationMistake]  # learned anti-patterns
+```
 
 ## Context Schema Design
 
@@ -147,38 +216,131 @@ class SuggestedUpdate:
 - **Bidirectional Linking**: Contexts trigger doc updates, docs reference relevant contexts
 - **No Lock-in**: Documentation remains in standard markdown, CM adds intelligence layer
 
+## Enhanced Intelligence Systems
+
+### 1. Task Analysis Engine
+
+```python
+@dataclass
+class EnhancedTaskAnalysis:
+    """Deep understanding of task intent and context needs."""
+    
+    # Task understanding
+    task_type: TaskType  # create, update, fix, refactor, document
+    primary_intent: str  # What the user really wants
+    scope: TaskScope  # file, module, system-wide
+    
+    # Semantic extraction
+    concepts: List[Concept]  # Not just keywords, but understood concepts
+    entities: List[Entity]  # Files, classes, functions mentioned
+    relationships: List[Relationship]  # How concepts relate
+    
+    # Context requirements
+    required_context: List[ContextRequirement]
+    optional_context: List[ContextRequirement]
+    context_depth: int  # How much detail needed
+    
+    # Documentation implications
+    likely_updates: List[DocumentationUpdate]
+    update_locations: Dict[str, str]  # info type -> file path
+```
+
+### 2. Semantic Search System
+
+```python
+class SemanticSearch:
+    """Understands meaning, not just keywords."""
+    
+    def search(self, query: str, intent: SearchIntent) -> SearchResults:
+        # Parse query intent
+        intent_analysis = self._analyze_intent(query)
+        
+        # Expand concepts semantically
+        expanded_concepts = self._expand_concepts(intent_analysis.concepts)
+        
+        # Search with relationship awareness
+        results = self._relationship_aware_search(expanded_concepts)
+        
+        # Rank by semantic relevance
+        return self._rank_by_meaning(results, intent_analysis)
+    
+    def _expand_concepts(self, concepts: List[str]) -> List[str]:
+        """Expand concepts using learned relationships."""
+        expanded = set(concepts)
+        for concept in concepts:
+            # Add related concepts from graph
+            expanded.update(self.concept_graph.get(concept, []))
+            # Add synonyms and variations
+            expanded.update(self._get_variations(concept))
+        return list(expanded)
+```
+
+### 3. Documentation Gateway
+
+```python
+class DocumentationGateway:
+    """All documentation operations go through here."""
+    
+    def before_file_operation(self, operation: FileOp) -> Guidance:
+        """Called before any file operation by agents."""
+        
+        if operation.type == 'create':
+            # Check if info belongs elsewhere
+            existing = self._find_existing_location(operation.content_type)
+            if existing:
+                return Guidance(
+                    action='update_instead',
+                    target_file=existing,
+                    reason=f"This information belongs in {existing}"
+                )
+        
+        elif operation.type == 'update':
+            # Ensure consistency
+            conflicts = self._check_conflicts(operation)
+            if conflicts:
+                return Guidance(
+                    action='resolve_first',
+                    conflicts=conflicts
+                )
+        
+        return Guidance(action='proceed')
+    
+    def _find_existing_location(self, content_type: str) -> Optional[str]:
+        """Find where this type of information should live."""
+        return self.project_index.information_ownership.get(content_type)
+```
+
 ## Storage Strategy
 
-### JSON Storage (v1)
+### Hierarchical Storage (v2)
 
 ```python
 # Directory structure
-contexts/                   # Immutable event records
-├── active/                 # Hot contexts
-│   └── {date}/
-│       └── {context_id}.json
-├── archive/                # Cold storage
-│   └── {year-month}/
-└── indices/                # Search indices
-    ├── by_type.json
-    ├── by_source.json
-    └── patterns.json
-
-doc_metadata/               # Documentation intelligence
-├── metadata/               # Metadata for each doc
-│   └── {path_hash}.json   # Hash of file path -> metadata
-├── patterns/               # Learned patterns
-│   ├── global_patterns.json    # Project-wide patterns
-│   └── by_type/               # Type-specific patterns
-│       ├── readme_patterns.json
-│       └── api_patterns.json
-├── indices/                # Search and relationships
-│   ├── doc_index.json     # Path -> metadata mapping
-│   ├── dependency_graph.json  # Code -> doc dependencies
-│   └── update_queue.json  # Pending updates
-└── learning/              # Pattern learning data
-    ├── style_samples.json
-    └── update_history.json
+aw_context/                    # All Context Manager data
+├── contexts/                  # Immutable event records
+│   ├── active/               # Hot contexts
+│   │   └── {date}/
+│   │       └── {id}.json
+│   └── archive/              # Cold storage
+│       └── {year-month}/
+├── project_index/            # Semantic project understanding
+│   ├── structure.json        # Project map and components
+│   ├── concepts.json         # Concept graph and relationships
+│   ├── ownership.json        # Information → File mappings
+│   └── patterns.json         # Learned patterns and anti-patterns
+├── doc_intelligence/         # Documentation awareness
+│   ├── metadata/            # Per-document intelligence
+│   ├── quality/             # Quality tracking
+│   ├── relationships/       # Doc-to-doc relationships
+│   └── update_queue/        # Pending updates
+├── search_index/            # Semantic search data
+│   ├── embeddings/          # Future: vector embeddings
+│   ├── concepts/            # Concept mappings
+│   └── relationships/       # Relationship graphs
+└── agent_memory/            # Agent-specific context
+    ├── mistakes/            # Common errors to avoid
+    ├── successes/           # Successful patterns
+    └── preferences/         # Learned preferences
 ```
 
 ### Storage Interface (Future-proof)
@@ -237,9 +399,88 @@ class RedisBackend(StorageBackend):
     pass
 ```
 
+## Context Collection Enhancement
+
+### Intelligent Context Collection
+
+```python
+class ContextCollector:
+    """Provides hierarchical, relevant context to agents."""
+    
+    def collect_context_for_task(self, task: str) -> CollectedContext:
+        """Collect context with semantic understanding."""
+        
+        # Deep task analysis
+        analysis = self.task_analyzer.analyze(task)
+        
+        # Three-tier context collection
+        context = CollectedContext()
+        
+        # Tier 1: Project Overview (always included)
+        context.project_overview = self._get_project_overview(analysis)
+        
+        # Tier 2: Task-Specific Focus
+        context.task_focus = self._collect_task_focus(analysis)
+        
+        # Tier 3: Detailed Information (on demand)
+        context.details = self._collect_details(analysis)
+        
+        # Add guidance
+        context.guidance = self._generate_guidance(analysis)
+        
+        return context
+    
+    def _generate_guidance(self, analysis: TaskAnalysis) -> Guidance:
+        """Proactive guidance to prevent common mistakes."""
+        guidance = []
+        
+        # Check for potential documentation creation
+        if 'document' in analysis.keywords or 'create' in analysis.actions:
+            existing_docs = self._find_related_docs(analysis.concepts)
+            if existing_docs:
+                guidance.append(
+                    f"Before creating new documentation, consider updating: "
+                    f"{', '.join(existing_docs)}"
+                )
+        
+        # Warn about common mistakes
+        for mistake in self.project_index.common_mistakes:
+            if self._might_repeat_mistake(analysis, mistake):
+                guidance.append(f"Warning: {mistake.description}")
+        
+        return guidance
+```
+
+### Smart Relevance Scoring
+
+```python
+def calculate_relevance(self, item: Any, task_analysis: TaskAnalysis) -> float:
+    """Multi-factor relevance scoring."""
+    
+    score = 0.0
+    
+    # Semantic relevance (not just keyword match)
+    semantic_score = self._semantic_similarity(item, task_analysis)
+    score += semantic_score * 0.4
+    
+    # Relationship relevance (connected items)
+    relationship_score = self._relationship_relevance(item, task_analysis)
+    score += relationship_score * 0.3
+    
+    # Recency and modification patterns
+    temporal_score = self._temporal_relevance(item, task_analysis)
+    score += temporal_score * 0.2
+    
+    # Task-specific boosts
+    task_boost = self._task_specific_boost(item, task_analysis)
+    score += task_boost * 0.1
+    
+    return min(1.0, score)
+```
+
 ## Pattern Detection
 
-### Simple v1 Algorithm
+### Enhanced Pattern Recognition
 
 ```python
 def detect_patterns(self, time_window: timedelta = timedelta(hours=24)):
@@ -271,9 +512,62 @@ def detect_patterns(self, time_window: timedelta = timedelta(hours=24)):
 4. **Development Patterns**: Feature implementation success/failure
 5. **Documentation Patterns**: Update triggers and style consistency
 
+## Implementation Phases
+
+### Phase 1: Core v2 Engine (Current)
+
+1. **Enhanced Task Analysis**
+   - Implement semantic task understanding
+   - Build concept extraction beyond keywords
+   - Create relationship detection
+
+2. **Project Index System**
+   - Build semantic project map
+   - Create information ownership mappings
+   - Implement concept graph
+
+3. **Documentation Gateway**
+   - Intercept file operations
+   - Guide to existing files
+   - Prevent redundant creation
+
+### Phase 2: Intelligence Layer (Next)
+
+1. **Semantic Search**
+   - Concept expansion
+   - Relationship-aware search
+   - Intent understanding
+
+2. **Quality Monitoring**
+   - Documentation health metrics
+   - Staleness detection
+   - Consistency checking
+
+3. **Learning System**
+   - Pattern extraction from usage
+   - Mistake detection and prevention
+   - Success pattern reinforcement
+
+### Phase 3: Advanced Features (Future)
+
+1. **Neural Embeddings**
+   - Vector representations of concepts
+   - Semantic similarity search
+   - Cross-language understanding
+
+2. **Predictive Guidance**
+   - Anticipate documentation needs
+   - Suggest updates proactively
+   - Learn from agent behaviors
+
+3. **Multi-Agent Coordination**
+   - Shared context optimization
+   - Conflict resolution
+   - Collaborative documentation
+
 ## Documentation Intelligence
 
-### Pattern Learning System
+### Anti-Redundancy System
 
 ```python
 def learn_doc_patterns(self, doc_path: str) -> DocPattern:
@@ -397,7 +691,82 @@ def record_update_outcome(self, update: DocUpdate, success: bool, feedback: str 
 
 ## API Design
 
-### RESTful Endpoints
+### Core APIs
+
+```python
+# Context Collection API
+POST /api/context/collect
+{
+    "task": "Fix authentication in user login",
+    "max_tokens": 4000,
+    "include_guidance": true
+}
+
+# Returns hierarchical context:
+{
+    "project_overview": {
+        "purpose": "Autonomous software engineering system",
+        "key_components": ["Context Manager", "Agents", "Documentation"],
+        "current_focus": "Authentication system"
+    },
+    "task_focus": {
+        "relevant_files": [
+            {"path": "auth/login.py", "relevance": 0.95},
+            {"path": "docs/AUTH.md", "relevance": 0.85}
+        ],
+        "concepts": ["authentication", "JWT", "user sessions"],
+        "recent_changes": [...]
+    },
+    "guidance": [
+        "Authentication logic is in auth/login.py",
+        "Update docs/AUTH.md after changes",
+        "Related test files: tests/test_auth.py"
+    ]
+}
+
+# Documentation Gateway API  
+POST /api/docs/check-operation
+{
+    "operation": "create",
+    "path": "AUTH_FIX.md",
+    "content_type": "authentication_documentation"
+}
+
+# Returns guidance:
+{
+    "action": "update_instead",
+    "target_file": "docs/AUTH.md",
+    "reason": "Authentication documentation belongs in docs/AUTH.md",
+    "existing_sections": ["Overview", "JWT Implementation", "Troubleshooting"]
+}
+```
+
+### Search & Discovery API
+
+```python
+# Semantic search
+GET /api/search?q=authentication+problems&intent=debug
+
+# Returns semantically relevant results:
+{
+    "direct_matches": [...],
+    "related_concepts": ["JWT", "sessions", "login"],
+    "expanded_results": [...],
+    "suggested_files": ["auth/login.py", "docs/AUTH.md", "tests/test_auth.py"]
+}
+
+# Find information location
+GET /api/docs/where-does-this-belong?info=api_endpoints
+
+# Returns:
+{
+    "canonical_location": "docs/API.md",
+    "reason": "API documentation is centralized in docs/API.md",
+    "existing_structure": ["Endpoints", "Authentication", "Examples"]
+}
+```
+
+## RESTful Endpoints (Complete List)
 
 ```python
 # Flask Blueprint integration
@@ -463,9 +832,46 @@ socket.on('pattern_learned', (data) => {
 });
 ```
 
+## Key Innovations
+
+### 1. Project Consciousness Model
+
+The Context Manager acts as the "consciousness" of the project:
+- **Memory**: Stores all events and decisions
+- **Understanding**: Semantic grasp of project structure
+- **Awareness**: Knows what exists and where
+- **Guidance**: Actively prevents mistakes
+
+### 2. Hierarchical Context Delivery
+
+Instead of dumping all context, provide it in tiers:
+1. **Overview**: Project purpose and structure (always)
+2. **Focus**: Task-specific relevant information
+3. **Details**: Deep information when needed
+
+This prevents context overflow while ensuring agents have what they need.
+
+### 3. Anti-Redundancy Mechanisms
+
+- **Pre-operation checks**: Catch file creation before it happens
+- **Semantic understanding**: Know that "AUTH_FIX.md" content belongs in "docs/AUTH.md"
+- **Learning system**: Remember and prevent repeated mistakes
+- **Active guidance**: Tell agents where information should go
+
+### 4. Semantic vs Keyword Search
+
+**Old (Keyword)**:
+- Search: "authentication"
+- Results: Any file containing "authentication"
+
+**New (Semantic)**:
+- Search: "authentication problems"
+- Understanding: User wants to debug auth issues
+- Results: auth/login.py, error logs, AUTH.md troubleshooting section, recent auth-related contexts
+
 ## Testing Strategy
 
-### TDD Test Structure
+### Test Coverage for v2 Features
 
 ```
 tests/
@@ -635,17 +1041,65 @@ CONTEXT_MANAGER_CONFIG = {
 }
 ```
 
+## Migration Strategy
+
+### From v1 to v2
+
+1. **Preserve existing functionality**
+   - All v1 APIs remain functional
+   - Add v2 endpoints alongside
+   - Gradual migration path
+
+2. **Build semantic index**
+   - Scan existing project
+   - Extract relationships
+   - Learn patterns
+
+3. **Enable gateway features**
+   - Start with warnings
+   - Move to active guidance
+   - Finally enforce best practices
+
+### Removing Redundant Documentation
+
+Based on this unified design, the following files should be removed:
+
+**Root directory files to remove**:
+- `CONTEXT_COLLECTION_IMPROVEMENT_PLAN.md` - Merged into this design
+- `CONTEXT_MANAGER_CLEANUP_PLAN.md` - Implementation detail, not design
+- `CONTEXT_MANAGER_CLEANUP_DETAILS.md` - Implementation detail, not design
+
+**Consolidation actions**:
+- Move cleanup plans to `IMPLEMENTATION_NOTES.md` as lessons learned
+- Extract improvement ideas into GitHub issues
+- Keep only canonical documentation in docs/agents/context-manager/
+
 ## Summary
 
-This technical design provides a complete blueprint for implementing Context Manager v1 with documentation gateway capabilities. The focus is on:
+### The Context Manager v2 Vision
 
-1. **Dual Purpose**: Context management + Documentation gateway
-2. **Clear Separation**: Immutable contexts vs versioned documents
-3. **Quality**: TDD approach, comprehensive testing
-4. **Future-proof**: Interfaces for migration, extensible schema
-5. **Bootstrap**: Self-documenting from day one
-6. **Consistency**: All docs go through Context Manager
+Context Manager v2 evolves from a passive context store to an active project consciousness that:
 
-Key architectural decision: Context Manager is the sole gateway for all documentation operations, ensuring consistency, versioning, and intelligent suggestions across the entire documentation ecosystem.
+1. **Understands** project structure semantically, not just through keywords
+2. **Guides** agents to update existing files instead of creating new ones  
+3. **Learns** from patterns to prevent repeated mistakes
+4. **Coordinates** all documentation through a central gateway
+5. **Provides** hierarchical context that matches task needs
 
-For implementation details and daily plan, see [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md).
+### Key Architectural Decisions
+
+1. **Semantic Project Index**: Deep understanding of project structure and relationships
+2. **Documentation Gateway**: All file operations go through Context Manager
+3. **Hierarchical Context**: Overview → Focus → Details approach
+4. **Active Guidance**: Proactively prevent redundancy and maintain consistency
+5. **Learning System**: Continuously improve from usage patterns
+
+### Next Steps
+
+1. Update `IMPLEMENTATION_PLAN.md` with v2 features
+2. Remove redundant documentation files
+3. Begin implementing semantic project index
+4. Add documentation gateway hooks
+5. Enhance context collection with guidance
+
+This design directly addresses the problem we experienced: agents creating redundant files because they lack awareness of existing documentation structure. With v2, the Context Manager will actively guide agents to the right places, preventing documentation sprawl and maintaining project coherence.

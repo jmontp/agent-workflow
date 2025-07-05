@@ -1,0 +1,17 @@
+{
+  "context_manager_design": "docs/agents/context-manager/TECHNICAL_DESIGN.md",
+  "context_manager_implementation": "docs/agents/context-manager/IMPLEMENTATION_PLAN.md",
+  "context_manager_api": "docs/agents/context-manager/AGENT_SPECIFICATION.md",
+  "context_manager_improvements": "docs/agents/context-manager/TECHNICAL_DESIGN.md",
+  "context_manager_cleanup": "docs/agents/context-manager/IMPLEMENTATION_NOTES.md",
+  "context_collection_enhancements": "docs/agents/context-manager/TECHNICAL_DESIGN.md",
+  "project_overview": "README.md",
+  "project_vision": "docs/project-evolution-guide/01_AUTONOMOUS_SOFTWARE_COMPANY_VISION.md",
+  "project_status": "CLAUDE.md",
+  "project_milestones": "CLAUDE.md",
+  "agent_specifications": "docs/agents/",
+  "agent_communication": "docs/agents/README.md",
+  "code_cleanup_plans": "docs/agents/context-manager/IMPLEMENTATION_NOTES.md",
+  "performance_improvements": "docs/agents/context-manager/IMPLEMENTATION_NOTES.md",
+  "bootstrap_process": "docs/agents/context-manager/BOOTSTRAP_GUIDE.md"
+}

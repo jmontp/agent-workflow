@@ -1,0 +1,32 @@
+{
+  "id": "d01c4247-8f46-479e-8e40-d564a93a6e6e",
+  "type": "project_management",
+  "source": "human",
+  "timestamp": "2025-07-05T17:10:10.827074",
+  "data": {
+    "title": "Completed v1.1 improvements: code cleanup and dynamic relevance scoring",
+    "status": "completed",
+    "timestamp": "2025-07-05T17:10:10.827051",
+    "version": "v1.1",
+    "lines_removed": 169,
+    "improvements": [
+      "logging",
+      "consolidated saves",
+      "dynamic scoring"
+    ],
+    "files_improved": 1
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 70
+  },
+  "relationships": [],
+  "tags": [
+    "milestone",
+    "project-management",
+    "completed"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

@@ -1,16 +1,22 @@
 # Context Manager Documentation
 
-This directory contains all documentation specific to the Context Manager agent - the foundational "nervous system" of the agent-workflow project.
+> **v2.0 - From Passive Store to Active Project Consciousness**
+
+This directory contains all documentation for the Context Manager - the cognitive system that prevents documentation redundancy and maintains project coherence.
 
 ## 📁 Documentation Structure
 
-### Core Documentation (This Directory)
-- **[AGENT_SPECIFICATION.md](AGENT_SPECIFICATION.md)** - Complete Context Manager specification (Level 2)
-- **[TECHNICAL_DESIGN.md](TECHNICAL_DESIGN.md)** - Technical design with schema, storage, and API details
-- **[IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md)** - Week-by-week implementation guide
-- **[BOOTSTRAP_GUIDE.md](BOOTSTRAP_GUIDE.md)** - How the Context Manager builds itself
-- **[IMPLEMENTATION_NOTES.md](IMPLEMENTATION_NOTES.md)** - Real-time learnings and patterns
-- **[INITIALIZE_PROJECT_DESIGN.md](INITIALIZE_PROJECT_DESIGN.md)** - Project initialization and metadata layer design
+### Core Documentation (Canonical Locations)
+- **[TECHNICAL_DESIGN.md](TECHNICAL_DESIGN.md)** - v2.0 design with Project Consciousness Model ⭐
+- **[IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md)** - v2.0 implementation with anti-redundancy features ⭐
+- **[AGENT_SPECIFICATION.md](AGENT_SPECIFICATION.md)** - Complete API reference and behaviors
+- **[BOOTSTRAP_GUIDE.md](BOOTSTRAP_GUIDE.md)** - How Context Manager builds itself
+- **[IMPLEMENTATION_NOTES.md](IMPLEMENTATION_NOTES.md)** - Lessons learned and cleanup insights
+
+### Specialized Documentation
+- **[INITIALIZE_PROJECT_DESIGN.md](INITIALIZE_PROJECT_DESIGN.md)** - Project initialization algorithms
+- **[CONTEXT_COLLECTION_SYSTEM_DESIGN.md](CONTEXT_COLLECTION_SYSTEM_DESIGN.md)** - Collection system details
+- **[METADATA_VISUALIZATION_DESIGN.md](METADATA_VISUALIZATION_DESIGN.md)** - Visualization approaches
 
 ### Project Evolution Documents
 These documents in the project-evolution-guide show how we arrived at the current design:
@@ -18,40 +24,86 @@ These documents in the project-evolution-guide show how we arrived at the curren
 - **[04_CONTEXT_MANAGER_V1_PLAN.md](../../project-evolution-guide/04_CONTEXT_MANAGER_V1_PLAN.md)** - Original planning phase
 - **[06_CONTEXT_MANAGER_V1_DESIGN.md](../../project-evolution-guide/06_CONTEXT_MANAGER_V1_DESIGN.md)** - Original design exploration
 
-## 🎯 Quick Start
+## 🎯 Quick Start for v2.0
 
-1. **Understanding the Design**: Read [TECHNICAL_DESIGN.md](TECHNICAL_DESIGN.md) for complete technical details
-2. **API Reference**: See [AGENT_SPECIFICATION.md](AGENT_SPECIFICATION.md) for complete API
-3. **Implementation**: Follow [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) for week-by-week guide
-4. **Bootstrap**: Use [BOOTSTRAP_GUIDE.md](BOOTSTRAP_GUIDE.md) to understand self-improvement
+1. **Understand the Problem**: We created 3 redundant files instead of updating existing docs
+2. **Read the Solution**: [TECHNICAL_DESIGN.md](TECHNICAL_DESIGN.md) - Project Consciousness Model
+3. **Implement Anti-Redundancy**: [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) - Immediate actions
+4. **Use the Gateway**: All documentation operations must go through Context Manager
 
-## 🔑 Key Concepts
+## 🔑 Key v2.0 Innovations
 
-### Bootstrap Methodology
-The Context Manager documents its own development:
+### 1. Project Consciousness Model
 ```python
-cm.log_decision("Using JSON storage", "Human-readable for debugging")
-suggestions = cm.suggest_next_action()
+# Context Manager actively prevents redundancy
+operation = FileOperation(type='create', path='NEW_FEATURE.md')
+guidance = cm.check_file_operation(operation)
+# Returns: "Update docs/FEATURES.md instead"
 ```
 
-### Context Flow
+### 2. Semantic Understanding
+```python
+# Beyond keywords to concepts
+results = cm.search("authentication problems", intent="debug")
+# Finds: auth code, error logs, troubleshooting docs
+```
+
+### 3. Hierarchical Context
+```python
+context = cm.collect_context_for_task("Fix auth bug")
+# Returns:
+# - project_overview (always)
+# - task_focus (relevant files)
+# - guidance (prevent mistakes)
+```
+
+### 4. Documentation Gateway
 ```mermaid
 graph LR
-    A[Source] --> CM[Context Manager]
-    CM --> B[Target Agent]
-    CM --> S[Storage]
-    CM --> P[Patterns]
+    A[Agent] -->|"create file"| CM[Context Manager]
+    CM -->|"check ownership"| PI[Project Index]
+    PI -->|"exists in API.md"| CM
+    CM -->|"update API.md instead"| A
 ```
 
-## 📊 Current Status
+## 📊 Current Status (v2.0)
 
-- ✅ Design completed (TDD approach)
-- ✅ Documentation structure established
-- 🔄 Implementation starting (Week 1)
-- ⏳ Bootstrap features in development
+### What's New
+- ✅ **Unified Design**: Consolidated all redundant documentation
+- ✅ **Anti-Redundancy System**: Prevents creating duplicate files
+- ✅ **Semantic Understanding**: Concepts, not just keywords
+- ✅ **Active Guidance**: Tells agents where information belongs
+
+### Implementation Phases
+- **Phase 1** (Current): Core v2 engine with anti-redundancy
+- **Phase 2** (Next): Intelligence layer with semantic search
+- **Phase 3** (Future): Predictive guidance and multi-agent coordination
+
+### Immediate Actions
+1. Remove redundant CONTEXT_*.md files
+2. Implement semantic task analysis
+3. Create project index with ownership mappings
+4. Add documentation gateway hooks
+
+## 🚨 Important: Information Ownership
+
+To prevent redundancy, Context Manager v2 maintains clear ownership mappings:
+
+| Information Type | Canonical Location |
+|-----------------|-------------------|
+| Context Manager Design | `docs/agents/context-manager/TECHNICAL_DESIGN.md` |
+| Implementation Plans | `docs/agents/context-manager/IMPLEMENTATION_PLAN.md` |
+| API Reference | `docs/agents/context-manager/AGENT_SPECIFICATION.md` |
+| Code Cleanup | `docs/agents/context-manager/IMPLEMENTATION_NOTES.md` |
+| Project Status | `CLAUDE.md` |
+
+**Before creating any new documentation file**, check with:
+```bash
+cm where-belongs "your information type"
+```
 
 ## 🔗 Related Documentation
 
+- [Project Evolution Guide](../../project-evolution-guide/) - How we got here
 - [Context Engineering Research](../../research/simple/docs/CONTEXT_ENGINEERING_INSIGHTS.md)
-- [Dependency Map](../../research/simple/docs/CONTEXT_DEPENDENCY_MAP.md)
 - [Agent Documentation Standard](../../project-evolution-guide/07_AGENT_DOCUMENTATION_STANDARD.md)

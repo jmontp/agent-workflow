@@ -197,106 +197,194 @@ cm.log_decision(
 - Documentation quality scoring
 - Auto-suggestion for doc improvements
 
-### Wednesday: Search & Query (Context + Docs)
-- Search functionality tests
-- Implement search filters
-- Advanced search working
-- Document search implementation
-- Cross-reference search (contexts ↔ docs)
-- Full-text document search
-- Document relationship graphs
+```python
+def test_learn_from_mistakes():
+    """Test system learns from documentation mistakes."""
+    cm = ContextManager()
+    
+    # Record a mistake
+    cm.record_mistake(
+        action="created CONTEXT_IMPROVEMENTS.md",
+        should_have="updated TECHNICAL_DESIGN.md",
+        pattern="creating new files for improvements"
+    )
+    
+    # System should prevent similar mistake
+    operation = FileOperation(
+        type='create',
+        path='SEARCH_IMPROVEMENTS.md'
+    )
+    
+    guidance = cm.check_file_operation(operation)
+    assert guidance.action == 'warning'
+    assert 'similar to previous mistake' in guidance.reason
 
-### Thursday: WebSocket Integration & Doc Events
-- WebSocket tests
-- Real-time events implementation
-- Live updates working
-- Document change notifications
-- Suggestion streaming
-- Concurrent doc update handling
-- Version conflict resolution
+def test_learn_from_success():
+    """Test system reinforces successful patterns."""
+    cm = ContextManager()
+    
+    # Record successful documentation update
+    cm.record_success(
+        action="updated docs/API.md with new endpoint",
+        impact="kept docs in sync with code",
+        pattern="updating existing docs for API changes"
+    )
+    
+    # System should suggest this pattern
+    suggestions = cm.suggest_documentation_action("added new API endpoint")
+    assert "update docs/API.md" in suggestions[0].action
+```
 
-### Friday: UI Integration
-- UI component tests
-- Implement minimal UI
-- Quick capture working
-- Documentation dashboard
-- Doc quality visualization
+## Phase 3: Advanced Features (Week 3-4)
 
-## Week 3: Polish & Performance
+### Predictive Guidance
 
-### Monday: Performance Optimization
-- Performance benchmarks
-- Optimize slow operations
-- Meet performance targets (<2s search, <30s patterns)
+```python
+def test_predictive_documentation_needs():
+    """Test system anticipates documentation needs."""
+    cm = ContextManager()
+    
+    # After several API additions
+    cm.add_context(Context(
+        type=ContextType.CODE_CHANGE,
+        data={"files": ["api/endpoints.py"], "change": "new endpoint"}
+    ))
+    
+    # System should predict need for API doc update
+    predictions = cm.predict_documentation_needs()
+    
+    assert predictions[0].file == "docs/API.md"
+    assert predictions[0].urgency == "high"
+    assert "new endpoint" in predictions[0].reason
+```
 
-### Tuesday: Error Handling
-- Error case tests
-- Comprehensive error handling
-- Robust error responses
+### Multi-Agent Coordination
 
-### Wednesday: Import/Export
-- Import/export tests
-- Multiple format support (JSON, Markdown, CSV)
-- Data portability complete
-- Documentation export formats
-- Bulk documentation operations
+```python
+def test_shared_context_optimization():
+    """Test context sharing between agents."""
+    cm = ContextManager()
+    
+    # Two agents working on related tasks
+    context1 = cm.collect_context_for_task("implement user authentication")
+    context2 = cm.collect_context_for_task("write authentication tests")
+    
+    # Should identify shared context
+    shared = cm.identify_shared_context([context1, context2])
+    assert len(shared.files) > 0
+    
+    # Should optimize to avoid duplication
+    optimized = cm.optimize_multi_agent_context([context1, context2])
+    assert optimized.total_tokens < (context1.tokens + context2.tokens)
+```
 
-### Thursday: Documentation
-- API documentation
-- User guide
-- Complete docs
-- Document gateway guide
-- Documentation standards reference
-- Example integration patterns
+## Success Metrics
 
-### Friday: Release Prep
-- Final integration tests
-- Deployment preparation
-- v1.0 ready
+### Redundancy Prevention
+- **Before**: 3 redundant files created for context improvements
+- **After**: 0 redundant files (all updates to existing docs)
+- **Target**: 95% reduction in redundant documentation
 
-## Week 4: Learning & Iteration
+### Context Quality
+- **Relevance**: >90% of collected items used by agents
+- **Guidance**: >80% of suggestions followed
+- **Efficiency**: <5% wasted tokens on irrelevant content
 
-### Monday: Pattern Analysis
-- Analyze bootstrap patterns
-- Refine detection algorithms
-- Document learnings
+### Performance
+- **Task analysis**: <100ms
+- **Context collection**: <500ms  
+- **File operation check**: <50ms
+- **Semantic search**: <200ms
 
-### Tuesday: Suggestion Tuning
-- Review suggestion effectiveness
-- Implement feedback loop
-- Adjust confidence scores
-- Documentation suggestion accuracy
-- Cross-agent doc consistency
+### Learning Effectiveness
+- **Mistake prevention**: 90% of repeated mistakes caught
+- **Success patterns**: 80% of successful patterns reinforced
+- **Prediction accuracy**: 70% of documentation needs predicted
 
-### Wednesday: Performance Monitoring
-- Deploy monitoring
-- Analyze usage patterns
-- Plan optimizations
-- Document operation metrics
-- Documentation coverage analysis
+## Implementation Strategy
 
-### Thursday: User Feedback
-- Gather developer feedback
-- Prioritize improvements
-- Plan v1.1 features
-- Documentation workflow feedback
-- Agent integration experiences
+### Incremental Rollout
 
-### Friday: Retrospective
-- Team retrospective
-- Document lessons learned
-- Create v2 roadmap
+1. **Phase 1 (Week 1)**: Core v2 engine with anti-redundancy
+   - Deploy alongside v1
+   - Start with warnings only
+   - Measure effectiveness
 
-## Success Criteria
+2. **Phase 2 (Week 2)**: Intelligence layer
+   - Enable semantic search
+   - Activate quality monitoring
+   - Begin learning from usage
 
-### Week 1 Complete When:
-1. Can track its own development decisions
-2. Suggests useful next steps based on patterns
-3. Maintains audit trail for all operations
-4. Persists state between sessions
-5. Integrates with existing Flask app
-6. DocMetadata schema working
-7. Pattern extraction from existing docs
+3. **Phase 3 (Week 3-4)**: Advanced features
+   - Predictive guidance
+   - Multi-agent optimization
+   - Full enforcement mode
+
+### Backward Compatibility
+
+```python
+# All v1 APIs continue to work
+@app.route('/api/context/', methods=['POST'])  # v1
+@app.route('/api/v2/context/', methods=['POST'])  # v2
+
+# CLI supports both versions
+cm query  # v1 behavior
+cm query --semantic  # v2 behavior
+```
+
+## Next Steps
+
+### Immediate (This Week)
+
+1. **Clean up redundant files**
+   ```bash
+   mkdir -p archived/context_plans
+   mv CONTEXT_*.md archived/context_plans/
+   git add -A
+   git commit -m "Consolidate Context Manager design into canonical location"
+   ```
+
+2. **Implement semantic task analysis**
+   - Start with test cases
+   - Build task type classifier
+   - Add entity extraction
+
+3. **Create project index**
+   - Scan existing structure
+   - Build ownership mappings
+   - Extract relationships
+
+4. **Add documentation gateway**
+   - Hook into file operations
+   - Implement guidance system
+   - Add CLI commands
+
+### This Month
+
+1. **Deploy v2 with measurements**
+   - Track redundancy prevention
+   - Measure context quality
+   - Monitor performance
+
+2. **Iterate based on usage**
+   - Refine task analysis
+   - Improve guidance
+   - Enhance search
+
+3. **Share learnings**
+   - Document what worked
+   - Record patterns
+   - Plan v3 features
+
+## Conclusion
+
+Context Manager v2 transforms from a passive store to an active project consciousness that:
+- **Prevents** redundant documentation by understanding where information belongs
+- **Guides** agents with hierarchical, relevant context
+- **Learns** from patterns to continuously improve
+- **Coordinates** all documentation through a central gateway
+
+This directly solves the problem we experienced: agents creating redundant files because they lack awareness of existing project structure. With these improvements, Context Manager becomes the cognitive system that maintains project coherence and prevents documentation sprawl.
 8. Update suggestions based on code changes
 9. Simple updates handled by CM
 

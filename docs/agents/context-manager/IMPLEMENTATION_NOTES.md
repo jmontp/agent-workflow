@@ -308,8 +308,108 @@ cm.debug_memory_stats()
    - Verify file permissions
    - Check for file locks
 
+## Code Cleanup Insights (From v1 Analysis)
+
+### Current State Analysis
+The Context Manager grew to 2,704 lines in a single file. Analysis revealed:
+
+**Dead Code**: 
+- Unused imports (timedelta, sys, Set)
+- Single-use methods that should be inlined
+- 17 print statements that should use logging
+
+**Duplication**:
+- Similar save methods repeated 3 times
+- Same error handling pattern 20+ times
+- Code analysis methods with 80% similar logic
+
+**Complexity**:
+- Monster methods >100 lines each:
+  - `_optimize_for_tokens` (142 lines)
+  - `_collect_relevant_items` (134 lines)
+  - `collect_context_for_task` (133 lines)
+  - `needs_update` (131 lines)
+  - `get_project_status` (126 lines)
+
+### Refactoring Lessons
+
+1. **Modularization Strategy**
+   ```
+   context_manager/
+   ├── __init__.py          # Main class
+   ├── schemas.py           # Dataclasses
+   ├── storage.py           # File I/O
+   ├── analyzers.py         # Code/doc analysis  
+   ├── patterns.py          # Pattern detection
+   ├── project_index.py     # Project understanding
+   ├── task_context.py      # Context collection
+   └── utils.py            # Shared utilities
+   ```
+
+2. **Common Patterns to Extract**
+   - Error handling decorator
+   - Generic JSON save/load
+   - File analysis strategy pattern
+   - Token optimization algorithm
+
+3. **Performance Optimizations Needed**
+   - Cache computed relevance scores
+   - Limit import analysis depth
+   - Batch file operations
+   - Use indices for common queries
+
+## Context Collection Improvements (v2 Design)
+
+### Problems with v1 Approach
+
+1. **Simplistic Keyword Matching**
+   - No stemming/lemmatization
+   - Ignores compound terms
+   - Misses technical acronyms
+
+2. **Static Relevance Scoring**
+   - Fixed scores don't adapt
+   - No relationship awareness
+   - Linear scoring without context
+
+3. **Missing Semantic Understanding**
+   - No concept expansion
+   - No import relationships
+   - No directory proximity
+
+### v2 Enhancements
+
+**Enhanced Keyword Extraction**:
+```python
+def _extract_keywords(self, text: str) -> List[str]:
+    # Extract compounds (snake_case, CamelCase, ACRONYMS)
+    # Apply simple stemming
+    # Keep short technical terms
+    # Return both original and stemmed versions
+```
+
+**Dynamic Relevance Scoring**:
+```python
+def calculate_relevance(self, item, task_analysis, context_so_far):
+    # Semantic similarity (not just keywords)
+    # Relationship relevance (imports, proximity)
+    # Recency and modification patterns
+    # Task-specific boosts
+```
+
+**Learning from History**:
+```python
+def learn_from_usage(self, task, context_used, success):
+    # Track which context was actually useful
+    # Adjust scoring weights
+    # Learn common patterns
+    # Prevent repeated mistakes
+```
+
 ## Conclusion
 
 The Context Manager implementation validates the bootstrap approach. By using it to track its own development, we've discovered patterns that would have been lost otherwise. The simple solutions (JSON, keyword patterns, basic routing) have proven more valuable than complex alternatives.
 
-Key takeaway: **Start simple, track everything, let patterns guide complexity.**
+The v2 design addresses the core issue we experienced: agents creating redundant documentation because they lack semantic understanding of the project structure. By evolving from a passive store to an active project consciousness, Context Manager v2 will guide agents to maintain coherence and prevent documentation sprawl.
+
+Key takeaway: **Start simple, track everything, let patterns guide complexity, then evolve based on real usage.**
