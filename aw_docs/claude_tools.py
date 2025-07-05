@@ -520,3 +520,207 @@ Provide only the 1-2 sentence description of the folder's purpose, nothing else.
                 return f"Mixed content directory with {total_files} files and {subdirs} subdirectories."
         
         return "Project directory."
+    
+    def generate_folder_descriptions_batch(self, folder_path: str, files: List[Dict[str, Any]]) -> Dict[str, str]:
+        """
+        Generate descriptions for all files in a folder with a single Claude call.
+        
+        Args:
+            folder_path: Path to the folder being processed
+            files: List of file info dicts with 'path', 'content', 'type' keys
+            
+        Returns:
+            Dictionary mapping file paths to descriptions
+        """
+        import subprocess
+        import json
+        
+        if not files:
+            return {}
+        
+        # First check if claude command is available
+        try:
+            test_result = subprocess.run(["claude", "--version"], capture_output=True, text=True, timeout=5)
+            if test_result.returncode != 0:
+                print(f"Claude command not available or not working: {test_result.stderr}")
+                # Fall back to individual processing
+                return self._fallback_to_individual(files)
+        except Exception as e:
+            print(f"Error checking claude command: {e}")
+            return self._fallback_to_individual(files)
+        
+        # Batch files if there are too many or content is too large
+        batches = self._create_batches(files)
+        all_descriptions = {}
+        
+        for batch_idx, batch in enumerate(batches):
+            print(f"Processing batch {batch_idx} with {len(batch)} files from {folder_path}")
+            try:
+                # Build file summaries for the batch
+                file_summaries = []
+                for file_info in batch:
+                    file_path = file_info['path']
+                    content = file_info['content']
+                    file_type = file_info.get('type', 'code')
+                    
+                    # Create file summary
+                    file_name = Path(file_path).name
+                    preview = content[:500]  # Reduced to 500 chars
+                    
+                    file_summaries.append({
+                        "file": str(file_path),
+                        "name": file_name,
+                        "type": file_type,
+                        "preview": preview
+                    })
+                
+                # Create simpler batch prompt
+                prompt = f"Generate 1-sentence descriptions for these {len(file_summaries)} files. Return ONLY a JSON object mapping file paths to descriptions.\n\n"
+                
+                # Add each file's preview
+                for summary in file_summaries:
+                    prompt += f"File: {summary['file']}\nPreview:\n{summary['preview'][:300]}\n\n"
+                
+                prompt += 'Example output: {"file1.py": "Main application entry point.", "file2.py": "Utility functions."}'
+                
+                print(f"Calling Claude with prompt of {len(prompt)} characters...")
+                
+                # Call Claude
+                result = subprocess.run(
+                    ["claude", "-p"],
+                    input=prompt,
+                    capture_output=True,
+                    text=True,
+                    timeout=120  # Increased timeout for batch processing
+                )
+                
+                if result.returncode == 0 and result.stdout.strip():
+                    try:
+                        # Parse JSON response
+                        response_text = result.stdout.strip()
+                        print(f"Batch {batch_idx}: Got response from Claude ({len(response_text)} chars)")
+                        
+                        # Try to find JSON in response
+                        # First try: look for JSON that starts with { and ends with }
+                        import re
+                        
+                        # Find the first { and last } to extract JSON
+                        first_brace = response_text.find('{')
+                        last_brace = response_text.rfind('}')
+                        
+                        if first_brace != -1 and last_brace != -1 and last_brace > first_brace:
+                            json_str = response_text[first_brace:last_brace + 1]
+                            try:
+                                descriptions = json.loads(json_str)
+                                all_descriptions.update(descriptions)
+                                print(f"Batch {batch_idx}: Successfully parsed {len(descriptions)} descriptions")
+                            except json.JSONDecodeError:
+                                # Try parsing the whole response as JSON
+                                try:
+                                    descriptions = json.loads(response_text)
+                                    all_descriptions.update(descriptions)
+                                    print(f"Batch {batch_idx}: Parsed full response as JSON")
+                                except json.JSONDecodeError as e:
+                                    print(f"Batch {batch_idx}: Failed to parse JSON: {e}")
+                                    print(f"Response preview: {response_text[:200]}...")
+                                    raise
+                        else:
+                            # No JSON found, try parsing whole response
+                            descriptions = json.loads(response_text)
+                            all_descriptions.update(descriptions)
+                            
+                    except (json.JSONDecodeError, Exception) as e:
+                        print(f"Batch {batch_idx}: Falling back to individual processing due to: {e}")
+                        # Fall back to individual processing for this batch
+                        for file_info in batch:
+                            desc = self.generate_file_description(
+                                file_info['path'], 
+                                file_info['content'], 
+                                file_info.get('type', 'code')
+                            )
+                            all_descriptions[file_info['path']] = desc
+                else:
+                    if result.returncode != 0:
+                        print(f"Claude command failed with exit code {result.returncode}")
+                        print(f"stderr: {result.stderr}")
+                        print(f"stdout: {result.stdout}")
+                    else:
+                        print(f"Claude returned empty response")
+                    
+                    print(f"Falling back to individual processing for batch {batch_idx}")
+                    # Fall back to individual processing
+                    for file_info in batch:
+                        desc = self.generate_file_description(
+                            file_info['path'], 
+                            file_info['content'], 
+                            file_info.get('type', 'code')
+                        )
+                        all_descriptions[file_info['path']] = desc
+                        
+            except Exception as e:
+                print(f"Batch processing failed for {folder_path}, batch {batch_idx}: {e}")
+                # Fall back to individual processing
+                for file_info in batch:
+                    desc = self.generate_file_description(
+                        file_info['path'], 
+                        file_info['content'], 
+                        file_info.get('type', 'code')
+                    )
+                    all_descriptions[file_info['path']] = desc
+        
+        return all_descriptions
+    
+    def _fallback_to_individual(self, files: List[Dict[str, Any]]) -> Dict[str, str]:
+        """Fallback to individual file processing."""
+        descriptions = {}
+        for file_info in files:
+            try:
+                desc = self.generate_file_description(
+                    file_info['path'],
+                    file_info['content'][:5000],
+                    file_info.get('type', 'code')
+                )
+                descriptions[file_info['path']] = desc
+            except Exception as e:
+                print(f"Error generating description for {file_info['path']}: {e}")
+                descriptions[file_info['path']] = "File description unavailable."
+        return descriptions
+    
+    def _create_batches(self, files: List[Dict[str, Any]], max_files: int = 10, max_chars: int = 20000) -> List[List[Dict[str, Any]]]:
+        """
+        Create batches of files for processing, respecting limits.
+        
+        Args:
+            files: List of file info dicts
+            max_files: Maximum files per batch
+            max_chars: Maximum total characters per batch
+            
+        Returns:
+            List of batches (each batch is a list of file info dicts)
+        """
+        batches = []
+        current_batch = []
+        current_chars = 0
+        
+        for file_info in files:
+            file_size = len(file_info.get('content', ''))
+            
+            # Check if adding this file would exceed limits
+            if current_batch and (
+                len(current_batch) >= max_files or 
+                current_chars + file_size > max_chars
+            ):
+                # Start a new batch
+                batches.append(current_batch)
+                current_batch = []
+                current_chars = 0
+            
+            # Add file to current batch
+            current_batch.append(file_info)
+            current_chars += file_size
+        
+        # Add final batch if not empty
+        if current_batch:
+            batches.append(current_batch)
+        
+        return batches

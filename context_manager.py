@@ -707,19 +707,21 @@ class ContextManager:
             json.dump(data, f, indent=2)
     
     # Project Initialization Features
-    def initialize_project(self, project_root: str = ".") -> Dict[str, Any]:
+    def initialize_project(self, project_root: str = ".", skip_descriptions: bool = False) -> Dict[str, Any]:
         """
         Initialize project by scanning all documentation and code.
         Builds comprehensive metadata layer for intelligent routing.
         
         Args:
             project_root: Root directory of project to scan
+            skip_descriptions: Skip generating Claude descriptions for faster indexing
             
         Returns:
             Summary of initialization results
         """
         start_time = datetime.now()
         root_path = Path(project_root).resolve()
+        self.skip_descriptions = skip_descriptions
         
         # Create new project index
         self.project_index = ProjectIndex()
@@ -766,7 +768,9 @@ class ContextManager:
     def _scan_documentation(self, root_path: Path) -> int:
         """Scan all documentation files."""
         doc_count = 0
+        files_by_folder = {}
         
+        # First pass: collect all doc files and analyze metadata
         for md_file in root_path.rglob("*.md"):
             # Skip hidden and build directories
             if any(part.startswith('.') for part in md_file.parts):
@@ -777,28 +781,72 @@ class ContextManager:
             try:
                 # Analyze the document
                 metadata = self.analyze_doc(str(md_file))
-                
-                # Generate description using Claude tools if available
-                try:
-                    content = md_file.read_text()
-                    tools = self.get_claude_tools()
-                    metadata.description = tools.generate_file_description(
-                        str(md_file), 
-                        content[:2000],  # First 2000 chars
-                        file_type="doc"
-                    )
-                except:
-                    # Fallback to simple description
-                    metadata.description = f"Documentation file: {md_file.name}"
-                
                 self.project_index.doc_files[str(md_file)] = metadata
+                
+                # Read content for concept extraction and batch processing
+                content = md_file.read_text()
                 
                 # Extract concepts from content
                 self._extract_concepts_from_text(content, str(md_file))
                 
+                # Group by folder for batch description generation
+                folder = str(md_file.parent)
+                if folder not in files_by_folder:
+                    files_by_folder[folder] = []
+                files_by_folder[folder].append({
+                    'path': str(md_file),
+                    'content': content,
+                    'type': 'doc'
+                })
+                
                 doc_count += 1
             except Exception as e:
                 print(f"Error scanning {md_file}: {e}")
+        
+        # Second pass: batch generate descriptions by folder
+        if not getattr(self, 'skip_descriptions', False):
+            try:
+                tools = self.get_claude_tools()
+                total_folders = len(files_by_folder)
+                
+                for idx, (folder_path, files) in enumerate(files_by_folder.items()):
+                    print(f"Generating descriptions for folder {idx+1}/{total_folders}: {Path(folder_path).name}")
+                    
+                    try:
+                        # Batch generate descriptions for all files in folder
+                        descriptions = tools.generate_folder_descriptions_batch(folder_path, files)
+                        
+                        # Update metadata with generated descriptions
+                        for file_path, description in descriptions.items():
+                            if file_path in self.project_index.doc_files:
+                                self.project_index.doc_files[file_path].description = description
+                    
+                    except Exception as e:
+                        print(f"Batch generation failed for {folder_path}, falling back to individual: {e}")
+                        # Fallback to individual generation
+                        for file_info in files:
+                            try:
+                                desc = tools.generate_file_description(
+                                    file_info['path'],
+                                    file_info['content'][:5000],
+                                    file_type="doc"
+                                )
+                                if file_info['path'] in self.project_index.doc_files:
+                                    self.project_index.doc_files[file_info['path']].description = desc
+                            except:
+                                # Final fallback
+                                if file_info['path'] in self.project_index.doc_files:
+                                    self.project_index.doc_files[file_info['path']].description = f"Documentation file: {Path(file_info['path']).name}"
+            except:
+                # If Claude tools not available, use simple descriptions
+                for file_path, metadata in self.project_index.doc_files.items():
+                    if not metadata.description:
+                        metadata.description = f"Documentation file: {Path(file_path).name}"
+        else:
+            # Skip descriptions - use simple ones
+            print("Skipping Claude descriptions for faster indexing...")
+            for file_path, metadata in self.project_index.doc_files.items():
+                metadata.description = f"Documentation file: {Path(file_path).name}"
         
         return doc_count
     
@@ -806,7 +854,9 @@ class ContextManager:
         """Scan all code files."""
         code_count = 0
         code_extensions = {'.py', '.js', '.ts', '.jsx', '.tsx', '.java', '.cpp', '.c', '.h', '.go', '.rs'}
+        files_by_folder = {}
         
+        # First pass: collect all code files and analyze metadata
         for code_file in root_path.rglob("*"):
             if not code_file.is_file() or code_file.suffix not in code_extensions:
                 continue
@@ -819,20 +869,6 @@ class ContextManager:
             
             try:
                 metadata = self._analyze_code_file(code_file)
-                
-                # Generate description using Claude tools if available
-                try:
-                    content = code_file.read_text()
-                    tools = self.get_claude_tools()
-                    metadata.description = tools.generate_file_description(
-                        str(code_file),
-                        content[:2000],  # First 2000 chars
-                        file_type="code"
-                    )
-                except:
-                    # Fallback to simple description
-                    metadata.description = f"{metadata.language} source file with {len(metadata.functions)} functions."
-                
                 self.project_index.code_files[str(code_file)] = metadata
                 
                 # Map functions and classes
@@ -841,9 +877,67 @@ class ContextManager:
                 for cls in metadata.classes:
                     self.project_index.classes[cls] = str(code_file)
                 
+                # Read content for batch processing
+                content = code_file.read_text()
+                
+                # Group by folder for batch description generation
+                folder = str(code_file.parent)
+                if folder not in files_by_folder:
+                    files_by_folder[folder] = []
+                files_by_folder[folder].append({
+                    'path': str(code_file),
+                    'content': content,
+                    'type': 'code'
+                })
+                
                 code_count += 1
             except Exception as e:
                 print(f"Error scanning {code_file}: {e}")
+        
+        # Second pass: batch generate descriptions by folder
+        if not getattr(self, 'skip_descriptions', False):
+            try:
+                tools = self.get_claude_tools()
+                total_folders = len(files_by_folder)
+                
+                for idx, (folder_path, files) in enumerate(files_by_folder.items()):
+                    print(f"Generating code descriptions for folder {idx+1}/{total_folders}: {Path(folder_path).name}")
+                    
+                    try:
+                        # Batch generate descriptions for all files in folder
+                        descriptions = tools.generate_folder_descriptions_batch(folder_path, files)
+                        
+                        # Update metadata with generated descriptions
+                        for file_path, description in descriptions.items():
+                            if file_path in self.project_index.code_files:
+                                self.project_index.code_files[file_path].description = description
+                    
+                    except Exception as e:
+                        print(f"Batch generation failed for {folder_path}, falling back to individual: {e}")
+                        # Fallback to individual generation
+                        for file_info in files:
+                            try:
+                                desc = tools.generate_file_description(
+                                    file_info['path'],
+                                    file_info['content'][:5000],
+                                    file_type="code"
+                                )
+                                if file_info['path'] in self.project_index.code_files:
+                                    self.project_index.code_files[file_info['path']].description = desc
+                            except:
+                                # Final fallback
+                                if file_info['path'] in self.project_index.code_files:
+                                    metadata = self.project_index.code_files[file_info['path']]
+                                    self.project_index.code_files[file_info['path']].description = f"{metadata.language} source file with {len(metadata.functions)} functions."
+            except:
+                # If Claude tools not available, use simple descriptions
+                for file_path, metadata in self.project_index.code_files.items():
+                    if not metadata.description:
+                        metadata.description = f"{metadata.language} source file with {len(metadata.functions)} functions."
+        else:
+            # Skip descriptions - use simple ones
+            for file_path, metadata in self.project_index.code_files.items():
+                metadata.description = f"{metadata.language} source file with {len(metadata.functions)} functions."
         
         return code_count
     
@@ -1019,6 +1113,10 @@ class ContextManager:
     
     def _generate_folder_descriptions(self, root_path: Path):
         """Generate descriptions for all directories in the project."""
+        if getattr(self, 'skip_descriptions', False):
+            print("Skipping folder descriptions...")
+            return
+            
         try:
             tools = self.get_claude_tools()
             

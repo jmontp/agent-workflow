@@ -253,9 +253,13 @@ def cmd_init(args):
     cm = ContextManager()
     
     print("🔍 Initializing project...")
-    print(f"   Root: {args.path}\n")
+    print(f"   Root: {args.path}")
+    if args.skip_descriptions:
+        print("   ⚡ Fast mode: Skipping Claude descriptions\n")
+    else:
+        print()
     
-    result = cm.initialize_project(args.path)
+    result = cm.initialize_project(args.path, skip_descriptions=args.skip_descriptions)
     
     if result['success']:
         print("✅ Project initialized successfully!\n")
@@ -402,6 +406,7 @@ def main():
     # init command
     p_init = subparsers.add_parser('init', help='Initialize project by scanning all files')
     p_init.add_argument('path', nargs='?', default='.', help='Project root path (default: current directory)')
+    p_init.add_argument('--skip-descriptions', action='store_true', help='Skip generating Claude descriptions for faster indexing')
     p_init.set_defaults(func=cmd_init)
     
     # find command
