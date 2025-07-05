@@ -1,0 +1,18 @@
+{
+  "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/02_IMPLEMENTATION_ROADMAP.md",
+  "doc_type": "guide",
+  "last_analyzed": "2025-07-04T20:24:16.630464",
+  "quality_scores": {
+    "completeness": 0.75,
+    "clarity": 1.0,
+    "consistency": 0.7,
+    "staleness": 1.0
+  },
+  "staleness_indicators": [
+    "contains_todos"
+  ],
+  "linked_contexts": [],
+  "linked_docs": [],
+  "dependencies": {},
+  "pending_updates": []
+}

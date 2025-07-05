@@ -1,0 +1,22 @@
+{
+  "id": "14621bea-94e7-4df4-9e12-502671256657",
+  "type": "decision",
+  "source": "human",
+  "timestamp": "2025-07-04T19:13:12.962534",
+  "data": {
+    "decision": "Launch parallel agents for feature development",
+    "reasoning": "Can work on documentation intelligence, web UI, and Swiss Army Knife simultaneously while one agent prunes codebase"
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 40
+  },
+  "relationships": [],
+  "tags": [
+    "bootstrap",
+    "decision"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

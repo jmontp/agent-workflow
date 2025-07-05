@@ -1,0 +1,22 @@
+{
+  "id": "3289d872-2c15-4a79-94c1-f7ae6fd596d9",
+  "type": "decision",
+  "source": "human",
+  "timestamp": "2025-07-04T19:39:38.423368",
+  "data": {
+    "decision": "Implemented initialize_project function",
+    "reasoning": "Creates metadata layer by scanning all docs and code, enabling fast information retrieval. Agents can now ask 'where is X?' and get instant answers."
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 46
+  },
+  "relationships": [],
+  "tags": [
+    "bootstrap",
+    "decision"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

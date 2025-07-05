@@ -10,6 +10,7 @@ This directory contains all documentation specific to the Context Manager agent 
 - **[IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md)** - Week-by-week implementation guide
 - **[BOOTSTRAP_GUIDE.md](BOOTSTRAP_GUIDE.md)** - How the Context Manager builds itself
 - **[IMPLEMENTATION_NOTES.md](IMPLEMENTATION_NOTES.md)** - Real-time learnings and patterns
+- **[INITIALIZE_PROJECT_DESIGN.md](INITIALIZE_PROJECT_DESIGN.md)** - Project initialization and metadata layer design
 
 ### Project Evolution Documents
 These documents in the project-evolution-guide show how we arrived at the current design:

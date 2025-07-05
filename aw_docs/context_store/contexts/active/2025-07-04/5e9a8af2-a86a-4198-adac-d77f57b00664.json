@@ -1,0 +1,22 @@
+{
+  "id": "5e9a8af2-a86a-4198-adac-d77f57b00664",
+  "type": "decision",
+  "source": "human",
+  "timestamp": "2025-07-04T19:14:41.508198",
+  "data": {
+    "decision": "Prioritize documentation intelligence as next feature",
+    "reasoning": "Context Manager needs to understand existing docs before it can help maintain them. This enables learning patterns and suggesting updates."
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 47
+  },
+  "relationships": [],
+  "tags": [
+    "bootstrap",
+    "decision"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

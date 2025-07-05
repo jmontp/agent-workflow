@@ -86,8 +86,12 @@ temp/
 *-demo.html
 test-*.html
 
-# Context Manager storage
-context_store/
+# Agent Workflow Documentation
+# Track all aw_docs by default for team collaboration
+# aw_docs/
 
-# CM CLI config
+# Future: ignore user-specific contexts
+# aw_docs/context_store/contexts/user_*/
+
+# CM CLI config (user-specific project selection)
 .cm_config.json

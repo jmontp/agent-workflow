@@ -1,0 +1,18 @@
+{
+  "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/05_ai_ml_systems_perspective.md",
+  "doc_type": "general",
+  "last_analyzed": "2025-07-04T20:24:16.893256",
+  "quality_scores": {
+    "completeness": 0.5,
+    "clarity": 1.0,
+    "consistency": 0.7,
+    "staleness": 1.0
+  },
+  "staleness_indicators": [
+    "version_numbers_found"
+  ],
+  "linked_contexts": [],
+  "linked_docs": [],
+  "dependencies": {},
+  "pending_updates": []
+}

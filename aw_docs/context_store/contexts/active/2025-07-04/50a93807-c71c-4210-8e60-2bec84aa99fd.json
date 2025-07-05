@@ -1,0 +1,22 @@
+{
+  "id": "50a93807-c71c-4210-8e60-2bec84aa99fd",
+  "type": "decision",
+  "source": "human",
+  "timestamp": "2025-07-04T19:05:50.409545",
+  "data": {
+    "decision": "Completed Context Manager v1 implementation",
+    "reasoning": "Core functionality working: schemas, storage, CLI, API, and bootstrap features. Ready for agents to use."
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 36
+  },
+  "relationships": [],
+  "tags": [
+    "bootstrap",
+    "decision"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

@@ -1,0 +1,22 @@
+{
+  "id": "abca7526-feee-4b8d-838f-684cc8e8d230",
+  "type": "decision",
+  "source": "human",
+  "timestamp": "2025-07-04T19:06:13.714040",
+  "data": {
+    "decision": "Keep project-wide contexts in git for team collaboration",
+    "reasoning": "Enables shared understanding and synchronized development across team members"
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 33
+  },
+  "relationships": [],
+  "tags": [
+    "bootstrap",
+    "decision"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

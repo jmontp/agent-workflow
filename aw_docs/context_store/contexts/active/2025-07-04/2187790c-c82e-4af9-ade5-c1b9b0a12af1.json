@@ -1,0 +1,22 @@
+{
+  "id": "2187790c-c82e-4af9-ade5-c1b9b0a12af1",
+  "type": "decision",
+  "source": "human",
+  "timestamp": "2025-07-04T19:48:33.792349",
+  "data": {
+    "decision": "Implemented knowledge graph visualization",
+    "reasoning": "Created interactive D3.js force-directed graph showing relationships between docs, code, and concepts. Includes node filtering, zoom, drag, and click interactions."
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 51
+  },
+  "relationships": [],
+  "tags": [
+    "bootstrap",
+    "decision"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

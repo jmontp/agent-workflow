@@ -1,0 +1,16 @@
+{
+  "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/CLAUDE.md",
+  "doc_type": "general",
+  "last_analyzed": "2025-07-04T20:24:15.736047",
+  "quality_scores": {
+    "completeness": 1.0,
+    "clarity": 1.0,
+    "consistency": 0.7,
+    "staleness": 1.0
+  },
+  "staleness_indicators": [],
+  "linked_contexts": [],
+  "linked_docs": [],
+  "dependencies": {},
+  "pending_updates": []
+}

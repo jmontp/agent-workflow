@@ -1,0 +1,18 @@
+{
+  "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/advanced/docs/autonomous_agent_architectures.md",
+  "doc_type": "general",
+  "last_analyzed": "2025-07-04T20:24:16.911548",
+  "quality_scores": {
+    "completeness": 0.75,
+    "clarity": 1.0,
+    "consistency": 0.7,
+    "staleness": 1.0
+  },
+  "staleness_indicators": [
+    "version_numbers_found"
+  ],
+  "linked_contexts": [],
+  "linked_docs": [],
+  "dependencies": {},
+  "pending_updates": []
+}

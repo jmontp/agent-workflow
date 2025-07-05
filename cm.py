@@ -52,7 +52,7 @@ def set_current_project(project_id):
 
 def cmd_log_decision(args):
     """Log a development decision."""
-    cm = ContextManager(project_id=get_current_project())
+    cm = ContextManager()
     context_id = cm.log_decision(args.decision, args.reasoning)
     print(f"✓ Decision logged: {context_id}")
     
@@ -67,7 +67,7 @@ def cmd_log_decision(args):
 
 def cmd_log_error(args):
     """Log an error."""
-    cm = ContextManager(project_id=get_current_project())
+    cm = ContextManager()
     context_info = {}
     if args.context:
         try:
@@ -81,7 +81,7 @@ def cmd_log_error(args):
 
 def cmd_suggest(args):
     """Get task suggestions."""
-    cm = ContextManager(project_id=get_current_project())
+    cm = ContextManager()
     suggestions = cm.suggest_next_task()
     
     if not suggestions:
@@ -95,10 +95,10 @@ def cmd_suggest(args):
 
 def cmd_stats(args):
     """Show statistics."""
-    cm = ContextManager(project_id=get_current_project())
+    cm = ContextManager()
     stats = cm.get_stats()
     
-    print(f"📊 Context Manager Statistics (Project: {stats['project_id']})")
+    print(f"📊 Context Manager Statistics")
     print(f"   Total contexts: {stats['total_contexts']}")
     print(f"   Patterns detected: {stats['patterns_detected']}")
     print(f"   Significant patterns: {stats['significant_patterns']}")
@@ -119,7 +119,7 @@ def cmd_stats(args):
 
 def cmd_query(args):
     """Query contexts."""
-    cm = ContextManager(project_id=get_current_project())
+    cm = ContextManager()
     
     # Build query parameters
     kwargs = {}
@@ -192,6 +192,152 @@ def cmd_use_project(args):
     print(f"✓ Switched to project: {args.project_id}")
 
 
+def cmd_analyze_doc(args):
+    """Analyze a documentation file."""
+    cm = ContextManager()
+    
+    try:
+        metadata = cm.analyze_doc(args.doc_path)
+        print(f"📄 Analyzed: {args.doc_path}")
+        print(f"   Type: {metadata.doc_type}")
+        print(f"   Quality scores:")
+        for metric, score in metadata.quality_scores.items():
+            print(f"     - {metric}: {score:.2f}")
+        
+        if metadata.staleness_indicators:
+            print(f"   ⚠️  Staleness indicators: {', '.join(metadata.staleness_indicators)}")
+    except Exception as e:
+        print(f"❌ Error: {e}")
+
+
+def cmd_learn_patterns(args):
+    """Learn documentation patterns."""
+    cm = ContextManager()
+    
+    print("🔍 Learning documentation patterns...")
+    patterns = cm.learn_doc_patterns(args.paths if args.paths else None)
+    
+    print(f"\n📊 Patterns learned:")
+    print(f"   Unique headers: {len(patterns.section_headers)}")
+    print(f"   Common phrases: {len(patterns.common_phrases)}")
+    print(f"   Markdown style: {patterns.markdown_style}")
+    print(f"   List style: '{patterns.list_style}'")
+    
+    if patterns.common_phrases:
+        print(f"\n   Top phrases:")
+        sorted_phrases = sorted(patterns.common_phrases.items(), key=lambda x: x[1], reverse=True)[:5]
+        for phrase, count in sorted_phrases:
+            print(f"     - '{phrase}': {count} occurrences")
+
+
+def cmd_doc_quality(args):
+    """Check documentation quality."""
+    cm = ContextManager()
+    
+    scores = cm.calculate_doc_quality(args.doc_path)
+    
+    print(f"📊 Quality scores for {args.doc_path}:")
+    overall = 0
+    for metric, score in scores.items():
+        print(f"   {metric}: {'█' * int(score * 10)}{'░' * (10 - int(score * 10))} {score:.2f}")
+        if metric != 'error':
+            overall += score
+    
+    if 'error' not in scores:
+        overall_avg = overall / len(scores)
+        print(f"\n   Overall: {'█' * int(overall_avg * 10)}{'░' * (10 - int(overall_avg * 10))} {overall_avg:.2f}")
+
+
+def cmd_init(args):
+    """Initialize project by scanning all files."""
+    cm = ContextManager()
+    
+    print("🔍 Initializing project...")
+    print(f"   Root: {args.path}\n")
+    
+    result = cm.initialize_project(args.path)
+    
+    if result['success']:
+        print("✅ Project initialized successfully!\n")
+        print(f"📊 Summary:")
+        print(f"   Files scanned: {result['files_scanned']}")
+        print(f"   Documentation: {result['docs_scanned']} files")
+        print(f"   Code files: {result['code_scanned']} files")
+        print(f"   Concepts mapped: {result['concepts_mapped']}")
+        print(f"   Relationships: {result['relationships']}")
+        print(f"   Duration: {result['duration_seconds']:.2f} seconds")
+        print(f"\n💡 You can now use 'cm find' to search for information")
+    else:
+        print("❌ Failed to initialize project")
+
+
+def cmd_find(args):
+    """Find information in the project."""
+    cm = ContextManager()
+    
+    query = ' '.join(args.query)
+    print(f"🔍 Searching for: {query}\n")
+    
+    try:
+        results = cm.find_information(query)
+        
+        if not results:
+            print("No results found.")
+        else:
+            print(f"Found {len(results)} locations:\n")
+            for i, result in enumerate(results, 1):
+                print(f"{i}. {result.file}")
+                print(f"   Type: {result.content}")
+                print(f"   Context: {result.context}")
+                print(f"   Confidence: {result.confidence:.1%}\n")
+    except ValueError as e:
+        print(f"❌ {e}")
+        print("   Run 'cm init' first to scan the project")
+
+
+def cmd_status(args):
+    """Show project initialization status."""
+    cm = ContextManager()
+    status = cm.get_project_status()
+    
+    print(f"📊 Project Status\n")
+    
+    if status['initialized']:
+        print("✅ Project is initialized")
+        print(f"   Last indexed: {status['index_timestamp']}")
+        print(f"   Total concepts: {status['total_concepts']}")
+        print(f"   Total functions: {status['total_functions']}")
+        print(f"   Total classes: {status['total_classes']}")
+        print(f"   Documentation files: {status.get('total_docs', 'N/A')}")
+        print(f"   Code files: {status.get('total_code_files', 'N/A')}")
+    else:
+        print("❌ " + status['message'])
+
+
+def cmd_explain(args):
+    """Explain a concept or answer a question using AI."""
+    cm = ContextManager()
+    
+    query = ' '.join(args.query)
+    print(f"🤖 Explaining: {query}\n")
+    
+    # First show deterministic results
+    print("📍 Quick lookup results:\n")
+    cmd_find_args = type('obj', (object,), {'query': args.query})
+    cmd_find(cmd_find_args)
+    
+    # Then add AI explanation if requested
+    if args.ai:
+        print("\n🧠 AI-Enhanced Explanation:\n")
+        try:
+            explanation = cm.explain_with_ai(query)
+            print(explanation)
+        except ImportError:
+            print("❌ AI tools not available. Add claude_tools.py to aw_docs/")
+        except Exception as e:
+            print(f"❌ Error: {e}")
+
+
 def main():
     """Main CLI entry point."""
     parser = argparse.ArgumentParser(
@@ -237,6 +383,41 @@ def main():
     p_use = subparsers.add_parser('use-project', help='Switch to a project')
     p_use.add_argument('project_id', help='Project ID to switch to')
     p_use.set_defaults(func=cmd_use_project)
+    
+    # analyze-doc command
+    p_analyze = subparsers.add_parser('analyze-doc', help='Analyze a documentation file')
+    p_analyze.add_argument('doc_path', help='Path to markdown file')
+    p_analyze.set_defaults(func=cmd_analyze_doc)
+    
+    # learn-patterns command
+    p_learn = subparsers.add_parser('learn-patterns', help='Learn documentation patterns')
+    p_learn.add_argument('paths', nargs='*', help='Specific doc paths (optional)')
+    p_learn.set_defaults(func=cmd_learn_patterns)
+    
+    # doc-quality command
+    p_quality = subparsers.add_parser('doc-quality', help='Check documentation quality')
+    p_quality.add_argument('doc_path', help='Path to markdown file')
+    p_quality.set_defaults(func=cmd_doc_quality)
+    
+    # init command
+    p_init = subparsers.add_parser('init', help='Initialize project by scanning all files')
+    p_init.add_argument('path', nargs='?', default='.', help='Project root path (default: current directory)')
+    p_init.set_defaults(func=cmd_init)
+    
+    # find command
+    p_find = subparsers.add_parser('find', help='Find information in the project')
+    p_find.add_argument('query', nargs='+', help='Search query')
+    p_find.set_defaults(func=cmd_find)
+    
+    # status command
+    p_status = subparsers.add_parser('status', help='Show project initialization status')
+    p_status.set_defaults(func=cmd_status)
+    
+    # explain command
+    p_explain = subparsers.add_parser('explain', help='Explain a concept or answer a question')
+    p_explain.add_argument('query', nargs='+', help='What to explain')
+    p_explain.add_argument('--ai', action='store_true', help='Include AI-enhanced explanation')
+    p_explain.set_defaults(func=cmd_explain)
     
     # Parse arguments
     args = parser.parse_args()

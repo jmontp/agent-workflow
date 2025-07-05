@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Context Manager - Agent Workflow</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/context_manager.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+    <div class="cm-container">
+        <header class="cm-header">
+            <h1>Context Manager</h1>
+            <p class="subtitle">The nervous system of agent-workflow</p>
+            <div class="nav-links">
+                <a href="/">State Machine</a>
+                <span class="separator">|</span>
+                <span class="current-page">Context Manager</span>
+            </div>
+        </header>
+        
+        <div class="cm-layout">
+            <!-- Stats Overview -->
+            <section class="cm-panel stats-panel">
+                <h2>System Overview</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="total-contexts">0</div>
+                        <div class="stat-label">Total Contexts</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="patterns-detected">0</div>
+                        <div class="stat-label">Patterns Detected</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="docs-analyzed">0</div>
+                        <div class="stat-label">Docs Analyzed</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="current-project">default</div>
+                        <div class="stat-label">Current Project</div>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="context-types-chart"></canvas>
+                </div>
+                <div class="project-init-section">
+                    <div id="project-status" class="project-status"></div>
+                    <button class="btn btn-primary" onclick="initializeProject()" id="init-btn">Initialize Project</button>
+                </div>
+            </section>
+            
+            <!-- Quick Actions -->
+            <section class="cm-panel actions-panel">
+                <h2>Quick Actions</h2>
+                
+                <div class="action-group">
+                    <h3>Find Information</h3>
+                    <input type="text" id="find-input" placeholder="What are you looking for? (e.g., error handling, authentication)">
+                    <button class="btn btn-primary" onclick="findInformation()">Search</button>
+                    <div id="find-results" class="find-results"></div>
+                </div>
+                
+                <div class="action-group">
+                    <h3>Log Decision</h3>
+                    <input type="text" id="decision-input" placeholder="What decision was made?">
+                    <textarea id="reasoning-input" placeholder="Why was this decision made?" rows="3"></textarea>
+                    <button class="btn btn-primary" onclick="logDecision()">Log Decision</button>
+                </div>
+                
+                <div class="action-group">
+                    <h3>Log Error</h3>
+                    <input type="text" id="error-input" placeholder="Error message">
+                    <textarea id="error-context" placeholder="Additional context (optional)" rows="2"></textarea>
+                    <button class="btn btn-danger" onclick="logError()">Log Error</button>
+                </div>
+                
+                <div class="action-group">
+                    <h3>Query Contexts</h3>
+                    <div class="query-controls">
+                        <input type="text" id="query-input" placeholder="Search contexts...">
+                        <select id="type-filter">
+                            <option value="">All Types</option>
+                            <option value="development">Development</option>
+                            <option value="planning">Planning</option>
+                            <option value="execution">Execution</option>
+                            <option value="documentation">Documentation</option>
+                            <option value="code_change">Code Change</option>
+                            <option value="error">Error</option>
+                            <option value="decision">Decision</option>
+                        </select>
+                        <button class="btn btn-secondary" onclick="queryContexts()">Search</button>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Suggestions -->
+            <section class="cm-panel suggestions-panel">
+                <h2>Task Suggestions</h2>
+                <div id="suggestions-list" class="suggestions-list">
+                    <p class="loading">Loading suggestions...</p>
+                </div>
+                <button class="btn btn-secondary" onclick="refreshSuggestions()">Refresh</button>
+            </section>
+            
+            <!-- Recent Contexts -->
+            <section class="cm-panel contexts-panel">
+                <h2>Recent Contexts</h2>
+                <div id="contexts-list" class="contexts-list">
+                    <p class="loading">Loading contexts...</p>
+                </div>
+            </section>
+            
+            <!-- Documentation Intelligence -->
+            <section class="cm-panel doc-panel">
+                <h2>Documentation Intelligence</h2>
+                
+                <div class="action-group">
+                    <h3>Analyze Document</h3>
+                    <input type="text" id="doc-path-input" placeholder="Path to markdown file (e.g., docs/README.md)">
+                    <button class="btn btn-primary" onclick="analyzeDoc()">Analyze</button>
+                </div>
+                
+                <div class="action-group">
+                    <h3>Learn Patterns</h3>
+                    <p class="help-text">Analyze all documentation files to learn patterns</p>
+                    <button class="btn btn-secondary" onclick="learnPatterns()">Learn from Docs</button>
+                </div>
+                
+                <div id="doc-results" class="doc-results"></div>
+            </section>
+            
+            <!-- Patterns -->
+            <section class="cm-panel patterns-panel">
+                <h2>Detected Patterns</h2>
+                <div id="patterns-list" class="patterns-list">
+                    <p class="loading">Loading patterns...</p>
+                </div>
+            </section>
+            
+            <!-- Visualization Panel -->
+            <section class="cm-panel visualization-panel">
+                <h2>Project Knowledge Graph</h2>
+                <div class="viz-controls">
+                    <button class="btn btn-secondary" onclick="toggleNodeType('doc')">Toggle Docs</button>
+                    <button class="btn btn-secondary" onclick="toggleNodeType('code')">Toggle Code</button>
+                    <button class="btn btn-secondary" onclick="toggleNodeType('concept')">Toggle Concepts</button>
+                    <button class="btn btn-secondary" onclick="resetZoom()">Reset View</button>
+                </div>
+                <div id="graph-stats" class="graph-stats"></div>
+                <div id="visualization-container">
+                    <svg id="knowledge-graph"></svg>
+                </div>
+                <div id="node-info" class="node-info"></div>
+            </section>
+        </div>
+        
+        <!-- Status Messages -->
+        <div id="status-message" class="status-message"></div>
+    </div>
+    
+    <script src="/static/context_manager.js"></script>
+</body>
+</html>

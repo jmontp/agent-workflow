@@ -1,0 +1,22 @@
+{
+  "id": "cdd65eec-0da8-42f1-a817-52889bffc153",
+  "type": "decision",
+  "source": "human",
+  "timestamp": "2025-07-04T19:21:41.055260",
+  "data": {
+    "decision": "Implemented documentation intelligence features",
+    "reasoning": "Added pattern learning, quality metrics, and staleness detection to help maintain documentation"
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 35
+  },
+  "relationships": [],
+  "tags": [
+    "bootstrap",
+    "decision"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

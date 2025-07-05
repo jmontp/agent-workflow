@@ -10,6 +10,7 @@ from enum import Enum
 from dataclasses import dataclass
 from typing import Optional, Dict, Any, List
 from datetime import datetime
+from pathlib import Path
 from context_manager import ContextManager, Context, ContextType
 
 app = Flask(__name__)
@@ -113,6 +114,11 @@ COMMANDS = {
 def index():
     """Serve main interface."""
     return render_template('index.html')
+
+@app.route('/context-manager')
+def context_manager_ui():
+    """Serve Context Manager UI."""
+    return render_template('context_manager.html')
 
 @app.route('/api/state')
 def get_state():
@@ -259,6 +265,197 @@ def get_patterns():
     """Get detected patterns."""
     min_occurrences = int(request.args.get('min', 3))
     return jsonify(cm.get_patterns(min_occurrences))
+
+@app.route('/api/context/analyze-doc', methods=['POST'])
+def analyze_doc():
+    """Analyze a documentation file."""
+    try:
+        data = request.json
+        doc_path = data.get('doc_path')
+        if not doc_path:
+            return jsonify({"error": "doc_path is required"}), 400
+        
+        metadata = cm.analyze_doc(doc_path)
+        return jsonify({
+            "doc_type": metadata.doc_type,
+            "quality_scores": metadata.quality_scores,
+            "staleness_indicators": metadata.staleness_indicators,
+            "needs_update": metadata.needs_update()
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+@app.route('/api/context/learn-patterns', methods=['POST'])
+def learn_patterns():
+    """Learn documentation patterns."""
+    try:
+        data = request.json
+        doc_paths = data.get('paths')
+        
+        patterns = cm.learn_doc_patterns(doc_paths)
+        return jsonify({
+            "success": True,
+            "files_analyzed": len(doc_paths) if doc_paths else "all",
+            "headers_found": len(patterns.section_headers),
+            "phrases_found": len(patterns.common_phrases)
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+@app.route('/api/context/init', methods=['POST'])
+def init_project():
+    """Initialize project by scanning all files."""
+    try:
+        data = request.json
+        project_root = data.get('project_root', '.')
+        
+        result = cm.initialize_project(project_root)
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 400
+
+@app.route('/api/context/find', methods=['POST'])
+def find_info():
+    """Find information in the project."""
+    try:
+        data = request.json
+        query = data.get('query')
+        if not query:
+            return jsonify({"error": "query is required"}), 400
+        
+        results = cm.find_information(query)
+        return jsonify({
+            "results": [
+                {
+                    "file": r.file,
+                    "line": r.line,
+                    "content": r.content,
+                    "confidence": r.confidence,
+                    "context": r.context
+                }
+                for r in results
+            ]
+        })
+    except ValueError as e:
+        return jsonify({"error": str(e), "not_initialized": True}), 400
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+@app.route('/api/context/project-status')
+def project_status():
+    """Get project initialization status."""
+    return jsonify(cm.get_project_status())
+
+@app.route('/api/context/visualization/graph')
+def get_visualization_graph():
+    """Get knowledge graph data for visualization."""
+    try:
+        # Check if project is initialized
+        if not cm.project_index:
+            cm._load_project_index()
+            if not cm.project_index:
+                return jsonify({"error": "Project not initialized"}), 400
+        
+        nodes = []
+        edges = []
+        node_id_map = {}
+        
+        # Add document nodes
+        for path, metadata in cm.project_index.doc_files.items():
+            node_id = f"doc_{len(nodes)}"
+            node_id_map[path] = node_id
+            nodes.append({
+                "id": node_id,
+                "label": Path(path).name,
+                "path": path,
+                "type": "doc",
+                "group": 1,
+                "metrics": {
+                    "quality": sum(metadata.quality_scores.values()) / len(metadata.quality_scores) if metadata.quality_scores else 0,
+                    "hasIssues": len(metadata.staleness_indicators) > 0
+                }
+            })
+        
+        # Add code nodes
+        for path, metadata in cm.project_index.code_files.items():
+            node_id = f"code_{len(nodes)}"
+            node_id_map[path] = node_id
+            nodes.append({
+                "id": node_id,
+                "label": Path(path).name,
+                "path": path,
+                "type": "code",
+                "group": 2,
+                "metrics": {
+                    "loc": metadata.lines_of_code,
+                    "functions": len(metadata.functions),
+                    "classes": len(metadata.classes)
+                }
+            })
+        
+        # Add concept nodes (limit to top 50)
+        concept_counts = {c: len(locs) for c, locs in cm.project_index.concepts.items()}
+        top_concepts = sorted(concept_counts.items(), key=lambda x: x[1], reverse=True)[:50]
+        
+        for concept, count in top_concepts:
+            node_id = f"concept_{len(nodes)}"
+            nodes.append({
+                "id": node_id,
+                "label": concept,
+                "type": "concept",
+                "group": 3,
+                "metrics": {
+                    "occurrences": count
+                }
+            })
+            
+            # Add edges from files to concepts
+            for file_path in cm.project_index.concepts[concept]:
+                if file_path in node_id_map:
+                    edges.append({
+                        "source": node_id_map[file_path],
+                        "target": node_id,
+                        "type": "contains",
+                        "value": 1
+                    })
+        
+        # Add reference edges (doc -> code)
+        for doc_path, code_refs in cm.project_index.references.items():
+            if doc_path in node_id_map:
+                for code_path in code_refs:
+                    if code_path in node_id_map:
+                        edges.append({
+                            "source": node_id_map[doc_path],
+                            "target": node_id_map[code_path],
+                            "type": "references",
+                            "value": 2
+                        })
+        
+        # Add dependency edges (code -> code)
+        for code_path, deps in cm.project_index.dependencies.items():
+            if code_path in node_id_map:
+                for dep_path in deps:
+                    if dep_path in node_id_map:
+                        edges.append({
+                            "source": node_id_map[code_path],
+                            "target": node_id_map[dep_path],
+                            "type": "imports",
+                            "value": 2
+                        })
+        
+        return jsonify({
+            "nodes": nodes,
+            "edges": edges,
+            "stats": {
+                "totalNodes": len(nodes),
+                "totalEdges": len(edges),
+                "docNodes": len([n for n in nodes if n["type"] == "doc"]),
+                "codeNodes": len([n for n in nodes if n["type"] == "code"]),
+                "conceptNodes": len([n for n in nodes if n["type"] == "concept"])
+            }
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
     print("Starting agent workflow state machine...")

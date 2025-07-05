@@ -1,0 +1,22 @@
+{
+  "id": "6142c54a-fbb1-42f1-affe-90248d57e7ca",
+  "type": "decision",
+  "source": "human",
+  "timestamp": "2025-07-04T19:26:09.098854",
+  "data": {
+    "decision": "Created web UI panel for Context Manager",
+    "reasoning": "Provides visual interface for viewing contexts, stats, patterns, and documentation intelligence features. Accessible at /context-manager endpoint."
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 46
+  },
+  "relationships": [],
+  "tags": [
+    "bootstrap",
+    "decision"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

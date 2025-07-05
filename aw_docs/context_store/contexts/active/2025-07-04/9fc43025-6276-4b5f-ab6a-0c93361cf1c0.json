@@ -1,0 +1,22 @@
+{
+  "id": "9fc43025-6276-4b5f-ab6a-0c93361cf1c0",
+  "type": "decision",
+  "source": "human",
+  "timestamp": "2025-07-04T19:20:17.309308",
+  "data": {
+    "decision": "Learned documentation patterns from 41 files",
+    "reasoning": "Found 1184 unique headers, 597 common phrases"
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 22
+  },
+  "relationships": [],
+  "tags": [
+    "bootstrap",
+    "decision"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

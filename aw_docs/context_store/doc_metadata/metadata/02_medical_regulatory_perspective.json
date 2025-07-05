@@ -1,0 +1,16 @@
+{
+  "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/documentation-analysis/02_medical_regulatory_perspective.md",
+  "doc_type": "general",
+  "last_analyzed": "2025-07-04T20:24:16.860416",
+  "quality_scores": {
+    "completeness": 0.25,
+    "clarity": 1.0,
+    "consistency": 0.7,
+    "staleness": 1.0
+  },
+  "staleness_indicators": [],
+  "linked_contexts": [],
+  "linked_docs": [],
+  "dependencies": {},
+  "pending_updates": []
+}

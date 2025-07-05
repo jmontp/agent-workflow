@@ -1,0 +1,22 @@
+{
+  "id": "421a6974-ae23-4e03-abce-9ab853179300",
+  "type": "decision",
+  "source": "human",
+  "timestamp": "2025-07-04T20:26:43.339166",
+  "data": {
+    "decision": "Reorganized to distributed aw_docs structure",
+    "reasoning": "Each project now has its own aw_docs/ directory for git tracking. Removed project_id layer, fixed visualization metadata loading, and added optional Claude tools integration."
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 54
+  },
+  "relationships": [],
+  "tags": [
+    "bootstrap",
+    "decision"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}
