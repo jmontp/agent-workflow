@@ -207,6 +207,21 @@ class TaskAnalysis:
     concepts: List[str]          # Domain concepts mentioned
     file_patterns: List[str]     # File types/patterns likely needed
     estimated_scope: str         # 'small', 'medium', 'large', 'unknown'
+    
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert to dictionary for serialization."""
+        return {
+            'keywords': self.keywords,
+            'actions': self.actions,
+            'concepts': self.concepts,
+            'file_patterns': self.file_patterns,
+            'estimated_scope': self.estimated_scope
+        }
+    
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> 'TaskAnalysis':
+        """Create TaskAnalysis from dictionary."""
+        return cls(**data)
 
 
 @dataclass
@@ -347,6 +362,10 @@ class ContextManager:
         self._load_existing_data()
         self._load_project_index()
         
+        # Load Claude cache from disk
+        if self.config.cache_claude_responses:
+            self._load_claude_cache()
+        
         # Optional AI tools
         self._claude_tools = None
     
@@ -360,6 +379,10 @@ class ContextManager:
         # Doc metadata storage
         (self.storage_dir / "doc_metadata" / "metadata").mkdir(parents=True, exist_ok=True)
         (self.storage_dir / "doc_metadata" / "patterns").mkdir(parents=True, exist_ok=True)
+        
+        # Claude cache storage
+        if self.config.cache_claude_responses:
+            self.config.cache_dir.mkdir(parents=True, exist_ok=True)
     
     def _load_existing_data(self):
         """Load existing contexts and metadata from storage."""
@@ -375,6 +398,115 @@ class ContextManager:
                             self.contexts[context.id] = context
                     except Exception as e:
                         print(f"Error loading context {context_file}: {e}")
+    
+    def _load_claude_cache(self):
+        """Load Claude response cache from disk."""
+        cache_file = self.config.cache_dir / "claude_cache.json"
+        if cache_file.exists():
+            try:
+                with open(cache_file, 'r') as f:
+                    cache_data = json.load(f)
+                
+                # Validate cache version
+                cache_version = cache_data.get('version', 1)
+                if cache_version != 1:
+                    print(f"Warning: Unsupported cache version {cache_version}, starting fresh")
+                    return
+                
+                # Load cache entries
+                for key, entry in cache_data.get('entries', {}).items():
+                    # Convert timestamp back to datetime
+                    entry['timestamp'] = datetime.fromisoformat(entry['timestamp'])
+                    
+                    # Check if cache entry is still valid
+                    age_hours = (datetime.now() - entry['timestamp']).total_seconds() / 3600
+                    if age_hours < self.config.claude_cache_ttl_hours:
+                        # Deserialize TaskAnalysis if present
+                        if isinstance(entry.get('result'), dict) and 'keywords' in entry['result']:
+                            entry['result'] = TaskAnalysis.from_dict(entry['result'])
+                        
+                        self._claude_cache[key] = entry
+                
+                print(f"Loaded {len(self._claude_cache)} valid cache entries")
+                
+                # Rotate cache if needed
+                self._rotate_cache_if_needed()
+                
+            except Exception as e:
+                print(f"Error loading Claude cache: {e}")
+    
+    def _save_claude_cache(self):
+        """Save Claude response cache to disk."""
+        try:
+            cache_file = self.config.cache_dir / "claude_cache.json"
+            
+            # Prepare cache data for serialization
+            cache_data = {
+                'version': 1,
+                'last_updated': datetime.now().isoformat(),
+                'entries': {}
+            }
+            
+            # Convert cache entries to serializable format
+            for key, entry in self._claude_cache.items():
+                # Create a copy to avoid modifying the original
+                serializable_entry = entry.copy()
+                
+                # Convert datetime to string
+                if isinstance(serializable_entry.get('timestamp'), datetime):
+                    serializable_entry['timestamp'] = serializable_entry['timestamp'].isoformat()
+                
+                # Convert TaskAnalysis to dict if needed
+                if hasattr(serializable_entry.get('result'), 'to_dict'):
+                    serializable_entry['result'] = serializable_entry['result'].to_dict()
+                elif hasattr(serializable_entry.get('result'), '__dict__'):
+                    # For dataclass objects
+                    serializable_entry['result'] = {
+                        k: v for k, v in serializable_entry['result'].__dict__.items()
+                        if not k.startswith('_')
+                    }
+                
+                cache_data['entries'][key] = serializable_entry
+            
+            # Write to temporary file first for atomic operation
+            temp_file = cache_file.with_suffix('.tmp')
+            with open(temp_file, 'w') as f:
+                json.dump(cache_data, f, indent=2)
+            
+            # Atomically replace the cache file
+            temp_file.replace(cache_file)
+            
+        except Exception as e:
+            print(f"Error saving Claude cache: {e}")
+    
+    def _rotate_cache_if_needed(self):
+        """Rotate cache to prevent unbounded growth."""
+        max_cache_size = 1000  # Maximum number of cache entries
+        max_cache_age_days = 7  # Maximum age for cache entries
+        
+        # Remove old entries
+        cutoff_time = datetime.now() - timedelta(days=max_cache_age_days)
+        keys_to_remove = []
+        
+        for key, entry in self._claude_cache.items():
+            if entry['timestamp'] < cutoff_time:
+                keys_to_remove.append(key)
+        
+        for key in keys_to_remove:
+            del self._claude_cache[key]
+        
+        # If still too large, remove oldest entries
+        if len(self._claude_cache) > max_cache_size:
+            # Sort by timestamp and keep only the newest entries
+            sorted_entries = sorted(
+                self._claude_cache.items(),
+                key=lambda x: x[1]['timestamp'],
+                reverse=True
+            )
+            
+            self._claude_cache = dict(sorted_entries[:max_cache_size])
+            
+            print(f"Rotated cache to {max_cache_size} entries")
     
     # Core context operations
     def add_context(self, context: Context) -> str:
@@ -1736,6 +1868,7 @@ Return ONLY valid JSON, no additional text.'''
                     'result': analysis,
                     'timestamp': datetime.now()
                 }
+                self._save_claude_cache()
             
             return analysis
             

@@ -1,0 +1,19 @@
+{
+  "id": "f91ef558-f219-42ed-b2e1-d489b5056d07",
+  "type": "development",
+  "source": "claude_analysis",
+  "timestamp": "2025-07-05T14:35:38.327418",
+  "data": {
+    "task": "Implement user authentication system",
+    "analysis": "claude"
+  },
+  "project_id": "default",
+  "metadata": {},
+  "relationships": [],
+  "tags": [
+    "ai_enhanced"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

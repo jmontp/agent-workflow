@@ -1,0 +1,19 @@
+{
+  "id": "aacfcfc7-049e-491b-9cce-a82f871f6a2e",
+  "type": "development",
+  "source": "claude_analysis",
+  "timestamp": "2025-07-05T14:35:38.318121",
+  "data": {
+    "task": "Test persistent caching feature",
+    "analysis": "claude"
+  },
+  "project_id": "default",
+  "metadata": {},
+  "relationships": [],
+  "tags": [
+    "ai_enhanced"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}
