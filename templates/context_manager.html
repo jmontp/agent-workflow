@@ -142,18 +142,39 @@
             
             <!-- Visualization Panel -->
             <section class="cm-panel visualization-panel">
-                <h2>Project Knowledge Graph</h2>
-                <div class="viz-controls">
-                    <button class="btn btn-secondary" onclick="toggleNodeType('doc')">Toggle Docs</button>
-                    <button class="btn btn-secondary" onclick="toggleNodeType('code')">Toggle Code</button>
-                    <button class="btn btn-secondary" onclick="toggleNodeType('concept')">Toggle Concepts</button>
-                    <button class="btn btn-secondary" onclick="resetZoom()">Reset View</button>
+                <h2>Project Visualizations</h2>
+                <div class="viz-type-selector">
+                    <button class="viz-type-btn active" onclick="switchVisualization('graph')">Knowledge Graph</button>
+                    <button class="viz-type-btn" onclick="switchVisualization('treemap')">Project Treemap</button>
+                    <button class="viz-type-btn" onclick="switchVisualization('tree')">Directory Tree</button>
                 </div>
-                <div id="graph-stats" class="graph-stats"></div>
-                <div id="visualization-container">
-                    <svg id="knowledge-graph"></svg>
+                
+                <!-- Knowledge Graph -->
+                <div id="viz-graph" class="viz-content">
+                    <div class="viz-controls">
+                        <button class="btn btn-secondary" onclick="toggleNodeType('doc')">Toggle Docs</button>
+                        <button class="btn btn-secondary" onclick="toggleNodeType('code')">Toggle Code</button>
+                        <button class="btn btn-secondary" onclick="toggleNodeType('concept')">Toggle Concepts</button>
+                        <button class="btn btn-secondary" onclick="resetZoom()">Reset View</button>
+                    </div>
+                    <div id="graph-stats" class="graph-stats"></div>
+                    <div id="visualization-container">
+                        <svg id="knowledge-graph"></svg>
+                    </div>
+                    <div id="node-info" class="node-info"></div>
                 </div>
-                <div id="node-info" class="node-info"></div>
+                
+                <!-- Treemap -->
+                <div id="viz-treemap" class="viz-content" style="display: none;">
+                    <div id="treemap-container"></div>
+                    <div id="treemap-info"></div>
+                </div>
+                
+                <!-- Directory Tree -->
+                <div id="viz-tree" class="viz-content" style="display: none;">
+                    <div id="tree-container"></div>
+                    <div id="tree-details"></div>
+                </div>
             </section>
         </div>
         
@@ -162,5 +183,6 @@
     </div>
     
     <script src="/static/context_manager.js"></script>
+    <script src="/static/context_visualizations.js"></script>
 </body>
 </html>

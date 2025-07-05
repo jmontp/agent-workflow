@@ -1,0 +1,22 @@
+{
+  "id": "5820f903-dada-4006-9ade-12c08545bcb7",
+  "type": "decision",
+  "source": "human",
+  "timestamp": "2025-07-04T22:09:05.723065",
+  "data": {
+    "decision": "Initialized project at /mnt/c/Users/jmontp/Documents/workspace/agent-workflow/test_project",
+    "reasoning": "Scanned 1 docs, 1 code files, found 2 concepts"
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 34
+  },
+  "relationships": [],
+  "tags": [
+    "bootstrap",
+    "decision"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

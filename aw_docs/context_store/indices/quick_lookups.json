@@ -1,9 +1,9 @@
 {
-  "error handling": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/CLAUDE.md, /mnt/c/Users/jmontp/Documents/workspace/agent-workflow/README.md, /mnt/c/Users/jmontp/Documents/workspace/agent-workflow/aw_docs/README.md, /mnt/c/Users/jmontp/Documents/workspace/agent-workflow/cm.py, /mnt/c/Users/jmontp/Documents/workspace/agent-workflow/context_manager.py",
-  "authentication": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/CLAUDE.md, /mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md, /mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/IMPLEMENTATION_PLAN.md, /mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/INITIALIZE_PROJECT_ALGORITHMS.md, /mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/INITIALIZE_PROJECT_DESIGN.md",
-  "database": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/CLAUDE.md, /mnt/c/Users/jmontp/Documents/workspace/agent-workflow/app.py, /mnt/c/Users/jmontp/Documents/workspace/agent-workflow/aw_docs/README.md, /mnt/c/Users/jmontp/Documents/workspace/agent-workflow/cm.py, /mnt/c/Users/jmontp/Documents/workspace/agent-workflow/context_manager.py",
-  "api": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/CLAUDE.md, /mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/README.md, /mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md, /mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/BOOTSTRAP_GUIDE.md, /mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/IMPLEMENTATION_NOTES.md",
-  "testing": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/CLAUDE.md, /mnt/c/Users/jmontp/Documents/workspace/agent-workflow/README.md, /mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/README.md, /mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/README.md, /mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md",
-  "configuration": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/cm.py, /mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/IMPLEMENTATION_NOTES.md, /mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/IMPLEMENTATION_PLAN.md, /mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/TECHNICAL_DESIGN.md, /mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/swiss-army-knife/AGENT_SPECIFICATION.md",
-  "state management": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/CLAUDE.md, /mnt/c/Users/jmontp/Documents/workspace/agent-workflow/README.md, /mnt/c/Users/jmontp/Documents/workspace/agent-workflow/app.py, /mnt/c/Users/jmontp/Documents/workspace/agent-workflow/aw_docs/README.md, /mnt/c/Users/jmontp/Documents/workspace/agent-workflow/context_manager.py"
+  "error handling": "",
+  "authentication": "",
+  "database": "",
+  "api": "",
+  "testing": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/test_project/README.md, /mnt/c/Users/jmontp/Documents/workspace/agent-workflow/test_project/main.py",
+  "configuration": "",
+  "state management": ""
 }

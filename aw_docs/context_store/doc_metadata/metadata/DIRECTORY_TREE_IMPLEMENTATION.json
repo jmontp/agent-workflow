@@ -1,10 +1,10 @@
 {
-  "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/project-evolution-guide/04_CONTEXT_MANAGER_V1_PLAN.md",
-  "doc_type": "guide",
-  "last_analyzed": "2025-07-04T22:05:27.983944",
+  "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/DIRECTORY_TREE_IMPLEMENTATION.md",
+  "doc_type": "general",
+  "last_analyzed": "2025-07-04T22:04:34.141690",
   "quality_scores": {
     "completeness": 0.5,
-    "clarity": 0.3,
+    "clarity": 1.0,
     "consistency": 0.7,
     "staleness": 1.0
   },

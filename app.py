@@ -457,6 +457,173 @@ def get_visualization_graph():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+@app.route('/api/context/visualization/treemap')
+def get_visualization_treemap():
+    """Get treemap data for project structure visualization."""
+    try:
+        # Check if project is initialized
+        if not cm.project_index:
+            cm._load_project_index()
+            if not cm.project_index:
+                return jsonify({"error": "Project not initialized"}), 400
+        
+        # Build hierarchical structure
+        root = {
+            "name": "project",
+            "children": []
+        }
+        
+        # Group files by directory
+        file_groups = {}
+        
+        # Process documentation files
+        for path, metadata in cm.project_index.doc_files.items():
+            parts = Path(path).parts
+            group_key = parts[0] if len(parts) > 1 else "root"
+            
+            if group_key not in file_groups:
+                file_groups[group_key] = []
+            
+            file_groups[group_key].append({
+                "name": Path(path).name,
+                "path": path,
+                "value": len(metadata.quality_scores) * 100,  # Size based on metrics
+                "fileType": "doc",
+                "metrics": {
+                    "quality": sum(metadata.quality_scores.values()) / len(metadata.quality_scores) if metadata.quality_scores else 0
+                }
+            })
+        
+        # Process code files
+        for path, metadata in cm.project_index.code_files.items():
+            parts = Path(path).parts
+            group_key = parts[0] if len(parts) > 1 else "root"
+            
+            if group_key not in file_groups:
+                file_groups[group_key] = []
+            
+            file_type = "test" if "test" in path.lower() else "code"
+            
+            file_groups[group_key].append({
+                "name": Path(path).name,
+                "path": path,
+                "value": metadata.lines_of_code,
+                "fileType": file_type,
+                "metrics": {
+                    "functions": len(metadata.functions),
+                    "classes": len(metadata.classes),
+                    "complexity": metadata.complexity_score
+                }
+            })
+        
+        # Build tree structure
+        for group_name, files in file_groups.items():
+            root["children"].append({
+                "name": group_name,
+                "children": files
+            })
+        
+        return jsonify(root)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/context/visualization/directory-tree')
+def get_visualization_directory_tree():
+    """Get directory tree data with Claude-generated descriptions."""
+    try:
+        # Check if project is initialized
+        if not cm.project_index:
+            cm._load_project_index()
+            if not cm.project_index:
+                return jsonify({"error": "Project not initialized"}), 400
+        
+        # Build tree structure recursively
+        def build_tree(path: Path, project_root: Path) -> dict:
+            node = {
+                "name": path.name if path != project_root else "Project Root",
+                "path": str(path),
+                "type": "directory",
+                "description": cm.project_index.folder_descriptions.get(str(path), ""),
+                "children": []
+            }
+            
+            # Get all files in this directory
+            files_in_dir = []
+            
+            # Add doc files
+            for file_path, metadata in cm.project_index.doc_files.items():
+                if Path(file_path).parent == path:
+                    files_in_dir.append({
+                        "name": Path(file_path).name,
+                        "path": file_path,
+                        "type": "file",
+                        "description": metadata.description or "",
+                        "metrics": {
+                            "quality": sum(metadata.quality_scores.values()) / len(metadata.quality_scores) if metadata.quality_scores else 0,
+                            "type": metadata.doc_type
+                        }
+                    })
+            
+            # Add code files
+            for file_path, metadata in cm.project_index.code_files.items():
+                if Path(file_path).parent == path:
+                    files_in_dir.append({
+                        "name": Path(file_path).name,
+                        "path": file_path,
+                        "type": "file",
+                        "description": metadata.description or "",
+                        "metrics": {
+                            "language": metadata.language,
+                            "loc": metadata.lines_of_code,
+                            "functions": len(metadata.functions),
+                            "classes": len(metadata.classes),
+                            "complexity": metadata.complexity_score
+                        }
+                    })
+            
+            # Sort files by name
+            files_in_dir.sort(key=lambda x: x["name"])
+            node["children"].extend(files_in_dir)
+            
+            # Get all subdirectories
+            subdirs = set()
+            for file_path in list(cm.project_index.doc_files.keys()) + list(cm.project_index.code_files.keys()):
+                file_p = Path(file_path)
+                # Check if this file is in a subdirectory of current path
+                if path in file_p.parents and file_p.parent != path:
+                    # Find the immediate subdirectory
+                    for parent in file_p.parents:
+                        if parent.parent == path:
+                            subdirs.add(parent)
+                            break
+            
+            # Build subdirectory nodes
+            for subdir in sorted(subdirs):
+                child_node = build_tree(subdir, project_root)
+                node["children"].append(child_node)
+            
+            return node
+        
+        # Find project root (common ancestor of all files)
+        all_paths = list(cm.project_index.doc_files.keys()) + list(cm.project_index.code_files.keys())
+        if not all_paths:
+            return jsonify({"error": "No files indexed"}), 400
+        
+        # Find common root
+        common_root = Path(all_paths[0]).parent
+        for path_str in all_paths[1:]:
+            path = Path(path_str)
+            # Find common ancestor
+            while common_root not in path.parents and common_root != path.parent:
+                common_root = common_root.parent
+        
+        # Build tree from root
+        tree = build_tree(common_root, common_root)
+        
+        return jsonify(tree)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 if __name__ == '__main__':
     print("Starting agent workflow state machine...")
     print("Tracking execution stages: Request → Context Search → Execute → Update → Review")

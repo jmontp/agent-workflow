@@ -775,3 +775,48 @@ function resetZoom() {
         .duration(750)
         .call(zoom.transform, d3.zoomIdentity);
 }
+
+// Visualization Switching
+let currentVisualization = 'graph';
+let visualizations = {
+    treemap: null,
+    tree: null
+};
+
+function switchVisualization(type) {
+    // Update button states
+    document.querySelectorAll('.viz-type-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    event.target.classList.add('active');
+    
+    // Hide all visualizations
+    document.querySelectorAll('.viz-content').forEach(viz => {
+        viz.style.display = 'none';
+    });
+    
+    // Show selected visualization
+    document.getElementById(`viz-${type}`).style.display = 'block';
+    currentVisualization = type;
+    
+    // Load visualization if needed
+    switch (type) {
+        case 'graph':
+            // Already loaded
+            break;
+            
+        case 'treemap':
+            if (!visualizations.treemap) {
+                visualizations.treemap = new ProjectTreemap('treemap-container');
+                visualizations.treemap.load();
+            }
+            break;
+            
+        case 'tree':
+            if (!visualizations.tree) {
+                visualizations.tree = new DirectoryTreeView('tree-container', 'tree-details');
+                visualizations.tree.load();
+            }
+            break;
+    }
+}

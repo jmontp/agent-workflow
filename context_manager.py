@@ -90,6 +90,9 @@ class DocMetadata:
     quality_scores: Dict[str, float] = field(default_factory=dict)
     staleness_indicators: List[str] = field(default_factory=list)
     
+    # Claude-generated description
+    description: Optional[str] = None  # 1-2 sentence summary of file purpose
+    
     # Relationships
     linked_contexts: List[str] = field(default_factory=list)    # Related events
     linked_docs: List[str] = field(default_factory=list)        # Related docs
@@ -110,6 +113,9 @@ class CodeMetadata:
     path: str
     language: str
     last_modified: datetime
+    
+    # Claude-generated description
+    description: Optional[str] = None  # 1-2 sentence summary of file purpose
     
     # Extracted elements
     classes: List[str] = field(default_factory=list)
@@ -133,6 +139,9 @@ class ProjectIndex:
     # File mappings
     doc_files: Dict[str, DocMetadata] = field(default_factory=dict)
     code_files: Dict[str, CodeMetadata] = field(default_factory=dict)
+    
+    # Claude-generated folder descriptions
+    folder_descriptions: Dict[str, str] = field(default_factory=dict)  # folder path -> description
     
     # Concept mappings
     concepts: Dict[str, List[str]] = field(default_factory=dict)  # concept -> file paths
@@ -727,6 +736,9 @@ class ContextManager:
         # Extract relationships
         relationships_count = self._extract_relationships()
         
+        # Generate folder descriptions
+        self._generate_folder_descriptions(root_path)
+        
         # Save index
         self._save_project_index()
         
@@ -765,10 +777,23 @@ class ContextManager:
             try:
                 # Analyze the document
                 metadata = self.analyze_doc(str(md_file))
+                
+                # Generate description using Claude tools if available
+                try:
+                    content = md_file.read_text()
+                    tools = self.get_claude_tools()
+                    metadata.description = tools.generate_file_description(
+                        str(md_file), 
+                        content[:2000],  # First 2000 chars
+                        file_type="doc"
+                    )
+                except:
+                    # Fallback to simple description
+                    metadata.description = f"Documentation file: {md_file.name}"
+                
                 self.project_index.doc_files[str(md_file)] = metadata
                 
                 # Extract concepts from content
-                content = md_file.read_text()
                 self._extract_concepts_from_text(content, str(md_file))
                 
                 doc_count += 1
@@ -794,6 +819,20 @@ class ContextManager:
             
             try:
                 metadata = self._analyze_code_file(code_file)
+                
+                # Generate description using Claude tools if available
+                try:
+                    content = code_file.read_text()
+                    tools = self.get_claude_tools()
+                    metadata.description = tools.generate_file_description(
+                        str(code_file),
+                        content[:2000],  # First 2000 chars
+                        file_type="code"
+                    )
+                except:
+                    # Fallback to simple description
+                    metadata.description = f"{metadata.language} source file with {len(metadata.functions)} functions."
+                
                 self.project_index.code_files[str(code_file)] = metadata
                 
                 # Map functions and classes
@@ -978,6 +1017,71 @@ class ContextManager:
         
         return relationship_count
     
+    def _generate_folder_descriptions(self, root_path: Path):
+        """Generate descriptions for all directories in the project."""
+        try:
+            tools = self.get_claude_tools()
+            
+            # Get all unique directories
+            all_dirs = set()
+            
+            # Add root
+            all_dirs.add(root_path)
+            
+            # Add all parent directories of files
+            for file_path in self.project_index.doc_files.keys():
+                path = Path(file_path)
+                for parent in path.parents:
+                    if parent >= root_path:  # Only include dirs within project
+                        all_dirs.add(parent)
+            
+            for file_path in self.project_index.code_files.keys():
+                path = Path(file_path)
+                for parent in path.parents:
+                    if parent >= root_path:  # Only include dirs within project
+                        all_dirs.add(parent)
+            
+            # Generate descriptions for each directory
+            for dir_path in sorted(all_dirs):
+                # Get contents of this directory
+                contents = []
+                
+                # Add files
+                for file_path, metadata in self.project_index.doc_files.items():
+                    if Path(file_path).parent == dir_path:
+                        contents.append({
+                            'name': Path(file_path).name,
+                            'type': 'file',
+                            'description': metadata.description or ''
+                        })
+                
+                for file_path, metadata in self.project_index.code_files.items():
+                    if Path(file_path).parent == dir_path:
+                        contents.append({
+                            'name': Path(file_path).name,
+                            'type': 'file',
+                            'description': metadata.description or ''
+                        })
+                
+                # Add subdirectories
+                for other_dir in all_dirs:
+                    if other_dir.parent == dir_path and other_dir != dir_path:
+                        contents.append({
+                            'name': other_dir.name,
+                            'type': 'directory',
+                            'description': self.project_index.folder_descriptions.get(str(other_dir), '')
+                        })
+                
+                # Generate description
+                description = tools.generate_folder_description(str(dir_path), contents)
+                self.project_index.folder_descriptions[str(dir_path)] = description
+                
+        except Exception as e:
+            # If Claude tools not available, generate simple descriptions
+            print(f"Generating simple folder descriptions: {e}")
+            for dir_path in [root_path]:
+                self.project_index.folder_descriptions[str(dir_path)] = "Project root directory."
+    
     def _save_project_index(self):
         """Save project index to disk."""
         index_dir = self.storage_dir / "indices"
@@ -994,7 +1098,8 @@ class ContextManager:
             "references": self.project_index.references,
             "naming_conventions": self.project_index.naming_conventions,
             "architectural_patterns": self.project_index.architectural_patterns,
-            "faq_mappings": self.project_index.faq_mappings
+            "faq_mappings": self.project_index.faq_mappings,
+            "folder_descriptions": self.project_index.folder_descriptions
         }
         
         with open(index_file, 'w') as f:
@@ -1018,6 +1123,7 @@ class ContextManager:
                 'path': meta.path,
                 'doc_type': meta.doc_type,
                 'last_analyzed': meta.last_analyzed.isoformat(),
+                'description': meta.description,
                 'quality_scores': meta.quality_scores,
                 'staleness_indicators': meta.staleness_indicators,
                 'linked_contexts': meta.linked_contexts,
@@ -1037,6 +1143,7 @@ class ContextManager:
                 'path': meta.path,
                 'language': meta.language,
                 'last_modified': meta.last_modified.isoformat(),
+                'description': meta.description,
                 'classes': meta.classes,
                 'functions': meta.functions,
                 'imports': meta.imports,
@@ -1143,6 +1250,7 @@ class ContextManager:
                 naming_conventions=data.get("naming_conventions", {}),
                 architectural_patterns=data.get("architectural_patterns", []),
                 faq_mappings=data.get("faq_mappings", {}),
+                folder_descriptions=data.get("folder_descriptions", {}),
                 index_timestamp=datetime.fromisoformat(data.get("index_timestamp", datetime.now().isoformat()))
             )
             
@@ -1156,6 +1264,7 @@ class ContextManager:
                             path=data['path'],
                             doc_type=data['doc_type'],
                             last_analyzed=datetime.fromisoformat(data['last_analyzed']),
+                            description=data.get('description'),
                             quality_scores=data.get('quality_scores', {}),
                             staleness_indicators=data.get('staleness_indicators', []),
                             linked_contexts=data.get('linked_contexts', []),
@@ -1174,6 +1283,7 @@ class ContextManager:
                             path=data['path'],
                             language=data['language'],
                             last_modified=datetime.fromisoformat(data['last_modified']),
+                            description=data.get('description'),
                             classes=data.get('classes', []),
                             functions=data.get('functions', []),
                             imports=data.get('imports', []),

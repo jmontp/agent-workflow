@@ -1,14 +1,16 @@
 {
-  "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/research/simple/docs/IMPLEMENTATION_PLAN.md",
+  "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/IMPLEMENTATION_PLAN.md",
   "doc_type": "general",
-  "last_analyzed": "2025-07-04T20:24:17.002870",
+  "last_analyzed": "2025-07-04T22:06:20.190617",
   "quality_scores": {
-    "completeness": 0.5,
+    "completeness": 0.75,
     "clarity": 1.0,
     "consistency": 0.7,
     "staleness": 1.0
   },
-  "staleness_indicators": [],
+  "staleness_indicators": [
+    "version_numbers_found"
+  ],
   "linked_contexts": [],
   "linked_docs": [],
   "dependencies": {},

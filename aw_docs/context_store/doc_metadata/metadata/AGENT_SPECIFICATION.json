@@ -1,16 +1,14 @@
 {
-  "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/swiss-army-knife/AGENT_SPECIFICATION.md",
+  "path": "/mnt/c/Users/jmontp/Documents/workspace/agent-workflow/docs/agents/context-manager/AGENT_SPECIFICATION.md",
   "doc_type": "api_spec",
-  "last_analyzed": "2025-07-04T20:24:16.816148",
+  "last_analyzed": "2025-07-04T22:06:05.465354",
   "quality_scores": {
-    "completeness": 1.0,
+    "completeness": 0.75,
     "clarity": 1.0,
     "consistency": 0.7,
     "staleness": 1.0
   },
-  "staleness_indicators": [
-    "version_numbers_found"
-  ],
+  "staleness_indicators": [],
   "linked_contexts": [],
   "linked_docs": [],
   "dependencies": {},
