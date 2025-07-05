@@ -346,7 +346,15 @@ def cmd_explain(args):
 
 def cmd_collect(args):
     """Collect context for a specific task."""
-    cm = ContextManager()
+    from context_manager import ContextManagerConfig
+    
+    # Create config with longer timeout for CLI usage
+    config = ContextManagerConfig(
+        use_claude_analysis=True,
+        fallback_to_heuristic=True,
+        claude_timeout_seconds=30  # Give Claude more time
+    )
+    cm = ContextManager(config=config)
     
     print(f"🔍 Collecting context for: {args.description}\n")
     

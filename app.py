@@ -184,7 +184,7 @@ from context_manager import ContextManagerConfig
 config = ContextManagerConfig(
     use_claude_analysis=True,
     fallback_to_heuristic=True,
-    claude_timeout_seconds=10  # Give Claude more time for web requests
+    claude_timeout_seconds=30  # Give Claude more time to generate JSON responses
 )
 cm = ContextManager(config=config)
 
@@ -368,6 +368,7 @@ def collect_context():
         agent_template = data.get('agent_template')
         explain_selection = data.get('explain_selection', False)
         min_relevance = data.get('min_relevance', 0.3)
+        use_claude_analysis = data.get('use_claude_analysis', None)
         
         # Call the context collection method
         context_collection = cm.collect_context_for_task(
@@ -378,7 +379,8 @@ def collect_context():
             exclude_patterns=exclude_patterns,
             agent_template=agent_template,
             explain_selection=explain_selection,
-            min_relevance=min_relevance
+            min_relevance=min_relevance,
+            use_claude_analysis=use_claude_analysis
         )
         
         # Convert ContextCollection to JSON-serializable format

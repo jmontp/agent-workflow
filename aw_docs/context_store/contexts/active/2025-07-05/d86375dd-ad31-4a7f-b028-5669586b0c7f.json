@@ -1,0 +1,20 @@
+{
+  "id": "d86375dd-ad31-4a7f-b028-5669586b0c7f",
+  "type": "error",
+  "source": "system",
+  "timestamp": "2025-07-05T13:10:39.916084",
+  "data": {
+    "error": "Claude task analysis failed: Command 'claude -p \"Analyze this software development task and extract key information.\\n\\nTask: \\\"Fix the authentication bug in the login system\\\"\\n\\nExtract and return as JSON:\\n1. primary_intent: What is the user trying to accomplish? (one sentence)\\n2. keywords: List of important technical terms (max 10)\\n3. actions: What actions need to be taken? (e.g., \\\"fix\\\", \\\"implement\\\", \\\"refactor\\\")\\n4. concepts: Technical concepts and entities involved (e.g., \\\"authentication\\\", \\\"database\\\", \\\"UI\\\")\\n5. file_patterns: Likely file types/patterns needed (e.g., \\\"*test*.py\\\", \\\"*.config.js\\\", \\\"*controller*\\\")\\n6. estimated_scope: \\\"narrow\\\" (single file), \\\"medium\\\" (few files), or \\\"broad\\\" (many files)\\n7. success_criteria: How would we know the task is complete?\\n\\nReturn ONLY valid JSON, no additional text.\"' timed out after 5 seconds",
+    "context": {}
+  },
+  "project_id": "default",
+  "metadata": {},
+  "relationships": [],
+  "tags": [
+    "error",
+    "pattern-source"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

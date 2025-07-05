@@ -1,0 +1,20 @@
+{
+  "id": "8b64b30a-84f2-4b86-b3ad-6adad6a77a4e",
+  "type": "error",
+  "source": "system",
+  "timestamp": "2025-07-05T13:13:19.684209",
+  "data": {
+    "error": "Claude analysis failed: 'ContextManager' object has no attribute 'log_context'",
+    "context": {}
+  },
+  "project_id": "default",
+  "metadata": {},
+  "relationships": [],
+  "tags": [
+    "error",
+    "pattern-source"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

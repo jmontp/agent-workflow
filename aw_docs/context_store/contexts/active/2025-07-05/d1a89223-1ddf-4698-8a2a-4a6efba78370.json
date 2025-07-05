@@ -1,0 +1,20 @@
+{
+  "id": "d1a89223-1ddf-4698-8a2a-4a6efba78370",
+  "type": "error",
+  "source": "system",
+  "timestamp": "2025-07-05T13:11:47.600833",
+  "data": {
+    "error": "Claude task analysis failed: Command 'claude -p < /tmp/tmpbawhomxs.txt' timed out after 5 seconds",
+    "context": {}
+  },
+  "project_id": "default",
+  "metadata": {},
+  "relationships": [],
+  "tags": [
+    "error",
+    "pattern-source"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

@@ -1645,16 +1645,52 @@ Extract and return as JSON:
 
 Return ONLY valid JSON, no additional text.'''
 
-            # Call Claude with timeout
-            import asyncio
-            response = await asyncio.wait_for(
-                tools.analyze_text_async(prompt),
-                timeout=self.config.claude_timeout_seconds
-            )
-            
-            # Parse response
+            # Use claude CLI directly via bash
+            import subprocess
             import json
-            data = json.loads(response)
+            import tempfile
+            
+            # Write prompt to a temporary file to avoid shell escaping issues
+            with tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False) as f:
+                f.write(prompt)
+                prompt_file = f.name
+            
+            # Call claude with -p flag for non-interactive mode
+            cmd = f'claude -p < {prompt_file}'
+            
+            try:
+                result = subprocess.run(
+                    cmd,
+                    shell=True,
+                    capture_output=True,
+                    text=True,
+                    timeout=self.config.claude_timeout_seconds
+                )
+                
+                if result.returncode != 0:
+                    raise Exception(f"Claude CLI failed: {result.stderr}")
+            finally:
+                # Clean up temp file
+                import os
+                os.unlink(prompt_file)
+            
+            # Parse JSON response
+            response_text = result.stdout.strip()
+            
+            # Try to extract JSON from the response
+            # Claude might return markdown code blocks, so handle that
+            json_match = re.search(r'```json\s*(.*?)\s*```', response_text, re.DOTALL)
+            if json_match:
+                json_str = json_match.group(1)
+            else:
+                # Try to find raw JSON
+                json_match = re.search(r'\{.*\}', response_text, re.DOTALL)
+                if json_match:
+                    json_str = json_match.group(0)
+                else:
+                    raise ValueError("No JSON found in Claude response")
+            
+            data = json.loads(json_str)
             
             # Create TaskAnalysis from Claude's response
             analysis = TaskAnalysis(
@@ -1794,7 +1830,8 @@ Return ONLY valid JSON, no additional text.'''
     def collect_context_for_task(self, task_description: str, agent_type: str = None, 
                                 max_tokens: int = 50000, include_types: List[str] = None, 
                                 exclude_patterns: List[str] = None, agent_template: Dict[str, Any] = None, 
-                                explain_selection: bool = False, min_relevance: float = 0.3) -> ContextCollection:
+                                explain_selection: bool = False, min_relevance: float = 0.3,
+                                use_claude_analysis: Optional[bool] = None) -> ContextCollection:
         """
         Intelligent context collection based on task description.
         
@@ -1812,6 +1849,7 @@ Return ONLY valid JSON, no additional text.'''
             agent_template: Custom template for context organization
             explain_selection: If True, include explanations for why items were selected
             min_relevance: Minimum relevance score to include an item (0-1, default: 0.3)
+            use_claude_analysis: Override config to enable/disable Claude analysis (None = use config)
         
         Returns:
             ContextCollection: Complete context collection with items, analysis, and suggestions
@@ -1841,8 +1879,11 @@ Return ONLY valid JSON, no additional text.'''
         # Analyze the task - try Claude first, fallback to heuristic
         task_analysis = None
         
+        # Determine whether to use Claude (parameter overrides config)
+        should_use_claude = use_claude_analysis if use_claude_analysis is not None else self.config.use_claude_analysis
+        
         # Try Claude analysis if enabled
-        if self.config.use_claude_analysis:
+        if should_use_claude:
             try:
                 # Run async Claude analysis in sync context
                 import asyncio
@@ -1855,11 +1896,15 @@ Return ONLY valid JSON, no additional text.'''
                 
                 if task_analysis:
                     # Log that we used Claude
-                    self.log_context(
-                        ContextType.DEVELOPMENT,
-                        {"source": "claude_analysis", "task": task_description},
+                    context = Context(
+                        id=str(uuid.uuid4()),
+                        type=ContextType.DEVELOPMENT,
+                        source="claude_analysis",
+                        timestamp=datetime.now(),
+                        data={"task": task_description, "analysis": "claude"},
                         tags=["ai_enhanced"]
                     )
+                    self.add_context(context)
             except Exception as e:
                 # Log error but continue
                 self.log_error(f"Claude analysis failed: {str(e)}")

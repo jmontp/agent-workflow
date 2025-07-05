@@ -895,7 +895,8 @@ async function collectContext() {
         agent_type: document.getElementById('agent-type').value,
         max_tokens: parseInt(document.getElementById('max-tokens').value),
         min_relevance: parseFloat(document.getElementById('min-relevance').value),
-        explain_selection: document.getElementById('explain-selection').checked
+        explain_selection: document.getElementById('explain-selection').checked,
+        use_claude_analysis: document.getElementById('use-claude-analysis').checked
     };
     
     // Determine include types
