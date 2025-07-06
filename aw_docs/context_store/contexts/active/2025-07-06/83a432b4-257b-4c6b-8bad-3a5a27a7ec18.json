@@ -1,0 +1,27 @@
+{
+  "id": "83a432b4-257b-4c6b-8bad-3a5a27a7ec18",
+  "type": "project_management",
+  "source": "human",
+  "timestamp": "2025-07-06T01:11:25.066164",
+  "data": {
+    "title": "Created Graph Librarian migration plan and architecture",
+    "status": "completed",
+    "timestamp": "2025-07-06T01:11:25.066140",
+    "files_created": 3,
+    "architecture": "graph-based",
+    "migration_timeline": "4 weeks"
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 54
+  },
+  "relationships": [],
+  "tags": [
+    "milestone",
+    "project-management",
+    "completed"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}

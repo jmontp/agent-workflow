@@ -1,0 +1,25 @@
+{
+  "id": "ecf7eedd-2ec1-474e-81db-fb2efcf4acfa",
+  "type": "project_management",
+  "source": "human",
+  "timestamp": "2025-07-05T17:53:15.276841",
+  "data": {
+    "title": "Completed Context Manager v2.0 unified design with anti-redundancy features",
+    "status": "completed",
+    "timestamp": "2025-07-05T17:53:15.276816",
+    "version": "v2.0-design"
+  },
+  "project_id": "default",
+  "metadata": {
+    "tokens": 45
+  },
+  "relationships": [],
+  "tags": [
+    "milestone",
+    "project-management",
+    "completed"
+  ],
+  "ttl": null,
+  "requires_audit": true,
+  "sensitivity_level": "internal"
+}
